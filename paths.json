@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@components": ["src/components/"],
+      "@models/*": ["src/models/*"],
+      "@models": ["src/models/"],
+      "@redux/*": ["src/redux/*"],
+      "@redux": ["src/redux/"],
+      "@utils/*": ["src/utils/*"],
+      "@utils": ["src/utils/"],
+      "@src/*": ["src/*"],
+      "@src": ["src/"],
+      "@root/*": ["./*"],
+      "@root": ["./"]
+    }
+  }
+}
