@@ -1,5 +1,11 @@
-function App() {
-  return <div>Home</div>;
-}
+import {Dashboard} from './components';
+
+const App = () => {
+  return (
+    <div>
+      <Dashboard />
+    </div>
+  );
+};
 
 export default App;
