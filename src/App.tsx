@@ -7,6 +7,7 @@ import {SIDEBAR_WIDTH} from './constants/constants';
 import {Sidebar} from './components';
 
 const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
+const Settings = lazy(() => import('./components/Settings/Settings'));
 
 const AppContainer = styled.div`
   height: 100%;
@@ -23,6 +24,7 @@ const App = () => {
       <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </Suspense>
     </AppContainer>
