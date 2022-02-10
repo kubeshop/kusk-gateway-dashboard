@@ -19,11 +19,15 @@ const Sidebar = () => {
         </S.IconContainer>
 
         <S.IconContainer $border>
-          <S.GithubFilled />
+          <a href="https://github.com/kubeshop/kusk-gateway" target="_blank" rel="noopener noreferrer">
+            <S.GithubFilled />
+          </a>
         </S.IconContainer>
 
         <S.IconContainer>
-          <S.QuestionCircleFilled />
+          <a href="https://kubeshop.github.io/kusk-gateway/" target="_blank" rel="noopener noreferrer">
+            <S.QuestionCircleFilled />
+          </a>
         </S.IconContainer>
       </S.OptionsContainer>
     </S.SidebarContainer>
