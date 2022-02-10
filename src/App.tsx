@@ -1,8 +1,8 @@
 import {lazy, Suspense} from 'react';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 import styled from 'styled-components';
 
-const Dashboard = lazy(() => import('@components/Dashboard/Dashboard'));
+const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
 
 const AppContainer = styled.div`
   height: 100%;
@@ -11,15 +11,13 @@ const AppContainer = styled.div`
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <AppContainer>
-        <Suspense fallback={null}>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-          </Routes>
-        </Suspense>
-      </AppContainer>
-    </BrowserRouter>
+    <AppContainer>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+        </Routes>
+      </Suspense>
+    </AppContainer>
   );
 };
 

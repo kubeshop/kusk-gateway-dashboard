@@ -17,6 +17,5 @@
     "jsx": "react-jsx",
     "baseUrl": "./"
   },
-  "include": ["src"],
-  "extends": "./paths.json"
+  "include": ["src"]
 }

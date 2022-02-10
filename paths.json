@@ -8,6 +8,8 @@
       "@models": ["src/models/"],
       "@redux/*": ["src/redux/*"],
       "@redux": ["src/redux/"],
+      "@styles/*": ["src/styles/*"],
+      "@styles": ["src/styles/"],
       "@utils/*": ["src/utils/*"],
       "@utils": ["src/utils/"],
       "@src/*": ["src/*"],

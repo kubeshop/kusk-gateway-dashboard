@@ -1,3 +1,5 @@
-const initialReduxState = {};
+const initialAppState = {};
 
-export default initialReduxState;
+export default {
+  main: initialAppState,
+};
