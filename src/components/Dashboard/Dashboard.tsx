@@ -9,12 +9,35 @@ const apisFromEndpoint = [
     fleet: {name: 'Fleet 1', namespace: 'fleet-1-namespace'},
     service: {name: 'Service 1', namespace: 'service-1-namespace'},
   },
+  {
+    name: 'API 2',
+    id: '4ad12f64-5717-4218-b3fc-2c964a16afb1',
+    status: 'unpublished',
+    fleet: {name: 'Fleet 2', namespace: 'fleet-2-namespace'},
+    service: {name: 'Service 2', namespace: 'service-2-namespace'},
+  },
 ];
+
+const renderStatusTag = (status: 'published' | 'unpublished') => {
+  if (status === 'published') {
+    return <S.TrueTag>Published</S.TrueTag>;
+  }
+
+  return <S.FalseTag>Unpublished</S.FalseTag>;
+};
+
+const renderServicesTag = (status: 'available' | 'unavailable') => {
+  if (status === 'available') {
+    return <S.TrueTag>Available</S.TrueTag>;
+  }
+
+  return <S.FalseTag>Unavailable</S.FalseTag>;
+};
 
 const columns = [
   {title: 'Name', dataIndex: 'name', key: 'name'},
-  {title: 'Status', dataIndex: 'status', key: 'status'},
-  {title: 'Services', dataIndex: 'services', key: 'services'},
+  {title: 'Status', dataIndex: 'status', key: 'status', render: renderStatusTag},
+  {title: 'Services', dataIndex: 'services', key: 'services', render: renderServicesTag},
 ];
 
 const Dashboard: React.FC = () => {
@@ -46,7 +69,7 @@ const Dashboard: React.FC = () => {
         const service: {name: string; namespace: string; status: 'available' | 'unavailable'} = {
           name: api.service.name,
           namespace: api.service.namespace,
-          status: 'available',
+          status: i % 2 ? 'unavailable' : 'available',
         };
 
         tableDataSource.push({

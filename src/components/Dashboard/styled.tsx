@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {Table as RawTable} from 'antd';
+import {Table as RawTable, Tag as RawTag} from 'antd';
 
 import Colors from 'src/styles/colors';
 
@@ -45,4 +45,16 @@ export const Table = styled(RawTable)`
     border-bottom: 1px solid ${Colors.grey2};
     color: ${Colors.grey9};
   }
+`;
+
+export const FalseTag = styled(RawTag)`
+  color: ${Colors.magenta2};
+  background: ${Colors.magenta0};
+  border: 2px solid ${Colors.magenta1};
+`;
+
+export const TrueTag = styled(RawTag)`
+  color: ${Colors.cyan2};
+  background: ${Colors.cyan0};
+  border: 2px solid ${Colors.cyan1};
 `;
