@@ -14,5 +14,13 @@ html {
 body {
     margin: 0;
     height: 100vh;
+
+    font-family: "PT Sans", "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body #root {
+  height: 100%
 }
 `;
