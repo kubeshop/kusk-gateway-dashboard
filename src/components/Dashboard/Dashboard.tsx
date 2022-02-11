@@ -36,8 +36,8 @@ const renderServicesTag = (status: 'available' | 'unavailable') => {
 
 const columns = [
   {title: 'Name', dataIndex: 'name', key: 'name'},
-  {title: 'Status', dataIndex: 'status', key: 'status', render: renderStatusTag},
-  {title: 'Services', dataIndex: 'services', key: 'services', render: renderServicesTag},
+  {title: 'Status', dataIndex: 'status', key: 'status', render: renderStatusTag, width: '25%'},
+  {title: 'Services', dataIndex: 'services', key: 'services', render: renderServicesTag, width: '25%'},
 ];
 
 const Dashboard: React.FC = () => {
@@ -90,7 +90,7 @@ const Dashboard: React.FC = () => {
     <S.DashboardContainer>
       <S.DashboardTitle>APIs</S.DashboardTitle>
 
-      <S.Table columns={columns} dataSource={dataSource} pagination={false} />
+      <S.Table columns={columns} dataSource={dataSource} pagination={false} tableLayout="fixed" />
     </S.DashboardContainer>
   );
 };
