@@ -1,5 +1,9 @@
-const initialAppState = {};
+import {MainState} from 'src/models/main';
+
+const initialMainState: MainState = {
+  selectedApi: '',
+};
 
 export default {
-  main: initialAppState,
+  main: initialMainState,
 };

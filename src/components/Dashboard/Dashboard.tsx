@@ -1,4 +1,8 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
+
+import {useAppDispatch, useAppSelector} from 'src/redux/hooks';
+import {selectApi} from 'src/redux/reducers/main';
+
 import * as S from './styled';
 
 const apisFromEndpoint = [
@@ -26,21 +30,53 @@ const renderStatusTag = (status: 'published' | 'unpublished') => {
   return <S.FalseTag>Unpublished</S.FalseTag>;
 };
 
-const renderServicesTag = (status: 'available' | 'unavailable') => {
-  if (status === 'available') {
-    return <S.TrueTag>Available</S.TrueTag>;
-  }
-
-  return <S.FalseTag>Unavailable</S.FalseTag>;
-};
-
-const columns = [
-  {title: 'Name', dataIndex: 'name', key: 'name'},
-  {title: 'Status', dataIndex: 'status', key: 'status', render: renderStatusTag, width: '25%'},
-  {title: 'Services', dataIndex: 'services', key: 'services', render: renderServicesTag, width: '25%'},
-];
-
 const Dashboard: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const selectedApi = useAppSelector(state => state.main.selectedApi);
+
+  const renderApiName = useCallback(
+    (name: string, record: any) => {
+      const {key} = record;
+
+      return <S.ApiLabel $selected={key === selectedApi}>{name}</S.ApiLabel>;
+    },
+    [selectedApi]
+  );
+
+  const renderServicesTag = useCallback(
+    (status: 'available' | 'unavailable', record: any) => {
+      const {key} = record;
+
+      let tag = <S.FalseTag>Unavailable</S.FalseTag>;
+
+      if (status === 'available') {
+        tag = <S.TrueTag>Available</S.TrueTag>;
+      }
+
+      return (
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          {tag}
+
+          <S.RightOutlined
+            $disabled={key === selectedApi}
+            onClick={() => {
+              if (key !== selectedApi) {
+                dispatch(selectApi(key));
+              }
+            }}
+          />
+        </div>
+      );
+    },
+    [dispatch, selectedApi]
+  );
+
+  const columns = [
+    {title: 'Name', dataIndex: 'name', key: 'name', render: renderApiName},
+    {title: 'Status', dataIndex: 'status', key: 'status', render: renderStatusTag, width: '25%'},
+    {title: 'Services', dataIndex: 'services', key: 'services', render: renderServicesTag, width: '25%'},
+  ];
+
   // pretend we get them from redux maybe or directly a local state
   const apis = apisFromEndpoint;
 
