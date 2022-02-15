@@ -1,13 +1,14 @@
+import React, {Suspense, useMemo} from 'react';
 import {Skeleton} from 'antd';
-import {useMemo} from 'react';
 
 import {useAppSelector} from 'src/redux/hooks';
-import {ApiInfo} from '..';
 import {useGetApis} from '../../models/api';
 
 import DashboardAPIsTable from './DashboardAPIsTable';
 
 import * as S from './styled';
+
+const ApiInfo = React.lazy(() => import('../ApiInfo/ApiInfo'));
 
 const Dashboard: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
@@ -36,7 +37,7 @@ const Dashboard: React.FC = () => {
         )}
       </S.ApisContainer>
 
-      {selectedApi && <ApiInfo />}
+      <Suspense fallback={null}>{selectedApi && <ApiInfo />}</Suspense>
     </S.DashboardContainer>
   );
 };

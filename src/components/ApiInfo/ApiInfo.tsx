@@ -1,14 +1,17 @@
-import {useState} from 'react';
+import React, {Suspense, useState} from 'react';
 
 import {useAppDispatch} from 'src/redux/hooks';
 import {selectApi} from 'src/redux/reducers/main';
 
 import * as S from './styled';
 
+const ApiRequestLog = React.lazy(() => import('../ApiRequestLog/ApiRequestLog'));
+const ApiSpec = React.lazy(() => import('../ApiSpec/ApiSpec'));
+
 const ApiInfo: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const [activeTab, setActiveTab] = useState<string>('api');
+  const [activeTab, setActiveTab] = useState<'api' | 'request-log'>('api');
 
   const onCloseHandler = () => {
     dispatch(selectApi(''));
@@ -27,6 +30,11 @@ const ApiInfo: React.FC = () => {
           Request Log
         </S.TabsLabel>
       </S.TabsContainer>
+
+      <Suspense fallback={null}>
+        {activeTab === 'api' && <ApiSpec />}
+        {activeTab === 'request-log' && <ApiRequestLog />}
+      </Suspense>
 
       <S.CloseOutlined onClick={onCloseHandler} />
     </S.ApiInfoContainer>

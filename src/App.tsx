@@ -6,6 +6,8 @@ import {SIDEBAR_WIDTH} from './constants/constants';
 
 import {Sidebar} from './components';
 
+import 'swagger-ui-react/swagger-ui.css';
+
 const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
 const Settings = lazy(() => import('./components/Settings/Settings'));
 

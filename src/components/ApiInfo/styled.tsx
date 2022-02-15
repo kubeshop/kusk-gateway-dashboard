@@ -8,6 +8,9 @@ export const ApiInfoContainer = styled.div`
   position: relative;
   background: ${Colors.grey4};
   padding: 40px 20px 20px 20px;
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  grid-row-gap: 30px;
 
   & .selected-tab {
     color: ${Colors.grey9};
