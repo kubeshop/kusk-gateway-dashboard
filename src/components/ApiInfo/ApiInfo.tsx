@@ -1,9 +1,18 @@
 import {useState} from 'react';
 
+import {useAppDispatch} from 'src/redux/hooks';
+import {selectApi} from 'src/redux/reducers/main';
+
 import * as S from './styled';
 
 const ApiInfo: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   const [activeTab, setActiveTab] = useState<string>('api');
+
+  const onCloseHandler = () => {
+    dispatch(selectApi(''));
+  };
 
   return (
     <S.ApiInfoContainer>
@@ -18,6 +27,8 @@ const ApiInfo: React.FC = () => {
           Request Log
         </S.TabsLabel>
       </S.TabsContainer>
+
+      <S.CloseOutlined onClick={onCloseHandler} />
     </S.ApiInfoContainer>
   );
 };

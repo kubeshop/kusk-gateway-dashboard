@@ -14,7 +14,7 @@ export const DashboardContainer = styled.div<{$gridTemplateColumns: string}>`
   display: grid;
   height: 100%;
   width: 100%;
-  background: ${Colors.grey2};
+  background: ${Colors.grey3};
 `;
 
 export const DashboardTitle = styled.h2`
