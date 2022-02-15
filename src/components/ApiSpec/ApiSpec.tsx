@@ -7,17 +7,23 @@ import {useGetApiOpenApiSpec} from '../../models/api';
 
 import * as S from './styled';
 
+import openApiSpec from '../../constants/kuskOpenApiSpec.json';
+
 const ApiSpec: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
   const {data, error, loading} = useGetApiOpenApiSpec({apiId: selectedApi});
 
-  return loading ? (
-    <Skeleton />
-  ) : error ? (
-    <S.ErrorLabel>{error.message}</S.ErrorLabel>
-  ) : (
-    data && <SwaggerUI url="https://petstore.swagger.io/v2/swagger.json" />
+  return (
+    <S.ApiSpecContainer>
+      {loading ? (
+        <Skeleton />
+      ) : error ? (
+        <S.ErrorLabel>{error.message}</S.ErrorLabel>
+      ) : (
+        data && <SwaggerUI spec={openApiSpec} />
+      )}
+    </S.ApiSpecContainer>
   );
 };
 
