@@ -12,7 +12,13 @@ const Dashboard: React.FC = () => {
     <S.DashboardContainer>
       <S.DashboardTitle>APIs</S.DashboardTitle>
 
-      {loading ? <Skeleton /> : error ? <div>{error}</div> : data && <DashboardAPIsTable apis={data} />}
+      {loading ? (
+        <Skeleton />
+      ) : error ? (
+        <S.ErrorLabel>{error.message}</S.ErrorLabel>
+      ) : (
+        data && <DashboardAPIsTable apis={data} />
+      )}
     </S.DashboardContainer>
   );
 };

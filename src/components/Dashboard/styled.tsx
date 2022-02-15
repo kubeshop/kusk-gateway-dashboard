@@ -20,3 +20,7 @@ export const DashboardTitle = styled.h2`
   font-size: 20px;
   font-family: 'Roboto', sans-serif;
 `;
+
+export const ErrorLabel = styled.span`
+  color: red;
+`;
