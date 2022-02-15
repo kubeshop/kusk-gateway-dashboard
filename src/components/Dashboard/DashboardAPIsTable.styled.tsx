@@ -22,31 +22,31 @@ export const FalseTag = styled(RawTag)`
 export const RightOutlined = styled(RawRightOutlined)<{$disabled: boolean}>`
   ${({$disabled}) => `
     cursor: ${$disabled ? 'not-allowed' : 'pointer'} !important;
-    color: ${$disabled ? Colors.grey3 : Colors.whitePure};
+    color: ${$disabled ? Colors.grey4 : Colors.whitePure};
   `}
   font-size: 20px;
 `;
 
 export const Table = styled(RawTable)`
-  border: 1px solid ${Colors.grey2};
+  border: 1px solid ${Colors.grey3};
 
   & .ant-table-thead {
-    background: ${Colors.grey1};
+    background: ${Colors.grey2};
   }
 
   & .ant-table-tbody > tr:hover > td {
-    background: ${Colors.grey0};
+    background: ${Colors.grey1};
   }
 
   & .ant-table-thead > tr > th {
-    background: ${Colors.grey1};
+    background: ${Colors.grey2};
     color: ${Colors.grey9};
-    border-bottom: 1px solid ${Colors.grey2};
+    border-bottom: 1px solid ${Colors.grey3};
   }
 
   & .ant-table-tbody > tr > td {
-    background: ${Colors.grey0};
-    border-bottom: 1px solid ${Colors.grey2};
+    background: ${Colors.grey1};
+    border-bottom: 1px solid ${Colors.grey3};
     color: ${Colors.grey9};
   }
 `;

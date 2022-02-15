@@ -2,17 +2,19 @@ import styled from 'styled-components';
 
 import Colors from 'src/styles/colors';
 
-export const APIsContainer = styled.div`
-  margin: 20px 0px;
-  border: 1px solid ${Colors.grey2};
+export const ApisContainer = styled.div`
+  padding: 40px 20px 20px 20px;
 `;
 
-export const DashboardContainer = styled.div`
+export const DashboardContainer = styled.div<{$gridTemplateColumns: string}>`
+  ${({$gridTemplateColumns}) => `
+    grid-template-columns: ${$gridTemplateColumns};
+  `}
+
+  display: grid;
   height: 100%;
   width: 100%;
-  padding: 40px 20px 20px 20px;
-
-  background: ${Colors.grey0};
+  background: ${Colors.grey2};
 `;
 
 export const DashboardTitle = styled.h2`

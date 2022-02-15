@@ -17,4 +17,8 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+body #root {
+  height: 100%;
+}
 `;

@@ -1,9 +1,10 @@
 enum Colors {
   grey9 = '#dbdbdb',
-  grey3 = '#434343',
-  grey2 = '#262626',
-  grey1 = '#1d1d1d',
-  grey0 = '#151515',
+  grey4 = '#434343',
+  grey3 = '#262626',
+  grey2 = '#1d1d1d',
+  grey1 = '#151515',
+  grey0 = '#888888',
 
   cyan2 = '#9AF2EC',
   cyan1 = '#5CDBD3',
