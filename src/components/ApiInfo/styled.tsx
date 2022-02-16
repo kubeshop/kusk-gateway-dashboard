@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {CloseOutlined as RawCloseOutlined} from '@ant-design/icons';
 
 import Colors from 'src/styles/colors';
+import {GlobalScrollbarStyle} from 'src/utils/scrollbar';
 
 export const ApiInfoContainer = styled.div`
   position: relative;
@@ -11,6 +12,7 @@ export const ApiInfoContainer = styled.div`
   display: grid;
   grid-template-rows: max-content 1fr;
   grid-row-gap: 30px;
+  overflow-y: auto;
 
   & .selected-tab {
     color: ${Colors.grey9};
@@ -24,6 +26,8 @@ export const ApiInfoContainer = styled.div`
     bottom: -4px;
     border: 1px solid ${Colors.grey9};
   }
+
+  ${GlobalScrollbarStyle};
 `;
 
 export const CloseOutlined = styled(RawCloseOutlined)`
