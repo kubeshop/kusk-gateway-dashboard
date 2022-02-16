@@ -7,7 +7,7 @@ import {useGetApiOpenApiSpec} from '../../models/api';
 
 import * as S from './styled';
 
-import openApiSpec from '../../constants/openApiSpec.json';
+import openApiSpec from '../../constants/kuskOpenApiSpec.json';
 
 const ApiSpec: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);

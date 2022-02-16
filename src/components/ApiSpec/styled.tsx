@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import Colors from 'src/styles/colors';
+import {GlobalScrollbarStyle} from 'src/utils/scrollbar';
 
 export const ApiSpecContainer = styled.div`
   & .swagger-ui {
@@ -59,6 +60,26 @@ export const ApiSpecContainer = styled.div`
 
       &.cancel {
         color: #ff6060;
+      }
+    }
+
+    & .description {
+      margin-bottom: 20px;
+    }
+
+    & .highlight-code {
+      & pre {
+        overflow-y: auto;
+
+        ${GlobalScrollbarStyle};
+      }
+
+      & .download-contents {
+        right: 15px;
+      }
+
+      & .copy-to-clipboard {
+        right: 105px;
       }
     }
 

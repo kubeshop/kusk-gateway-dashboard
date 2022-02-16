@@ -5,6 +5,16 @@
     "title": "Kusk Gateway API",
     "description": "This is the Kusk Gateway Management API"
   },
+  "externalDocs": {
+    "description": "Find out more about Kusk-Gateway",
+    "url": "https://kubeshop.github.io/kusk-gateway/"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4010",
+      "description": "My local endpoint mockup"
+    }
+  ],
   "tags": [
     {
       "name": "apis",
