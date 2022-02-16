@@ -67,7 +67,7 @@ const DashboardAPIsTable: React.FC<IProps> = props => {
   const columns = [
     {title: 'Name', dataIndex: 'name', key: 'name', render: renderApiName},
     {title: 'Status', dataIndex: 'status', key: 'status', render: renderStatusTag, width: '25%'},
-    {title: 'Services', dataIndex: 'services', key: 'services', render: renderServicesTag, width: '25%'},
+    {title: 'Services', dataIndex: 'services', key: 'services', render: renderServicesTag, width: '30%'},
   ];
 
   useEffect(() => {
