@@ -14,6 +14,15 @@ export const ApiSpecContainer = styled.div`
       color: ${Colors.grey2};
     }
 
+    & svg.arrow {
+      fill: ${Colors.whitePure};
+    }
+
+    & label span,
+    & h4 {
+      color: ${Colors.whitePure};
+    }
+
     & .btn {
       color: ${Colors.whitePure};
 
@@ -33,9 +42,18 @@ export const ApiSpecContainer = styled.div`
     & section.models {
       border: 1px solid ${Colors.grey1};
 
+      & svg {
+        fill: ${Colors.whitePure};
+      }
+
       & h4 span {
         color: ${Colors.whitePure};
       }
+    }
+
+    & .model-toggle:after {
+      background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23ffffff" width="24" height="24"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>')
+        50% no-repeat;
     }
 
     & .tab {
@@ -57,7 +75,8 @@ export const ApiSpecContainer = styled.div`
       }
     }
 
-    & .renderedMarkdown {
+    & .renderedMarkdown,
+    & .markdown {
       & p {
         color: ${Colors.whitePure};
         margin: 0 auto !important;
