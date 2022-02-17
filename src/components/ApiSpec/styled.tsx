@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
-import Colors from '@styles/colors';
 import {GlobalScrollbarStyle} from '@utils/scrollbar';
+
+import Colors from '@styles/colors';
 
 export const ApiSpecContainer = styled.div`
   & .swagger-ui {
@@ -14,7 +15,8 @@ export const ApiSpecContainer = styled.div`
     }
 
     & label span,
-    & h4 {
+    & h4,
+    & h5 {
       color: ${Colors.whitePure};
     }
 

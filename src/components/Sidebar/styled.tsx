@@ -1,13 +1,14 @@
-import styled from 'styled-components';
-
 import {
   GithubFilled as RawGithubFilled,
   QuestionCircleFilled as RawQuestionsCircleFilled,
   SettingFilled as RawSettingFilled,
 } from '@ant-design/icons';
 
-import Colors from '@styles/colors';
+import styled from 'styled-components';
+
 import {SIDEBAR_WIDTH} from '@constants/constants';
+
+import Colors from '@styles/colors';
 
 export const Logo = styled.img`
   height: 50px;

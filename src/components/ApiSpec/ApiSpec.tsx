@@ -1,8 +1,11 @@
 import {Skeleton} from 'antd';
+
 import SwaggerUI from 'swagger-ui-react';
 
 import openApiSpec from '@constants/kuskOpenApiSpec.json';
+
 import {useGetApiOpenApiSpec} from '@models/api';
+
 import {useAppSelector} from '@redux/hooks';
 
 import * as S from './styled';

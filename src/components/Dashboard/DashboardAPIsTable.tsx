@@ -2,6 +2,7 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {ApiItem} from '@models/api';
 import {DashboardAPIsTableDataSourceItem} from '@models/dashboard';
+
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
 
@@ -47,7 +48,13 @@ const DashboardAPIsTable: React.FC<IProps> = props => {
       }
 
       return (
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           {tag}
 
           <S.RightOutlined
@@ -66,8 +73,20 @@ const DashboardAPIsTable: React.FC<IProps> = props => {
 
   const columns = [
     {title: 'Name', dataIndex: 'name', key: 'name', render: renderApiName},
-    {title: 'Status', dataIndex: 'status', key: 'status', render: renderStatusTag, width: '25%'},
-    {title: 'Services', dataIndex: 'services', key: 'services', render: renderServicesTag, width: '30%'},
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: renderStatusTag,
+      width: '25%',
+    },
+    {
+      title: 'Services',
+      dataIndex: 'services',
+      key: 'services',
+      render: renderServicesTag,
+      width: '30%',
+    },
   ];
 
   useEffect(() => {
@@ -82,7 +101,11 @@ const DashboardAPIsTable: React.FC<IProps> = props => {
         const api = apis[i];
         // TODO: might be useful to have a Promise all for better performance
         // const service = await getService({namespace: api.service.namespace, name: api.service.name});
-        const service: {name: string; namespace: string; status: 'available' | 'unavailable'} = {
+        const service: {
+          name: string;
+          namespace: string;
+          status: 'available' | 'unavailable';
+        } = {
           name: api.service.name,
           namespace: api.service.namespace,
           status: i % 2 ? 'unavailable' : 'available',

@@ -1,11 +1,12 @@
-import {lazy, Suspense} from 'react';
+import {Suspense, lazy} from 'react';
 import {Route, Routes} from 'react-router-dom';
-import styled from 'styled-components';
 
+import styled from 'styled-components';
 import 'swagger-ui-react/swagger-ui.css';
 
-import {Sidebar} from '@components/Sidebar';
 import {SIDEBAR_WIDTH} from '@constants/constants';
+
+import {Sidebar} from '@components/Sidebar';
 
 const Dashboard = lazy(() => import('@components/Dashboard/Dashboard'));
 const Settings = lazy(() => import('@components/Settings/Settings'));

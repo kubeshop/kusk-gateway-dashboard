@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {RestfulProvider} from 'restful-react';
+import {BrowserRouter} from 'react-router-dom';
 
 import 'antd/dist/antd.min.css';
 
-import {GlobalStyle} from '@styles/global';
+import {RestfulProvider} from 'restful-react';
+
 import {store} from '@redux/store';
+
+import {GlobalStyle} from '@styles/global';
 
 import App from './App';
 

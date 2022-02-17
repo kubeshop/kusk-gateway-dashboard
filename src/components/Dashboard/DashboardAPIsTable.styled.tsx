@@ -1,8 +1,8 @@
-import styled from 'styled-components';
-
 import {Table as RawTable, Tag as RawTag} from 'antd';
 
 import {RightOutlined as RawRightOutlined} from '@ant-design/icons';
+
+import styled from 'styled-components';
 
 import Colors from '@styles/colors';
 

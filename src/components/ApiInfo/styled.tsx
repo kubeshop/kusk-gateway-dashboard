@@ -1,9 +1,10 @@
-import styled from 'styled-components';
-
 import {CloseOutlined as RawCloseOutlined} from '@ant-design/icons';
 
-import Colors from '@styles/colors';
+import styled from 'styled-components';
+
 import {GlobalScrollbarStyle} from '@utils/scrollbar';
+
+import Colors from '@styles/colors';
 
 export const ApiInfoContainer = styled.div`
   position: relative;
