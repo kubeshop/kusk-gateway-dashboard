@@ -4,7 +4,7 @@ import {BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {RestfulProvider} from 'restful-react';
 
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.min.css';
 
 import {GlobalStyle} from '@styles/global';
 import {store} from '@redux/store';
