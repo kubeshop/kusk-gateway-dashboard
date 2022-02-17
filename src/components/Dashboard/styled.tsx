@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import Colors from 'src/styles/colors';
+import Colors from '@styles/colors';
 
 export const ApisContainer = styled.div`
   padding: 40px 20px 20px 20px;

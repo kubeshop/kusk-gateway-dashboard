@@ -1,13 +1,11 @@
 import {Skeleton} from 'antd';
 import SwaggerUI from 'swagger-ui-react';
 
-import {useAppSelector} from 'src/redux/hooks';
-
-import {useGetApiOpenApiSpec} from '../../models/api';
+import openApiSpec from '@constants/kuskOpenApiSpec.json';
+import {useGetApiOpenApiSpec} from '@models/api';
+import {useAppSelector} from '@redux/hooks';
 
 import * as S from './styled';
-
-import openApiSpec from '../../constants/kuskOpenApiSpec.json';
 
 const ApiSpec: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);

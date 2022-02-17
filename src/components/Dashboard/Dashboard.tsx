@@ -1,8 +1,8 @@
 import React, {Suspense, useMemo} from 'react';
 import {Skeleton} from 'antd';
 
-import {useAppSelector} from 'src/redux/hooks';
-import {useGetApis} from '../../models/api';
+import {useGetApis} from '@models/api';
+import {useAppSelector} from '@redux/hooks';
 
 import DashboardAPIsTable from './DashboardAPIsTable';
 

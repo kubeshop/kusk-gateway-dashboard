@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import Colors from 'src/styles/colors';
-import {GlobalScrollbarStyle} from 'src/utils/scrollbar';
+import Colors from '@styles/colors';
+import {GlobalScrollbarStyle} from '@utils/scrollbar';
 
 export const ApiSpecContainer = styled.div`
   & .swagger-ui {

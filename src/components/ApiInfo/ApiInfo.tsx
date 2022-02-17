@@ -1,7 +1,7 @@
 import React, {Suspense, useState} from 'react';
 
-import {useAppDispatch} from 'src/redux/hooks';
-import {selectApi} from 'src/redux/reducers/main';
+import {useAppDispatch} from '@redux/hooks';
+import {selectApi} from '@redux/reducers/main';
 
 import * as S from './styled';
 

@@ -6,8 +6,8 @@ import {
   SettingFilled as RawSettingFilled,
 } from '@ant-design/icons';
 
-import Colors from 'src/styles/colors';
-import {SIDEBAR_WIDTH} from 'src/constants/constants';
+import Colors from '@styles/colors';
+import {SIDEBAR_WIDTH} from '@constants/constants';
 
 export const Logo = styled.img`
   height: 50px;

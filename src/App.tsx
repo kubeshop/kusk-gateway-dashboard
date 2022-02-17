@@ -2,14 +2,13 @@ import {lazy, Suspense} from 'react';
 import {Route, Routes} from 'react-router-dom';
 import styled from 'styled-components';
 
-import {SIDEBAR_WIDTH} from './constants/constants';
-
-import {Sidebar} from './components';
-
 import 'swagger-ui-react/swagger-ui.css';
 
-const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
-const Settings = lazy(() => import('./components/Settings/Settings'));
+import {Sidebar} from '@components/Sidebar';
+import {SIDEBAR_WIDTH} from '@constants/constants';
+
+const Dashboard = lazy(() => import('@components/Dashboard/Dashboard'));
+const Settings = lazy(() => import('@components/Settings/Settings'));
 
 const AppContainer = styled.div`
   height: 100%;

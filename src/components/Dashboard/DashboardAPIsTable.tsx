@@ -1,9 +1,9 @@
 import {useCallback, useEffect, useState} from 'react';
 
-import {ApiItem} from 'src/models/api';
-import {DashboardAPIsTableDataSourceItem} from 'src/models/dashboard';
-import {useAppDispatch, useAppSelector} from 'src/redux/hooks';
-import {selectApi} from 'src/redux/reducers/main';
+import {ApiItem} from '@models/api';
+import {DashboardAPIsTableDataSourceItem} from '@models/dashboard';
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {selectApi} from '@redux/reducers/main';
 
 import * as S from './DashboardAPIsTable.styled';
 

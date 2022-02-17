@@ -4,10 +4,10 @@ import {BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {RestfulProvider} from 'restful-react';
 
-import {GlobalStyle} from './styles/global';
-import {store} from './redux/store';
-
 import 'antd/dist/antd.css';
+
+import {GlobalStyle} from '@styles/global';
+import {store} from '@redux/store';
 
 import App from './App';
 

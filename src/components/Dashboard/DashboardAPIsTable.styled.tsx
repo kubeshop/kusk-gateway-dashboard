@@ -4,7 +4,7 @@ import {Table as RawTable, Tag as RawTag} from 'antd';
 
 import {RightOutlined as RawRightOutlined} from '@ant-design/icons';
 
-import Colors from 'src/styles/colors';
+import Colors from '@styles/colors';
 
 export const ApiLabel = styled.span<{$selected: boolean}>`
   ${({$selected}) => `

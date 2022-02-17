@@ -1,8 +1,8 @@
 import {Link} from 'react-router-dom';
 
-import * as S from './styled';
+import KuskLogo from '@assets/KuskLogo.svg';
 
-import KuskLogo from '../../assets/KuskLogo.svg';
+import * as S from './styled';
 
 const Sidebar = () => {
   return (
