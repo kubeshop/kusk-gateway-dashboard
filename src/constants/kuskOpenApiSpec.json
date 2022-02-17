@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "version": "1.0.0",
     "title": "Kusk Gateway API",
-    "description": "This is the Kusk Gateway Management API"
+    "description": "This is the Kusk Gateway Management API",
+    "version": "1.0.0"
   },
   "externalDocs": {
     "description": "Find out more about Kusk-Gateway",
@@ -40,11 +40,13 @@
           {
             "name": "fleet",
             "in": "query",
+            "description": "optional filter on fleet",
+            "required": false,
+            "style": "form",
+            "explode": true,
             "schema": {
               "type": "string"
-            },
-            "required": false,
-            "description": "optional filter on fleet"
+            }
           }
         ],
         "responses": {
@@ -75,6 +77,8 @@
             "name": "apiId",
             "in": "path",
             "required": true,
+            "style": "simple",
+            "explode": false,
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -91,6 +95,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "OpenAPI spec not found"
           }
         }
       }
@@ -105,11 +112,13 @@
           {
             "name": "namespace",
             "in": "query",
+            "description": "optional filter on namespace",
+            "required": false,
+            "style": "form",
+            "explode": true,
             "schema": {
               "type": "string"
-            },
-            "required": false,
-            "description": "optional filter on namespace"
+            }
           }
         ],
         "responses": {
@@ -140,6 +149,8 @@
             "name": "namespace",
             "in": "path",
             "required": true,
+            "style": "simple",
+            "explode": false,
             "schema": {
               "type": "string"
             }
@@ -148,6 +159,8 @@
             "name": "name",
             "in": "path",
             "required": true,
+            "style": "simple",
+            "explode": false,
             "schema": {
               "type": "string"
             }
@@ -163,6 +176,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Service not found by namespace-name combination"
           }
         }
       }
@@ -177,11 +193,13 @@
           {
             "name": "namespace",
             "in": "query",
+            "description": "optional filter on namespace",
+            "required": false,
+            "style": "form",
+            "explode": true,
             "schema": {
               "type": "string"
-            },
-            "required": false,
-            "description": "optional filter on namespace"
+            }
           }
         ],
         "responses": {
@@ -211,20 +229,24 @@
           {
             "name": "namespace",
             "in": "path",
+            "description": "the namespace of the fleet",
             "required": true,
+            "style": "simple",
+            "explode": false,
             "schema": {
               "type": "string"
-            },
-            "description": "the namespace of the fleet"
+            }
           },
           {
             "name": "name",
             "in": "path",
+            "description": "the name of the fleet",
             "required": true,
+            "style": "simple",
+            "explode": false,
             "schema": {
               "type": "string"
-            },
-            "description": "the name of the fleet"
+            }
           }
         ],
         "responses": {
@@ -237,6 +259,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Envoy fleet not found by namespace-name combination"
           }
         }
       }
@@ -245,8 +270,8 @@
   "components": {
     "schemas": {
       "ApiItem": {
+        "required": ["fleet", "id", "name", "service", "status"],
         "type": "object",
-        "required": ["name", "id", "status", "fleet", "service"],
         "properties": {
           "name": {
             "type": "string"
@@ -260,34 +285,16 @@
             "enum": ["published", "unpublished"]
           },
           "fleet": {
-            "type": "object",
-            "required": ["name", "namespace"],
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "namespace": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/components/schemas/ApiItem_Fleet"
           },
           "service": {
-            "type": "object",
-            "required": ["name", "namespace"],
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "namespace": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/components/schemas/ApiItem_Service"
           }
         }
       },
       "ServiceItem": {
+        "required": ["id", "name", "status"],
         "type": "object",
-        "required": ["name", "id", "status"],
         "properties": {
           "name": {
             "type": "string"
@@ -303,8 +310,8 @@
         }
       },
       "EnvoyFleetItem": {
+        "required": ["id", "name"],
         "type": "object",
-        "required": ["name", "id"],
         "properties": {
           "name": {
             "type": "string"
@@ -312,6 +319,30 @@
           "id": {
             "type": "string",
             "format": "uuid"
+          }
+        }
+      },
+      "ApiItem_Fleet": {
+        "required": ["name", "namespace"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "namespace": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiItem_Service": {
+        "required": ["name", "namespace"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "namespace": {
+            "type": "string"
           }
         }
       }

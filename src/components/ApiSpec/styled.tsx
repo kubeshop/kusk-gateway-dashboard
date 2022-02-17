@@ -71,6 +71,7 @@ export const ApiSpecContainer = styled.div`
 
     & .highlight-code {
       & pre {
+        margin-bottom: 20px;
         overflow-y: auto;
 
         ${GlobalScrollbarStyle};
