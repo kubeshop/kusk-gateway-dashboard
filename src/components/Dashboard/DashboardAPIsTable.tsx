@@ -12,14 +12,6 @@ interface IProps {
   apis: ApiItem[];
 }
 
-const renderStatusTag = (status: 'published' | 'unpublished') => {
-  if (status === 'published') {
-    return <S.TrueTag>Published</S.TrueTag>;
-  }
-
-  return <S.FalseTag>Unpublished</S.FalseTag>;
-};
-
 const DashboardAPIsTable: React.FC<IProps> = props => {
   const {apis} = props;
 
@@ -74,18 +66,11 @@ const DashboardAPIsTable: React.FC<IProps> = props => {
   const columns = [
     {title: 'Name', dataIndex: 'name', key: 'name', render: renderApiName},
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: renderStatusTag,
-      width: '25%',
-    },
-    {
       title: 'Services',
       dataIndex: 'services',
       key: 'services',
       render: renderServicesTag,
-      width: '30%',
+      width: '35%',
     },
   ];
 
@@ -114,7 +99,6 @@ const DashboardAPIsTable: React.FC<IProps> = props => {
         tableDataSource.push({
           key: api.id,
           name: api.name,
-          status: api.status as 'published',
           services: service.status,
         });
       }

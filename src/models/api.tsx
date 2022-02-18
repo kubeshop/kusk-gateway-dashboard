@@ -5,7 +5,6 @@ export const SPEC_VERSION = '1.0.0';
 export interface ApiItem {
   name: string;
   id: string;
-  status: 'published' | 'unpublished';
   fleet: ApiItemFleet;
   service: ApiItemService;
 }
