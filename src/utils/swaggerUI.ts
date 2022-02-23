@@ -1,11 +1,9 @@
-import styled from 'styled-components';
-
-import {GlobalScrollbarStyle} from '@utils/scrollbar';
-
 import Colors from '@styles/colors';
 
-export const ApiSpecContainer = styled.div`
-  & .swagger-ui {
+import {GlobalScrollbarStyle} from './scrollbar';
+
+export const SwaggerUIStyle = `
+& .swagger-ui {
     & button {
       outline: none !important;
     }
@@ -220,8 +218,4 @@ export const ApiSpecContainer = styled.div`
       }
     }
   }
-`;
-
-export const ErrorLabel = styled.span`
-  color: red;
 `;

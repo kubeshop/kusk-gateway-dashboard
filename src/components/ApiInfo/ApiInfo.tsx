@@ -6,12 +6,12 @@ import {selectApi} from '@redux/reducers/main';
 import * as S from './styled';
 
 const ApiRequestLog = React.lazy(() => import('../ApiRequestLog/ApiRequestLog'));
-const ApiSpec = React.lazy(() => import('../ApiSpec/ApiSpec'));
+const RawApiSpec = React.lazy(() => import('../RawApiSpec/RawApiSpec'));
 
 const ApiInfo: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const [activeTab, setActiveTab] = useState<'api' | 'request-log'>('api');
+  const [activeTab, setActiveTab] = useState<'raw-api-spec' | 'post-processed-api-spec'>('raw-api-spec');
 
   const onCloseHandler = () => {
     dispatch(selectApi(''));
@@ -20,20 +20,23 @@ const ApiInfo: React.FC = () => {
   return (
     <S.ApiInfoContainer>
       <S.TabsContainer>
-        <S.TabsLabel className={activeTab === 'api' ? 'selected-tab' : ''} onClick={() => setActiveTab('api')}>
-          API
+        <S.TabsLabel
+          className={activeTab === 'raw-api-spec' ? 'selected-tab' : ''}
+          onClick={() => setActiveTab('raw-api-spec')}
+        >
+          Raw API Spec
         </S.TabsLabel>
         <S.TabsLabel
-          className={activeTab === 'request-log' ? 'selected-tab' : ''}
-          onClick={() => setActiveTab('request-log')}
+          className={activeTab === 'post-processed-api-spec' ? 'selected-tab' : ''}
+          onClick={() => setActiveTab('post-processed-api-spec')}
         >
-          Request Log
+          Post-Processed API Spec
         </S.TabsLabel>
       </S.TabsContainer>
 
       <Suspense fallback={null}>
-        {activeTab === 'api' && <ApiSpec />}
-        {activeTab === 'request-log' && <ApiRequestLog />}
+        {activeTab === 'raw-api-spec' && <RawApiSpec />}
+        {activeTab === 'post-processed-api-spec' && <ApiRequestLog />}
       </Suspense>
 
       <S.CloseOutlined onClick={onCloseHandler} />
