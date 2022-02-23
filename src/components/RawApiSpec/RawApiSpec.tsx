@@ -24,7 +24,7 @@ const RawApiSpec: React.FC = () => {
       ) : error ? (
         <S.ErrorLabel>{error.message}</S.ErrorLabel>
       ) : (
-        data && <SwaggerUI spec={openApiSpec} />
+        data && <SwaggerUI spec={openApiSpec} supportedSubmitMethods={[]} />
       )}
     </S.RawApiSpecContainer>
   );
