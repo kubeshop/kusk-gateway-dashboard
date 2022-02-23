@@ -1,24 +1,22 @@
-import React from 'react';
-
 import {Skeleton} from 'antd';
 
 import SwaggerUI from 'swagger-ui-react';
 
-import openApiSpec from '@constants/kuskOpenApiSpec.json';
+import openApiSpec from '@constants/openApiSpec.json';
 
-import {useGetRawOpenApiSpec} from '@models/api';
+import {useGetPostProcessedOpenApiSpec} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
 import * as S from './styled';
 
-const RawApiSpec: React.FC = () => {
+const PostProcessedApiSpec: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const {data, error, loading} = useGetRawOpenApiSpec({apiId: selectedApi});
+  const {data, error, loading} = useGetPostProcessedOpenApiSpec({apiId: selectedApi});
 
   return (
-    <S.RawApiSpecContainer>
+    <S.PostProcessedApiSpecContainer>
       {loading ? (
         <Skeleton />
       ) : error ? (
@@ -26,8 +24,8 @@ const RawApiSpec: React.FC = () => {
       ) : (
         data && <SwaggerUI spec={openApiSpec} />
       )}
-    </S.RawApiSpecContainer>
+    </S.PostProcessedApiSpecContainer>
   );
 };
 
-export default RawApiSpec;
+export default PostProcessedApiSpec;

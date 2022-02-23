@@ -66,12 +66,12 @@
         }
       }
     },
-    "/apis/{apiId}/openapispec": {
+    "/apis/{apiId}/rawOpenApiSpec": {
       "get": {
         "tags": ["apis"],
-        "summary": "Get the OpenAPI spec by API id",
-        "description": "Returns the OpenAPI specification",
-        "operationId": "getApiOpenApiSpec",
+        "summary": "Get the raw OpenAPI spec by API id",
+        "description": "Returns the raw OpenAPI specification",
+        "operationId": "getRawOpenApiSpec",
         "parameters": [
           {
             "name": "apiId",
@@ -87,7 +87,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OpenAPI spec object",
+            "description": "Raw OpenAPI spec object",
             "content": {
               "application/json": {
                 "schema": {
@@ -97,7 +97,43 @@
             }
           },
           "404": {
-            "description": "OpenAPI spec not found"
+            "description": "Raw OpenAPI spec not found"
+          }
+        }
+      }
+    },
+    "/apis/{apiId}/postProcessedOpenApiSpec": {
+      "get": {
+        "tags": ["apis"],
+        "summary": "Get the post-processed OpenAPI spec by API id",
+        "description": "Returns the post-processed OpenAPI specification",
+        "operationId": "getPostProcessedOpenApiSpec",
+        "parameters": [
+          {
+            "name": "apiId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post-processed OpenAPI spec object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Post-processed OpenAPI spec not found"
           }
         }
       }

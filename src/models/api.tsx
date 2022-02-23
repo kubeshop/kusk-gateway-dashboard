@@ -58,46 +58,89 @@ export type UseGetApisProps = Omit<UseGetProps<ApiItem[], unknown, GetApisQueryP
 export const useGetApis = (props: UseGetApisProps) =>
   useGet<ApiItem[], unknown, GetApisQueryParams, void>(`/apis`, props);
 
-export interface GetApiOpenApiSpecResponse {
+export interface GetRawOpenApiSpecResponse {
   [key: string]: any;
 }
 
-export interface GetApiOpenApiSpecPathParams {
+export interface GetRawOpenApiSpecPathParams {
   apiId: string;
 }
 
-export type GetApiOpenApiSpecProps = Omit<
-  GetProps<GetApiOpenApiSpecResponse, void, void, GetApiOpenApiSpecPathParams>,
+export type GetRawOpenApiSpecProps = Omit<
+  GetProps<GetRawOpenApiSpecResponse, void, void, GetRawOpenApiSpecPathParams>,
   'path'
 > &
-  GetApiOpenApiSpecPathParams;
+  GetRawOpenApiSpecPathParams;
 
 /**
- * Get the OpenAPI spec by API id
+ * Get the raw OpenAPI spec by API id
  *
- * Returns the OpenAPI specification
+ * Returns the raw OpenAPI specification
  */
-export const GetApiOpenApiSpec = ({apiId, ...props}: GetApiOpenApiSpecProps) => (
-  <Get<GetApiOpenApiSpecResponse, void, void, GetApiOpenApiSpecPathParams>
-    path={`/apis/${apiId}/openapispec`}
+export const GetRawOpenApiSpec = ({apiId, ...props}: GetRawOpenApiSpecProps) => (
+  <Get<GetRawOpenApiSpecResponse, void, void, GetRawOpenApiSpecPathParams>
+    path={`/apis/${apiId}/rawOpenApiSpec`}
     {...props}
   />
 );
 
-export type UseGetApiOpenApiSpecProps = Omit<
-  UseGetProps<GetApiOpenApiSpecResponse, void, void, GetApiOpenApiSpecPathParams>,
+export type UseGetRawOpenApiSpecProps = Omit<
+  UseGetProps<GetRawOpenApiSpecResponse, void, void, GetRawOpenApiSpecPathParams>,
   'path'
 > &
-  GetApiOpenApiSpecPathParams;
+  GetRawOpenApiSpecPathParams;
 
 /**
- * Get the OpenAPI spec by API id
+ * Get the raw OpenAPI spec by API id
  *
- * Returns the OpenAPI specification
+ * Returns the raw OpenAPI specification
  */
-export const useGetApiOpenApiSpec = ({apiId, ...props}: UseGetApiOpenApiSpecProps) =>
-  useGet<GetApiOpenApiSpecResponse, void, void, GetApiOpenApiSpecPathParams>(
-    (paramsInPath: GetApiOpenApiSpecPathParams) => `/apis/${paramsInPath.apiId}/openapispec`,
+export const useGetRawOpenApiSpec = ({apiId, ...props}: UseGetRawOpenApiSpecProps) =>
+  useGet<GetRawOpenApiSpecResponse, void, void, GetRawOpenApiSpecPathParams>(
+    (paramsInPath: GetRawOpenApiSpecPathParams) => `/apis/${paramsInPath.apiId}/rawOpenApiSpec`,
+    {pathParams: {apiId}, ...props}
+  );
+
+export interface GetPostProcessedOpenApiSpecResponse {
+  [key: string]: any;
+}
+
+export interface GetPostProcessedOpenApiSpecPathParams {
+  apiId: string;
+}
+
+export type GetPostProcessedOpenApiSpecProps = Omit<
+  GetProps<GetPostProcessedOpenApiSpecResponse, void, void, GetPostProcessedOpenApiSpecPathParams>,
+  'path'
+> &
+  GetPostProcessedOpenApiSpecPathParams;
+
+/**
+ * Get the post-processed OpenAPI spec by API id
+ *
+ * Returns the post-processed OpenAPI specification
+ */
+export const GetPostProcessedOpenApiSpec = ({apiId, ...props}: GetPostProcessedOpenApiSpecProps) => (
+  <Get<GetPostProcessedOpenApiSpecResponse, void, void, GetPostProcessedOpenApiSpecPathParams>
+    path={`/apis/${apiId}/postProcessedOpenApiSpec`}
+    {...props}
+  />
+);
+
+export type UseGetPostProcessedOpenApiSpecProps = Omit<
+  UseGetProps<GetPostProcessedOpenApiSpecResponse, void, void, GetPostProcessedOpenApiSpecPathParams>,
+  'path'
+> &
+  GetPostProcessedOpenApiSpecPathParams;
+
+/**
+ * Get the post-processed OpenAPI spec by API id
+ *
+ * Returns the post-processed OpenAPI specification
+ */
+export const useGetPostProcessedOpenApiSpec = ({apiId, ...props}: UseGetPostProcessedOpenApiSpecProps) =>
+  useGet<GetPostProcessedOpenApiSpecResponse, void, void, GetPostProcessedOpenApiSpecPathParams>(
+    (paramsInPath: GetPostProcessedOpenApiSpecPathParams) => `/apis/${paramsInPath.apiId}/postProcessedOpenApiSpec`,
     {pathParams: {apiId}, ...props}
   );
 

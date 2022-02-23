@@ -5,8 +5,8 @@ import {selectApi} from '@redux/reducers/main';
 
 import * as S from './styled';
 
-const ApiRequestLog = React.lazy(() => import('../ApiRequestLog/ApiRequestLog'));
-const RawApiSpec = React.lazy(() => import('../RawApiSpec/RawApiSpec'));
+const PostProcessedApiSpec = React.lazy(() => import('@components/PostProcessedApiSpec/PostProcessedApiSpec'));
+const RawApiSpec = React.lazy(() => import('@components/RawApiSpec/RawApiSpec'));
 
 const ApiInfo: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -36,7 +36,7 @@ const ApiInfo: React.FC = () => {
 
       <Suspense fallback={null}>
         {activeTab === 'raw-api-spec' && <RawApiSpec />}
-        {activeTab === 'post-processed-api-spec' && <ApiRequestLog />}
+        {activeTab === 'post-processed-api-spec' && <PostProcessedApiSpec />}
       </Suspense>
 
       <S.CloseOutlined onClick={onCloseHandler} />
