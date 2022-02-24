@@ -63,15 +63,49 @@ const ExtensionsPlugin = (system: any) => ({
             <div>
               <S.ExtensionTitle>X-kusk extension (Top level)</S.ExtensionTitle>
               <S.Tree
+                $level="top"
                 defaultExpandAll
                 showLine={{showLeafIcon: false}}
                 showIcon={false}
                 switcherIcon={<DownOutlined />}
                 treeData={treeData}
-              />{' '}
+              />
             </div>
           )}
         </>
+      );
+    },
+
+    OperationExt: () => (props: any) => {
+      const {extensions} = props;
+
+      const xKuskExtensionSpec = extensions.toJS()['x-kusk'];
+
+      if (!xKuskExtensionSpec) {
+        return null;
+      }
+
+      const treeData = Object.entries(xKuskExtensionSpec).map(([key, children]) =>
+        createExtensionTreeNode(key, children)
+      );
+
+      return (
+        <div className="opblock-section">
+          <div className="opblock-section-header">
+            <h4>X-kusk extension</h4>
+          </div>
+
+          <div className="table-container">
+            <S.Tree
+              $level="operation"
+              defaultExpandAll
+              showLine={{showLeafIcon: false}}
+              showIcon={false}
+              switcherIcon={<DownOutlined />}
+              treeData={treeData}
+            />
+          </div>
+        </div>
       );
     },
   },
@@ -89,7 +123,7 @@ const RawApiSpec: React.FC = () => {
       ) : error ? (
         <S.ErrorLabel>{error.message}</S.ErrorLabel>
       ) : (
-        data && <SwaggerUI spec={openApiSpec} plugins={[ExtensionsPlugin]} supportedSubmitMethods={[]} />
+        data && <SwaggerUI spec={openApiSpec} plugins={[ExtensionsPlugin]} supportedSubmitMethods={[]} showExtensions />
       )}
     </S.RawApiSpecContainer>
   );

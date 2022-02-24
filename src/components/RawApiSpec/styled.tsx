@@ -20,13 +20,19 @@ export const RawApiSpecContainer = styled.div`
   ${SwaggerUIStyle}
 `;
 
-export const Tree = styled(RawTree)`
-  background: ${Colors.grey3};
+export const Tree = styled(RawTree)<{$level: 'operation' | 'top'}>`
+  ${({$level}) => `
+    background: ${$level === 'operation' ? Colors.swaggerUIGrey : Colors.grey3};
+  `}
+
   color: ${Colors.whitePure};
   margin-bottom: 20px;
+  padding: 10px;
 
   & .ant-tree-switcher {
-    background: ${Colors.grey3};
+    ${({$level}) => `
+      background: ${$level === 'operation' ? Colors.swaggerUIGrey : Colors.grey3};
+    `}
   }
 
   & .ant-tree-title {
@@ -34,12 +40,17 @@ export const Tree = styled(RawTree)`
   }
 
   & .ant-tree-node-content-wrapper:hover {
-    background-color: ${Colors.grey3};
+    ${({$level}) => `
+      background-color: ${$level === 'operation' ? Colors.swaggerUIGrey : Colors.grey3};
+    `}
+
     cursor: default;
   }
 
   & .ant-tree-node-selected {
-    background-color: ${Colors.grey3} !important;
+    ${({$level}) => `
+      background-color: ${$level === 'operation' ? Colors.swaggerUIGrey : Colors.grey3} !important;
+    `}
   }
 
   & .extension-property-value {

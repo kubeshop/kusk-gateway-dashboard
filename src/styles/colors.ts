@@ -7,6 +7,8 @@ enum Colors {
   grey1 = '#888888',
   grey0 = '#acacac',
 
+  swaggerUIGrey = '#333333',
+
   cyan2 = '#9AF2EC',
   cyan1 = '#5CDBD3',
   cyan0 = '#32BAB5',
