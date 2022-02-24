@@ -2,7 +2,7 @@ import {Skeleton} from 'antd';
 
 import SwaggerUI from 'swagger-ui-react';
 
-import openApiSpec from '@constants/openApiSpec.json';
+import openApiSpec from '@constants/kuskOpenApiSpec.json';
 
 import {useGetPostProcessedOpenApiSpec} from '@models/api';
 
