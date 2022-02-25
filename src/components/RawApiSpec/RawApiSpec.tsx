@@ -7,7 +7,7 @@ import {DownOutlined} from '@ant-design/icons';
 
 import SwaggerUI from 'swagger-ui-react';
 
-import openApiSpec from '@constants/rawOpenApiSpec.json';
+import openApiSpec from '@constants/kuskOpenApiSpec.json';
 
 import {useGetRawOpenApiSpec} from '@models/api';
 
@@ -51,9 +51,14 @@ const createExtensionTreeNode = (key: string, children: any): DataNode => {
 const ExtensionsPlugin = (system: any) => ({
   wrapComponents: {
     info: (Original: any) => (props: any) => {
-      const spec = system.specSelectors.specJson().toJS();
+      const {specSelectors} = system;
 
-      const treeData = Object.entries(spec['x-kusk']).map(([key, children]) => createExtensionTreeNode(key, children));
+      const spec = specSelectors.specJson().toJS();
+      let treeData: DataNode[] = [];
+
+      if (spec['x-kusk']) {
+        treeData = Object.entries(spec['x-kusk']).map(([key, children]) => createExtensionTreeNode(key, children));
+      }
 
       return (
         <>
