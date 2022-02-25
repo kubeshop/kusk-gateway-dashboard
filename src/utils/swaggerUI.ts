@@ -118,7 +118,7 @@ export const SwaggerUIStyle = `
     & .parameters-container {
       color: ${Colors.whitePure};
 
-      & th {
+      & th, & p {
         color: ${Colors.whitePure};
       }
 

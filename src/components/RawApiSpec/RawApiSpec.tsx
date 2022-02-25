@@ -7,7 +7,7 @@ import {DownOutlined} from '@ant-design/icons';
 
 import SwaggerUI from 'swagger-ui-react';
 
-import openApiSpec from '@constants/kuskOpenApiSpec.json';
+import openApiSpec from '@constants/rawOpenApiSpec.json';
 
 import {useGetRawOpenApiSpec} from '@models/api';
 
@@ -78,6 +78,44 @@ const ExtensionsPlugin = (system: any) => ({
             </div>
           )}
         </>
+      );
+    },
+
+    responses: (Original: any) => (props: any) => {
+      const {path, specSelectors} = props;
+
+      const spec = specSelectors.specJson().toJS();
+
+      const pathExtension = spec.paths[path]['x-kusk'];
+      let treeData: DataNode[] = [];
+
+      if (pathExtension) {
+        treeData = Object.entries(pathExtension).map(([key, children]) => createExtensionTreeNode(key, children));
+      }
+
+      return (
+        <div>
+          <Original {...props} />
+
+          {pathExtension && (
+            <div className="opblock-section">
+              <div className="opblock-section-header">
+                <h4>X-kusk extension (Path level)</h4>
+              </div>
+
+              <div className="table-container">
+                <S.Tree
+                  $level="operation"
+                  defaultExpandAll
+                  showLine={{showLeafIcon: false}}
+                  showIcon={false}
+                  switcherIcon={<DownOutlined />}
+                  treeData={treeData}
+                />
+              </div>
+            </div>
+          )}
+        </div>
       );
     },
 
