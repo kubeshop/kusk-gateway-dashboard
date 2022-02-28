@@ -6,6 +6,10 @@ import {SwaggerUIStyle} from '@utils/swaggerUI';
 
 import Colors from '@styles/colors';
 
+export const ContentContainer = styled.div`
+  margin-top: 20px;
+`;
+
 export const ErrorLabel = styled.span`
   color: red;
 `;
@@ -18,6 +22,15 @@ export const ExtensionTitle = styled.h2`
 
 export const RawApiSpecContainer = styled.div`
   ${SwaggerUIStyle}
+`;
+
+export const TableOfContentsContainer = styled.div`
+  margin-bottom: 30px;
+`;
+
+export const TableOfContentsTitle = styled.span`
+  font-size: 18px;
+  color: ${Colors.whitePure};
 `;
 
 export const Tree = styled(RawTree)<{$level: 'operation' | 'top'}>`

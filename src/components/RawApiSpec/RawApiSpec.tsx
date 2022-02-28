@@ -48,6 +48,21 @@ const createExtensionTreeNode = (key: string, children: any): DataNode => {
   return node;
 };
 
+const tableOfContentsScrollToElement = (content: {name: string; ref: string; operationId: string}) => {
+  const {operationId, ref} = content;
+
+  const operationElement = document.getElementById(operationId);
+  const extensionElement = document.getElementById(ref);
+
+  if (operationElement?.classList.contains('is-open')) {
+    extensionElement?.scrollIntoView({behavior: 'smooth'});
+  } else {
+    operationElement?.scrollIntoView({behavior: 'smooth'});
+  }
+
+  // document.getElementById(content.ref)?.scrollIntoView({behavior: 'smooth'});
+};
+
 const ExtensionsPlugin = (system: any) => ({
   wrapComponents: {
     info: (Original: any) => (props: any) => {
@@ -55,17 +70,34 @@ const ExtensionsPlugin = (system: any) => ({
 
       const spec = specSelectors.specJson().toJS();
       let treeData: DataNode[] = [];
+      let tableOfContents: {name: string; ref: string; operationId: string}[] = [];
 
       if (spec['x-kusk']) {
         treeData = Object.entries(spec['x-kusk']).map(([key, children]) => createExtensionTreeNode(key, children));
+        tableOfContents.push({
+          name: 'Top level',
+          ref: 'test-123-extension',
+          operationId: 'operations-Todo-patch_todos__id_',
+        });
       }
 
       return (
         <>
           <Original {...props} />
 
+          <S.TableOfContentsContainer>
+            <S.TableOfContentsTitle>Table of contents (x-kusk extensions)</S.TableOfContentsTitle>
+            <S.ContentContainer>
+              {tableOfContents.map(content => (
+                <div key={content.ref} onClick={() => tableOfContentsScrollToElement(content)}>
+                  {content.name}
+                </div>
+              ))}
+            </S.ContentContainer>
+          </S.TableOfContentsContainer>
+
           {spec['x-kusk'] && (
-            <div>
+            <div id="top-level-extension">
               <S.ExtensionTitle>X-kusk extension (Top level)</S.ExtensionTitle>
               <S.Tree
                 $level="top"
@@ -82,15 +114,23 @@ const ExtensionsPlugin = (system: any) => ({
     },
 
     responses: (Original: any) => (props: any) => {
-      const {path, specSelectors} = props;
+      const {method, path, specSelectors} = props;
 
       const spec = specSelectors.specJson().toJS();
 
       const pathExtension = spec.paths[path]['x-kusk'];
-      let treeData: DataNode[] = [];
+      let methodExtension = spec.paths[path][method]['x-kusk'];
+      let pathTreeData: DataNode[] = [];
+      let operationTreeData: DataNode[] = [];
 
       if (pathExtension) {
-        treeData = Object.entries(pathExtension).map(([key, children]) => createExtensionTreeNode(key, children));
+        pathTreeData = Object.entries(pathExtension).map(([key, children]) => createExtensionTreeNode(key, children));
+      }
+
+      if (methodExtension) {
+        operationTreeData = Object.entries(methodExtension).map(([key, children]) =>
+          createExtensionTreeNode(key, children)
+        );
       }
 
       return (
@@ -110,44 +150,30 @@ const ExtensionsPlugin = (system: any) => ({
                   showLine={{showLeafIcon: false}}
                   showIcon={false}
                   switcherIcon={<DownOutlined />}
-                  treeData={treeData}
+                  treeData={pathTreeData}
                 />
               </div>
             </div>
           )}
-        </div>
-      );
-    },
 
-    OperationExt: () => (props: any) => {
-      const {extensions} = props;
+          {methodExtension && (
+            <div className="opblock-section" id="test-123-extension" onClick={() => console.log('Clicked')}>
+              <div className="opblock-section-header">
+                <h4>X-kusk extension (Operation level)</h4>
+              </div>
 
-      const xKuskExtensionSpec = extensions.toJS()['x-kusk'];
-
-      if (!xKuskExtensionSpec) {
-        return null;
-      }
-
-      const treeData = Object.entries(xKuskExtensionSpec).map(([key, children]) =>
-        createExtensionTreeNode(key, children)
-      );
-
-      return (
-        <div className="opblock-section">
-          <div className="opblock-section-header">
-            <h4>X-kusk extension</h4>
-          </div>
-
-          <div className="table-container">
-            <S.Tree
-              $level="operation"
-              defaultExpandAll
-              showLine={{showLeafIcon: false}}
-              showIcon={false}
-              switcherIcon={<DownOutlined />}
-              treeData={treeData}
-            />
-          </div>
+              <div className="table-container">
+                <S.Tree
+                  $level="operation"
+                  defaultExpandAll
+                  showLine={{showLeafIcon: false}}
+                  showIcon={false}
+                  switcherIcon={<DownOutlined />}
+                  treeData={operationTreeData}
+                />
+              </div>
+            </div>
+          )}
         </div>
       );
     },
@@ -166,7 +192,7 @@ const RawApiSpec: React.FC = () => {
       ) : error ? (
         <S.ErrorLabel>{error.message}</S.ErrorLabel>
       ) : (
-        data && <SwaggerUI spec={openApiSpec} plugins={[ExtensionsPlugin]} supportedSubmitMethods={[]} showExtensions />
+        data && <SwaggerUI spec={openApiSpec} plugins={[ExtensionsPlugin]} supportedSubmitMethods={[]} />
       )}
     </S.RawApiSpecContainer>
   );

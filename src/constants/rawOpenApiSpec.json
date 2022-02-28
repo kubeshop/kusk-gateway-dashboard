@@ -25,6 +25,14 @@
   },
   "paths": {
     "/todos/{id}": {
+      "x-kusk": {
+        "upstream": {
+          "service": {
+            "namespace": "default",
+            "name": "todo-backend"
+          }
+        }
+      },
       "get": {
         "responses": {
           "200": {
