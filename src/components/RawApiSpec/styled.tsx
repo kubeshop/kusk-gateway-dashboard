@@ -14,10 +14,21 @@ export const ContentContainer = styled.div`
   padding: 5px 15px;
 `;
 
-export const ContentLabel = styled.div`
+export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'}>`
   margin: 7px 0px;
+
+  ${({$level}) => `
+    margin-left: ${$level === 'top' ? '0px' : $level === 'path' ? '10px' : '20px'}; 
+  `}
+
   cursor: pointer;
   width: max-content;
+  transition: all 0.2s ease-in;
+
+  &:hover {
+    letter-spacing: 0.4px;
+    color: ${Colors.whitePure};
+  }
 `;
 
 export const ErrorLabel = styled.span`

@@ -55,9 +55,10 @@ const createTableOfContents = (spec: any) => {
   // top level extension
   if (spec['x-kusk']) {
     tableOfContents.push({
-      name: 'Top level',
+      name: 'Root object',
       ref: 'top-level-extension',
-      operationId: 'top-level-extension',
+      operationElementId: 'top-level-extension',
+      level: 'top',
     });
   }
 
@@ -83,7 +84,10 @@ const createTableOfContents = (spec: any) => {
             tableOfContents.push({
               name: `${path} ${operation.toUpperCase()}`,
               ref: `${reconstructedPathRef}-${operation}-extension`,
-              operationId: `operations-${tag}-${operation}_${reconstructedPathId}`,
+              operationId: `${operation}_${reconstructedPathId}`,
+              operationElementId: `operations-${tag}-${operation}_${reconstructedPathId}`,
+              level: 'operation',
+              tag,
             });
           });
         } else {
@@ -96,25 +100,31 @@ const createTableOfContents = (spec: any) => {
   return tableOfContents;
 };
 
-const tableOfContentsScrollToElement = (content: {name: string; ref: string; operationId: string}) => {
-  const {operationId, ref} = content;
+const tableOfContentsScrollToElement = (content: TableOfContentsItem, layoutActions: any) => {
+  const {operationElementId, operationId, ref, tag, level} = content;
 
-  const operationElement = document.getElementById(operationId);
-  const extensionElement = document.getElementById(ref);
+  const operationElement = document.getElementById(operationElementId);
 
+  // operation already expanded, scroll to extension
   if (operationElement?.classList.contains('is-open')) {
-    extensionElement?.scrollIntoView({behavior: 'smooth'});
-  } else {
+    document.getElementById(ref)?.scrollIntoView({behavior: 'smooth'});
+  } else if (level !== 'operation') {
+    // scroll to top/path level extensions
     operationElement?.scrollIntoView({behavior: 'smooth'});
-  }
+  } else {
+    // expand operation and then scroll to extension from operation level
+    layoutActions.show(['operations', tag, operationId], true);
 
-  // document.getElementById(content.ref)?.scrollIntoView({behavior: 'smooth'});
+    setTimeout(() => {
+      document.getElementById(ref)?.scrollIntoView({behavior: 'smooth'});
+    }, 200);
+  }
 };
 
 const ExtensionsPlugin = (system: any) => ({
   wrapComponents: {
     info: (Original: any) => (props: any) => {
-      const {specSelectors} = system;
+      const {layoutActions, specSelectors} = system;
 
       const spec = specSelectors.specJson().toJS();
       let treeData: DataNode[] = [];
@@ -134,7 +144,11 @@ const ExtensionsPlugin = (system: any) => ({
               <S.TableOfContentsTitle>Table of contents (x-kusk extensions)</S.TableOfContentsTitle>
               <S.ContentContainer>
                 {tableOfContents.map(content => (
-                  <S.ContentLabel key={content.ref} onClick={() => tableOfContentsScrollToElement(content)}>
+                  <S.ContentLabel
+                    $level={content.level}
+                    key={content.ref}
+                    onClick={() => tableOfContentsScrollToElement(content, layoutActions)}
+                  >
                     - {content.name}
                   </S.ContentLabel>
                 ))}
