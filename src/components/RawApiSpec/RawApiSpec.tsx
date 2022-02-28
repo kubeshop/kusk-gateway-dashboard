@@ -10,6 +10,7 @@ import SwaggerUI from 'swagger-ui-react';
 import openApiSpec from '@constants/rawOpenApiSpec.json';
 
 import {useGetRawOpenApiSpec} from '@models/api';
+import {TableOfContentsItem} from '@models/swaggerUI';
 
 import {useAppSelector} from '@redux/hooks';
 
@@ -48,6 +49,53 @@ const createExtensionTreeNode = (key: string, children: any): DataNode => {
   return node;
 };
 
+const createTableOfContents = (spec: any) => {
+  let tableOfContents: TableOfContentsItem[] = [];
+
+  // top level extension
+  if (spec['x-kusk']) {
+    tableOfContents.push({
+      name: 'Top level',
+      ref: 'top-level-extension',
+      operationId: 'top-level-extension',
+    });
+  }
+
+  Object.entries(spec.paths).forEach((pathEntry: [string, any]) => {
+    const [path, pathValue] = pathEntry;
+
+    // operation level extensions
+    Object.entries(pathValue).forEach((operationEntry: [string, any]) => {
+      const [operation, operationValue] = operationEntry;
+
+      const reconstructedPath = path.substring(1).replaceAll('{', '').replaceAll('}', '');
+
+      let reconstructedPathId = reconstructedPath.replaceAll('/', '__');
+      const reconstructedPathRef = reconstructedPath.replaceAll('/', '-');
+
+      if (operationValue.parameters) {
+        reconstructedPathId += '_';
+      }
+
+      if (operationValue['x-kusk']) {
+        if (operationValue.tags && operationValue.tags.length) {
+          operationValue.tags.forEach((tag: string) => {
+            tableOfContents.push({
+              name: `${path} ${operation.toUpperCase()}`,
+              ref: `${reconstructedPathRef}-${operation}-extension`,
+              operationId: `operations-${tag}-${operation}_${reconstructedPathId}`,
+            });
+          });
+        } else {
+          // here should be if contains no tags ( default )
+        }
+      }
+    });
+  });
+
+  return tableOfContents;
+};
+
 const tableOfContentsScrollToElement = (content: {name: string; ref: string; operationId: string}) => {
   const {operationId, ref} = content;
 
@@ -70,62 +118,29 @@ const ExtensionsPlugin = (system: any) => ({
 
       const spec = specSelectors.specJson().toJS();
       let treeData: DataNode[] = [];
-      let tableOfContents: {name: string; ref: string; operationId: string}[] = [];
 
       if (spec['x-kusk']) {
         treeData = Object.entries(spec['x-kusk']).map(([key, children]) => createExtensionTreeNode(key, children));
-        tableOfContents.push({
-          name: 'Top level',
-          ref: 'test-123-extension',
-          operationId: 'operations-Todo-patch_todos__id_',
-        });
       }
 
-      Object.entries(spec.paths).forEach((pathEntry: [string, any]) => {
-        const [path, pathValue] = pathEntry;
-
-        Object.entries(pathValue).forEach((operationEntry: [string, any]) => {
-          const [operation, operationValue] = operationEntry;
-
-          const reconstructedPath = path.substring(1).replaceAll('{', '').replaceAll('}', '');
-
-          let reconstructedPathId = reconstructedPath.replaceAll('/', '__');
-          const reconstructedPathRef = reconstructedPath.replaceAll('/', '-');
-
-          if (operationValue.parameters) {
-            reconstructedPathId += '_';
-          }
-
-          if (operationValue['x-kusk']) {
-            if (operationValue.tags && operationValue.tags.length) {
-              operationValue.tags.forEach((tag: string) => {
-                tableOfContents.push({
-                  name: `${path} ${operation.toUpperCase()}`,
-                  ref: `${reconstructedPathRef}-${operation}-extension`,
-                  operationId: `operations-${tag}-${operation}_${reconstructedPathId}`,
-                });
-              });
-            } else {
-              // here should be if contains no tags ( default )
-            }
-          }
-        });
-      });
+      const tableOfContents = createTableOfContents(spec);
 
       return (
         <>
           <Original {...props} />
 
-          <S.TableOfContentsContainer>
-            <S.TableOfContentsTitle>Table of contents (x-kusk extensions)</S.TableOfContentsTitle>
-            <S.ContentContainer>
-              {tableOfContents.map(content => (
-                <S.ContentLabel key={content.ref} onClick={() => tableOfContentsScrollToElement(content)}>
-                  - {content.name}
-                </S.ContentLabel>
-              ))}
-            </S.ContentContainer>
-          </S.TableOfContentsContainer>
+          {tableOfContents.length ? (
+            <S.TableOfContentsContainer>
+              <S.TableOfContentsTitle>Table of contents (x-kusk extensions)</S.TableOfContentsTitle>
+              <S.ContentContainer>
+                {tableOfContents.map(content => (
+                  <S.ContentLabel key={content.ref} onClick={() => tableOfContentsScrollToElement(content)}>
+                    - {content.name}
+                  </S.ContentLabel>
+                ))}
+              </S.ContentContainer>
+            </S.TableOfContentsContainer>
+          ) : null}
 
           {spec['x-kusk'] && (
             <div id="top-level-extension">
