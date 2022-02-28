@@ -8,6 +8,16 @@ import Colors from '@styles/colors';
 
 export const ContentContainer = styled.div`
   margin-top: 20px;
+  color: ${Colors.grey9};
+  border: 1px solid ${Colors.grey5};
+  background: ${Colors.grey2};
+  padding: 5px 15px;
+`;
+
+export const ContentLabel = styled.div`
+  margin: 7px 0px;
+  cursor: pointer;
+  width: max-content;
 `;
 
 export const ErrorLabel = styled.span`

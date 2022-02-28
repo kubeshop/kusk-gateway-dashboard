@@ -81,6 +81,37 @@ const ExtensionsPlugin = (system: any) => ({
         });
       }
 
+      Object.entries(spec.paths).forEach((pathEntry: [string, any]) => {
+        const [path, pathValue] = pathEntry;
+
+        Object.entries(pathValue).forEach((operationEntry: [string, any]) => {
+          const [operation, operationValue] = operationEntry;
+
+          const reconstructedPath = path.substring(1).replaceAll('{', '').replaceAll('}', '');
+
+          let reconstructedPathId = reconstructedPath.replaceAll('/', '__');
+          const reconstructedPathRef = reconstructedPath.replaceAll('/', '-');
+
+          if (operationValue.parameters) {
+            reconstructedPathId += '_';
+          }
+
+          if (operationValue['x-kusk']) {
+            if (operationValue.tags && operationValue.tags.length) {
+              operationValue.tags.forEach((tag: string) => {
+                tableOfContents.push({
+                  name: `${path} ${operation.toUpperCase()}`,
+                  ref: `${reconstructedPathRef}-${operation}-extension`,
+                  operationId: `operations-${tag}-${operation}_${reconstructedPathId}`,
+                });
+              });
+            } else {
+              // here should be if contains no tags ( default )
+            }
+          }
+        });
+      });
+
       return (
         <>
           <Original {...props} />
@@ -89,9 +120,9 @@ const ExtensionsPlugin = (system: any) => ({
             <S.TableOfContentsTitle>Table of contents (x-kusk extensions)</S.TableOfContentsTitle>
             <S.ContentContainer>
               {tableOfContents.map(content => (
-                <div key={content.ref} onClick={() => tableOfContentsScrollToElement(content)}>
-                  {content.name}
-                </div>
+                <S.ContentLabel key={content.ref} onClick={() => tableOfContentsScrollToElement(content)}>
+                  - {content.name}
+                </S.ContentLabel>
               ))}
             </S.ContentContainer>
           </S.TableOfContentsContainer>
@@ -122,6 +153,8 @@ const ExtensionsPlugin = (system: any) => ({
       let methodExtension = spec.paths[path][method]['x-kusk'];
       let pathTreeData: DataNode[] = [];
       let operationTreeData: DataNode[] = [];
+
+      const reconstructedPath = path.substring(1).replaceAll('{', '').replaceAll('}', '').replaceAll('/', '-');
 
       if (pathExtension) {
         pathTreeData = Object.entries(pathExtension).map(([key, children]) => createExtensionTreeNode(key, children));
@@ -157,7 +190,7 @@ const ExtensionsPlugin = (system: any) => ({
           )}
 
           {methodExtension && (
-            <div className="opblock-section" id="test-123-extension" onClick={() => console.log('Clicked')}>
+            <div className="opblock-section" id={`${reconstructedPath}-${method}-extension`}>
               <div className="opblock-section-header">
                 <h4>X-kusk extension (Operation level)</h4>
               </div>
