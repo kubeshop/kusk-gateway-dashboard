@@ -3,7 +3,7 @@ interface TableOfContentsItem {
   ref: string;
   operationId?: string;
   level: 'top' | 'path' | 'operation';
-  operationElementId: string;
+  operationElementId?: string;
   tag?: string;
 }
 

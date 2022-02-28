@@ -57,13 +57,19 @@ const createTableOfContents = (spec: any) => {
     tableOfContents.push({
       label: <S.TableOfContentsLabel>- Root object</S.TableOfContentsLabel>,
       ref: 'top-level-extension',
-      operationElementId: 'top-level-extension',
       level: 'top',
     });
   }
 
   Object.entries(spec.paths).forEach((pathEntry: [string, any]) => {
     const [path, pathValue] = pathEntry;
+
+    // TODO: Add ref and operationElementId?? depending on how we show the path
+    tableOfContents.push({
+      label: <S.TableOfContentsLabel>- {path}</S.TableOfContentsLabel>,
+      ref: '',
+      level: 'path',
+    });
 
     // operation level extensions
     Object.entries(pathValue).forEach((operationEntry: [string, any]) => {
@@ -117,14 +123,12 @@ const createTableOfContents = (spec: any) => {
 const tableOfContentsScrollToElement = (content: TableOfContentsItem, layoutActions: any) => {
   const {operationElementId, operationId, ref, tag, level} = content;
 
-  const operationElement = document.getElementById(operationElementId);
-
-  // operation already expanded, scroll to extension
-  if (operationElement?.classList.contains('is-open')) {
+  // operation already expanded, scroll to extension or scroll to top/path level extension
+  if (
+    (operationElementId && document.getElementById(operationElementId)?.classList.contains('is-open')) ||
+    level !== 'operation'
+  ) {
     document.getElementById(ref)?.scrollIntoView({behavior: 'smooth'});
-  } else if (level !== 'operation') {
-    // scroll to top/path level extensions
-    operationElement?.scrollIntoView({behavior: 'smooth'});
   } else {
     // expand operation and then scroll to extension from operation level
     layoutActions.show(['operations', tag || 'default', operationId], true);
@@ -160,6 +164,7 @@ const ExtensionsPlugin = (system: any) => ({
                 {tableOfContents.map(content => (
                   <S.ContentLabel
                     $level={content.level}
+                    $ref={content.ref}
                     key={content.ref}
                     onClick={() => tableOfContentsScrollToElement(content, layoutActions)}
                   >

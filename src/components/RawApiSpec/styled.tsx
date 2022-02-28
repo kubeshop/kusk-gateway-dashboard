@@ -14,21 +14,27 @@ export const ContentContainer = styled.div`
   padding: 5px 15px;
 `;
 
-export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'}>`
+export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $ref: string}>`
   margin: 10px 0px;
 
   ${({$level}) => `
-    margin-left: ${$level === 'top' ? '0px' : $level === 'path' ? '10px' : '20px'}; 
+    margin-left: ${$level === 'top' ? '0px' : $level === 'path' ? '15px' : '30px'}; 
+
   `}
 
-  cursor: pointer;
   width: max-content;
   transition: all 0.2s ease-in;
 
   &:hover {
-    letter-spacing: 0.4px;
-    color: ${Colors.whitePure};
-  }
+    ${({$ref}) => {
+      if ($ref) {
+        return `
+          letter-spacing: 0.4px;
+          color: ${Colors.whitePure};
+          cursor: pointer;
+        `;
+      }
+    }}
 `;
 
 export const ErrorLabel = styled.span`
