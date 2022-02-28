@@ -19,12 +19,17 @@ export const SwaggerUIStyle = `
     }
 
     & h3.opblock-tag {
+      pointer-events: none;
       display: grid;
       grid-template-columns: max-content 1fr 1fr max-content;
       grid-column-gap: 10px;
 
       & small {
         padding: 0;
+      }
+
+      & button {
+        display: none;
       }
     }
 
@@ -43,6 +48,22 @@ export const SwaggerUIStyle = `
 
       & svg {
         fill: ${Colors.whitePure};
+      }
+
+      & h4 {
+        cursor: default;
+        
+        &:hover {
+          background: ${Colors.grey4};
+        }
+
+        & button {
+          pointer-events: none;
+        }
+
+        & svg {
+          display: none;
+        }
       }
     }
 
