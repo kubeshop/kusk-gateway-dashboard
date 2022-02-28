@@ -1,5 +1,5 @@
 interface TableOfContentsItem {
-  name: string;
+  label: JSX.Element;
   ref: string;
   operationId?: string;
   level: 'top' | 'path' | 'operation';

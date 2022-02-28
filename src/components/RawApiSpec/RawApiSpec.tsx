@@ -55,7 +55,7 @@ const createTableOfContents = (spec: any) => {
   // top level extension
   if (spec['x-kusk']) {
     tableOfContents.push({
-      name: 'Root object',
+      label: <S.TableOfContentsLabel>- Root object</S.TableOfContentsLabel>,
       ref: 'top-level-extension',
       operationElementId: 'top-level-extension',
       level: 'top',
@@ -82,7 +82,11 @@ const createTableOfContents = (spec: any) => {
         if (operationValue.tags && operationValue.tags.length) {
           operationValue.tags.forEach((tag: string) => {
             tableOfContents.push({
-              name: `${path} ${operation.toUpperCase()}`,
+              label: (
+                <S.TableOfContentsLabel>
+                  - {path} {operation.toUpperCase()} <S.LabelTag>{tag}</S.LabelTag>
+                </S.TableOfContentsLabel>
+              ),
               ref: `${reconstructedPathRef}-${operation}-extension`,
               operationId: `${operation}_${reconstructedPathId}`,
               operationElementId: `operations-${tag}-${operation}_${reconstructedPathId}`,
@@ -91,7 +95,17 @@ const createTableOfContents = (spec: any) => {
             });
           });
         } else {
-          // here should be if contains no tags ( default )
+          tableOfContents.push({
+            label: (
+              <S.TableOfContentsLabel>
+                - {path} {operation.toUpperCase()} <S.LabelTag>default</S.LabelTag>
+              </S.TableOfContentsLabel>
+            ),
+            ref: `${reconstructedPathRef}-${operation}-extension`,
+            operationId: `${operation}_${reconstructedPathId}`,
+            operationElementId: `operations-default-${operation}_${reconstructedPathId}`,
+            level: 'operation',
+          });
         }
       }
     });
@@ -113,7 +127,7 @@ const tableOfContentsScrollToElement = (content: TableOfContentsItem, layoutActi
     operationElement?.scrollIntoView({behavior: 'smooth'});
   } else {
     // expand operation and then scroll to extension from operation level
-    layoutActions.show(['operations', tag, operationId], true);
+    layoutActions.show(['operations', tag || 'default', operationId], true);
 
     setTimeout(() => {
       document.getElementById(ref)?.scrollIntoView({behavior: 'smooth'});
@@ -149,7 +163,7 @@ const ExtensionsPlugin = (system: any) => ({
                     key={content.ref}
                     onClick={() => tableOfContentsScrollToElement(content, layoutActions)}
                   >
-                    - {content.name}
+                    {content.label}
                   </S.ContentLabel>
                 ))}
               </S.ContentContainer>

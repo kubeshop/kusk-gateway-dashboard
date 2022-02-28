@@ -1,4 +1,4 @@
-import {Tree as RawTree} from 'antd';
+import {Tag as RawTag, Tree as RawTree} from 'antd';
 
 import styled from 'styled-components';
 
@@ -15,7 +15,7 @@ export const ContentContainer = styled.div`
 `;
 
 export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'}>`
-  margin: 7px 0px;
+  margin: 10px 0px;
 
   ${({$level}) => `
     margin-left: ${$level === 'top' ? '0px' : $level === 'path' ? '10px' : '20px'}; 
@@ -41,12 +41,23 @@ export const ExtensionTitle = styled.h2`
   margin-bottom: 20px;
 `;
 
+export const LabelTag = styled(RawTag)`
+  background-color: ${Colors.grey4};
+  color: ${Colors.whitePure};
+  margin-left: 5px;
+`;
+
 export const RawApiSpecContainer = styled.div`
   ${SwaggerUIStyle}
 `;
 
 export const TableOfContentsContainer = styled.div`
   margin-bottom: 30px;
+`;
+
+export const TableOfContentsLabel = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 export const TableOfContentsTitle = styled.span`
