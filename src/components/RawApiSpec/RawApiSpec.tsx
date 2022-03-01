@@ -15,6 +15,8 @@ import {TableOfContentsItem} from '@models/swaggerUI';
 
 import {useAppSelector} from '@redux/hooks';
 
+import KuskExtensionIcon from './KuskExtensionIcon';
+
 import * as S from './styled';
 
 const createExtensionTreeNode = (key: string, children: any): DataNode => {
@@ -55,7 +57,7 @@ const createTableOfContents = (spec: any) => {
 
   // top level extension
   tableOfContents.push({
-    label: <S.TableOfContentsLabel>- Root object {spec['x-kusk'] && <S.ApiOutlined />}</S.TableOfContentsLabel>,
+    label: <S.TableOfContentsLabel>- Root object {spec['x-kusk'] && <KuskExtensionIcon />}</S.TableOfContentsLabel>,
     kuskExtensionRef: 'top-level-extension',
     level: 'top',
   });
@@ -67,7 +69,7 @@ const createTableOfContents = (spec: any) => {
     tableOfContents.push({
       label: (
         <S.TableOfContentsLabel>
-          - {path} {pathValue['x-kusk'] && <S.ApiOutlined />}
+          - {path} {pathValue['x-kusk'] && <KuskExtensionIcon />}
         </S.TableOfContentsLabel>
       ),
       level: 'path',
@@ -100,7 +102,7 @@ const createTableOfContents = (spec: any) => {
               label: (
                 <S.TableOfContentsLabel>
                   - {path} {operation.toUpperCase()} <S.LabelTag>{tag}</S.LabelTag>{' '}
-                  {kuskExtensionRef && <S.ApiOutlined />}
+                  {kuskExtensionRef && <KuskExtensionIcon />}
                 </S.TableOfContentsLabel>
               ),
               kuskExtensionRef,
@@ -115,7 +117,7 @@ const createTableOfContents = (spec: any) => {
             label: (
               <S.TableOfContentsLabel>
                 - {path} {operation.toUpperCase()} <S.LabelTag>default</S.LabelTag>{' '}
-                {kuskExtensionRef && <S.ApiOutlined />}
+                {kuskExtensionRef && <KuskExtensionIcon />}
               </S.TableOfContentsLabel>
             ),
             kuskExtensionRef,

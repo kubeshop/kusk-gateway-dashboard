@@ -1,16 +1,10 @@
 import {Tag as RawTag, Tree as RawTree} from 'antd';
 
-import {ApiOutlined as RawApiOutlined} from '@ant-design/icons';
-
 import styled from 'styled-components';
 
 import {SwaggerUIStyle} from '@utils/swaggerUI';
 
 import Colors from '@styles/colors';
-
-export const ApiOutlined = styled(RawApiOutlined)`
-  font-size: 16px;
-`;
 
 export const ContentContainer = styled.div`
   margin-top: 20px;
