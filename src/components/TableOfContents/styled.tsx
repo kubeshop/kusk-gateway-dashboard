@@ -4,6 +4,16 @@ import styled from 'styled-components';
 
 import Colors from '@styles/colors';
 
+const swaggerUIMethodsColors: {[method: string]: string} = {
+  delete: '#F93E3E',
+  get: '#61AFFE',
+  head: '#9012FE',
+  options: '#0D5AA7',
+  patch: '#50E3C2',
+  post: '#49CC90',
+  put: '#FCA130',
+};
+
 export const ContentContainer = styled.div`
   margin-top: 20px;
   color: ${Colors.grey9};
@@ -35,6 +45,14 @@ export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $r
   }
 `;
 
+export const LabelOperation = styled.span<{$method: string}>`
+  ${({$method}) => `
+        color: ${swaggerUIMethodsColors[$method]};
+    `}
+
+  font-weight: bold;
+`;
+
 export const LabelTag = styled(RawTag)`
   background-color: ${Colors.grey4};
   color: ${Colors.whitePure};
@@ -48,7 +66,7 @@ export const TableOfContentsContainer = styled.div`
 export const TableOfContentsLabel = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 `;
 
 export const TableOfContentsTitle = styled.span`

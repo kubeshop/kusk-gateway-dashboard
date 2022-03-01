@@ -61,8 +61,8 @@ const createTableOfContents = (spec: any) => {
             tableOfContents.push({
               label: (
                 <S.TableOfContentsLabel>
-                  - {path} {operation.toUpperCase()} <S.LabelTag>{tag}</S.LabelTag>{' '}
-                  {kuskExtensionRef && <KuskExtensionIcon />}
+                  - {path} <S.LabelOperation $method={operation}>{operation.toUpperCase()}</S.LabelOperation>{' '}
+                  <S.LabelTag>{tag}</S.LabelTag> {kuskExtensionRef && <KuskExtensionIcon />}
                 </S.TableOfContentsLabel>
               ),
               kuskExtensionRef,
@@ -76,8 +76,8 @@ const createTableOfContents = (spec: any) => {
           tableOfContents.push({
             label: (
               <S.TableOfContentsLabel>
-                - {path} {operation.toUpperCase()} <S.LabelTag>default</S.LabelTag>{' '}
-                {kuskExtensionRef && <KuskExtensionIcon />}
+                - {path} <S.LabelOperation $method={operation}>{operation.toUpperCase()}</S.LabelOperation>{' '}
+                <S.LabelTag>default</S.LabelTag> {kuskExtensionRef && <KuskExtensionIcon />}
               </S.TableOfContentsLabel>
             ),
             kuskExtensionRef,
