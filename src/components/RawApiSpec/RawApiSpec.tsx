@@ -7,15 +7,13 @@ import {DownOutlined} from '@ant-design/icons';
 
 import SwaggerUI from 'swagger-ui-react';
 
-import {SUPPORTED_METHODS} from '@constants/constants';
 import openApiSpec from '@constants/rawOpenApiSpec.json';
 
 import {useGetRawOpenApiSpec} from '@models/api';
-import {TableOfContentsItem} from '@models/swaggerUI';
 
 import {useAppSelector} from '@redux/hooks';
 
-import KuskExtensionIcon from './KuskExtensionIcon';
+import TableOfContents from '../TableOfContents/TableOfContents';
 
 import * as S from './styled';
 
@@ -52,107 +50,6 @@ const createExtensionTreeNode = (key: string, children: any): DataNode => {
   return node;
 };
 
-const createTableOfContents = (spec: any) => {
-  let tableOfContents: TableOfContentsItem[] = [];
-
-  // top level extension
-  tableOfContents.push({
-    label: <S.TableOfContentsLabel>- Root object {spec['x-kusk'] && <KuskExtensionIcon />}</S.TableOfContentsLabel>,
-    kuskExtensionRef: 'top-level-extension',
-    level: 'top',
-  });
-
-  Object.entries(spec.paths).forEach((pathEntry: [string, any]) => {
-    const [path, pathValue] = pathEntry;
-
-    // TODO: Add ref and operationElementId?? depending on how we show the path
-    tableOfContents.push({
-      label: (
-        <S.TableOfContentsLabel>
-          - {path} {pathValue['x-kusk'] && <KuskExtensionIcon />}
-        </S.TableOfContentsLabel>
-      ),
-      level: 'path',
-    });
-
-    // operation level extensions
-    Object.entries(pathValue)
-      .filter(entry => SUPPORTED_METHODS.includes(entry[0]))
-      .forEach((operationEntry: [string, any]) => {
-        const [operation, operationValue] = operationEntry;
-
-        const reconstructedPath = path.substring(1).replaceAll('{', '').replaceAll('}', '');
-
-        let reconstructedPathId = reconstructedPath.replaceAll('/', '__');
-        const reconstructedPathRef = reconstructedPath.replaceAll('/', '-');
-
-        if (operationValue.parameters) {
-          reconstructedPathId += '_';
-        }
-
-        let kuskExtensionRef: string = '';
-
-        if (operationValue['x-kusk']) {
-          kuskExtensionRef = `${reconstructedPathRef}-${operation}-extension`;
-        }
-
-        if (operationValue.tags && operationValue.tags.length) {
-          operationValue.tags.forEach((tag: string) => {
-            tableOfContents.push({
-              label: (
-                <S.TableOfContentsLabel>
-                  - {path} {operation.toUpperCase()} <S.LabelTag>{tag}</S.LabelTag>{' '}
-                  {kuskExtensionRef && <KuskExtensionIcon />}
-                </S.TableOfContentsLabel>
-              ),
-              kuskExtensionRef,
-              operationId: `${operation}_${reconstructedPathId}`,
-              operationElementId: `operations-${tag}-${operation}_${reconstructedPathId}`,
-              level: 'operation',
-              tag,
-            });
-          });
-        } else {
-          tableOfContents.push({
-            label: (
-              <S.TableOfContentsLabel>
-                - {path} {operation.toUpperCase()} <S.LabelTag>default</S.LabelTag>{' '}
-                {kuskExtensionRef && <KuskExtensionIcon />}
-              </S.TableOfContentsLabel>
-            ),
-            kuskExtensionRef,
-            operationId: `${operation}_${reconstructedPathId}`,
-            operationElementId: `operations-default-${operation}_${reconstructedPathId}`,
-            level: 'operation',
-          });
-        }
-      });
-  });
-
-  return tableOfContents;
-};
-
-const tableOfContentsScrollToElement = (content: TableOfContentsItem, layoutActions: any) => {
-  const {kuskExtensionRef, operationElementId, operationId, tag, level} = content;
-
-  // scroll to top/path level extension
-  if (level !== 'operation' && kuskExtensionRef) {
-    document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
-  } else if (operationElementId) {
-    // if operation expanded, scroll to kusk extension or to operation summary
-    if (document.getElementById(operationElementId)?.classList.contains('is-open')) {
-      document.getElementById(kuskExtensionRef || operationElementId)?.scrollIntoView({behavior: 'smooth'});
-    } else {
-      // expand the operation and the scroll to kusk extension or to operation summary
-      layoutActions.show(['operations', tag || 'default', operationId], true);
-
-      setTimeout(() => {
-        document.getElementById(kuskExtensionRef || operationElementId)?.scrollIntoView({behavior: 'smooth'});
-      }, 200);
-    }
-  }
-};
-
 const ExtensionsPlugin = (system: any) => ({
   wrapComponents: {
     info: (Original: any) => (props: any) => {
@@ -165,33 +62,11 @@ const ExtensionsPlugin = (system: any) => ({
         treeData = Object.entries(spec['x-kusk']).map(([key, children]) => createExtensionTreeNode(key, children));
       }
 
-      const tableOfContents = createTableOfContents(spec);
-
       return (
         <>
           <Original {...props} />
 
-          {tableOfContents.length ? (
-            <S.TableOfContentsContainer>
-              <S.TableOfContentsTitle>Table of contents</S.TableOfContentsTitle>
-              <S.ContentContainer>
-                {tableOfContents.map((content, index) => {
-                  const key = `${index}-${content.level}`;
-
-                  return (
-                    <S.ContentLabel
-                      $level={content.level}
-                      $ref={content.kuskExtensionRef || content.operationElementId || ''}
-                      key={key}
-                      onClick={() => tableOfContentsScrollToElement(content, layoutActions)}
-                    >
-                      {content.label}
-                    </S.ContentLabel>
-                  );
-                })}
-              </S.ContentContainer>
-            </S.TableOfContentsContainer>
-          ) : null}
+          <TableOfContents layoutActions={layoutActions} spec={spec} />
 
           {spec['x-kusk'] && (
             <div id="top-level-extension">
