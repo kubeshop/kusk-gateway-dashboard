@@ -17,7 +17,7 @@ const createTableOfContents = (spec: any) => {
   // top level extension
   tableOfContents.push({
     label: <S.TableOfContentsLabel>- Root object {spec['x-kusk'] && <KuskExtensionIcon />}</S.TableOfContentsLabel>,
-    kuskExtensionRef: 'top-level-extension',
+    kuskExtensionRef: spec['x-kusk'] ? 'top-level-extension' : '',
     level: 'top',
   });
 
