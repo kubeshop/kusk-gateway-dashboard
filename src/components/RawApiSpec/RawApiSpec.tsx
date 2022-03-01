@@ -7,6 +7,7 @@ import {DownOutlined} from '@ant-design/icons';
 
 import SwaggerUI from 'swagger-ui-react';
 
+import {SUPPORTED_METHODS} from '@constants/constants';
 import openApiSpec from '@constants/rawOpenApiSpec.json';
 
 import {useGetRawOpenApiSpec} from '@models/api';
@@ -53,47 +54,56 @@ const createTableOfContents = (spec: any) => {
   let tableOfContents: TableOfContentsItem[] = [];
 
   // top level extension
-  if (spec['x-kusk']) {
-    tableOfContents.push({
-      label: <S.TableOfContentsLabel>- Root object</S.TableOfContentsLabel>,
-      ref: 'top-level-extension',
-      level: 'top',
-    });
-  }
+  tableOfContents.push({
+    label: <S.TableOfContentsLabel>- Root object {spec['x-kusk'] && <S.ApiOutlined />}</S.TableOfContentsLabel>,
+    kuskExtensionRef: 'top-level-extension',
+    level: 'top',
+  });
 
   Object.entries(spec.paths).forEach((pathEntry: [string, any]) => {
     const [path, pathValue] = pathEntry;
 
     // TODO: Add ref and operationElementId?? depending on how we show the path
     tableOfContents.push({
-      label: <S.TableOfContentsLabel>- {path}</S.TableOfContentsLabel>,
-      ref: '',
+      label: (
+        <S.TableOfContentsLabel>
+          - {path} {pathValue['x-kusk'] && <S.ApiOutlined />}
+        </S.TableOfContentsLabel>
+      ),
       level: 'path',
     });
 
     // operation level extensions
-    Object.entries(pathValue).forEach((operationEntry: [string, any]) => {
-      const [operation, operationValue] = operationEntry;
+    Object.entries(pathValue)
+      .filter(entry => SUPPORTED_METHODS.includes(entry[0]))
+      .forEach((operationEntry: [string, any]) => {
+        const [operation, operationValue] = operationEntry;
 
-      const reconstructedPath = path.substring(1).replaceAll('{', '').replaceAll('}', '');
+        const reconstructedPath = path.substring(1).replaceAll('{', '').replaceAll('}', '');
 
-      let reconstructedPathId = reconstructedPath.replaceAll('/', '__');
-      const reconstructedPathRef = reconstructedPath.replaceAll('/', '-');
+        let reconstructedPathId = reconstructedPath.replaceAll('/', '__');
+        const reconstructedPathRef = reconstructedPath.replaceAll('/', '-');
 
-      if (operationValue.parameters) {
-        reconstructedPathId += '_';
-      }
+        if (operationValue.parameters) {
+          reconstructedPathId += '_';
+        }
 
-      if (operationValue['x-kusk']) {
+        let kuskExtensionRef: string = '';
+
+        if (operationValue['x-kusk']) {
+          kuskExtensionRef = `${reconstructedPathRef}-${operation}-extension`;
+        }
+
         if (operationValue.tags && operationValue.tags.length) {
           operationValue.tags.forEach((tag: string) => {
             tableOfContents.push({
               label: (
                 <S.TableOfContentsLabel>
-                  - {path} {operation.toUpperCase()} <S.LabelTag>{tag}</S.LabelTag>
+                  - {path} {operation.toUpperCase()} <S.LabelTag>{tag}</S.LabelTag>{' '}
+                  {kuskExtensionRef && <S.ApiOutlined />}
                 </S.TableOfContentsLabel>
               ),
-              ref: `${reconstructedPathRef}-${operation}-extension`,
+              kuskExtensionRef,
               operationId: `${operation}_${reconstructedPathId}`,
               operationElementId: `operations-${tag}-${operation}_${reconstructedPathId}`,
               level: 'operation',
@@ -104,38 +114,40 @@ const createTableOfContents = (spec: any) => {
           tableOfContents.push({
             label: (
               <S.TableOfContentsLabel>
-                - {path} {operation.toUpperCase()} <S.LabelTag>default</S.LabelTag>
+                - {path} {operation.toUpperCase()} <S.LabelTag>default</S.LabelTag>{' '}
+                {kuskExtensionRef && <S.ApiOutlined />}
               </S.TableOfContentsLabel>
             ),
-            ref: `${reconstructedPathRef}-${operation}-extension`,
+            kuskExtensionRef,
             operationId: `${operation}_${reconstructedPathId}`,
             operationElementId: `operations-default-${operation}_${reconstructedPathId}`,
             level: 'operation',
           });
         }
-      }
-    });
+      });
   });
 
   return tableOfContents;
 };
 
 const tableOfContentsScrollToElement = (content: TableOfContentsItem, layoutActions: any) => {
-  const {operationElementId, operationId, ref, tag, level} = content;
+  const {kuskExtensionRef, operationElementId, operationId, tag, level} = content;
 
-  // operation already expanded, scroll to extension or scroll to top/path level extension
-  if (
-    (operationElementId && document.getElementById(operationElementId)?.classList.contains('is-open')) ||
-    level !== 'operation'
-  ) {
-    document.getElementById(ref)?.scrollIntoView({behavior: 'smooth'});
-  } else {
-    // expand operation and then scroll to extension from operation level
-    layoutActions.show(['operations', tag || 'default', operationId], true);
+  // scroll to top/path level extension
+  if (level !== 'operation' && kuskExtensionRef) {
+    document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
+  } else if (operationElementId) {
+    // if operation expanded, scroll to kusk extension or to operation summary
+    if (document.getElementById(operationElementId)?.classList.contains('is-open')) {
+      document.getElementById(kuskExtensionRef || operationElementId)?.scrollIntoView({behavior: 'smooth'});
+    } else {
+      // expand the operation and the scroll to kusk extension or to operation summary
+      layoutActions.show(['operations', tag || 'default', operationId], true);
 
-    setTimeout(() => {
-      document.getElementById(ref)?.scrollIntoView({behavior: 'smooth'});
-    }, 200);
+      setTimeout(() => {
+        document.getElementById(kuskExtensionRef || operationElementId)?.scrollIntoView({behavior: 'smooth'});
+      }, 200);
+    }
   }
 };
 
@@ -159,18 +171,22 @@ const ExtensionsPlugin = (system: any) => ({
 
           {tableOfContents.length ? (
             <S.TableOfContentsContainer>
-              <S.TableOfContentsTitle>Table of contents (x-kusk extensions)</S.TableOfContentsTitle>
+              <S.TableOfContentsTitle>Table of contents</S.TableOfContentsTitle>
               <S.ContentContainer>
-                {tableOfContents.map(content => (
-                  <S.ContentLabel
-                    $level={content.level}
-                    $ref={content.ref}
-                    key={content.ref}
-                    onClick={() => tableOfContentsScrollToElement(content, layoutActions)}
-                  >
-                    {content.label}
-                  </S.ContentLabel>
-                ))}
+                {tableOfContents.map((content, index) => {
+                  const key = `${index}-${content.level}`;
+
+                  return (
+                    <S.ContentLabel
+                      $level={content.level}
+                      $ref={content.kuskExtensionRef || content.operationElementId || ''}
+                      key={key}
+                      onClick={() => tableOfContentsScrollToElement(content, layoutActions)}
+                    >
+                      {content.label}
+                    </S.ContentLabel>
+                  );
+                })}
               </S.ContentContainer>
             </S.TableOfContentsContainer>
           ) : null}

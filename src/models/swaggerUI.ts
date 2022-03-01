@@ -1,8 +1,8 @@
 interface TableOfContentsItem {
   label: JSX.Element;
-  ref: string;
-  operationId?: string;
   level: 'top' | 'path' | 'operation';
+  kuskExtensionRef?: string;
+  operationId?: string;
   operationElementId?: string;
   tag?: string;
 }

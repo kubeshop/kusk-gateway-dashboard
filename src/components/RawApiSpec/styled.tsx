@@ -1,10 +1,16 @@
 import {Tag as RawTag, Tree as RawTree} from 'antd';
 
+import {ApiOutlined as RawApiOutlined} from '@ant-design/icons';
+
 import styled from 'styled-components';
 
 import {SwaggerUIStyle} from '@utils/swaggerUI';
 
 import Colors from '@styles/colors';
+
+export const ApiOutlined = styled(RawApiOutlined)`
+  font-size: 16px;
+`;
 
 export const ContentContainer = styled.div`
   margin-top: 20px;
@@ -18,8 +24,7 @@ export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $r
   margin: 10px 0px;
 
   ${({$level}) => `
-    margin-left: ${$level === 'top' ? '0px' : $level === 'path' ? '15px' : '30px'}; 
-
+    margin-left: ${$level === 'top' ? '0px' : $level === 'path' ? '15px' : '30px'};
   `}
 
   width: max-content;
@@ -35,6 +40,7 @@ export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $r
         `;
       }
     }}
+  }
 `;
 
 export const ErrorLabel = styled.span`
@@ -50,7 +56,7 @@ export const ExtensionTitle = styled.h2`
 export const LabelTag = styled(RawTag)`
   background-color: ${Colors.grey4};
   color: ${Colors.whitePure};
-  margin-left: 5px;
+  margin: 0;
 `;
 
 export const RawApiSpecContainer = styled.div`
@@ -64,6 +70,7 @@ export const TableOfContentsContainer = styled.div`
 export const TableOfContentsLabel = styled.div`
   display: flex;
   align-items: center;
+  gap: 10px;
 `;
 
 export const TableOfContentsTitle = styled.span`
