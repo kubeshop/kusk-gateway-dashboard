@@ -45,25 +45,34 @@ export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $r
   }
 `;
 
-export const LabelOperation = styled.span<{$method: string}>`
+export const LabelMethodTag = styled(RawTag)<{$method: string}>`
   ${({$method}) => `
-        color: ${swaggerUIMethodsColors[$method]};
-    `}
+    background-color: ${swaggerUIMethodsColors[$method]};
+  `}
 
   font-weight: bold;
+  color: ${Colors.grey2};
+  border: none;
+  padding: 1px 8px;
+  margin: 0;
 `;
 
 export const LabelTag = styled(RawTag)`
   background-color: ${Colors.grey4};
   color: ${Colors.whitePure};
   margin: 0;
+  font-size: 11px;
 `;
 
 export const TableOfContentsContainer = styled.div`
   margin-bottom: 30px;
 `;
 
-export const TableOfContentsLabel = styled.div`
+export const TableOfContentsLabel = styled.div<{$level: 'top' | 'path' | 'operation'}>`
+  ${({$level}) => `
+    margin-bottom: ${$level === 'operation' ? '14px' : '0px'};
+  `}
+
   display: flex;
   align-items: center;
   gap: 12px;

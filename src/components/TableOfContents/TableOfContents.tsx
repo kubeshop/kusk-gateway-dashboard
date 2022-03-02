@@ -16,7 +16,11 @@ const createTableOfContents = (spec: any) => {
 
   // top level extension
   tableOfContents.push({
-    label: <S.TableOfContentsLabel>- Root object {spec['x-kusk'] && <KuskExtensionIcon />}</S.TableOfContentsLabel>,
+    label: (
+      <S.TableOfContentsLabel $level="top">
+        - Root object {spec['x-kusk'] && <KuskExtensionIcon />}
+      </S.TableOfContentsLabel>
+    ),
     kuskExtensionRef: spec['x-kusk'] ? 'top-level-extension' : '',
     level: 'top',
   });
@@ -27,7 +31,7 @@ const createTableOfContents = (spec: any) => {
     // TODO: Add ref and operationElementId?? depending on how we show the path
     tableOfContents.push({
       label: (
-        <S.TableOfContentsLabel>
+        <S.TableOfContentsLabel $level="path">
           - {path} {pathValue['x-kusk'] && <KuskExtensionIcon />}
         </S.TableOfContentsLabel>
       ),
@@ -60,9 +64,10 @@ const createTableOfContents = (spec: any) => {
           operationValue.tags.forEach((tag: string) => {
             tableOfContents.push({
               label: (
-                <S.TableOfContentsLabel>
-                  - {path} <S.LabelOperation $method={operation}>{operation.toUpperCase()}</S.LabelOperation>{' '}
-                  <S.LabelTag>{tag}</S.LabelTag> {kuskExtensionRef && <KuskExtensionIcon />}
+                <S.TableOfContentsLabel $level="operation">
+                  - <S.LabelTag>{tag}</S.LabelTag> {path}
+                  <S.LabelMethodTag $method={operation}>{operation.toUpperCase()}</S.LabelMethodTag>
+                  {kuskExtensionRef && <KuskExtensionIcon />}
                 </S.TableOfContentsLabel>
               ),
               kuskExtensionRef,
@@ -75,9 +80,10 @@ const createTableOfContents = (spec: any) => {
         } else {
           tableOfContents.push({
             label: (
-              <S.TableOfContentsLabel>
-                - {path} <S.LabelOperation $method={operation}>{operation.toUpperCase()}</S.LabelOperation>{' '}
-                <S.LabelTag>default</S.LabelTag> {kuskExtensionRef && <KuskExtensionIcon />}
+              <S.TableOfContentsLabel $level="operation">
+                - <S.LabelTag>default</S.LabelTag> {path}
+                <S.LabelMethodTag $method={operation}>{operation.toUpperCase()}</S.LabelMethodTag>
+                {kuskExtensionRef && <KuskExtensionIcon />}
               </S.TableOfContentsLabel>
             ),
             kuskExtensionRef,
