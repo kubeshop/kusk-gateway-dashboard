@@ -2,6 +2,8 @@ import {Tag as RawTag} from 'antd';
 
 import styled from 'styled-components';
 
+import {GlobalScrollbarStyle} from '@utils/scrollbar';
+
 import Colors from '@styles/colors';
 
 const swaggerUIMethodsColors: {[method: string]: string} = {
@@ -20,6 +22,10 @@ export const ContentContainer = styled.div`
   border: 1px solid ${Colors.grey5};
   background: ${Colors.grey2};
   padding: 5px 15px;
+  max-height: 700px;
+  overflow-y: auto;
+
+  ${GlobalScrollbarStyle};
 `;
 
 export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $ref: string}>`

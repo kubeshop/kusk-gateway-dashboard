@@ -166,6 +166,7 @@ export const SwaggerUIStyle = `
     }
 
     & .scheme-container {
+      margin-top: 50px;
       color: ${Colors.whitePure};
       background: ${Colors.grey4};
       box-shadow: none;
