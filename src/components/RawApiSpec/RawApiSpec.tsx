@@ -31,7 +31,7 @@ const createExtensionTreeNode = (key: string, children: any): DataNode => {
       {key}
       {propertyValue && (
         <>
-          : <span className="extension-property-value">{propertyValue.toString()}</span>
+          : <S.ExtensionValueLabel $type={typeof children}>{propertyValue.toString()}</S.ExtensionValueLabel>
         </>
       )}
     </div>

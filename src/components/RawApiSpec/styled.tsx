@@ -16,6 +16,14 @@ export const ExtensionTitle = styled.h2`
   margin-bottom: 20px;
 `;
 
+export const ExtensionValueLabel = styled.span<{$type: string}>`
+  ${({$type}) => `
+    color: ${
+      $type === 'number' ? 'rgb(211, 99, 99)' : $type === 'boolean' ? 'rgb(252, 194, 140)' : 'rgb(162, 252, 162)'
+    }
+  `}
+`;
+
 export const RawApiSpecContainer = styled.div`
   ${SwaggerUIStyle}
 `;
