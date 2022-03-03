@@ -14,6 +14,8 @@
       "@redux": ["src/redux/"],
       "@styles/*": ["src/styles/*"],
       "@styles": ["src/styles/"],
+      "@swaggerUI/*": ["src/swaggerUI/*"],
+      "@swaggerUI": ["src/swaggerUI/"],
       "@utils/*": ["src/utils/*"],
       "@utils": ["src/utils/"],
       "@src/*": ["src/*"],

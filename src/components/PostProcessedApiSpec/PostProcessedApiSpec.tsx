@@ -8,7 +8,7 @@ import {useGetPostProcessedOpenApiSpec} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
-import {TableOfContentsPlugin} from '@utils/swaggerUI/plugins';
+import {TableOfContentsPlugin} from '@swaggerUI/plugins';
 
 import * as S from './styled';
 

@@ -10,6 +10,7 @@ module.exports = {
       '@models': path.resolve(__dirname, 'src/models'),
       '@redux': path.resolve(__dirname, 'src/redux'),
       '@styles': path.resolve(__dirname, 'src/styles'),
+      '@swaggerUI': path.resolve(__dirname, 'src/swaggerUI'),
       '@utils': path.resolve(__dirname, 'src/utils'),
     },
     configure: {

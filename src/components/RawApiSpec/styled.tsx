@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {SwaggerUIStyle} from '@utils/swaggerUI';
+import {SwaggerUIStyle} from '@swaggerUI/style';
 
 export const ErrorLabel = styled.span`
   color: red;

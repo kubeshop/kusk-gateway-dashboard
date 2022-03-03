@@ -1,4 +1,4 @@
-import {TableOfContents} from '../../../components/TableOfContents';
+import {TableOfContents} from '../../components/TableOfContents';
 
 const TableOfContentsPlugin = (system: any) => ({
   wrapComponents: {

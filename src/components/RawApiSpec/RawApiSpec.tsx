@@ -10,7 +10,7 @@ import {useGetRawOpenApiSpec} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
-import {KuskExtensionPlugin, TableOfContentsPlugin} from '@utils/swaggerUI/plugins';
+import {KuskExtensionPlugin, TableOfContentsPlugin} from '@swaggerUI/plugins';
 
 import * as S from './styled';
 
