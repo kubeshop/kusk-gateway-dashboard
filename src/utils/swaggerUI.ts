@@ -21,7 +21,7 @@ export const SwaggerUIStyle = `
     & h3.opblock-tag {
       pointer-events: none;
       display: grid;
-      grid-template-columns: max-content 1fr 1fr max-content;
+      grid-template-columns: max-content 1fr max-content;
       grid-column-gap: 10px;
 
       & small {
