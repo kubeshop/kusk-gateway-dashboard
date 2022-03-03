@@ -67,6 +67,7 @@ export const LabelMethodTag = styled(RawTag)<{$deprecated: boolean; $method: str
 export const LabelPath = styled.span<{$deprecated: boolean}>`
   ${({$deprecated}) => `
     text-decoration: ${$deprecated ? 'line-through' : ''};
+    opacity: ${$deprecated ? '0.65' : '1'};
   `}
 `;
 
