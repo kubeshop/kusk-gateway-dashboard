@@ -2,33 +2,15 @@ import {Skeleton} from 'antd';
 
 import SwaggerUI from 'swagger-ui-react';
 
-import openApiSpec from '@constants/kuskOpenApiSpec.json';
+import openApiSpec from '@constants/openApiSpec.json';
 
 import {useGetPostProcessedOpenApiSpec} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
-import TableOfContents from '../TableOfContents/TableOfContents';
+import {TableOfContentsPlugin} from '@utils/swaggerUI/plugins';
 
 import * as S from './styled';
-
-const TableOfContentsPlugin = (system: any) => ({
-  wrapComponents: {
-    info: (Original: any) => (props: any) => {
-      const {layoutActions, specSelectors} = system;
-
-      const spec = specSelectors.specJson().toJS();
-
-      return (
-        <>
-          <Original {...props} />
-
-          <TableOfContents layoutActions={layoutActions} spec={spec} />
-        </>
-      );
-    },
-  },
-});
 
 const PostProcessedApiSpec: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
