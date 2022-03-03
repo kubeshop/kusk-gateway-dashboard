@@ -46,6 +46,7 @@ const createTableOfContents = (spec: any) => {
 
         const reconstructedPath = path.substring(1).replaceAll('{', '').replaceAll('}', '');
 
+        const deprecated = operationValue['deprecated'];
         let reconstructedPathId = reconstructedPath.replaceAll('/', '__');
         const reconstructedPathRef = reconstructedPath.replaceAll('/', '-');
 
@@ -65,8 +66,10 @@ const createTableOfContents = (spec: any) => {
             tableOfContents.push({
               label: (
                 <S.TableOfContentsLabel $level="operation">
-                  - <S.LabelTag>{tag}</S.LabelTag> {path}
-                  <S.LabelMethodTag $method={operation}>{operation.toUpperCase()}</S.LabelMethodTag>
+                  - <S.LabelTag>{tag}</S.LabelTag> <S.LabelPath $deprecated={deprecated}>{path}</S.LabelPath>
+                  <S.LabelMethodTag $deprecated={deprecated} $method={operation}>
+                    {operation.toUpperCase()}
+                  </S.LabelMethodTag>
                   {kuskExtensionRef && <KuskExtensionIcon />}
                 </S.TableOfContentsLabel>
               ),
@@ -81,8 +84,10 @@ const createTableOfContents = (spec: any) => {
           tableOfContents.push({
             label: (
               <S.TableOfContentsLabel $level="operation">
-                - <S.LabelTag>default</S.LabelTag> {path}
-                <S.LabelMethodTag $method={operation}>{operation.toUpperCase()}</S.LabelMethodTag>
+                - <S.LabelTag>default</S.LabelTag> <S.LabelPath $deprecated={deprecated}>{path}</S.LabelPath>
+                <S.LabelMethodTag $deprecated={deprecated} $method={operation}>
+                  {operation.toUpperCase()}
+                </S.LabelMethodTag>
                 {kuskExtensionRef && <KuskExtensionIcon />}
               </S.TableOfContentsLabel>
             ),

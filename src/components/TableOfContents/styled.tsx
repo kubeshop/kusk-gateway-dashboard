@@ -51,9 +51,10 @@ export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $r
   }
 `;
 
-export const LabelMethodTag = styled(RawTag)<{$method: string}>`
-  ${({$method}) => `
-    background-color: ${swaggerUIMethodsColors[$method]};
+export const LabelMethodTag = styled(RawTag)<{$deprecated: boolean; $method: string}>`
+  ${({$deprecated, $method}) => `
+    background-color: ${$deprecated ? '#EBEBEB' : swaggerUIMethodsColors[$method]};
+    opacity: ${$deprecated ? '0.6' : '1'};
   `}
 
   font-weight: bold;
@@ -61,6 +62,12 @@ export const LabelMethodTag = styled(RawTag)<{$method: string}>`
   border: none;
   padding: 1px 8px;
   margin: 0;
+`;
+
+export const LabelPath = styled.span<{$deprecated: boolean}>`
+  ${({$deprecated}) => `
+    text-decoration: ${$deprecated ? 'line-through' : ''};
+  `}
 `;
 
 export const LabelTag = styled(RawTag)`
