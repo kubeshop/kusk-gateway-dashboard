@@ -2,7 +2,7 @@ import {SUPPORTED_METHODS} from '@constants/constants';
 
 import {TableOfContentsItem} from '@models/swaggerUI';
 
-import KuskExtensionIcon from './KuskExtensionIcon';
+import TableOfContentsLabel from './TableOfContentsLabel';
 
 import * as S from './styled';
 
@@ -16,11 +16,7 @@ const createTableOfContents = (spec: any) => {
 
   // top level extension
   tableOfContents.push({
-    label: (
-      <S.TableOfContentsLabel $level="top">
-        - Root object {spec['x-kusk'] && <KuskExtensionIcon />}
-      </S.TableOfContentsLabel>
-    ),
+    label: <TableOfContentsLabel containsKuskExtension={spec['x-kusk']} level="top" path="Root object" />,
     kuskExtensionRef: spec['x-kusk'] ? 'top-level-extension' : '',
     level: 'top',
   });
@@ -30,11 +26,7 @@ const createTableOfContents = (spec: any) => {
 
     // TODO: Add ref and operationElementId?? depending on how we show the path
     tableOfContents.push({
-      label: (
-        <S.TableOfContentsLabel $level="path">
-          - {path} {pathValue['x-kusk'] && <KuskExtensionIcon />}
-        </S.TableOfContentsLabel>
-      ),
+      label: <TableOfContentsLabel containsKuskExtension={pathValue['x-kusk']} level="path" path={path} />,
       level: 'path',
     });
 
@@ -65,13 +57,14 @@ const createTableOfContents = (spec: any) => {
           operationValue.tags.forEach((tag: string) => {
             tableOfContents.push({
               label: (
-                <S.TableOfContentsLabel $level="operation">
-                  - <S.LabelTag>{tag}</S.LabelTag> <S.LabelPath $deprecated={deprecated}>{path}</S.LabelPath>
-                  <S.LabelMethodTag $deprecated={deprecated} $method={operation}>
-                    {operation.toUpperCase()}
-                  </S.LabelMethodTag>
-                  {kuskExtensionRef && <KuskExtensionIcon />}
-                </S.TableOfContentsLabel>
+                <TableOfContentsLabel
+                  containsKuskExtension={Boolean(kuskExtensionRef)}
+                  deprecated={deprecated}
+                  level="operation"
+                  operation={operation}
+                  path={path}
+                  tag={tag}
+                />
               ),
               kuskExtensionRef,
               operationId,
@@ -83,13 +76,14 @@ const createTableOfContents = (spec: any) => {
         } else {
           tableOfContents.push({
             label: (
-              <S.TableOfContentsLabel $level="operation">
-                - <S.LabelTag>default</S.LabelTag> <S.LabelPath $deprecated={deprecated}>{path}</S.LabelPath>
-                <S.LabelMethodTag $deprecated={deprecated} $method={operation}>
-                  {operation.toUpperCase()}
-                </S.LabelMethodTag>
-                {kuskExtensionRef && <KuskExtensionIcon />}
-              </S.TableOfContentsLabel>
+              <TableOfContentsLabel
+                containsKuskExtension={Boolean(kuskExtensionRef)}
+                deprecated={deprecated}
+                level="operation"
+                operation={operation}
+                path={path}
+                tag="default"
+              />
             ),
             kuskExtensionRef,
             operationId,
