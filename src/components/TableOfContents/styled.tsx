@@ -1,4 +1,4 @@
-import {Tree as RawTree} from 'antd';
+import {Button as RawButton, Tree as RawTree} from 'antd';
 
 import styled from 'styled-components';
 
@@ -7,7 +7,7 @@ import {GlobalScrollbarStyle} from '@utils/scrollbar';
 import Colors from '@styles/colors';
 
 export const ContentContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 10px;
   color: ${Colors.grey9};
   border: 1px solid ${Colors.grey5};
   background: ${Colors.grey2};
@@ -38,13 +38,28 @@ export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $r
   }
 `;
 
+export const ExpandCollapseButton = styled(RawButton)`
+  color: ${Colors.whitePure};
+
+  & span {
+    font-size: 14px;
+  }
+
+  &:active {
+    color: ${Colors.whitePure};
+    border-color: ${Colors.whitePure};
+  }
+`;
+
 export const TableOfContentsContainer = styled.div`
   margin-bottom: 30px;
 `;
 
-export const TableOfContentsTitle = styled.span`
+export const TableOfContentsTitle = styled.div`
   font-size: 18px;
   color: ${Colors.whitePure};
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const Tree = styled(RawTree)`
