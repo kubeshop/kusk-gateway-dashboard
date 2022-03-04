@@ -98,23 +98,22 @@ const createTableOfContents = (spec: any) => {
 };
 
 const tableOfContentsScrollToElement = (content: TableOfContentsItem, layoutActions: any) => {
-  const {kuskExtensionRef, operationElementId, operationId, tag, level} = content;
+  const {kuskExtensionRef, operationElementId, operationId, tag} = content;
 
-  // scroll to top/path level extension
-  if (level !== 'operation' && kuskExtensionRef) {
-    document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
-  } else if (operationElementId) {
-    // if operation expanded, scroll to kusk extension or to operation summary
+  if (operationElementId) {
+    // if operation expanded, scroll to operation summary
     if (document.getElementById(operationElementId)?.classList.contains('is-open')) {
-      document.getElementById(kuskExtensionRef || operationElementId)?.scrollIntoView({behavior: 'smooth'});
+      document.getElementById(operationElementId)?.scrollIntoView({behavior: 'smooth'});
     } else {
-      // expand the operation and the scroll to kusk extension or to operation summary
+      // expand the operation and the scroll to operation summary
       layoutActions.show(['operations', tag || 'default', operationId], true);
 
       setTimeout(() => {
-        document.getElementById(kuskExtensionRef || operationElementId)?.scrollIntoView({behavior: 'smooth'});
+        document.getElementById(operationElementId)?.scrollIntoView({behavior: 'smooth'});
       }, 200);
     }
+  } else if (kuskExtensionRef) {
+    document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
   }
 };
 
