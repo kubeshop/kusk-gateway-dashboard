@@ -11,7 +11,7 @@ interface IProps {
   spec: any;
 }
 
-const createTableOfContents = (spec: any) => {
+const createTableOfContents = (spec: any, layoutActions: any) => {
   let tableOfContents: TableOfContentsItem[] = [];
 
   // top level extension
@@ -53,44 +53,36 @@ const createTableOfContents = (spec: any) => {
           kuskExtensionRef = `${reconstructedPathRef}-${operation}-extension`;
         }
 
+        let tags: string[];
+
         if (operationValue.tags && operationValue.tags.length) {
-          operationValue.tags.forEach((tag: string) => {
-            tableOfContents.push({
-              label: (
-                <TableOfContentsLabel
-                  containsKuskExtension={Boolean(kuskExtensionRef)}
-                  deprecated={deprecated}
-                  level="operation"
-                  operation={operation}
-                  path={path}
-                  tag={tag}
-                />
-              ),
-              kuskExtensionRef,
-              operationId,
-              operationElementId: `operations-${tag}-${operationId}`,
-              level: 'operation',
-              tag,
-            });
-          });
+          tags = operationValue.tags;
         } else {
+          tags = ['default'];
+        }
+
+        tags.forEach((tag: string) => {
           tableOfContents.push({
             label: (
               <TableOfContentsLabel
                 containsKuskExtension={Boolean(kuskExtensionRef)}
                 deprecated={deprecated}
+                kuskExtensionRef={kuskExtensionRef}
+                layoutActions={layoutActions}
                 level="operation"
                 operation={operation}
+                operationId={operationId}
                 path={path}
-                tag="default"
+                tag={tag}
               />
             ),
             kuskExtensionRef,
             operationId,
-            operationElementId: `operations-default-${operationId}`,
+            operationElementId: `operations-${tag}-${operationId}`,
             level: 'operation',
+            tag,
           });
-        }
+        });
       });
   });
 
@@ -120,7 +112,7 @@ const tableOfContentsScrollToElement = (content: TableOfContentsItem, layoutActi
 const TableOfContents: React.FC<IProps> = props => {
   const {layoutActions, spec} = props;
 
-  const tableOfContents = createTableOfContents(spec);
+  const tableOfContents = createTableOfContents(spec, layoutActions);
 
   if (!tableOfContents || !tableOfContents.length) {
     return null;

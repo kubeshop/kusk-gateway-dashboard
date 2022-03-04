@@ -30,7 +30,6 @@ export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $r
     ${({$ref}) => {
       if ($ref) {
         return `
-          letter-spacing: 0.4px;
           color: ${Colors.whitePure};
           cursor: pointer;
         `;

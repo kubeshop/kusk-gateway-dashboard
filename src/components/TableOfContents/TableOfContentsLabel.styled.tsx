@@ -17,7 +17,7 @@ const swaggerUIMethodsColors: {[method: string]: string} = {
 };
 
 export const ApiOutlined = styled(RawApiOutlined)`
-  font-size: 16px;
+  font-size: 18px;
 `;
 
 export const Container = styled.div<{$level: 'top' | 'path' | 'operation'}>`
