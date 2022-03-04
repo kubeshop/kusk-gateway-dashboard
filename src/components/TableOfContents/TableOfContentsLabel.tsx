@@ -37,12 +37,15 @@ const TableOfContentsLabel: React.FC<IProps> = props => {
     (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
       e.stopPropagation();
 
-      if (!kuskExtensionRef || !layoutActions) {
+      if (!kuskExtensionRef) {
         return;
       }
 
-      // if operation expanded, scroll to operation summary
-      if (document.getElementById(kuskExtensionRef)?.classList.contains('is-open')) {
+      if (level !== 'operation') {
+        document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
+      } else if (document.getElementById(kuskExtensionRef)?.classList.contains('is-open')) {
+        // if operation expanded, scroll to operation summary
+
         document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
       } else {
         // expand the operation and the scroll to operation summary
@@ -53,7 +56,7 @@ const TableOfContentsLabel: React.FC<IProps> = props => {
         }, 200);
       }
     },
-    [kuskExtensionRef, layoutActions, operationId, tag]
+    [kuskExtensionRef, layoutActions, level, operationId, tag]
   );
 
   return (

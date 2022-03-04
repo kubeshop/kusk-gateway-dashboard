@@ -39,7 +39,14 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
   let treeData: DataNode[] = [];
 
   const rootNodeContent: TableOfContentsItem = {
-    label: <TableOfContentsLabel containsKuskExtension={spec['x-kusk']} level="top" path="Root object" />,
+    label: (
+      <TableOfContentsLabel
+        containsKuskExtension={spec['x-kusk']}
+        kuskExtensionRef={spec['x-kusk'] ? 'top-level-extension' : ''}
+        level="top"
+        path="Root object"
+      />
+    ),
     kuskExtensionRef: spec['x-kusk'] ? 'top-level-extension' : '',
     level: 'top',
   };
