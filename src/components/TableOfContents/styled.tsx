@@ -19,6 +19,10 @@ export const ContentContainer = styled.div`
 `;
 
 export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $ref: string}>`
+  ${({$level}) => `
+    margin-bottom: ${$level === 'path' ? '5px' : '0px'};
+  `}
+
   width: max-content;
   transition: all 0.2s ease-in;
 

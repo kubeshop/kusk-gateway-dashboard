@@ -27,7 +27,7 @@ export const Container = styled.div<{$level: 'top' | 'path' | 'operation'}>`
 
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 `;
 
 export const LabelMethodTag = styled(RawTag)<{$deprecated: boolean; $method: string}>`
