@@ -48,7 +48,6 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
       />
     ),
     kuskExtensionRef: spec['x-kusk'] ? 'top-level-extension' : '',
-    level: 'top',
   };
 
   treeData.push({
@@ -67,7 +66,6 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
 
       const pathNodeContent: TableOfContentsItem = {
         label: <TableOfContentsLabel containsKuskExtension={pathValue['x-kusk']} level="path" path={path} />,
-        level: 'path',
       };
 
       return {
@@ -129,7 +127,6 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
                 kuskExtensionRef,
                 operationId,
                 operationElementId: `operations-${tag}-${operationId}`,
-                level: 'operation',
                 tag,
               };
 
