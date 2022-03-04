@@ -1,3 +1,5 @@
+import {Tree as RawTree} from 'antd';
+
 import styled from 'styled-components';
 
 import {GlobalScrollbarStyle} from '@utils/scrollbar';
@@ -17,12 +19,6 @@ export const ContentContainer = styled.div`
 `;
 
 export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $ref: string}>`
-  margin: 10px 0px;
-
-  ${({$level}) => `
-    margin-left: ${$level === 'top' ? '0px' : $level === 'path' ? '15px' : '30px'};
-  `}
-
   width: max-content;
   transition: all 0.2s ease-in;
 
@@ -45,4 +41,25 @@ export const TableOfContentsContainer = styled.div`
 export const TableOfContentsTitle = styled.span`
   font-size: 18px;
   color: ${Colors.whitePure};
+`;
+
+export const Tree = styled(RawTree)`
+  background-color: ${Colors.grey2};
+  color: ${Colors.grey9};
+
+  & .ant-tree-switcher {
+    background: ${Colors.grey2};
+  }
+
+  & .ant-tree-node-content-wrapper {
+    cursor: default;
+
+    &:hover {
+      background-color: ${Colors.grey2};
+    }
+  }
+
+  & .ant-tree-node-selected {
+    background-color: ${Colors.grey2} !important;
+  }
 `;
