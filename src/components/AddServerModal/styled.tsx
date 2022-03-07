@@ -1,10 +1,10 @@
 import {Modal as RawModal} from 'antd';
 
+import {QuestionCircleOutlined as RawQuestionsCircleOutlined} from '@ant-design/icons';
+
 import styled from 'styled-components';
 
 import Colors from '@styles/colors';
-
-export const Container = styled.div``;
 
 export const InputLabel = styled.label`
   color: ${Colors.whitePure};
@@ -27,4 +27,9 @@ export const Modal = styled(RawModal)`
       color: ${Colors.whitePure};
     }
   }
+`;
+
+export const QuestionCircleOutlined = styled(RawQuestionsCircleOutlined)`
+  margin-left: 5px;
+  cursor: pointer;
 `;

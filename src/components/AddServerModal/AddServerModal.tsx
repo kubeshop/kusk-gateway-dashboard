@@ -25,7 +25,7 @@ const AddServerModal: React.FC<IProps> = props => {
   };
 
   return (
-    <S.Container>
+    <>
       <Button type="primary" onClick={() => setShowModal(true)}>
         Add server
       </Button>
@@ -39,7 +39,16 @@ const AddServerModal: React.FC<IProps> = props => {
           onCancel={onCancelHandler}
           onOk={onOkHandler}
         >
-          <S.InputLabel htmlFor="serverURL">Server URL</S.InputLabel>
+          <S.InputLabel htmlFor="serverURL">
+            Server URL
+            <a
+              href="https://swagger.io/docs/specification/api-host-and-base-path/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <S.QuestionCircleOutlined />
+            </a>
+          </S.InputLabel>
           <Input
             id="serverURL"
             placeholder="https://api-endpoint.com"
@@ -48,7 +57,7 @@ const AddServerModal: React.FC<IProps> = props => {
           />
         </S.Modal>
       )}
-    </S.Container>
+    </>
   );
 };
 
