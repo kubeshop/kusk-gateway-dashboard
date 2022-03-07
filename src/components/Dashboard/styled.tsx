@@ -1,5 +1,7 @@
 import {Select as RawSelect} from 'antd';
 
+import {QuestionCircleOutlined as RawQuestionsCircleOutlined} from '@ant-design/icons';
+
 import styled from 'styled-components';
 
 import Colors from '@styles/colors';
@@ -33,8 +35,18 @@ export const DashboardTitleLabel = styled.h2`
   margin: 0;
 `;
 
+export const EnvoyFleetFilterContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
 export const ErrorLabel = styled.span`
   color: red;
+`;
+
+export const QuestionCircleOutlined = styled(RawQuestionsCircleOutlined)`
+  cursor: pointer;
 `;
 
 export const Select = styled(RawSelect)`

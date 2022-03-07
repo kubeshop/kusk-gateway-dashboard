@@ -1,6 +1,9 @@
 import React, {Suspense, useMemo, useState} from 'react';
 
-import {Select, Skeleton} from 'antd';
+import {Select, Skeleton, Tooltip} from 'antd';
+
+import {TOOLTIP_DELAY} from '@constants/constants';
+import {EnvoyFleetInfoTooltip} from '@constants/tooltips';
 
 import {useGetApis, useGetEnvoyFleets} from '@models/api';
 
@@ -37,27 +40,35 @@ const Dashboard: React.FC = () => {
         <S.DashboardTitleContainer>
           <S.DashboardTitleLabel>APIs</S.DashboardTitleLabel>
 
-          {envoyFleetsState.loading ? (
-            <Skeleton.Button />
-          ) : envoyFleetsState.error ? (
-            <S.ErrorLabel>{envoyFleetsState.error.message}</S.ErrorLabel>
-          ) : (
-            envoyFleetsState.data && (
-              <S.Select
-                allowClear
-                placeholder="Select a fleet"
-                showSearch
-                onChange={value => setSelectedFleet(value as string)}
-              >
-                {envoyFleetsState.data.map(({id, name}) => (
-                  <Option key={id} value={name.toLowerCase()}>
-                    {name}
-                  </Option>
-                ))}
-                <Option value="test">Test</Option>
-              </S.Select>
-            )
-          )}
+          <S.EnvoyFleetFilterContainer>
+            {envoyFleetsState.loading ? (
+              <Skeleton.Button />
+            ) : envoyFleetsState.error ? (
+              <S.ErrorLabel>{envoyFleetsState.error.message}</S.ErrorLabel>
+            ) : (
+              envoyFleetsState.data && (
+                <S.Select
+                  allowClear
+                  placeholder="Select a fleet"
+                  showSearch
+                  onChange={value => setSelectedFleet(value as string)}
+                >
+                  {envoyFleetsState.data.map(({id, name}) => (
+                    <Option key={id} value={name.toLowerCase()}>
+                      {name}
+                    </Option>
+                  ))}
+                  <Option value="test">Test</Option>
+                </S.Select>
+              )
+            )}
+
+            {selectedFleet && (
+              <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={EnvoyFleetInfoTooltip}>
+                <S.QuestionCircleOutlined />
+              </Tooltip>
+            )}
+          </S.EnvoyFleetFilterContainer>
         </S.DashboardTitleContainer>
 
         {loading ? (

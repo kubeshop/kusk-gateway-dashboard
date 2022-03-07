@@ -21,12 +21,4 @@ body {
 body #root {
   height: 100%;
 }
-
-.ant-tooltip-inner {
-  background: #434343;
-}
-
-.ant-tooltip-arrow-content{
-    background-color: #434343 !important;
-}
 `;
