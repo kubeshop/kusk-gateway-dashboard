@@ -1,3 +1,4 @@
+export {AddServerModal} from './AddServerModal';
 export {ApiInfo} from './ApiInfo';
 export {Dashboard} from './Dashboard';
 export {PostProcessedApiSpec} from './PostProcessedApiSpec';
