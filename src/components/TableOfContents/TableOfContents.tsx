@@ -54,6 +54,7 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
 
   treeData.push({
     key: 'root',
+    className: 'tree-root-object',
     title: (
       <S.ContentLabel
         $level="top"

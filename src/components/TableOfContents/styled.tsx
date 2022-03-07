@@ -81,4 +81,11 @@ export const Tree = styled(RawTree)`
   & .ant-tree-node-selected {
     background-color: ${Colors.grey2} !important;
   }
+
+  & .tree-root-object {
+    & .ant-tree-switcher {
+      pointer-events: none;
+      color: ${Colors.grey5};
+    }
+  }
 `;
