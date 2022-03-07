@@ -1,3 +1,5 @@
+import {Select as RawSelect} from 'antd';
+
 import styled from 'styled-components';
 
 import Colors from '@styles/colors';
@@ -17,12 +19,24 @@ export const DashboardContainer = styled.div<{$gridTemplateColumns: string}>`
   background: ${Colors.grey3};
 `;
 
-export const DashboardTitle = styled.h2`
+export const DashboardTitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 10px;
+`;
+
+export const DashboardTitleLabel = styled.h2`
   color: ${Colors.grey9};
   font-size: 20px;
   font-family: 'Roboto', sans-serif;
+  margin: 0;
 `;
 
 export const ErrorLabel = styled.span`
   color: red;
+`;
+
+export const Select = styled(RawSelect)`
+  width: 200px;
 `;

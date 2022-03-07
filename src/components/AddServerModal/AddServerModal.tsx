@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-import {Input} from 'antd';
+import {Input, Modal} from 'antd';
 
 import * as S from './styled';
 
@@ -46,7 +46,7 @@ const AddServerModal: React.FC<IProps> = props => {
       </S.Button>
 
       {showModal && (
-        <S.Modal
+        <Modal
           destroyOnClose
           centered
           title="Add new server"
@@ -71,7 +71,7 @@ const AddServerModal: React.FC<IProps> = props => {
             onChange={onInputChangeHandler}
           />
           {errorMessage && <S.ErrorMessage>* {errorMessage}</S.ErrorMessage>}
-        </S.Modal>
+        </Modal>
       )}
     </>
   );

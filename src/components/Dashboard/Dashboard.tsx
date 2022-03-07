@@ -1,8 +1,8 @@
-import React, {Suspense, useMemo} from 'react';
+import React, {Suspense, useMemo, useState} from 'react';
 
-import {Skeleton} from 'antd';
+import {Select, Skeleton} from 'antd';
 
-import {useGetApis} from '@models/api';
+import {useGetApis, useGetEnvoyFleets} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
@@ -10,12 +10,18 @@ import DashboardAPIsTable from './DashboardAPIsTable';
 
 import * as S from './styled';
 
+const {Option} = Select;
+
 const ApiInfo = React.lazy(() => import('../ApiInfo/ApiInfo'));
 
 const Dashboard: React.FC = () => {
+  const [selectedFleet, setSelectedFleet] = useState<string>('');
+
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const {data, error, loading} = useGetApis({});
+  const {data, error, loading} = useGetApis({queryParams: {fleet: selectedFleet}});
+
+  const envoyFleetsState = useGetEnvoyFleets({});
 
   const dashboardContainerGridTemplateColumns = useMemo(() => {
     if (selectedApi) {
@@ -28,7 +34,31 @@ const Dashboard: React.FC = () => {
   return (
     <S.DashboardContainer $gridTemplateColumns={dashboardContainerGridTemplateColumns}>
       <S.ApisContainer>
-        <S.DashboardTitle>APIs</S.DashboardTitle>
+        <S.DashboardTitleContainer>
+          <S.DashboardTitleLabel>APIs</S.DashboardTitleLabel>
+
+          {envoyFleetsState.loading ? (
+            <Skeleton.Button />
+          ) : envoyFleetsState.error ? (
+            <S.ErrorLabel>{envoyFleetsState.error.message}</S.ErrorLabel>
+          ) : (
+            envoyFleetsState.data && (
+              <S.Select
+                allowClear
+                placeholder="Select a fleet"
+                showSearch
+                onChange={value => setSelectedFleet(value as string)}
+              >
+                {envoyFleetsState.data.map(({id, name}) => (
+                  <Option key={id} value={name.toLowerCase()}>
+                    {name}
+                  </Option>
+                ))}
+                <Option value="test">Test</Option>
+              </S.Select>
+            )
+          )}
+        </S.DashboardTitleContainer>
 
         {loading ? (
           <Skeleton />
