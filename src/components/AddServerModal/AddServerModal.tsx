@@ -35,6 +35,7 @@ const AddServerModal: React.FC<IProps> = props => {
     }
 
     addServerHandler(serverURL);
+    setServerURL('');
     setShowModal(false);
   };
 

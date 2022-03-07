@@ -17,9 +17,9 @@ const DynamicServersPlugin = () => ({
 
       return (
         <S.ServersContainer>
-          <AddServerModal addServerHandler={updateSpecServers} />
-
           <Original {...props} />
+
+          <AddServerModal addServerHandler={updateSpecServers} />
         </S.ServersContainer>
       );
     },
