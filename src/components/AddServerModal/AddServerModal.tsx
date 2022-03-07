@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-import {Button, Input} from 'antd';
+import {Input} from 'antd';
 
 import * as S from './styled';
 
@@ -11,6 +11,7 @@ interface IProps {
 const AddServerModal: React.FC<IProps> = props => {
   const {addServerHandler} = props;
 
+  const [errorMessage, setErrorMessage] = useState('');
   const [serverURL, setServerURL] = useState('');
   const [showModal, setShowModal] = useState(false);
 
@@ -19,16 +20,29 @@ const AddServerModal: React.FC<IProps> = props => {
     setShowModal(false);
   };
 
+  const onInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (errorMessage) {
+      setErrorMessage('');
+    }
+
+    setServerURL(e.target.value);
+  };
+
   const onOkHandler = () => {
+    if (!serverURL) {
+      setErrorMessage('Server URL must not be empty!');
+      return;
+    }
+
     addServerHandler(serverURL);
     setShowModal(false);
   };
 
   return (
     <>
-      <Button type="primary" onClick={() => setShowModal(true)}>
+      <S.Button type="primary" onClick={() => setShowModal(true)}>
         Add server
-      </Button>
+      </S.Button>
 
       {showModal && (
         <S.Modal
@@ -53,8 +67,9 @@ const AddServerModal: React.FC<IProps> = props => {
             id="serverURL"
             placeholder="https://api-endpoint.com"
             value={serverURL}
-            onChange={e => setServerURL(e.target.value)}
+            onChange={onInputChangeHandler}
           />
+          {errorMessage && <S.ErrorMessage>* {errorMessage}</S.ErrorMessage>}
         </S.Modal>
       )}
     </>
