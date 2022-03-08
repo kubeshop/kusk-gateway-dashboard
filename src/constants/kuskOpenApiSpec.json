@@ -1,13 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
+    "version": "1.0.0",
     "title": "Kusk Gateway API",
-    "description": "This is the Kusk Gateway Management API",
-    "version": "1.0.0"
-  },
-  "externalDocs": {
-    "description": "Find out more about Kusk-Gateway",
-    "url": "https://kubeshop.github.io/kusk-gateway/"
+    "description": "This is the Kusk Gateway Management API"
   },
   "servers": [
     {
@@ -15,6 +11,10 @@
       "description": "My local endpoint mockup"
     }
   ],
+  "externalDocs": {
+    "description": "Find out more about Kusk-Gateway",
+    "url": "https://kubeshop.github.io/kusk-gateway/"
+  },
   "tags": [
     {
       "name": "apis",
@@ -40,13 +40,11 @@
           {
             "name": "fleet",
             "in": "query",
-            "description": "optional filter on fleet",
-            "required": false,
-            "style": "form",
-            "explode": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "required": false,
+            "description": "optional filter on fleet"
           }
         ],
         "responses": {
@@ -77,8 +75,6 @@
             "name": "apiId",
             "in": "path",
             "required": true,
-            "style": "simple",
-            "explode": false,
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -113,8 +109,6 @@
             "name": "apiId",
             "in": "path",
             "required": true,
-            "style": "simple",
-            "explode": false,
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -148,13 +142,11 @@
           {
             "name": "namespace",
             "in": "query",
-            "description": "optional filter on namespace",
-            "required": false,
-            "style": "form",
-            "explode": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "required": false,
+            "description": "optional filter on namespace"
           }
         ],
         "responses": {
@@ -185,8 +177,6 @@
             "name": "namespace",
             "in": "path",
             "required": true,
-            "style": "simple",
-            "explode": false,
             "schema": {
               "type": "string"
             }
@@ -195,8 +185,6 @@
             "name": "name",
             "in": "path",
             "required": true,
-            "style": "simple",
-            "explode": false,
             "schema": {
               "type": "string"
             }
@@ -229,13 +217,11 @@
           {
             "name": "namespace",
             "in": "query",
-            "description": "optional filter on namespace",
-            "required": false,
-            "style": "form",
-            "explode": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "required": false,
+            "description": "optional filter on namespace"
           }
         ],
         "responses": {
@@ -265,24 +251,20 @@
           {
             "name": "namespace",
             "in": "path",
-            "description": "the namespace of the fleet",
             "required": true,
-            "style": "simple",
-            "explode": false,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "the namespace of the fleet"
           },
           {
             "name": "name",
             "in": "path",
-            "description": "the name of the fleet",
             "required": true,
-            "style": "simple",
-            "explode": false,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "the name of the fleet"
           }
         ],
         "responses": {
@@ -306,8 +288,8 @@
   "components": {
     "schemas": {
       "ApiItem": {
-        "required": ["fleet", "id", "name", "service", "status"],
         "type": "object",
+        "required": ["name", "id", "status", "fleet", "service"],
         "properties": {
           "name": {
             "type": "string"
@@ -325,8 +307,8 @@
         }
       },
       "ServiceItem": {
-        "required": ["id", "name", "status"],
         "type": "object",
+        "required": ["name", "id", "status", "namespace"],
         "properties": {
           "name": {
             "type": "string"
@@ -338,12 +320,15 @@
           "status": {
             "type": "string",
             "enum": ["available", "unavailable"]
+          },
+          "namespace": {
+            "type": "string"
           }
         }
       },
       "EnvoyFleetItem": {
-        "required": ["id", "name"],
         "type": "object",
+        "required": ["name", "id", "namespace"],
         "properties": {
           "name": {
             "type": "string"
@@ -351,12 +336,15 @@
           "id": {
             "type": "string",
             "format": "uuid"
+          },
+          "namespace": {
+            "type": "string"
           }
         }
       },
       "ApiItem_Fleet": {
-        "required": ["name", "namespace"],
         "type": "object",
+        "required": ["name", "namespace"],
         "properties": {
           "name": {
             "type": "string"
@@ -367,8 +355,8 @@
         }
       },
       "ApiItem_Service": {
-        "required": ["name", "namespace"],
         "type": "object",
+        "required": ["name", "namespace"],
         "properties": {
           "name": {
             "type": "string"

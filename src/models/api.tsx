@@ -13,11 +13,13 @@ export interface ServiceItem {
   name: string;
   id: string;
   status: 'available' | 'unavailable';
+  namespace: string;
 }
 
 export interface EnvoyFleetItem {
   name: string;
   id: string;
+  namespace: string;
 }
 
 export interface ApiItemFleet {
