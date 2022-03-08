@@ -1,11 +1,12 @@
-import {Draft, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
+
 import {MainState} from 'src/models/main';
 
-import initialReduxState from '../initialState';
+import initialState from '@redux/initialState';
 
 export const mainSlice = createSlice({
   name: 'main',
-  initialState: initialReduxState.main,
+  initialState: initialState.main,
   reducers: {
     selectApi: (state: Draft<MainState>, action: PayloadAction<string>) => {
       state.selectedApi = action.payload;
