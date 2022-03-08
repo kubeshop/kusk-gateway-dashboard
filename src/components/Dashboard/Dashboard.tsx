@@ -65,6 +65,7 @@ const Dashboard: React.FC = () => {
             ) : (
               envoyFleetsState.data && (
                 <S.Select
+                  onClear={() => setSelectedFleet(undefined)}
                   allowClear
                   placeholder="Select a fleet"
                   showSearch
