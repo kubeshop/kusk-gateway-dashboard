@@ -1,13 +1,16 @@
 import React, {Suspense, useMemo, useState} from 'react';
 
-import {Select, Skeleton, Tooltip} from 'antd';
+import {Select, Skeleton, Tag, Tooltip} from 'antd';
 
 import {TOOLTIP_DELAY} from '@constants/constants';
 import {EnvoyFleetInfoTooltip} from '@constants/tooltips';
 
-import {useGetApis, useGetEnvoyFleets} from '@models/api';
+import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets} from '@models/api';
 
-import {useAppSelector} from '@redux/hooks';
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
+
+import {EnvoyFleetInfoModal} from '@components/EnvoyFleetInfoModal';
 
 import DashboardAPIsTable from './DashboardAPIsTable';
 
@@ -18,11 +21,13 @@ const {Option} = Select;
 const ApiInfo = React.lazy(() => import('../ApiInfo/ApiInfo'));
 
 const Dashboard: React.FC = () => {
-  const [selectedFleet, setSelectedFleet] = useState<string>('');
-
+  const dispatch = useAppDispatch();
+  const envoyFleet = useAppSelector(state => state.ui.envoyFleetModal.envoyFleet);
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const {data, error, loading} = useGetApis({queryParams: {fleet: selectedFleet}});
+  const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
+
+  const {data, error, loading} = useGetApis({queryParams: {fleet: selectedFleet?.id || ''}});
 
   const envoyFleetsState = useGetEnvoyFleets({});
 
@@ -33,6 +38,18 @@ const Dashboard: React.FC = () => {
 
     return '1fr';
   }, [selectedApi]);
+
+  const onEnvoyFleetSelectHandler = (envoyFleetItem: EnvoyFleetItem) => {
+    setSelectedFleet(envoyFleetItem);
+  };
+
+  const onEnvoyFleetInfoIconClickHandler = () => {
+    if (!selectedFleet) {
+      return;
+    }
+
+    dispatch(toggleEnvoyFleetInfoModal({name: selectedFleet.name, namespace: selectedFleet.namespace}));
+  };
 
   return (
     <S.DashboardContainer $gridTemplateColumns={dashboardContainerGridTemplateColumns}>
@@ -51,21 +68,23 @@ const Dashboard: React.FC = () => {
                   allowClear
                   placeholder="Select a fleet"
                   showSearch
-                  onChange={value => setSelectedFleet(value as string)}
+                  onSelect={(value: any, option: any) => {
+                    onEnvoyFleetSelectHandler(option.envoyfleet);
+                  }}
                 >
-                  {envoyFleetsState.data.map(({id, name}) => (
-                    <Option key={id} value={name.toLowerCase()}>
-                      {name}
+                  {envoyFleetsState.data.map(envoyFleetItem => (
+                    <Option key={envoyFleetItem.id} value={envoyFleetItem.name} envoyfleet={envoyFleetItem}>
+                      <Tag>{envoyFleetItem.namespace}</Tag>
+                      {envoyFleetItem.name}
                     </Option>
                   ))}
-                  <Option value="test">Test</Option>
                 </S.Select>
               )
             )}
 
             {selectedFleet && (
               <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={EnvoyFleetInfoTooltip}>
-                <S.QuestionCircleOutlined />
+                <S.QuestionCircleOutlined onClick={onEnvoyFleetInfoIconClickHandler} />
               </Tooltip>
             )}
           </S.EnvoyFleetFilterContainer>
@@ -80,7 +99,10 @@ const Dashboard: React.FC = () => {
         )}
       </S.ApisContainer>
 
-      <Suspense fallback={null}>{selectedApi && <ApiInfo />}</Suspense>
+      <Suspense fallback={null}>
+        {selectedApi && <ApiInfo />}
+        {envoyFleet && <EnvoyFleetInfoModal />}
+      </Suspense>
     </S.DashboardContainer>
   );
 };

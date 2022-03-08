@@ -50,5 +50,5 @@ export const QuestionCircleOutlined = styled(RawQuestionsCircleOutlined)`
 `;
 
 export const Select = styled(RawSelect)`
-  width: 200px;
+  width: 300px;
 `;

@@ -40,12 +40,14 @@ export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $r
 
 export const ExpandCollapseButton = styled(RawButton)`
   color: ${Colors.whitePure};
+  border-color: ${Colors.whitePure};
 
   & span {
     font-size: 14px;
   }
 
-  &:active {
+  &:active,
+  &:focus {
     color: ${Colors.whitePure};
     border-color: ${Colors.whitePure};
   }
