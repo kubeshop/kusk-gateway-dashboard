@@ -18,18 +18,18 @@ interface IProps {
 }
 
 const tableOfContentsScrollToElement = (content: TableOfContentsItem, layoutActions: any) => {
-  const {operationElementRef, operationId, tag} = content;
+  const {elementRef, operationId, tag} = content;
 
-  if (operationElementRef) {
+  if (elementRef) {
     // if operation expanded, scroll to operation summary
-    if (document.getElementById(operationElementRef)?.classList.contains('is-open')) {
-      document.getElementById(operationElementRef)?.scrollIntoView({behavior: 'smooth'});
+    if (document.getElementById(elementRef)?.classList.contains('is-open')) {
+      document.getElementById(elementRef)?.scrollIntoView({behavior: 'smooth'});
     } else {
       // expand the operation and the scroll to operation summary
       layoutActions.show(['operations', tag || 'default', operationId], true);
 
       setTimeout(() => {
-        document.getElementById(operationElementRef)?.scrollIntoView({behavior: 'smooth'});
+        document.getElementById(elementRef)?.scrollIntoView({behavior: 'smooth'});
       }, 200);
     }
   }
@@ -107,7 +107,7 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
                   />
                 ),
                 operationId,
-                operationElementRef: `operations-${tag}-${operationId}`,
+                elementRef: `operations-${tag}-${operationId}`,
                 tag,
               };
 
@@ -116,7 +116,7 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
                 title: (
                   <S.ContentLabel
                     $level="operation"
-                    $ref={operationTagNodeContent.operationElementRef || ''}
+                    $ref={operationTagNodeContent.elementRef || ''}
                     onClick={() => tableOfContentsScrollToElement(operationTagNodeContent, layoutActions)}
                   >
                     {operationTagNodeContent.label}
