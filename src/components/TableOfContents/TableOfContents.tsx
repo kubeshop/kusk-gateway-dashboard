@@ -18,22 +18,20 @@ interface IProps {
 }
 
 const tableOfContentsScrollToElement = (content: TableOfContentsItem, layoutActions: any) => {
-  const {kuskExtensionRef, operationElementId, operationId, tag} = content;
+  const {operationElementRef, operationId, tag} = content;
 
-  if (operationElementId) {
+  if (operationElementRef) {
     // if operation expanded, scroll to operation summary
-    if (document.getElementById(operationElementId)?.classList.contains('is-open')) {
-      document.getElementById(operationElementId)?.scrollIntoView({behavior: 'smooth'});
+    if (document.getElementById(operationElementRef)?.classList.contains('is-open')) {
+      document.getElementById(operationElementRef)?.scrollIntoView({behavior: 'smooth'});
     } else {
       // expand the operation and the scroll to operation summary
       layoutActions.show(['operations', tag || 'default', operationId], true);
 
       setTimeout(() => {
-        document.getElementById(operationElementId)?.scrollIntoView({behavior: 'smooth'});
+        document.getElementById(operationElementRef)?.scrollIntoView({behavior: 'smooth'});
       }, 200);
     }
-  } else if (kuskExtensionRef) {
-    document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
   }
 };
 
@@ -49,7 +47,6 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
         path="Root object"
       />
     ),
-    kuskExtensionRef: spec['x-kusk'] ? 'top-level-extension' : '',
   };
 
   treeData.push({
@@ -58,7 +55,7 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
     title: (
       <S.ContentLabel
         $level="top"
-        $ref={rootNodeContent.kuskExtensionRef || ''}
+        $ref=""
         onClick={() => tableOfContentsScrollToElement(rootNodeContent, layoutActions)}
       >
         {rootNodeContent.label}
@@ -127,9 +124,8 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
                     tag={tag}
                   />
                 ),
-                kuskExtensionRef,
                 operationId,
-                operationElementId: `operations-${tag}-${operationId}`,
+                operationElementRef: `operations-${tag}-${operationId}`,
                 tag,
               };
 
@@ -138,7 +134,7 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
                 title: (
                   <S.ContentLabel
                     $level="operation"
-                    $ref={operationTagNodeContent.kuskExtensionRef || operationTagNodeContent.operationElementId || ''}
+                    $ref={operationTagNodeContent.operationElementRef || ''}
                     onClick={() => tableOfContentsScrollToElement(operationTagNodeContent, layoutActions)}
                   >
                     {operationTagNodeContent.label}

@@ -18,6 +18,12 @@ const swaggerUIMethodsColors: {[method: string]: string} = {
 
 export const ApiOutlined = styled(RawApiOutlined)`
   font-size: 18px;
+
+  transition: all 0.2s ease-in;
+
+  &:hover {
+    color: ${Colors.whitePure} !important;
+  }
 `;
 
 export const Container = styled.div<{$level: 'top' | 'path' | 'operation'}>`
