@@ -38,45 +38,27 @@ const tableOfContentsScrollToElement = (content: TableOfContentsItem, layoutActi
 const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[] => {
   let treeData: DataNode[] = [];
 
-  const rootNodeContent: TableOfContentsItem = {
-    label: (
-      <TableOfContentsLabel
-        containsKuskExtension={spec['x-kusk']}
-        kuskExtensionRef={spec['x-kusk'] ? 'top-level-extension' : ''}
-        level="top"
-        path="Root object"
-      />
-    ),
-  };
-
   treeData.push({
     key: 'root',
     className: 'tree-root-object',
     title: (
-      <S.ContentLabel
-        $level="top"
-        $ref=""
-        onClick={() => tableOfContentsScrollToElement(rootNodeContent, layoutActions)}
-      >
-        {rootNodeContent.label}
+      <S.ContentLabel $level="top">
+        <TableOfContentsLabel
+          containsKuskExtension={spec['x-kusk']}
+          kuskExtensionRef={spec['x-kusk'] ? 'top-level-extension' : ''}
+          level="top"
+          path="Root object"
+        />
       </S.ContentLabel>
     ),
     children: Object.entries(spec.paths).map((pathEntry: [string, any]) => {
       const [path, pathValue] = pathEntry;
 
-      const pathNodeContent: TableOfContentsItem = {
-        label: <TableOfContentsLabel containsKuskExtension={pathValue['x-kusk']} level="path" path={path} />,
-      };
-
       return {
         key: path,
         title: (
-          <S.ContentLabel
-            $level="path"
-            $ref=""
-            onClick={() => tableOfContentsScrollToElement(pathNodeContent, layoutActions)}
-          >
-            {pathNodeContent.label}
+          <S.ContentLabel $level="path">
+            <TableOfContentsLabel containsKuskExtension={pathValue['x-kusk']} level="path" path={path} />
           </S.ContentLabel>
         ),
         children: Object.entries(pathValue)

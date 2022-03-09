@@ -18,7 +18,7 @@ export const ContentContainer = styled.div`
   ${GlobalScrollbarStyle};
 `;
 
-export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $ref: string}>`
+export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $ref?: string}>`
   ${({$level}) => `
     margin-bottom: ${$level === 'path' ? '5px' : '0px'};
   `}
