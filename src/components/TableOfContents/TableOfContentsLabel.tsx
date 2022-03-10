@@ -8,7 +8,6 @@ import {KuskExtensionTooltip} from '@constants/tooltips';
 import * as S from './TableOfContentsLabel.styled';
 
 interface IProps {
-  containsKuskExtension: boolean;
   level: 'top' | 'path' | 'operation';
   path: string;
   deprecated?: boolean;
@@ -20,7 +19,7 @@ interface IProps {
 }
 
 const TableOfContentsLabel: React.FC<IProps> = props => {
-  const {containsKuskExtension, layoutActions, level, path} = props;
+  const {layoutActions, level, path} = props;
   const {deprecated = false, kuskExtensionRef = '', operation = '', operationId = '', tag = ''} = props;
 
   const onTagClickHandler = useCallback(
@@ -45,7 +44,6 @@ const TableOfContentsLabel: React.FC<IProps> = props => {
         document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
       } else if (document.getElementById(kuskExtensionRef)?.classList.contains('is-open')) {
         // if operation expanded, scroll to operation summary
-
         document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
       } else {
         // expand the operation and the scroll to operation summary
@@ -53,7 +51,7 @@ const TableOfContentsLabel: React.FC<IProps> = props => {
 
         setTimeout(() => {
           document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
-        }, 200);
+        }, 100);
       }
     },
     [kuskExtensionRef, layoutActions, level, operationId, tag]
@@ -71,7 +69,7 @@ const TableOfContentsLabel: React.FC<IProps> = props => {
         </S.LabelMethodTag>
       )}
 
-      {containsKuskExtension && (
+      {Boolean(kuskExtensionRef) && (
         <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={KuskExtensionTooltip}>
           <S.ApiOutlined onClick={onKuskExtensionIconClickHandler} />
         </Tooltip>

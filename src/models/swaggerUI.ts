@@ -1,7 +1,7 @@
 interface TableOfContentsItem {
   label: JSX.Element;
-  elementRef?: string;
   operationId?: string;
+  operationElementRef?: string;
   tag?: string;
 }
 
