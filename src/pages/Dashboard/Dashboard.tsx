@@ -10,7 +10,7 @@ import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets} from '@models/api';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
 
-import {ApisTable, EnvoyFleetInfoModal} from '@components';
+import {ApisList, EnvoyFleetInfoModal} from '@components';
 
 import * as S from './styled';
 
@@ -94,7 +94,7 @@ const Dashboard: React.FC = () => {
         ) : error ? (
           <S.ErrorLabel>{error.message}</S.ErrorLabel>
         ) : (
-          data && <ApisTable apis={data} />
+          data && <ApisList apis={data} />
         )}
       </S.ApisContainer>
 

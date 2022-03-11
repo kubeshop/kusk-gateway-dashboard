@@ -1,2 +1,2 @@
 export {ApiInfo} from './ApiInfo';
-export {ApisTable} from './ApisTable';
+export {ApisList} from './ApisList';

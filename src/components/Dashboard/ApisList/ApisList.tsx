@@ -12,7 +12,7 @@ interface IProps {
   apis: ApiItem[];
 }
 
-const ApisTable: React.FC<IProps> = props => {
+const ApisList: React.FC<IProps> = props => {
   const {apis} = props;
 
   const dispatch = useAppDispatch();
@@ -112,4 +112,4 @@ const ApisTable: React.FC<IProps> = props => {
   return <S.Table columns={columns} dataSource={dataSource} pagination={false} tableLayout="fixed" />;
 };
 
-export default ApisTable;
+export default ApisList;
