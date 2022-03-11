@@ -1,4 +1,4 @@
-import React, {Suspense, useMemo, useState} from 'react';
+import React, {Suspense, lazy, useMemo, useState} from 'react';
 
 import {Select, Skeleton, Tag, Tooltip} from 'antd';
 
@@ -10,15 +10,13 @@ import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets} from '@models/api';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
 
-import {EnvoyFleetInfoModal} from '@components/EnvoyFleetInfoModal';
-
-import DashboardAPIsTable from './DashboardAPIsTable';
+import {ApisTable, EnvoyFleetInfoModal} from '@components';
 
 import * as S from './styled';
 
 const {Option} = Select;
 
-const ApiInfo = React.lazy(() => import('../ApiInfo/ApiInfo'));
+const ApiInfo = lazy(() => import('@components/Dashboard/ApiInfo/ApiInfo'));
 
 const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -96,7 +94,7 @@ const Dashboard: React.FC = () => {
         ) : error ? (
           <S.ErrorLabel>{error.message}</S.ErrorLabel>
         ) : (
-          data && <DashboardAPIsTable apis={data} />
+          data && <ApisTable apis={data} />
         )}
       </S.ApisContainer>
 

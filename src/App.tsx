@@ -10,7 +10,7 @@ import {SIDEBAR_WIDTH} from '@constants/constants';
 
 import {Sidebar} from '@components/Sidebar';
 
-const Dashboard = lazy(() => import('@components/Dashboard/Dashboard'));
+const Dashboard = lazy(() => import('@pages/Dashboard/Dashboard'));
 const Settings = lazy(() => import('@pages/Settings/Settings'));
 
 const AppContainer = styled.div`

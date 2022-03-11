@@ -1,24 +1,24 @@
 import {useCallback, useEffect, useState} from 'react';
 
 import {ApiItem} from '@models/api';
-import {DashboardAPIsTableDataSourceItem} from '@models/dashboard';
+import {ApisTableDataSourceItem} from '@models/dashboard';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
 
-import * as S from './DashboardAPIsTable.styled';
+import * as S from './styled';
 
 interface IProps {
   apis: ApiItem[];
 }
 
-const DashboardAPIsTable: React.FC<IProps> = props => {
+const ApisTable: React.FC<IProps> = props => {
   const {apis} = props;
 
   const dispatch = useAppDispatch();
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const [dataSource, setDataSource] = useState<DashboardAPIsTableDataSourceItem[]>([]);
+  const [dataSource, setDataSource] = useState<ApisTableDataSourceItem[]>([]);
 
   const renderApiName = useCallback(
     (name: string, record: any) => {
@@ -80,7 +80,7 @@ const DashboardAPIsTable: React.FC<IProps> = props => {
     }
     const getTableDataSource = async () => {
       // for each api, get the service from the endpoint in order to get the service status
-      let tableDataSource: DashboardAPIsTableDataSourceItem[] = [];
+      let tableDataSource: ApisTableDataSourceItem[] = [];
 
       for (let i = 0; i < apis.length; i += 1) {
         const api = apis[i];
@@ -112,4 +112,4 @@ const DashboardAPIsTable: React.FC<IProps> = props => {
   return <S.Table columns={columns} dataSource={dataSource} pagination={false} tableLayout="fixed" />;
 };
 
-export default DashboardAPIsTable;
+export default ApisTable;
