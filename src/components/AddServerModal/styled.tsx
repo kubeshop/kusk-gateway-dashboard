@@ -8,6 +8,7 @@ import Colors from '@styles/colors';
 
 export const Button = styled(RawButton)`
   width: max-content;
+  margin-bottom: 30px !important;
 `;
 
 export const ErrorMessage = styled.div`

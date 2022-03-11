@@ -1,11 +1,11 @@
-import {AddServerModal} from '@components/AddServerModal';
+import {lazy} from 'react';
 
-import * as S from './DynamicServersPlugin.styled';
+const AddServerModal = lazy(() => import('../../components/AddServerModal/AddServerModal'));
 
 const DynamicServersPlugin = () => ({
   wrapComponents: {
-    ServersContainer: (Original: any) => (props: any) => {
-      const {oas3Actions, spec, specActions} = props;
+    operations: (Original: any) => (props: any) => {
+      const {oas3Actions, spec, specActions, specSelectors} = props;
 
       const specJson = spec().toJS().json;
 
@@ -16,11 +16,10 @@ const DynamicServersPlugin = () => ({
       };
 
       return (
-        <S.ServersContainer>
-          <Original {...props} />
-
-          <AddServerModal addServerHandler={updateSpecServers} />
-        </S.ServersContainer>
+        <>
+          {specSelectors.isOAS3() && <AddServerModal addServerHandler={updateSpecServers} />}
+          <Original {...props} />;
+        </>
       );
     },
   },
