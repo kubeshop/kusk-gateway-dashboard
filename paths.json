@@ -10,6 +10,8 @@
       "@constants": ["src/constants/"],
       "@models/*": ["src/models/*"],
       "@models": ["src/models/"],
+      "@pages/*": ["src/pages/*"],
+      "@pages": ["src/pages/"],
       "@redux/*": ["src/redux/*"],
       "@redux": ["src/redux/"],
       "@styles/*": ["src/styles/*"],

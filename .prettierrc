@@ -11,6 +11,7 @@
     "^@constants",
     "^@models",
     "^@redux",
+    "^@pages",
     "^@components",
     "^@hooks",
     "^@swaggerUI",

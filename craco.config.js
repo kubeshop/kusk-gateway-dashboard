@@ -8,6 +8,7 @@ module.exports = {
       '@components': path.resolve(__dirname, 'src/components'),
       '@constants': path.resolve(__dirname, 'src/constants'),
       '@models': path.resolve(__dirname, 'src/models'),
+      '@pages': path.resolve(__dirname, 'src/pages'),
       '@redux': path.resolve(__dirname, 'src/redux'),
       '@styles': path.resolve(__dirname, 'src/styles'),
       '@swaggerUI': path.resolve(__dirname, 'src/swaggerUI'),
