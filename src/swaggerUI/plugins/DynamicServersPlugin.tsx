@@ -17,7 +17,7 @@ const DynamicServersPlugin = () => ({
 
       return (
         <>
-          {specSelectors.isOAS3() && <AddServerModal addServerHandler={updateSpecServers} />}
+          {specSelectors.isOAS3() && <AddServerModal addServerHandler={updateSpecServers} servers={specJson.servers} />}
           <Original {...props} />;
         </>
       );

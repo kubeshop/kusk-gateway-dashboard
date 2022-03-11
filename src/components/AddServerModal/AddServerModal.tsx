@@ -5,11 +5,12 @@ import {Input, Modal} from 'antd';
 import * as S from './styled';
 
 interface IProps {
+  servers: {url: string; description: string}[];
   addServerHandler: (url: string) => void;
 }
 
 const AddServerModal: React.FC<IProps> = props => {
-  const {addServerHandler} = props;
+  const {servers, addServerHandler} = props;
 
   const [errorMessage, setErrorMessage] = useState('');
   const [serverURL, setServerURL] = useState('');
@@ -31,6 +32,11 @@ const AddServerModal: React.FC<IProps> = props => {
   const onOkHandler = () => {
     if (!serverURL) {
       setErrorMessage('Server URL must not be empty!');
+      return;
+    }
+
+    if (servers.find(server => server.url === serverURL)) {
+      setErrorMessage('Server already exists!');
       return;
     }
 
