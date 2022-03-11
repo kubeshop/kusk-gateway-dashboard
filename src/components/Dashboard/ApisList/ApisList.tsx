@@ -1,115 +1,96 @@
-import {useCallback, useEffect, useState} from 'react';
+import {Suspense, useState} from 'react';
 
-import {ApiItem} from '@models/api';
-import {ApisTableDataSourceItem} from '@models/dashboard';
+import {Select, Skeleton, Tag, Tooltip} from 'antd';
+
+import {TOOLTIP_DELAY} from '@constants/constants';
+import {EnvoyFleetInfoTooltip} from '@constants/tooltips';
+
+import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
-import {selectApi} from '@redux/reducers/main';
+import {toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
+
+import {EnvoyFleetInfoModal} from '@components';
+
+import ApisListTable from './ApisListTable';
 
 import * as S from './styled';
 
-interface IProps {
-  apis: ApiItem[];
-}
+const {Option} = Select;
 
-const ApisList: React.FC<IProps> = props => {
-  const {apis} = props;
-
+const ApisList: React.FC = () => {
   const dispatch = useAppDispatch();
-  const selectedApi = useAppSelector(state => state.main.selectedApi);
+  const envoyFleet = useAppSelector(state => state.ui.envoyFleetModal.envoyFleet);
 
-  const [dataSource, setDataSource] = useState<ApisTableDataSourceItem[]>([]);
+  const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
 
-  const renderApiName = useCallback(
-    (name: string, record: any) => {
-      const {key} = record;
+  const {data, error, loading} = useGetApis({queryParams: {fleet: selectedFleet?.id || ''}});
+  const envoyFleetsState = useGetEnvoyFleets({});
 
-      return <S.ApiLabel $selected={key === selectedApi}>{name}</S.ApiLabel>;
-    },
-    [selectedApi]
-  );
+  const onEnvoyFleetSelectHandler = (envoyFleetItem: EnvoyFleetItem) => {
+    setSelectedFleet(envoyFleetItem);
+  };
 
-  const renderServicesTag = useCallback(
-    (status: 'available' | 'unavailable', record: any) => {
-      const {key} = record;
-
-      let tag = <S.FalseTag>Unavailable</S.FalseTag>;
-
-      if (status === 'available') {
-        tag = <S.TrueTag>Available</S.TrueTag>;
-      }
-
-      return (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          {tag}
-
-          <S.RightOutlined
-            $disabled={key === selectedApi}
-            onClick={() => {
-              if (key !== selectedApi) {
-                dispatch(selectApi(key));
-              }
-            }}
-          />
-        </div>
-      );
-    },
-    [dispatch, selectedApi]
-  );
-
-  const columns = [
-    {title: 'Name', dataIndex: 'name', key: 'name', render: renderApiName},
-    {
-      title: 'Services',
-      dataIndex: 'services',
-      key: 'services',
-      render: renderServicesTag,
-      width: '35%',
-    },
-  ];
-
-  useEffect(() => {
-    if (!apis.length) {
+  const onEnvoyFleetInfoIconClickHandler = () => {
+    if (!selectedFleet) {
       return;
     }
-    const getTableDataSource = async () => {
-      // for each api, get the service from the endpoint in order to get the service status
-      let tableDataSource: ApisTableDataSourceItem[] = [];
 
-      for (let i = 0; i < apis.length; i += 1) {
-        const api = apis[i];
-        // TODO: might be useful to have a Promise all for better performance
-        // const service = await getService({namespace: api.service.namespace, name: api.service.name});
-        const service: {
-          name: string;
-          namespace: string;
-          status: 'available' | 'unavailable';
-        } = {
-          name: api.service.name,
-          namespace: api.service.namespace,
-          status: i % 2 ? 'unavailable' : 'available',
-        };
+    dispatch(toggleEnvoyFleetInfoModal({name: selectedFleet.name, namespace: selectedFleet.namespace}));
+  };
 
-        tableDataSource.push({
-          key: api.id,
-          name: api.name,
-          services: service.status,
-        });
-      }
+  return (
+    <>
+      <S.ApisListContainer>
+        <S.TitleContainer>
+          <S.TitleLabel>APIs</S.TitleLabel>
 
-      setDataSource(tableDataSource);
-    };
+          <S.EnvoyFleetFilterContainer>
+            {envoyFleetsState.loading ? (
+              <Skeleton.Button />
+            ) : envoyFleetsState.error ? (
+              <S.ErrorLabel>{envoyFleetsState.error.message}</S.ErrorLabel>
+            ) : (
+              envoyFleetsState.data && (
+                <S.Select
+                  onClear={() => setSelectedFleet(undefined)}
+                  allowClear
+                  placeholder="Select a fleet"
+                  showSearch
+                  onSelect={(value: any, option: any) => {
+                    onEnvoyFleetSelectHandler(option.envoyfleet);
+                  }}
+                >
+                  {envoyFleetsState.data.map(envoyFleetItem => (
+                    <Option key={envoyFleetItem.id} value={envoyFleetItem.name} envoyfleet={envoyFleetItem}>
+                      <Tag>{envoyFleetItem.namespace}</Tag>
+                      {envoyFleetItem.name}
+                    </Option>
+                  ))}
+                </S.Select>
+              )
+            )}
 
-    getTableDataSource();
-  }, [apis]);
+            {selectedFleet && (
+              <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={EnvoyFleetInfoTooltip}>
+                <S.QuestionCircleOutlined onClick={onEnvoyFleetInfoIconClickHandler} />
+              </Tooltip>
+            )}
+          </S.EnvoyFleetFilterContainer>
+        </S.TitleContainer>
 
-  return <S.Table columns={columns} dataSource={dataSource} pagination={false} tableLayout="fixed" />;
+        {loading ? (
+          <Skeleton />
+        ) : error ? (
+          <S.ErrorLabel>{error.message}</S.ErrorLabel>
+        ) : (
+          data && <ApisListTable apis={data} />
+        )}
+      </S.ApisListContainer>
+
+      <Suspense fallback={null}>{envoyFleet && <EnvoyFleetInfoModal />}</Suspense>
+    </>
+  );
 };
 
 export default ApisList;
