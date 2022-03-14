@@ -1,21 +1,17 @@
-import CollapseExpandOperationsActionButton from './CollapseExpandOperationsActionButton';
-
 import * as S from './styled';
 
-const CollapseExpandOperationsPlugin = (system: any) => ({
+const CollapseOperationsPlugin = (system: any) => ({
   wrapComponents: {
     operations: (Original: any) => (props: any) => {
-      console.log(props);
-
       return (
         <S.CollapseExpandOperationsPluginContainer>
           <Original {...props} />
 
-          <CollapseExpandOperationsActionButton />
+          <S.CollapseOperationsButton>Collapse all</S.CollapseOperationsButton>
         </S.CollapseExpandOperationsPluginContainer>
       );
     },
   },
 });
 
-export default CollapseExpandOperationsPlugin;
+export default CollapseOperationsPlugin;

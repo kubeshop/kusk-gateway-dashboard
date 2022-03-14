@@ -10,7 +10,7 @@ import {useGetRawOpenApiSpec} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
-import {CollapseExpandOperationsPlugin, KuskExtensionPlugin, TableOfContentsPlugin} from '@swaggerUI/plugins';
+import {CollapseOperationsPlugin, KuskExtensionPlugin, TableOfContentsPlugin} from '@swaggerUI/plugins';
 
 import * as S from './styled';
 
@@ -30,7 +30,7 @@ const RawApiSpec: React.FC = () => {
           <SwaggerUI
             spec={openApiSpec}
             plugins={[KuskExtensionPlugin]}
-            presets={[() => [TableOfContentsPlugin, CollapseExpandOperationsPlugin]]}
+            presets={[() => [TableOfContentsPlugin, CollapseOperationsPlugin]]}
             supportedSubmitMethods={[]}
           />
         )
