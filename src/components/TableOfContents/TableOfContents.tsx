@@ -8,6 +8,8 @@ import {SUPPORTED_METHODS} from '@constants/constants';
 
 import {TableOfContentsItem} from '@models/swaggerUI';
 
+import {getOperationId} from '@swaggerUI/utils/operations';
+
 import TableOfContentsLabel from './TableOfContentsLabel';
 
 import * as S from './styled';
@@ -73,18 +75,12 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
           .flatMap((operationEntry: [string, any]) => {
             const [operation, operationValue] = operationEntry;
 
-            const reconstructedPath = path.substring(1).replaceAll('{', '').replaceAll('}', '');
-
             const deprecated = operationValue['deprecated'];
-            let reconstructedPathId = reconstructedPath.replaceAll('/', '__');
+            const operationId = getOperationId(path, operation, operationValue);
+            const reconstructedPath = path.substring(1).replaceAll('{', '').replaceAll('}', '');
             const reconstructedPathRef = reconstructedPath.replaceAll('/', '-');
 
-            if (operationValue.parameters) {
-              reconstructedPathId += '_';
-            }
-
             let kuskExtensionRef: string = '';
-            const operationId: string = operationValue['operationId'] || `${operation}_${reconstructedPathId}`;
 
             if (operationValue['x-kusk']) {
               kuskExtensionRef = `${reconstructedPathRef}-${operation}-extension`;
@@ -184,6 +180,7 @@ const TableOfContents: React.FC<IProps> = props => {
           {tableContentStatus === 'collapsed' ? 'Expand all' : 'Colapse all'}
         </S.ExpandCollapseButton>
       </S.TableOfContentsTitle>
+
       <S.ContentContainer>
         <S.Tree
           expandedKeys={expandedKeys}
