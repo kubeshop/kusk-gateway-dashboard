@@ -6,6 +6,7 @@ const initialMainState: MainState = {
 };
 
 const initialUiState: UiState = {
+  apiInfoActiveTab: 'raw-api-spec',
   envoyFleetModal: {
     envoyFleet: null,
   },
