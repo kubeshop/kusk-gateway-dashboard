@@ -1,6 +1,6 @@
 import {lazy} from 'react';
 
-const AddServerModal = lazy(() => import('../../components/AddServerModal/AddServerModal'));
+const AddServerModal = lazy(() => import('@components/AddServerModal/AddServerModal'));
 
 const DynamicServersPlugin = () => ({
   wrapComponents: {

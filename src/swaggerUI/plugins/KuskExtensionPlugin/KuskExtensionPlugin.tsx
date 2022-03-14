@@ -2,7 +2,7 @@ import {DataNode} from 'antd/lib/tree';
 
 import {DownOutlined} from '@ant-design/icons';
 
-import * as S from './KuskExtensionPlugin.styled';
+import * as S from './styled';
 
 const createExtensionTreeNode = (key: string, children: any): DataNode => {
   let propertyValue = null;
