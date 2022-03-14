@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
     "paths": {
       "@assets/*": ["src/assets/*"],
       "@assets": ["src/assets/"],
