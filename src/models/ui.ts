@@ -8,6 +8,9 @@ interface UiState {
       namespace: string;
     } | null;
   };
+  kuskExtensionsActiveKeys: {
+    [key: string]: string[];
+  };
 }
 
 export type {UiState};

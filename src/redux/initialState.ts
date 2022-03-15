@@ -10,6 +10,11 @@ const initialUiState: UiState = {
   envoyFleetModal: {
     envoyFleet: null,
   },
+  kuskExtensionsActiveKeys: {
+    top: [],
+    path: [],
+    operation: [],
+  },
 };
 
 export default {

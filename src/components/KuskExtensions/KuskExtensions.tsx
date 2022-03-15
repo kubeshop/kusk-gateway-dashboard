@@ -5,7 +5,8 @@ import openApiSpec from '@constants/rawOpenApiSpec.json';
 
 import {useGetRawOpenApiSpec} from '@models/api';
 
-import {useAppSelector} from '@redux/hooks';
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {setKuskExtensionsActiveKeys} from '@redux/reducers/ui';
 
 import {getOperationId} from '@swaggerUI/utils/operations';
 
@@ -57,6 +58,8 @@ const createKuskExtensions = (spec: any) => {
 };
 
 const KuskExtensions: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const kuskExtensionsActiveKeys = useAppSelector(state => state.ui.kuskExtensionsActiveKeys);
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
   const {data, loading, error} = useGetRawOpenApiSpec({apiId: selectedApi});
@@ -71,7 +74,7 @@ const KuskExtensions: React.FC = () => {
         <S.ErrorLabel>{error.message}</S.ErrorLabel>
       ) : (
         data &&
-        Object.entries(kuskExtensions).map((kuskExtensionEntry: [string, any]) => {
+        Object.entries(kuskExtensions).map(kuskExtensionEntry => {
           const [level, entry] = kuskExtensionEntry;
 
           const title = level.charAt(0).toUpperCase() + level.substring(1);
@@ -89,7 +92,10 @@ const KuskExtensions: React.FC = () => {
                   Test click
                 </div> */}
 
-                <Collapse>
+                <Collapse
+                  activeKey={kuskExtensionsActiveKeys[level]}
+                  onChange={keys => dispatch(setKuskExtensionsActiveKeys({keys: keys as string[], level}))}
+                >
                   {entry
                     .sort((a: any, b: any) => a.path.localeCompare(b.path))
                     .map((item: any) => (

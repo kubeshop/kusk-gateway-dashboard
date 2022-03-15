@@ -13,6 +13,12 @@ export const uiSlice = createSlice({
       state.apiInfoActiveTab = action.payload;
     },
 
+    setKuskExtensionsActiveKeys: (state: Draft<UiState>, action: PayloadAction<{keys: string[]; level: string}>) => {
+      const {keys, level} = action.payload;
+
+      state.kuskExtensionsActiveKeys[level] = keys;
+    },
+
     toggleEnvoyFleetInfoModal: (
       state: Draft<UiState>,
       action: PayloadAction<{name: string; namespace: string} | null>
@@ -22,5 +28,5 @@ export const uiSlice = createSlice({
   },
 });
 
-export const {setApiInfoActiveTab, toggleEnvoyFleetInfoModal} = uiSlice.actions;
+export const {setApiInfoActiveTab, setKuskExtensionsActiveKeys, toggleEnvoyFleetInfoModal} = uiSlice.actions;
 export default uiSlice.reducer;
