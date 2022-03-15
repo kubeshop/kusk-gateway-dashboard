@@ -26,7 +26,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "generate-fetcher": "restful-react import --github kubeshop:kusk-gateway:swaggerhub:api/openapi/kuskgateway-api.yaml --output ./src/models/api.tsx"
+    "generate-fetcher": "restful-react import --github kubeshop:kuskgateway-api-server:main:api/openapi.yaml --output ./src/models/api.tsx"
   },
   "eslintConfig": {
     "extends": [
