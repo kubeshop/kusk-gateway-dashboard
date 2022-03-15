@@ -62,12 +62,13 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
     ),
     children: Object.entries(spec.paths).map((pathEntry: [string, any]) => {
       const [path, pathValue] = pathEntry;
+      const pathId = path.substring(1).replaceAll('{', '').replaceAll('}', '').replaceAll('/', '-');
 
       return {
         key: path,
         title: (
           <S.ContentLabel $level="path">
-            <TableOfContentsLabel level="path" path={path} />
+            <TableOfContentsLabel kuskExtensionRef={pathValue['x-kusk'] ? pathId : ''} level="path" path={path} />
           </S.ContentLabel>
         ),
         children: Object.entries(pathValue)
@@ -77,27 +78,23 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
 
             const deprecated = operationValue['deprecated'];
             const operationId = getOperationId(path, operation, operationValue);
-            const reconstructedPath = path.substring(1).replaceAll('{', '').replaceAll('}', '');
-            const reconstructedPathRef = reconstructedPath.replaceAll('/', '-');
-
-            let kuskExtensionRef: string = '';
-
-            if (operationValue['x-kusk']) {
-              kuskExtensionRef = `${reconstructedPathRef}-${operation}-extension`;
-            }
 
             const tags: string[] = operationValue.tags || ['default'];
 
             return tags.map((tag: string) => {
+              let kuskExtensionRef: string = '';
+
+              if (operationValue['x-kusk']) {
+                kuskExtensionRef = `operations-${tag}-${operationId}`;
+              }
+
               const operationTagNodeContent: TableOfContentsItem = {
                 label: (
                   <TableOfContentsLabel
                     deprecated={deprecated}
                     kuskExtensionRef={kuskExtensionRef}
-                    layoutActions={layoutActions}
                     level="operation"
                     operation={operation}
-                    operationId={operationId}
                     path={path}
                     tag={tag}
                   />

@@ -83,14 +83,6 @@ const KuskExtensions: React.FC = () => {
             return (
               <S.LevelContainer key={level}>
                 <S.LevelTitle>{title} level</S.LevelTitle>
-                {/* <div
-                  onClick={() => {
-                    console.log(document.getElementById(`${entry[0].id}`));
-                    (document.getElementById(`${entry[0].id}`)?.firstChild as HTMLDivElement).click();
-                  }}
-                >
-                  Test click
-                </div> */}
 
                 <Collapse
                   activeKey={kuskExtensionsActiveKeys[level]}

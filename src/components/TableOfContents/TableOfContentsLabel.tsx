@@ -5,6 +5,9 @@ import {Tooltip} from 'antd';
 import {TOOLTIP_DELAY} from '@constants/constants';
 import {KuskExtensionTooltip} from '@constants/tooltips';
 
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {setApiInfoActiveTab, setKuskExtensionsActiveKeys} from '@redux/reducers/ui';
+
 import * as S from './TableOfContentsLabel.styled';
 
 interface IProps {
@@ -12,15 +15,16 @@ interface IProps {
   path: string;
   deprecated?: boolean;
   kuskExtensionRef?: string;
-  layoutActions?: any;
   operation?: string;
-  operationId?: string;
   tag?: string;
 }
 
 const TableOfContentsLabel: React.FC<IProps> = props => {
-  const {layoutActions, level, path} = props;
-  const {deprecated = false, kuskExtensionRef = '', operation = '', operationId = '', tag = ''} = props;
+  const {level, path} = props;
+  const {deprecated = false, kuskExtensionRef = '', operation = '', tag = ''} = props;
+
+  const dispatch = useAppDispatch();
+  const kuskExtensionsActiveKeys = useAppSelector(state => state.ui.kuskExtensionsActiveKeys[level]);
 
   const onTagClickHandler = useCallback(
     (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
@@ -32,30 +36,23 @@ const TableOfContentsLabel: React.FC<IProps> = props => {
     [tag]
   );
 
-  const onKuskExtensionIconClickHandler = useCallback(
-    (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-      e.stopPropagation();
+  const onKuskExtensionIconClickHandler = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    e.stopPropagation();
 
-      if (!kuskExtensionRef) {
-        return;
-      }
+    if (!kuskExtensionRef) {
+      return;
+    }
 
-      if (level !== 'operation') {
-        document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
-      } else if (document.getElementById(kuskExtensionRef)?.classList.contains('is-open')) {
-        // if operation expanded, scroll to operation summary
-        document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
-      } else {
-        // expand the operation and the scroll to operation summary
-        layoutActions.show(['operations', tag || 'default', operationId], true);
+    dispatch(setApiInfoActiveTab('kusk-extensions'));
 
-        setTimeout(() => {
-          document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
-        }, 100);
-      }
-    },
-    [kuskExtensionRef, layoutActions, level, operationId, tag]
-  );
+    if (!kuskExtensionsActiveKeys.includes(kuskExtensionRef)) {
+      dispatch(setKuskExtensionsActiveKeys({keys: [...kuskExtensionsActiveKeys, kuskExtensionRef], level}));
+    }
+
+    setTimeout(() => {
+      document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
+    }, 50);
+  };
 
   return (
     <S.Container $level={level}>

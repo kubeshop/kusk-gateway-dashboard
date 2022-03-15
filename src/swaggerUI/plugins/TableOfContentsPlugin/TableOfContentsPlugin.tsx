@@ -1,3 +1,7 @@
+import {Provider} from 'react-redux';
+
+import {store} from '@redux/store';
+
 import {TableOfContents} from '@components/TableOfContents';
 
 const TableOfContentsPlugin = (system: any) => ({
@@ -11,7 +15,9 @@ const TableOfContentsPlugin = (system: any) => ({
         <>
           <Original {...props} />
 
-          <TableOfContents layoutActions={layoutActions} spec={spec} />
+          <Provider store={store}>
+            <TableOfContents layoutActions={layoutActions} spec={spec} />
+          </Provider>
         </>
       );
     },
