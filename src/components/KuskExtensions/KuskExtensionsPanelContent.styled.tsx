@@ -20,4 +20,9 @@ export const Tree = styled(DirectoryTree)`
   & .ant-tree-node-content-wrapper-normal {
     cursor: default;
   }
+
+  & .ant-tree-treenode-switcher-open,
+  & .ant-tree-treenode-switcher-close {
+    width: max-content;
+  }
 `;
