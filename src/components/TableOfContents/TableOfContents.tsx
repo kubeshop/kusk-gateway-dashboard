@@ -86,13 +86,7 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
               kuskExtensionRef = `${reconstructedPathRef}-${operation}-extension`;
             }
 
-            let tags: string[];
-
-            if (operationValue.tags && operationValue.tags.length) {
-              tags = operationValue.tags;
-            } else {
-              tags = ['default'];
-            }
+            const tags: string[] = operationValue.tags || ['default'];
 
             return tags.map((tag: string) => {
               const operationTagNodeContent: TableOfContentsItem = {
