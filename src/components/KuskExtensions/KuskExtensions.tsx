@@ -9,6 +9,7 @@ import {useAppSelector} from '@redux/hooks';
 
 import {getOperationId} from '@swaggerUI/utils/operations';
 
+import KuskExtensionsPanelContent from './KuskExtensionsPanelContent';
 import KuskExtensionsPanelHeader from './KuskExtensionsPanelHeader';
 
 import * as S from './styled';
@@ -78,7 +79,7 @@ const KuskExtensions: React.FC = () => {
           if (entry && entry.length) {
             return (
               <S.LevelContainer key={level}>
-                <S.LevelTitle>{title}</S.LevelTitle>
+                <S.LevelTitle>{title} level</S.LevelTitle>
                 {/* <div
                   onClick={() => {
                     console.log(document.getElementById(`${entry[0].id}`));
@@ -104,7 +105,7 @@ const KuskExtensions: React.FC = () => {
                         key={item.id}
                         id={item.id}
                       >
-                        Test content
+                        <KuskExtensionsPanelContent kuskExtension={item.kuskExtension} />
                       </Panel>
                     ))}
                 </Collapse>
