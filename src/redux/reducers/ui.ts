@@ -5,6 +5,8 @@ import {UiState} from '@models/ui';
 
 import initialState from '@redux/initialState';
 
+import {selectApi} from './main';
+
 export const uiSlice = createSlice({
   name: 'ui',
   initialState: initialState.ui,
@@ -25,6 +27,15 @@ export const uiSlice = createSlice({
     ) => {
       state.envoyFleetModal.envoyFleet = action.payload;
     },
+  },
+  extraReducers: builder => {
+    builder.addCase(selectApi.type, state => {
+      state.kuskExtensionsActiveKeys = {
+        top: [],
+        path: [],
+        operation: [],
+      };
+    });
   },
 });
 
