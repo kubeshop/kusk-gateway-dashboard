@@ -3,7 +3,14 @@
   "info": {
     "title": "Todo-Backend API",
     "version": "1.0.0",
-    "description": "This is an example of a raw OpenAPI spec file"
+    "description": "API for using the GO-powered backend, containing <b>/todos</b> and <b>/todos/{id}</b> paths.",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about our API",
+    "url": "https://raw.githubusercontent.com/kubeshop/kusk-gateway/main/examples/todomvc/kusk-backend-api.yaml"
   },
   "x-kusk": {
     "cors": {
