@@ -93,7 +93,7 @@ const ApisListTable: React.FC<IProps> = props => {
         } = {
           name: api.service.name,
           namespace: api.service.namespace,
-          status: i % 2 ? 'unavailable' : 'available',
+          status: i % 3 ? 'available' : 'unavailable',
         };
 
         tableDataSource.push({

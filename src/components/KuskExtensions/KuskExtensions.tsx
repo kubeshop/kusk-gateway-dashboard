@@ -4,11 +4,13 @@ import {SUPPORTED_METHODS} from '@constants/constants';
 import openApiSpec from '@constants/rawOpenApiSpec.json';
 
 import {useGetRawOpenApiSpec} from '@models/api';
+import {KuskExtensionsItem} from '@models/dashboard';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setKuskExtensionsActiveKeys} from '@redux/reducers/ui';
 
 import {getOperationId} from '@swaggerUI/utils/operations';
+import {getPathId} from '@swaggerUI/utils/path';
 
 import KuskExtensionsPanelContent from './KuskExtensionsPanelContent';
 import KuskExtensionsPanelHeader from './KuskExtensionsPanelHeader';
@@ -18,7 +20,11 @@ import * as S from './styled';
 const {Panel} = Collapse;
 
 const createKuskExtensions = (spec: any) => {
-  let kuskExtensions: {top: any[]; path: any[]; operation: any[]} = {top: [], path: [], operation: []};
+  let kuskExtensions: {top: KuskExtensionsItem[]; path: KuskExtensionsItem[]; operation: KuskExtensionsItem[]} = {
+    top: [],
+    path: [],
+    operation: [],
+  };
 
   if (spec['x-kusk']) {
     kuskExtensions['top'].push({id: 'top-level-extension', kuskExtension: spec['x-kusk'], path: 'Top-level extension'});
@@ -26,7 +32,7 @@ const createKuskExtensions = (spec: any) => {
 
   Object.entries(spec.paths).forEach((pathEntry: [string, any]) => {
     const [path, pathValue] = pathEntry;
-    const pathId = path.substring(1).replaceAll('{', '').replaceAll('}', '').replaceAll('/', '-');
+    const pathId = getPathId(path);
 
     if (pathValue['x-kusk']) {
       kuskExtensions['path'].push({id: pathId, kuskExtension: pathValue['x-kusk'], path});
@@ -90,7 +96,7 @@ const KuskExtensions: React.FC = () => {
                 >
                   {entry
                     .sort((a: any, b: any) => a.path.localeCompare(b.path))
-                    .map((item: any) => (
+                    .map(item => (
                       <Panel
                         header={
                           <KuskExtensionsPanelHeader

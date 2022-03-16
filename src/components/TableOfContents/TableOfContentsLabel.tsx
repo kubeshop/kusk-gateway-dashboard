@@ -36,23 +36,26 @@ const TableOfContentsLabel: React.FC<IProps> = props => {
     [tag]
   );
 
-  const onKuskExtensionIconClickHandler = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-    e.stopPropagation();
+  const onKuskExtensionIconClickHandler = useCallback(
+    (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+      e.stopPropagation();
 
-    if (!kuskExtensionRef) {
-      return;
-    }
+      if (!kuskExtensionRef) {
+        return;
+      }
 
-    dispatch(setApiInfoActiveTab('kusk-extensions'));
+      dispatch(setApiInfoActiveTab('kusk-extensions'));
 
-    if (!kuskExtensionsActiveKeys.includes(kuskExtensionRef)) {
-      dispatch(setKuskExtensionsActiveKeys({keys: [...kuskExtensionsActiveKeys, kuskExtensionRef], level}));
-    }
+      if (!kuskExtensionsActiveKeys.includes(kuskExtensionRef)) {
+        dispatch(setKuskExtensionsActiveKeys({keys: [...kuskExtensionsActiveKeys, kuskExtensionRef], level}));
+      }
 
-    setTimeout(() => {
-      document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
-    }, 50);
-  };
+      setTimeout(() => {
+        document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
+      }, 50);
+    },
+    [dispatch, kuskExtensionRef, kuskExtensionsActiveKeys, level]
+  );
 
   return (
     <S.Container $level={level}>

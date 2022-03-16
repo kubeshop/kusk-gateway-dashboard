@@ -9,6 +9,7 @@ import {SUPPORTED_METHODS} from '@constants/constants';
 import {TableOfContentsItem} from '@models/swaggerUI';
 
 import {getOperationId} from '@swaggerUI/utils/operations';
+import {getPathId} from '@swaggerUI/utils/path';
 
 import TableOfContentsLabel from './TableOfContentsLabel';
 
@@ -62,7 +63,7 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
     ),
     children: Object.entries(spec.paths).map((pathEntry: [string, any]) => {
       const [path, pathValue] = pathEntry;
-      const pathId = path.substring(1).replaceAll('{', '').replaceAll('}', '').replaceAll('/', '-');
+      const pathId = getPathId(path);
 
       return {
         key: path,
