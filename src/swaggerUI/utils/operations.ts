@@ -1,4 +1,8 @@
 export const getOperationId = (path: string, method: string, operation: any): string => {
+  if (operation['__originalOperationId']) {
+    return operation['__originalOperationId'];
+  }
+
   if (operation['operationId']) {
     return operation['operationId'];
   }
