@@ -68,7 +68,10 @@ const KuskExtensions: React.FC = () => {
   const kuskExtensionsActiveKeys = useAppSelector(state => state.ui.kuskExtensionsActiveKeys);
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const {data, loading, error} = useGetRawOpenApiSpec({apiId: selectedApi});
+  const {data, loading, error} = useGetRawOpenApiSpec({
+    name: selectedApi?.name || '',
+    namespace: selectedApi?.namespace || '',
+  });
 
   const kuskExtensions = createKuskExtensions(openApiSpec);
 

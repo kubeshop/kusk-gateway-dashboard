@@ -17,7 +17,7 @@ const ApiInfo: React.FC = () => {
   const activeTab = useAppSelector(state => state.ui.apiInfoActiveTab);
 
   const onCloseHandler = () => {
-    dispatch(selectApi(''));
+    dispatch(selectApi(null));
   };
 
   return (

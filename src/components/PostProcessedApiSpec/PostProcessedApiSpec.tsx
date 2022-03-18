@@ -15,7 +15,10 @@ import * as S from './styled';
 const PostProcessedApiSpec: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const {data, error, loading} = useGetPostProcessedOpenApiSpec({apiId: selectedApi});
+  const {data, error, loading} = useGetPostProcessedOpenApiSpec({
+    name: selectedApi?.name || '',
+    namespace: selectedApi?.namespace || '',
+  });
 
   return (
     <S.PostProcessedApiSpecContainer>

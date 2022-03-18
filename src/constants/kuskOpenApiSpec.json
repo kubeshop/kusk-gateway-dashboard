@@ -38,7 +38,16 @@
         "operationId": "getApis",
         "parameters": [
           {
-            "name": "fleet",
+            "name": "fleetname",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "optional filter on fleet"
+          },
+          {
+            "name": "fleetnamespace",
             "in": "query",
             "schema": {
               "type": "string"
@@ -64,7 +73,48 @@
         }
       }
     },
-    "/apis/{apiId}/rawOpenApiSpec": {
+    "/apis/{namespace}/{name}\"": {
+      "get": {
+        "tags": ["apis"],
+        "summary": "Get an API instance by namespace and name",
+        "operationId": "getApi",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "default"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "API item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "API item not found"
+          }
+        }
+      }
+    },
+    "/apis/{namespace}/{name}/rawOpenApiSpec": {
       "get": {
         "tags": ["apis"],
         "summary": "Get the raw OpenAPI spec by API id",
@@ -72,12 +122,20 @@
         "operationId": "getRawOpenApiSpec",
         "parameters": [
           {
-            "name": "apiId",
+            "name": "namespace",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "default": "default"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -98,7 +156,7 @@
         }
       }
     },
-    "/apis/{apiId}/postProcessedOpenApiSpec": {
+    "/apis/{namespace}/{name}/postProcessedOpenApiSpec": {
       "get": {
         "tags": ["apis"],
         "summary": "Get the post-processed OpenAPI spec by API id",
@@ -106,12 +164,20 @@
         "operationId": "getPostProcessedOpenApiSpec",
         "parameters": [
           {
-            "name": "apiId",
+            "name": "namespace",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "default": "default"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -289,14 +355,13 @@
     "schemas": {
       "ApiItem": {
         "type": "object",
-        "required": ["name", "id", "status", "fleet", "service"],
+        "required": ["name", "namespace", "fleet", "service"],
         "properties": {
           "name": {
             "type": "string"
           },
-          "id": {
-            "type": "string",
-            "format": "uuid"
+          "namespace": {
+            "type": "string"
           },
           "fleet": {
             "$ref": "#/components/schemas/ApiItem_Fleet"
@@ -308,14 +373,10 @@
       },
       "ServiceItem": {
         "type": "object",
-        "required": ["name", "id", "status", "namespace"],
+        "required": ["name", "status", "namespace"],
         "properties": {
           "name": {
             "type": "string"
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid"
           },
           "status": {
             "type": "string",
@@ -328,17 +389,25 @@
       },
       "EnvoyFleetItem": {
         "type": "object",
-        "required": ["name", "id", "namespace"],
+        "required": ["name", "namespace"],
         "properties": {
           "name": {
             "type": "string"
           },
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "namespace": {
             "type": "string"
+          },
+          "apis": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiItem_Fleet"
+            }
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceItem"
+            }
           }
         }
       },

@@ -17,7 +17,10 @@ import * as S from './styled';
 const RawApiSpec: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const {data, error, loading} = useGetRawOpenApiSpec({apiId: selectedApi});
+  const {data, error, loading} = useGetRawOpenApiSpec({
+    name: selectedApi?.name || '',
+    namespace: selectedApi?.namespace || '',
+  });
 
   return (
     <S.RawApiSpecContainer>

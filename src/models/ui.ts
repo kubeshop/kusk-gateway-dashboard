@@ -1,12 +1,10 @@
+import {EnvoyFleetItem} from './api';
 import {ApiInfoTabs} from './dashboard';
 
 interface UiState {
   apiInfoActiveTab: ApiInfoTabs;
   envoyFleetModal: {
-    envoyFleet: {
-      name: string;
-      namespace: string;
-    } | null;
+    envoyFleet: EnvoyFleetItem | null;
   };
   kuskExtensionsActiveKeys: {
     [key: string]: string[];

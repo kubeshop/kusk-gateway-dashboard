@@ -2,7 +2,7 @@ import {MainState} from '@models/main';
 import {UiState} from '@models/ui';
 
 const initialMainState: MainState = {
-  selectedApi: '',
+  selectedApi: null,
 };
 
 const initialUiState: UiState = {

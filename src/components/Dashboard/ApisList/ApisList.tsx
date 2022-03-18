@@ -24,7 +24,9 @@ const ApisList: React.FC = () => {
 
   const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
 
-  const {data, error, loading} = useGetApis({queryParams: {fleet: selectedFleet?.id || ''}});
+  const {data, error, loading} = useGetApis({
+    queryParams: {fleetname: selectedFleet?.name, fleetnamespace: selectedFleet?.namespace},
+  });
   const envoyFleetsState = useGetEnvoyFleets({});
 
   const onEnvoyFleetSelectHandler = (envoyFleetItem: EnvoyFleetItem) => {
@@ -62,7 +64,11 @@ const ApisList: React.FC = () => {
                   }}
                 >
                   {envoyFleetsState.data.map(envoyFleetItem => (
-                    <Option key={envoyFleetItem.id} value={envoyFleetItem.name} envoyfleet={envoyFleetItem}>
+                    <Option
+                      key={`${envoyFleetItem.namespace}-${envoyFleetItem.name}`}
+                      value={envoyFleetItem.name}
+                      envoyfleet={envoyFleetItem}
+                    >
                       <Tag>{envoyFleetItem.namespace}</Tag>
                       {envoyFleetItem.name}
                     </Option>

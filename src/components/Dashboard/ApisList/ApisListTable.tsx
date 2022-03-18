@@ -24,14 +24,15 @@ const ApisListTable: React.FC<IProps> = props => {
     (name: string, record: any) => {
       const {key} = record;
 
-      return <S.ApiLabel $selected={key === selectedApi}>{name}</S.ApiLabel>;
+      return <S.ApiLabel $selected={key === `${selectedApi?.namespace}-${selectedApi?.name}`}>{name}</S.ApiLabel>;
     },
     [selectedApi]
   );
 
   const renderServicesTag = useCallback(
     (status: 'available' | 'unavailable', record: any) => {
-      const {key} = record;
+      const {apiItem, key} = record;
+      const selectedApiKey = `${selectedApi?.namespace}-${selectedApi?.name}`;
 
       let tag = <S.FalseTag>Unavailable</S.FalseTag>;
 
@@ -50,10 +51,10 @@ const ApisListTable: React.FC<IProps> = props => {
           {tag}
 
           <S.RightOutlined
-            $disabled={key === selectedApi}
+            $disabled={key === selectedApiKey}
             onClick={() => {
-              if (key !== selectedApi) {
-                dispatch(selectApi(key));
+              if (!selectedApi || key !== selectedApiKey) {
+                dispatch(selectApi(apiItem));
               }
             }}
           />
@@ -85,21 +86,23 @@ const ApisListTable: React.FC<IProps> = props => {
       for (let i = 0; i < apis.length; i += 1) {
         const api = apis[i];
         // TODO: might be useful to have a Promise all for better performance
-        // const service = await getService({namespace: api.service.namespace, name: api.service.name});
-        const service: {
-          name: string;
-          namespace: string;
-          status: 'available' | 'unavailable';
-        } = {
-          name: api.service.name,
-          namespace: api.service.namespace,
-          status: i % 3 ? 'available' : 'unavailable',
-        };
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+
+        // const service: {
+        //   name: string;
+        //   namespace: string;
+        //   status: 'available' | 'unavailable';
+        // } = {
+        //   name: api.service.name,
+        //   namespace: api.service.namespace,
+        //   status: i % 3 ? 'available' : 'unavailable',
+        // };
 
         tableDataSource.push({
-          key: api.id,
+          key: `${api.namespace}-${api.name}`,
           name: api.name,
-          services: service.status,
+          apiItem: api,
+          services: 'available',
         });
       }
 
