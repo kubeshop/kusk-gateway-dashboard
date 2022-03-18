@@ -42,7 +42,7 @@ const tableOfContentsScrollToElement = (content: TableOfContentsItem, layoutActi
 
     setTimeout(() => {
       operationElement.scrollIntoView({behavior: 'smooth'});
-    }, 100);
+    }, 150);
   }
 };
 
@@ -101,7 +101,9 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
                   />
                 ),
                 operationId,
-                operationElementRef: `operations-${tag}-${operationId}`,
+                operationElementRef: `operations-${tag}-${
+                  operationValue['operationId'] ? operationId.replaceAll('/', '\\/') : operationId
+                }`,
                 tag,
               };
 
