@@ -3,8 +3,7 @@ import React from 'react';
 import {Skeleton} from 'antd';
 
 import SwaggerUI from 'swagger-ui-react';
-
-import openApiSpec from '@constants/rawOpenApiSpec.json';
+import YAML from 'yaml';
 
 import {useGetRawOpenApiSpec} from '@models/api';
 
@@ -30,8 +29,9 @@ const RawApiSpec: React.FC = () => {
         <S.ErrorLabel>{error.message}</S.ErrorLabel>
       ) : (
         data && (
+          // TODO: Remove JSON parse/stringify after modying openapi spec
           <SwaggerUI
-            spec={openApiSpec}
+            spec={YAML.parse(JSON.parse(JSON.stringify(data)))}
             plugins={[TableOfContentsPlugin, CollapseOperationsPlugin]}
             supportedSubmitMethods={[]}
           />

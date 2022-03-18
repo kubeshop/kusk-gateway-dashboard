@@ -1,7 +1,8 @@
 import {Collapse, Skeleton} from 'antd';
 
+import YAML from 'yaml';
+
 import {SUPPORTED_METHODS} from '@constants/constants';
-import openApiSpec from '@constants/rawOpenApiSpec.json';
 
 import {useGetRawOpenApiSpec} from '@models/api';
 import {KuskExtensionsItem} from '@models/dashboard';
@@ -73,8 +74,6 @@ const KuskExtensions: React.FC = () => {
     namespace: selectedApi?.namespace || '',
   });
 
-  const kuskExtensions = createKuskExtensions(openApiSpec);
-
   return (
     <S.KuskExtensionsContainer>
       {loading ? (
@@ -83,7 +82,8 @@ const KuskExtensions: React.FC = () => {
         <S.ErrorLabel>{error.message}</S.ErrorLabel>
       ) : (
         data &&
-        Object.entries(kuskExtensions).map(kuskExtensionEntry => {
+        // TODO: Remove JSON parse/stringify after modying openapi spec
+        Object.entries(createKuskExtensions(YAML.parse(JSON.parse(JSON.stringify(data))))).map(kuskExtensionEntry => {
           const [level, entry] = kuskExtensionEntry;
 
           const title = level.charAt(0).toUpperCase() + level.substring(1);
