@@ -82,8 +82,7 @@ const KuskExtensions: React.FC = () => {
         <S.ErrorLabel>{error.message}</S.ErrorLabel>
       ) : (
         data &&
-        // TODO: Remove JSON parse/stringify after modying openapi spec
-        Object.entries(createKuskExtensions(YAML.parse(JSON.parse(JSON.stringify(data))))).map(kuskExtensionEntry => {
+        Object.entries(createKuskExtensions(YAML.parse(data))).map(kuskExtensionEntry => {
           const [level, entry] = kuskExtensionEntry;
 
           const title = level.charAt(0).toUpperCase() + level.substring(1);

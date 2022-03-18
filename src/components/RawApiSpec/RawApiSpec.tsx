@@ -29,9 +29,8 @@ const RawApiSpec: React.FC = () => {
         <S.ErrorLabel>{error.message}</S.ErrorLabel>
       ) : (
         data && (
-          // TODO: Remove JSON parse/stringify after modying openapi spec
           <SwaggerUI
-            spec={YAML.parse(JSON.parse(JSON.stringify(data)))}
+            spec={YAML.parse(data)}
             plugins={[TableOfContentsPlugin, CollapseOperationsPlugin]}
             supportedSubmitMethods={[]}
           />

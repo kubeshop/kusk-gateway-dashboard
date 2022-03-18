@@ -141,11 +141,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Raw OpenAPI spec object",
+            "description": "Raw OpenAPI spec",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "string"
                 }
               }
             }
@@ -183,11 +183,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Post-processed OpenAPI spec object",
+            "description": "Post-processed OpenAPI spec",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "string"
                 }
               }
             }
@@ -201,8 +201,8 @@
     "/services": {
       "get": {
         "tags": ["services"],
-        "summary": "Get a list of services",
-        "description": "Returns the list of services available in the cluster",
+        "summary": "Get a list of services handled by kusk-gateway",
+        "description": "Returns the list of services available in the cluster that are related to kusk-gateway",
         "operationId": "getServices",
         "parameters": [
           {

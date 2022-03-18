@@ -89,19 +89,12 @@ export const useGetApi = ({namespace, name, ...props}: UseGetApiProps) =>
     {pathParams: {namespace, name}, ...props}
   );
 
-export interface GetRawOpenApiSpecResponse {
-  [key: string]: any;
-}
-
 export interface GetRawOpenApiSpecPathParams {
   namespace: string;
   name: string;
 }
 
-export type GetRawOpenApiSpecProps = Omit<
-  GetProps<GetRawOpenApiSpecResponse, void, void, GetRawOpenApiSpecPathParams>,
-  'path'
-> &
+export type GetRawOpenApiSpecProps = Omit<GetProps<string, void, void, GetRawOpenApiSpecPathParams>, 'path'> &
   GetRawOpenApiSpecPathParams;
 
 /**
@@ -110,16 +103,10 @@ export type GetRawOpenApiSpecProps = Omit<
  * Returns the raw OpenAPI specification
  */
 export const GetRawOpenApiSpec = ({namespace, name, ...props}: GetRawOpenApiSpecProps) => (
-  <Get<GetRawOpenApiSpecResponse, void, void, GetRawOpenApiSpecPathParams>
-    path={`/apis/${namespace}/${name}/rawOpenApiSpec`}
-    {...props}
-  />
+  <Get<string, void, void, GetRawOpenApiSpecPathParams> path={`/apis/${namespace}/${name}/rawOpenApiSpec`} {...props} />
 );
 
-export type UseGetRawOpenApiSpecProps = Omit<
-  UseGetProps<GetRawOpenApiSpecResponse, void, void, GetRawOpenApiSpecPathParams>,
-  'path'
-> &
+export type UseGetRawOpenApiSpecProps = Omit<UseGetProps<string, void, void, GetRawOpenApiSpecPathParams>, 'path'> &
   GetRawOpenApiSpecPathParams;
 
 /**
@@ -128,15 +115,11 @@ export type UseGetRawOpenApiSpecProps = Omit<
  * Returns the raw OpenAPI specification
  */
 export const useGetRawOpenApiSpec = ({namespace, name, ...props}: UseGetRawOpenApiSpecProps) =>
-  useGet<GetRawOpenApiSpecResponse, void, void, GetRawOpenApiSpecPathParams>(
+  useGet<string, void, void, GetRawOpenApiSpecPathParams>(
     (paramsInPath: GetRawOpenApiSpecPathParams) =>
       `/apis/${paramsInPath.namespace}/${paramsInPath.name}/rawOpenApiSpec`,
     {pathParams: {namespace, name}, ...props}
   );
-
-export interface GetPostProcessedOpenApiSpecResponse {
-  [key: string]: any;
-}
 
 export interface GetPostProcessedOpenApiSpecPathParams {
   namespace: string;
@@ -144,7 +127,7 @@ export interface GetPostProcessedOpenApiSpecPathParams {
 }
 
 export type GetPostProcessedOpenApiSpecProps = Omit<
-  GetProps<GetPostProcessedOpenApiSpecResponse, void, void, GetPostProcessedOpenApiSpecPathParams>,
+  GetProps<string, void, void, GetPostProcessedOpenApiSpecPathParams>,
   'path'
 > &
   GetPostProcessedOpenApiSpecPathParams;
@@ -155,14 +138,14 @@ export type GetPostProcessedOpenApiSpecProps = Omit<
  * Returns the post-processed OpenAPI specification
  */
 export const GetPostProcessedOpenApiSpec = ({namespace, name, ...props}: GetPostProcessedOpenApiSpecProps) => (
-  <Get<GetPostProcessedOpenApiSpecResponse, void, void, GetPostProcessedOpenApiSpecPathParams>
+  <Get<string, void, void, GetPostProcessedOpenApiSpecPathParams>
     path={`/apis/${namespace}/${name}/postProcessedOpenApiSpec`}
     {...props}
   />
 );
 
 export type UseGetPostProcessedOpenApiSpecProps = Omit<
-  UseGetProps<GetPostProcessedOpenApiSpecResponse, void, void, GetPostProcessedOpenApiSpecPathParams>,
+  UseGetProps<string, void, void, GetPostProcessedOpenApiSpecPathParams>,
   'path'
 > &
   GetPostProcessedOpenApiSpecPathParams;
@@ -173,7 +156,7 @@ export type UseGetPostProcessedOpenApiSpecProps = Omit<
  * Returns the post-processed OpenAPI specification
  */
 export const useGetPostProcessedOpenApiSpec = ({namespace, name, ...props}: UseGetPostProcessedOpenApiSpecProps) =>
-  useGet<GetPostProcessedOpenApiSpecResponse, void, void, GetPostProcessedOpenApiSpecPathParams>(
+  useGet<string, void, void, GetPostProcessedOpenApiSpecPathParams>(
     (paramsInPath: GetPostProcessedOpenApiSpecPathParams) =>
       `/apis/${paramsInPath.namespace}/${paramsInPath.name}/postProcessedOpenApiSpec`,
     {pathParams: {namespace, name}, ...props}
@@ -189,9 +172,9 @@ export interface GetServicesQueryParams {
 export type GetServicesProps = Omit<GetProps<ServiceItem[], unknown, GetServicesQueryParams, void>, 'path'>;
 
 /**
- * Get a list of services
+ * Get a list of services handled by kusk-gateway
  *
- * Returns the list of services available in the cluster
+ * Returns the list of services available in the cluster that are related to kusk-gateway
  */
 export const GetServices = (props: GetServicesProps) => (
   <Get<ServiceItem[], unknown, GetServicesQueryParams, void> path="/services" {...props} />
@@ -200,9 +183,9 @@ export const GetServices = (props: GetServicesProps) => (
 export type UseGetServicesProps = Omit<UseGetProps<ServiceItem[], unknown, GetServicesQueryParams, void>, 'path'>;
 
 /**
- * Get a list of services
+ * Get a list of services handled by kusk-gateway
  *
- * Returns the list of services available in the cluster
+ * Returns the list of services available in the cluster that are related to kusk-gateway
  */
 export const useGetServices = (props: UseGetServicesProps) =>
   useGet<ServiceItem[], unknown, GetServicesQueryParams, void>(`/services`, props);
