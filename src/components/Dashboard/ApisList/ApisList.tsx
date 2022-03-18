@@ -8,6 +8,7 @@ import {EnvoyFleetInfoTooltip} from '@constants/tooltips';
 import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {selectApi} from '@redux/reducers/main';
 import {toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
 
 import {EnvoyFleetInfoModal} from '@components';
@@ -31,6 +32,7 @@ const ApisList: React.FC = () => {
 
   const onEnvoyFleetSelectHandler = (envoyFleetItem: EnvoyFleetItem) => {
     setSelectedFleet(envoyFleetItem);
+    dispatch(selectApi(null));
   };
 
   const onEnvoyFleetInfoIconClickHandler = () => {
@@ -39,6 +41,11 @@ const ApisList: React.FC = () => {
     }
 
     dispatch(toggleEnvoyFleetInfoModal({name: selectedFleet.name, namespace: selectedFleet.namespace}));
+  };
+
+  const onEnvoyFleetSelectionClearHandler = () => {
+    setSelectedFleet(undefined);
+    dispatch(selectApi(null));
   };
 
   return (
@@ -55,7 +62,7 @@ const ApisList: React.FC = () => {
             ) : (
               envoyFleetsState.data && (
                 <S.Select
-                  onClear={() => setSelectedFleet(undefined)}
+                  onClear={onEnvoyFleetSelectionClearHandler}
                   allowClear
                   placeholder="Select a fleet"
                   showSearch
