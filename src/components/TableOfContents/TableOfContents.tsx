@@ -66,7 +66,7 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
       const pathId = getPathId(path);
 
       return {
-        key: path,
+        key: pathId,
         title: (
           <S.ContentLabel $level="path">
             <TableOfContentsLabel kuskExtensionRef={pathValue['x-kusk'] ? pathId : ''} level="path" path={path} />
