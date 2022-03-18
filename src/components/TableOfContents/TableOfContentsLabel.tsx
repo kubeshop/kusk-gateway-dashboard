@@ -52,7 +52,7 @@ const TableOfContentsLabel: React.FC<IProps> = props => {
 
       setTimeout(() => {
         document.getElementById(kuskExtensionRef)?.scrollIntoView({behavior: 'smooth'});
-      }, 50);
+      }, 100);
     },
     [dispatch, kuskExtensionRef, kuskExtensionsActiveKeys, level]
   );
