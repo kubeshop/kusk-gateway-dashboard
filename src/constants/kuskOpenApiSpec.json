@@ -1,0 +1,440 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Kusk Gateway API",
+    "description": "This is the Kusk Gateway Management API"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4010",
+      "description": "My local endpoint mockup"
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Kusk-Gateway",
+    "url": "https://kubeshop.github.io/kusk-gateway/"
+  },
+  "tags": [
+    {
+      "name": "apis",
+      "description": "Get the list of the APIs"
+    },
+    {
+      "name": "services",
+      "description": "Get the list of all services"
+    },
+    {
+      "name": "fleets",
+      "description": "Get the list of all envoy fleets"
+    }
+  ],
+  "paths": {
+    "/apis": {
+      "get": {
+        "tags": ["apis"],
+        "summary": "Get a list of APIs",
+        "description": "Returns the list of APIs available in the cluster",
+        "operationId": "getApis",
+        "parameters": [
+          {
+            "name": "fleetname",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "optional filter on fleet"
+          },
+          {
+            "name": "fleetnamespace",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "optional filter on fleet"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "a list of apis",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apis/{namespace}/{name}\"": {
+      "get": {
+        "tags": ["apis"],
+        "summary": "Get an API instance by namespace and name",
+        "operationId": "getApi",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "default"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "API item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "API item not found"
+          }
+        }
+      }
+    },
+    "/apis/{namespace}/{name}/rawOpenApiSpec": {
+      "get": {
+        "tags": ["apis"],
+        "summary": "Get the raw OpenAPI spec by API id",
+        "description": "Returns the raw OpenAPI specification",
+        "operationId": "getRawOpenApiSpec",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "default"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Raw OpenAPI spec",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Raw OpenAPI spec not found"
+          }
+        }
+      }
+    },
+    "/apis/{namespace}/{name}/postProcessedOpenApiSpec": {
+      "get": {
+        "tags": ["apis"],
+        "summary": "Get the post-processed OpenAPI spec by API id",
+        "description": "Returns the post-processed OpenAPI specification",
+        "operationId": "getPostProcessedOpenApiSpec",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "default"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post-processed OpenAPI spec",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Post-processed OpenAPI spec not found"
+          }
+        }
+      }
+    },
+    "/services": {
+      "get": {
+        "tags": ["services"],
+        "summary": "Get a list of services handled by kusk-gateway",
+        "description": "Returns the list of services available in the cluster that are related to kusk-gateway",
+        "operationId": "getServices",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "optional filter on namespace"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "list of services",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/{namespace}/{name}": {
+      "get": {
+        "tags": ["services"],
+        "summary": "Get details for a single service",
+        "description": "Returns an object containing info about the service corresponding to the namespace and name",
+        "operationId": "getService",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "service details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Service not found by namespace-name combination"
+          }
+        }
+      }
+    },
+    "/fleets": {
+      "get": {
+        "tags": ["fleets"],
+        "summary": "Get a list of envoy fleets",
+        "description": "Returns a list of envoy fleets that are available in the cluster",
+        "operationId": "getEnvoyFleets",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "optional filter on namespace"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "list of envoy fleets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EnvoyFleetItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fleets/{namespace}/{name}": {
+      "get": {
+        "tags": ["fleets"],
+        "summary": "Get details for a single envoy fleet",
+        "description": "Returns an object containing info about the envoy fleet corresponding to the namespace and name",
+        "operationId": "getEnvoyFleet",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "the namespace of the fleet"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "the name of the fleet"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "envoy fleet details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvoyFleetItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Envoy fleet not found by namespace-name combination"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiItem": {
+        "type": "object",
+        "required": ["name", "namespace", "fleet", "service"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "namespace": {
+            "type": "string"
+          },
+          "fleet": {
+            "$ref": "#/components/schemas/ApiItem_Fleet"
+          },
+          "service": {
+            "$ref": "#/components/schemas/ApiItem_Service"
+          }
+        }
+      },
+      "ServiceItem": {
+        "type": "object",
+        "required": ["name", "status", "namespace"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["available", "unavailable"]
+          },
+          "namespace": {
+            "type": "string"
+          }
+        }
+      },
+      "EnvoyFleetItem": {
+        "type": "object",
+        "required": ["name", "namespace"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "namespace": {
+            "type": "string"
+          },
+          "apis": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiItem_Fleet"
+            }
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceItem"
+            }
+          }
+        }
+      },
+      "ApiItem_Fleet": {
+        "type": "object",
+        "required": ["name", "namespace"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "namespace": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiItem_Service": {
+        "type": "object",
+        "required": ["name", "namespace"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "namespace": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

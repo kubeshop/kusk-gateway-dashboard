@@ -1,13 +1,14 @@
-import styled from 'styled-components';
-
 import {
   GithubFilled as RawGithubFilled,
   QuestionCircleFilled as RawQuestionsCircleFilled,
   SettingFilled as RawSettingFilled,
 } from '@ant-design/icons';
 
-import Colors from 'src/styles/colors';
-import {SIDEBAR_WIDTH} from 'src/constants/constants';
+import styled from 'styled-components';
+
+import {SIDEBAR_WIDTH} from '@constants/constants';
+
+import Colors from '@styles/colors';
 
 export const Logo = styled.img`
   height: 50px;
@@ -25,14 +26,14 @@ export const IconContainer = styled.div<{$border?: boolean}>`
   justify-content: center;
   padding: 19px 0;
 
-  ${({$border}) => `border-bottom: ${$border ? `1px solid ${Colors.grey2}` : ''}`}
+  ${({$border}) => `border-bottom: ${$border ? `1px solid ${Colors.grey4}` : ''}`}
 `;
 
 export const OptionsContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  border: 1px solid ${Colors.grey2};
+  border: 1px solid ${Colors.grey4};
 `;
 
 export const QuestionCircleFilled = styled(RawQuestionsCircleFilled)`

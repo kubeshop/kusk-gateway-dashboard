@@ -1,6 +1,8 @@
+import {ApiItem} from './api';
+
 interface MainState {
   /** the ID of the currently selected API */
-  selectedApi: string;
+  selectedApi: ApiItem | null;
 }
 
 export type {MainState};

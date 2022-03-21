@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
+import {BrowserRouter} from 'react-router-dom';
 
-import {GlobalStyle} from './styles/global';
-import {store} from './redux/store';
+import 'antd/dist/antd.dark.min.css';
 
-import 'antd/dist/antd.css';
+import {RestfulProvider} from 'restful-react';
+
+import {store} from '@redux/store';
+
+import {GlobalStyle} from '@styles/global';
 
 import App from './App';
 
@@ -15,7 +18,9 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <GlobalStyle />
-        <App />
+        <RestfulProvider base="http://147.75.33.177:8080/">
+          <App />
+        </RestfulProvider>
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,

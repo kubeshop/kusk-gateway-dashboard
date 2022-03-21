@@ -1,13 +1,17 @@
-import {lazy, Suspense} from 'react';
+import {Suspense, lazy} from 'react';
 import {Route, Routes} from 'react-router-dom';
+
+import {Skeleton} from 'antd';
+
 import styled from 'styled-components';
+import 'swagger-ui-react/swagger-ui.css';
 
-import {SIDEBAR_WIDTH} from './constants/constants';
+import {SIDEBAR_WIDTH} from '@constants/constants';
 
-import {Sidebar} from './components';
+import {Sidebar} from '@components/Sidebar';
 
-const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
-const Settings = lazy(() => import('./components/Settings/Settings'));
+const Dashboard = lazy(() => import('@pages/Dashboard/Dashboard'));
+const Settings = lazy(() => import('@pages/Settings/Settings'));
 
 const AppContainer = styled.div`
   height: 100%;
@@ -21,7 +25,7 @@ const App = () => {
     <AppContainer>
       <Sidebar />
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<Skeleton />}>
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
