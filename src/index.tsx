@@ -18,7 +18,7 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <GlobalStyle />
-        <RestfulProvider base="/api/">
+        <RestfulProvider base="https://endpoint.com/">
           <App />
         </RestfulProvider>
       </BrowserRouter>
