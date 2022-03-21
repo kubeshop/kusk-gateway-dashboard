@@ -1,8 +1,7 @@
 import {Skeleton} from 'antd';
 
 import SwaggerUI from 'swagger-ui-react';
-
-import openApiSpec from '@constants/kuskOpenApiSpec.json';
+import YAML from 'yaml';
 
 import {useGetPostProcessedOpenApiSpec} from '@models/api';
 
@@ -27,7 +26,7 @@ const PostProcessedApiSpec: React.FC = () => {
       ) : error ? (
         <S.ErrorLabel>{error.message}</S.ErrorLabel>
       ) : (
-        data && <SwaggerUI spec={openApiSpec} plugins={[TableOfContentsPlugin, DynamicServersPlugin]} />
+        data && <SwaggerUI spec={YAML.parse(data)} plugins={[TableOfContentsPlugin, DynamicServersPlugin]} />
       )}
     </S.PostProcessedApiSpecContainer>
   );
