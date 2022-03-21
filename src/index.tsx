@@ -18,7 +18,7 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <GlobalStyle />
-        <RestfulProvider base="http://147.75.33.177:8080/">
+        <RestfulProvider base="/api/">
           <App />
         </RestfulProvider>
       </BrowserRouter>
