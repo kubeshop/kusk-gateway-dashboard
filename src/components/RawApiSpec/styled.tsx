@@ -8,4 +8,10 @@ export const ErrorLabel = styled.span`
 
 export const RawApiSpecContainer = styled.div`
   ${SwaggerUIStyle}
+
+  & .swagger-ui {
+    & .scheme-container {
+      display: none;
+    }
+  }
 `;
