@@ -18,7 +18,7 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <GlobalStyle />
-        <RestfulProvider base="/api/">
+        <RestfulProvider base="kgwtest.kusk-system.svc.cluster.local:8080/">
           <App />
         </RestfulProvider>
       </BrowserRouter>
