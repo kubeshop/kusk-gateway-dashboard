@@ -10,7 +10,12 @@ const DynamicServersPlugin = () => ({
       const specJson = spec().toJS().json;
 
       const updateSpecServers = (url: string) => {
-        specJson.servers.push({url, description: ''});
+        if (specJson.servers) {
+          specJson.servers.push({url, description: ''});
+        } else {
+          specJson['servers'] = [{url, description: ''}];
+        }
+
         specActions.updateJsonSpec(specJson);
         oas3Actions.setSelectedServer(url);
       };
