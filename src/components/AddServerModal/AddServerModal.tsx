@@ -35,7 +35,7 @@ const AddServerModal: React.FC<IProps> = props => {
       return;
     }
 
-    if (servers.find(server => server.url === serverURL)) {
+    if (servers?.find(server => server.url === serverURL)) {
       setErrorMessage('Server already exists!');
       return;
     }
