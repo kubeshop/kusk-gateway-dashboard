@@ -24,7 +24,6 @@ const TableOfContentsLabel: React.FC<IProps> = props => {
   const {deprecated = false, kuskExtensionRef = '', operation = '', tag = ''} = props;
 
   const dispatch = useAppDispatch();
-  const apiInfoActiveTab = useAppSelector(state => state.ui.apiInfoActiveTab);
   const kuskExtensionsActiveKeys = useAppSelector(state => state.ui.kuskExtensionsActiveKeys[level]);
 
   const onTagClickHandler = useCallback(
@@ -70,7 +69,7 @@ const TableOfContentsLabel: React.FC<IProps> = props => {
         </S.LabelMethodTag>
       )}
 
-      {Boolean(kuskExtensionRef) && apiInfoActiveTab === 'raw-api-spec' && (
+      {Boolean(kuskExtensionRef) && (
         <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={KuskExtensionTooltip}>
           <S.ApiOutlined onClick={onKuskExtensionIconClickHandler} />
         </Tooltip>

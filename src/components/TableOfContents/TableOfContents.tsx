@@ -20,6 +20,77 @@ interface IProps {
   spec: any;
 }
 
+const TableOfContents: React.FC<IProps> = props => {
+  const {layoutActions, spec} = props;
+
+  const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
+  const [tableContentStatus, setTableContentStatus] = useState<'collapsed' | 'expanded'>('expanded');
+
+  const treeData = createTableOfContentsTreeData(spec, layoutActions);
+
+  useEffect(() => {
+    if (!treeData) {
+      return;
+    }
+
+    if (treeData[0].children?.length && tableContentStatus === 'expanded') {
+      const treePathsKeys = treeData[0].children?.map(pathNode => pathNode.key);
+
+      setExpandedKeys(['root', ...treePathsKeys]);
+      return;
+    }
+
+    setExpandedKeys(['root']);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tableContentStatus]);
+
+  if (!treeData.length) {
+    return null;
+  }
+
+  return (
+    <S.TableOfContentsContainer>
+      <S.TableOfContentsTitle>
+        Table of contents
+        <S.ExpandCollapseButton
+          type="ghost"
+          onClick={() => {
+            if (tableContentStatus === 'collapsed') {
+              setTableContentStatus('expanded');
+            } else {
+              setTableContentStatus('collapsed');
+            }
+          }}
+        >
+          {tableContentStatus === 'collapsed' ? 'Expand all' : 'Colapse all'}
+        </S.ExpandCollapseButton>
+      </S.TableOfContentsTitle>
+
+      <S.ContentContainer>
+        <S.Tree
+          expandedKeys={expandedKeys}
+          showLine={{showLeafIcon: false}}
+          showIcon={false}
+          switcherIcon={<DownOutlined />}
+          treeData={treeData}
+          onExpand={expandedKeysValue => {
+            if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
+              setTimeout(() => setTableContentStatus('collapsed'), 200);
+            }
+
+            if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
+              setTimeout(() => setTableContentStatus('expanded'), 200);
+            }
+
+            setExpandedKeys(expandedKeysValue);
+          }}
+        />
+      </S.ContentContainer>
+    </S.TableOfContentsContainer>
+  );
+};
+
 const tableOfContentsScrollToElement = (content: TableOfContentsItem, layoutActions: any) => {
   const {operationElementRef, operationId, tag} = content;
 
@@ -126,77 +197,6 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
   });
 
   return treeData;
-};
-
-const TableOfContents: React.FC<IProps> = props => {
-  const {layoutActions, spec} = props;
-
-  const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
-  const [tableContentStatus, setTableContentStatus] = useState<'collapsed' | 'expanded'>('expanded');
-
-  const treeData = createTableOfContentsTreeData(spec, layoutActions);
-
-  useEffect(() => {
-    if (!treeData) {
-      return;
-    }
-
-    if (treeData[0].children?.length && tableContentStatus === 'expanded') {
-      const treePathsKeys = treeData[0].children?.map(pathNode => pathNode.key);
-
-      setExpandedKeys(['root', ...treePathsKeys]);
-      return;
-    }
-
-    setExpandedKeys(['root']);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableContentStatus]);
-
-  if (!treeData) {
-    return null;
-  }
-
-  return (
-    <S.TableOfContentsContainer>
-      <S.TableOfContentsTitle>
-        Table of contents
-        <S.ExpandCollapseButton
-          type="ghost"
-          onClick={() => {
-            if (tableContentStatus === 'collapsed') {
-              setTableContentStatus('expanded');
-            } else {
-              setTableContentStatus('collapsed');
-            }
-          }}
-        >
-          {tableContentStatus === 'collapsed' ? 'Expand all' : 'Colapse all'}
-        </S.ExpandCollapseButton>
-      </S.TableOfContentsTitle>
-
-      <S.ContentContainer>
-        <S.Tree
-          expandedKeys={expandedKeys}
-          showLine={{showLeafIcon: false}}
-          showIcon={false}
-          switcherIcon={<DownOutlined />}
-          treeData={treeData}
-          onExpand={expandedKeysValue => {
-            if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
-              setTimeout(() => setTableContentStatus('collapsed'), 200);
-            }
-
-            if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
-              setTimeout(() => setTableContentStatus('expanded'), 200);
-            }
-
-            setExpandedKeys(expandedKeysValue);
-          }}
-        />
-      </S.ContentContainer>
-    </S.TableOfContentsContainer>
-  );
 };
 
 export default TableOfContents;
