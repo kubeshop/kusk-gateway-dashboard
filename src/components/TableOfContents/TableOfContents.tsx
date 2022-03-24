@@ -45,7 +45,7 @@ const TableOfContents: React.FC<IProps> = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableContentStatus]);
 
-  if (!treeData) {
+  if (!treeData.length) {
     return null;
   }
 
