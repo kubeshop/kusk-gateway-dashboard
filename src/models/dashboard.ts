@@ -3,6 +3,7 @@ import {ApiItem} from './api';
 export interface ApisTableDataSourceItem {
   key: string;
   name: string;
+  version: string;
   apiItem: ApiItem;
 }
 

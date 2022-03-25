@@ -19,17 +19,18 @@ const ApisListTable: React.FC<IProps> = props => {
 
   const [dataSource, setDataSource] = useState<ApisTableDataSourceItem[]>([]);
 
-  const renderApiName = useCallback(
-    (name: string, record: any) => {
+  const renderColumnLabel = useCallback(
+    (columnKey: string, record: any) => {
       const {key} = record;
 
-      return <S.ApiLabel $selected={key === `${selectedApi?.namespace}-${selectedApi?.name}`}>{name}</S.ApiLabel>;
+      return <S.ApiLabel $selected={key === `${selectedApi?.namespace}-${selectedApi?.name}`}>{columnKey}</S.ApiLabel>;
     },
     [selectedApi]
   );
 
   const columns = [
-    {title: 'Name', dataIndex: 'name', key: 'name', render: renderApiName},
+    {title: 'Name', dataIndex: 'name', key: 'name', render: renderColumnLabel},
+    {title: 'Version', dataIndex: 'version', key: 'version', render: renderColumnLabel},
     {
       title: 'Services',
       dataIndex: 'services',
@@ -53,6 +54,7 @@ const ApisListTable: React.FC<IProps> = props => {
         tableDataSource.push({
           key: `${api.namespace}-${api.name}`,
           name: api.name,
+          version: api.version,
           apiItem: api,
         });
       }
