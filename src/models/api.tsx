@@ -7,6 +7,7 @@ export interface ApiItem {
   namespace: string;
   fleet: ApiItemFleet;
   service: ApiItemService;
+  version: string;
 }
 
 export interface ServiceItem {
@@ -41,6 +42,10 @@ export interface GetApisQueryParams {
    * optional filter on fleet
    */
   fleetnamespace?: string;
+  /**
+   * optional filter on namespace
+   */
+  namespace?: string;
 }
 
 export type GetApisProps = Omit<GetProps<ApiItem[], unknown, GetApisQueryParams, void>, 'path'>;

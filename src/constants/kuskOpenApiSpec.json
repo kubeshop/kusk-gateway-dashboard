@@ -9,6 +9,10 @@
     {
       "url": "http://localhost:4010",
       "description": "My local endpoint mockup"
+    },
+    {
+      "url": "http://147.75.33.177:8080",
+      "description": "Testing endpoint"
     }
   ],
   "externalDocs": {
@@ -32,7 +36,9 @@
   "paths": {
     "/apis": {
       "get": {
-        "tags": ["apis"],
+        "tags": [
+          "apis"
+        ],
         "summary": "Get a list of APIs",
         "description": "Returns the list of APIs available in the cluster",
         "operationId": "getApis",
@@ -54,6 +60,15 @@
             },
             "required": false,
             "description": "optional filter on fleet"
+          },
+          {
+            "name": "namespace",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "optional filter on namespace"
           }
         ],
         "responses": {
@@ -75,7 +90,9 @@
     },
     "/apis/{namespace}/{name}\"": {
       "get": {
-        "tags": ["apis"],
+        "tags": [
+          "apis"
+        ],
         "summary": "Get an API instance by namespace and name",
         "operationId": "getApi",
         "parameters": [
@@ -116,7 +133,9 @@
     },
     "/apis/{namespace}/{name}/rawOpenApiSpec": {
       "get": {
-        "tags": ["apis"],
+        "tags": [
+          "apis"
+        ],
         "summary": "Get the raw OpenAPI spec by API id",
         "description": "Returns the raw OpenAPI specification",
         "operationId": "getRawOpenApiSpec",
@@ -158,7 +177,9 @@
     },
     "/apis/{namespace}/{name}/postProcessedOpenApiSpec": {
       "get": {
-        "tags": ["apis"],
+        "tags": [
+          "apis"
+        ],
         "summary": "Get the post-processed OpenAPI spec by API id",
         "description": "Returns the post-processed OpenAPI specification",
         "operationId": "getPostProcessedOpenApiSpec",
@@ -200,7 +221,9 @@
     },
     "/services": {
       "get": {
-        "tags": ["services"],
+        "tags": [
+          "services"
+        ],
         "summary": "Get a list of services handled by kusk-gateway",
         "description": "Returns the list of services available in the cluster that are related to kusk-gateway",
         "operationId": "getServices",
@@ -234,7 +257,9 @@
     },
     "/services/{namespace}/{name}": {
       "get": {
-        "tags": ["services"],
+        "tags": [
+          "services"
+        ],
         "summary": "Get details for a single service",
         "description": "Returns an object containing info about the service corresponding to the namespace and name",
         "operationId": "getService",
@@ -275,7 +300,9 @@
     },
     "/fleets": {
       "get": {
-        "tags": ["fleets"],
+        "tags": [
+          "fleets"
+        ],
         "summary": "Get a list of envoy fleets",
         "description": "Returns a list of envoy fleets that are available in the cluster",
         "operationId": "getEnvoyFleets",
@@ -309,7 +336,9 @@
     },
     "/fleets/{namespace}/{name}": {
       "get": {
-        "tags": ["fleets"],
+        "tags": [
+          "fleets"
+        ],
         "summary": "Get details for a single envoy fleet",
         "description": "Returns an object containing info about the envoy fleet corresponding to the namespace and name",
         "operationId": "getEnvoyFleet",
@@ -355,7 +384,13 @@
     "schemas": {
       "ApiItem": {
         "type": "object",
-        "required": ["name", "namespace", "fleet", "service"],
+        "required": [
+          "name",
+          "namespace",
+          "fleet",
+          "service",
+          "version"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -368,19 +403,29 @@
           },
           "service": {
             "$ref": "#/components/schemas/ApiItem_Service"
+          },
+          "version": {
+            "type": "string"
           }
         }
       },
       "ServiceItem": {
         "type": "object",
-        "required": ["name", "status", "namespace"],
+        "required": [
+          "name",
+          "status",
+          "namespace"
+        ],
         "properties": {
           "name": {
             "type": "string"
           },
           "status": {
             "type": "string",
-            "enum": ["available", "unavailable"]
+            "enum": [
+              "available",
+              "unavailable"
+            ]
           },
           "namespace": {
             "type": "string"
@@ -389,7 +434,10 @@
       },
       "EnvoyFleetItem": {
         "type": "object",
-        "required": ["name", "namespace"],
+        "required": [
+          "name",
+          "namespace"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -413,7 +461,10 @@
       },
       "ApiItem_Fleet": {
         "type": "object",
-        "required": ["name", "namespace"],
+        "required": [
+          "name",
+          "namespace"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -425,7 +476,10 @@
       },
       "ApiItem_Service": {
         "type": "object",
-        "required": ["name", "namespace"],
+        "required": [
+          "name",
+          "namespace"
+        ],
         "properties": {
           "name": {
             "type": "string"
