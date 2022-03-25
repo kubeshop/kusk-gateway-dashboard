@@ -25,7 +25,7 @@ export const QuestionCircleOutlined = styled(RawQuestionsCircleOutlined)`
 `;
 
 export const Select = styled(RawSelect)`
-  width: 300px;
+  width: 100%;
 
   & .ant-select-selection-item {
     display: flex;
@@ -38,6 +38,13 @@ export const TitleContainer = styled.div`
   align-items: center;
   gap: 30px;
   margin-bottom: 10px;
+`;
+
+export const TitleFiltersContainer = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(150px, 300px));
+  grid-gap: 20px;
 `;
 
 export const TitleLabel = styled.h2`

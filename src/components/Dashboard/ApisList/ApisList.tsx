@@ -79,59 +79,61 @@ const ApisList: React.FC = () => {
         <S.TitleContainer>
           <S.TitleLabel>APIs</S.TitleLabel>
 
-          <S.EnvoyFleetFilterContainer>
-            {envoyFleetsState.loading ? (
-              <Skeleton.Button />
-            ) : envoyFleetsState.error ? (
-              <S.ErrorLabel>{envoyFleetsState.error.message}</S.ErrorLabel>
-            ) : (
-              envoyFleetsState.data && (
-                <S.Select
-                  allowClear
-                  placeholder="Select a fleet"
-                  showSearch
-                  onClear={onEnvoyFleetSelectionClearHandler}
-                  onSelect={(value: any, option: any) => {
-                    onEnvoyFleetSelectHandler(option.envoyfleet);
-                  }}
-                >
-                  {envoyFleetsState.data.map(envoyFleetItem => (
-                    <Option
-                      key={`${envoyFleetItem.namespace}-${envoyFleetItem.name}`}
-                      value={envoyFleetItem.name}
-                      envoyfleet={envoyFleetItem}
-                    >
-                      <Tag>{envoyFleetItem.namespace}</Tag>
-                      {envoyFleetItem.name}
-                    </Option>
-                  ))}
-                </S.Select>
-              )
-            )}
+          <S.TitleFiltersContainer>
+            <S.EnvoyFleetFilterContainer>
+              {envoyFleetsState.loading ? (
+                <Skeleton.Button />
+              ) : envoyFleetsState.error ? (
+                <S.ErrorLabel>{envoyFleetsState.error.message}</S.ErrorLabel>
+              ) : (
+                envoyFleetsState.data && (
+                  <S.Select
+                    allowClear
+                    placeholder="Select a fleet"
+                    showSearch
+                    onClear={onEnvoyFleetSelectionClearHandler}
+                    onSelect={(value: any, option: any) => {
+                      onEnvoyFleetSelectHandler(option.envoyfleet);
+                    }}
+                  >
+                    {envoyFleetsState.data.map(envoyFleetItem => (
+                      <Option
+                        key={`${envoyFleetItem.namespace}-${envoyFleetItem.name}`}
+                        value={envoyFleetItem.name}
+                        envoyfleet={envoyFleetItem}
+                      >
+                        <Tag>{envoyFleetItem.namespace}</Tag>
+                        {envoyFleetItem.name}
+                      </Option>
+                    ))}
+                  </S.Select>
+                )
+              )}
 
-            {selectedFleet && (
-              <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={EnvoyFleetInfoTooltip}>
-                <S.QuestionCircleOutlined onClick={onEnvoyFleetInfoIconClickHandler} />
-              </Tooltip>
-            )}
-          </S.EnvoyFleetFilterContainer>
+              {selectedFleet && (
+                <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={EnvoyFleetInfoTooltip}>
+                  <S.QuestionCircleOutlined onClick={onEnvoyFleetInfoIconClickHandler} />
+                </Tooltip>
+              )}
+            </S.EnvoyFleetFilterContainer>
 
-          <S.Select
-            allowClear
-            placeholder="Select a namespace"
-            value={selectedNamespace}
-            showSearch
-            onClear={onNamespaceSelectionClearHandler}
-            onSelect={(value: any) => {
-              onNamespaceSelectHandler(value);
-            }}
-          >
-            {apisNamespaces.map(namespace => (
-              <Option key={namespace} value={namespace}>
-                {namespace}
-              </Option>
-            ))}
-          </S.Select>
+            <S.Select
+              allowClear
+              placeholder="Select a namespace"
+              value={selectedNamespace}
+              showSearch
+              onClear={onNamespaceSelectionClearHandler}
+              onSelect={(value: any) => {
+                onNamespaceSelectHandler(value);
+              }}
+            >
+              {apisNamespaces.map(namespace => (
+                <Option key={namespace} value={namespace}>
+                  {namespace}
+                </Option>
+              ))}
+            </S.Select>
+          </S.TitleFiltersContainer>
         </S.TitleContainer>
 
         {loading ? (
