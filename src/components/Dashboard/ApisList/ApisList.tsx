@@ -1,4 +1,4 @@
-import {Suspense, useState} from 'react';
+import {Suspense, useMemo, useState} from 'react';
 
 import {Select, Skeleton, Tag, Tooltip} from 'antd';
 
@@ -29,6 +29,16 @@ const ApisList: React.FC = () => {
     queryParams: {fleetname: selectedFleet?.name, fleetnamespace: selectedFleet?.namespace},
   });
   const envoyFleetsState = useGetEnvoyFleets({});
+
+  const apisNamespaces = useMemo((): string[] => {
+    if (!data) {
+      return [];
+    }
+
+    const namespaces = data.map(apiItem => apiItem.namespace);
+
+    return [...Array.from(new Set(namespaces))];
+  }, [data]);
 
   const onEnvoyFleetSelectHandler = (envoyFleetItem: EnvoyFleetItem) => {
     setSelectedFleet(envoyFleetItem);
@@ -90,6 +100,14 @@ const ApisList: React.FC = () => {
               </Tooltip>
             )}
           </S.EnvoyFleetFilterContainer>
+
+          <S.Select allowClear placeholder="Select a namespace" showSearch>
+            {apisNamespaces.map(namespace => (
+              <Option key={namespace} value={namespace}>
+                {namespace}
+              </Option>
+            ))}
+          </S.Select>
         </S.TitleContainer>
 
         {loading ? (
