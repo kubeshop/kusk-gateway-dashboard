@@ -24,9 +24,14 @@ const ApisList: React.FC = () => {
   const envoyFleet = useAppSelector(state => state.ui.envoyFleetModal.envoyFleet);
 
   const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
+  const [selectedNamespace, setSelectedNamespace] = useState<string>();
 
   const {data, error, loading} = useGetApis({
-    queryParams: {fleetname: selectedFleet?.name, fleetnamespace: selectedFleet?.namespace},
+    queryParams: {
+      fleetname: selectedFleet?.name,
+      fleetnamespace: selectedFleet?.namespace,
+      namespace: selectedNamespace,
+    },
   });
   const envoyFleetsState = useGetEnvoyFleets({});
 
@@ -45,6 +50,11 @@ const ApisList: React.FC = () => {
     dispatch(selectApi(null));
   };
 
+  const onNamespaceSelectHandler = (namespace: string) => {
+    setSelectedNamespace(namespace);
+    dispatch(selectApi(null));
+  };
+
   const onEnvoyFleetInfoIconClickHandler = () => {
     if (!selectedFleet) {
       return;
@@ -55,6 +65,11 @@ const ApisList: React.FC = () => {
 
   const onEnvoyFleetSelectionClearHandler = () => {
     setSelectedFleet(undefined);
+    dispatch(selectApi(null));
+  };
+
+  const onNamespaceSelectionClearHandler = () => {
+    setSelectedNamespace(undefined);
     dispatch(selectApi(null));
   };
 
@@ -72,10 +87,10 @@ const ApisList: React.FC = () => {
             ) : (
               envoyFleetsState.data && (
                 <S.Select
-                  onClear={onEnvoyFleetSelectionClearHandler}
                   allowClear
                   placeholder="Select a fleet"
                   showSearch
+                  onClear={onEnvoyFleetSelectionClearHandler}
                   onSelect={(value: any, option: any) => {
                     onEnvoyFleetSelectHandler(option.envoyfleet);
                   }}
@@ -101,7 +116,16 @@ const ApisList: React.FC = () => {
             )}
           </S.EnvoyFleetFilterContainer>
 
-          <S.Select allowClear placeholder="Select a namespace" showSearch>
+          <S.Select
+            allowClear
+            placeholder="Select a namespace"
+            value={selectedNamespace}
+            showSearch
+            onClear={onNamespaceSelectionClearHandler}
+            onSelect={(value: any) => {
+              onNamespaceSelectHandler(value);
+            }}
+          >
             {apisNamespaces.map(namespace => (
               <Option key={namespace} value={namespace}>
                 {namespace}
