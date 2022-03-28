@@ -198,6 +198,7 @@ export const SwaggerUIStyle = `
 
     & .wrapper {
       padding: 0;
+      max-width: none;
     }
 
     & .opblock {
