@@ -1,7 +1,7 @@
 import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 import {ApiInfoTabs} from '@models/dashboard';
-import {UiState} from '@models/ui';
+import {DashboardPaneConfiguration, UiState} from '@models/ui';
 
 import initialState from '@redux/initialState';
 
@@ -19,6 +19,10 @@ export const uiSlice = createSlice({
       const {keys, level} = action.payload;
 
       state.kuskExtensionsActiveKeys[level] = keys;
+    },
+
+    setDashboardPaneConfiguration: (state: Draft<UiState>, action: PayloadAction<DashboardPaneConfiguration>) => {
+      state.dashboardPaneConfiguration = action.payload;
     },
 
     setPostProcessedTabledOfContentsHeight: (state: Draft<UiState>, action: PayloadAction<number>) => {
@@ -50,6 +54,7 @@ export const uiSlice = createSlice({
 export const {
   setApiInfoActiveTab,
   setKuskExtensionsActiveKeys,
+  setDashboardPaneConfiguration,
   setPostProcessedTabledOfContentsHeight,
   setRawApiSpecTableOfContentsHeight,
   toggleEnvoyFleetInfoModal,

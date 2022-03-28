@@ -3,6 +3,7 @@ import {ApiInfoTabs} from './dashboard';
 
 interface UiState {
   apiInfoActiveTab: ApiInfoTabs;
+  dashboardPaneConfiguration: DashboardPaneConfiguration;
   envoyFleetModal: {
     envoyFleet: EnvoyFleetItem | null;
   };
@@ -15,4 +16,9 @@ interface UiState {
   };
 }
 
-export type {UiState};
+interface DashboardPaneConfiguration {
+  leftPaneWidth: number;
+  rightPaneWidth: number;
+}
+
+export type {DashboardPaneConfiguration, UiState};

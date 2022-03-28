@@ -20,7 +20,7 @@ export const ContentContainer = styled.div`
     ${GlobalScrollbarStyle}
   }
 
-  & .custom-handle {
+  & .toc-custom-handle {
     position: absolute;
     left: 0;
     right: 0;

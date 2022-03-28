@@ -7,6 +7,10 @@ const initialMainState: MainState = {
 
 const initialUiState: UiState = {
   apiInfoActiveTab: 'raw-api-spec',
+  dashboardPaneConfiguration: {
+    leftPaneWidth: 0.5,
+    rightPaneWidth: 0.5,
+  },
   envoyFleetModal: {
     envoyFleet: null,
   },

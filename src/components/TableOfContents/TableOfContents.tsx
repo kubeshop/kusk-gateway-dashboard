@@ -1,13 +1,13 @@
-import React, {LegacyRef, useCallback, useEffect, useState} from 'react';
+import React, {LegacyRef, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {ResizableBox} from 'react-resizable';
-import {useMeasure, useWindowSize} from 'react-use';
+import useMeasure from 'react-use/lib/useMeasure';
 
 import {DataNode} from 'antd/lib/tree';
 
 import {DownOutlined} from '@ant-design/icons';
 
-import {SIDEBAR_WIDTH, SUPPORTED_METHODS} from '@constants/constants';
+import {SUPPORTED_METHODS} from '@constants/constants';
 
 import {TableOfContentsItem} from '@models/swaggerUI';
 
@@ -33,20 +33,17 @@ const TableOfContents: React.FC<IProps> = props => {
   const apiInfoActiveTab = useAppSelector(state => state.ui.apiInfoActiveTab);
   const tableOfContentsHeight = useAppSelector(state => state.ui.tableOfContentsHeight);
 
-  const [containerRef, {height, width}] = useMeasure<HTMLDivElement>();
+  const [containerRef, {height}] = useMeasure<HTMLDivElement>();
 
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [tableContentStatus, setTableContentStatus] = useState<'collapsed' | 'expanded'>('expanded');
-  const [tableOfContentsWidth, setTableOfContentsWidth] = useState<number>(width);
 
   const treeData = createTableOfContentsTreeData(spec, layoutActions);
 
   const resizableHandler = useCallback(
-    (_h: number, ref: LegacyRef<HTMLSpanElement>) => <span className="custom-handle" ref={ref} />,
+    (_h: number, ref: LegacyRef<HTMLSpanElement>) => <span className="toc-custom-handle" ref={ref} />,
     []
   );
-
-  const {width: windowWidth} = useWindowSize();
 
   const resizeTableOfContentsHandler = useCallback(() => {
     if (apiInfoActiveTab === 'raw-api-spec') {
@@ -57,6 +54,15 @@ const TableOfContents: React.FC<IProps> = props => {
       dispatch(setPostProcessedTabledOfContentsHeight(height));
     }
   }, [apiInfoActiveTab, dispatch, height]);
+
+  const tableOfContentsResizableHeight = useMemo(
+    () =>
+      height ||
+      (apiInfoActiveTab === 'raw-api-spec'
+        ? tableOfContentsHeight.rawApiSpec
+        : tableOfContentsHeight.postProcessedApiSpec),
+    [apiInfoActiveTab, height, tableOfContentsHeight.postProcessedApiSpec, tableOfContentsHeight.rawApiSpec]
+  );
 
   useEffect(() => {
     if (!treeData) {
@@ -74,10 +80,6 @@ const TableOfContents: React.FC<IProps> = props => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableContentStatus]);
-
-  useEffect(() => {
-    setTableOfContentsWidth((windowWidth - SIDEBAR_WIDTH) / 2 - 89);
-  }, [windowWidth]);
 
   if (!treeData.length) {
     return null;
@@ -103,15 +105,12 @@ const TableOfContents: React.FC<IProps> = props => {
 
       <S.ContentContainer ref={containerRef}>
         <ResizableBox
-          width={tableOfContentsWidth}
-          height={
-            height ||
-            (apiInfoActiveTab === 'raw-api-spec'
-              ? tableOfContentsHeight.rawApiSpec
-              : tableOfContentsHeight.postProcessedApiSpec)
-          }
-          minConstraints={[tableOfContentsWidth, 300]}
-          maxConstraints={[tableOfContentsWidth, 850]}
+          // Infinity as a placeholder because value 100% is not allowed
+          // by ResizableBox on the width property ( number required )
+          width={Infinity}
+          height={tableOfContentsResizableHeight}
+          minConstraints={[Infinity, 300]}
+          maxConstraints={[Infinity, 850]}
           axis="y"
           resizeHandles={['s']}
           handle={resizableHandler}

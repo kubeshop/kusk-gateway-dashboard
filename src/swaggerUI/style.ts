@@ -196,6 +196,10 @@ export const SwaggerUIStyle = `
       }
     }
 
+    & .wrapper {
+      padding: 0;
+    }
+
     & .opblock {
       &-description p {
         color: ${Colors.whitePure};
