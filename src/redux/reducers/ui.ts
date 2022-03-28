@@ -21,6 +21,14 @@ export const uiSlice = createSlice({
       state.kuskExtensionsActiveKeys[level] = keys;
     },
 
+    setPostProcessedTabledOfContentsHeight: (state: Draft<UiState>, action: PayloadAction<number>) => {
+      state.tableOfContentsHeight.postProcessedApiSpec = action.payload;
+    },
+
+    setRawApiSpecTableOfContentsHeight: (state: Draft<UiState>, action: PayloadAction<number>) => {
+      state.tableOfContentsHeight.rawApiSpec = action.payload;
+    },
+
     toggleEnvoyFleetInfoModal: (
       state: Draft<UiState>,
       action: PayloadAction<{name: string; namespace: string} | null>
@@ -39,5 +47,11 @@ export const uiSlice = createSlice({
   },
 });
 
-export const {setApiInfoActiveTab, setKuskExtensionsActiveKeys, toggleEnvoyFleetInfoModal} = uiSlice.actions;
+export const {
+  setApiInfoActiveTab,
+  setKuskExtensionsActiveKeys,
+  setPostProcessedTabledOfContentsHeight,
+  setRawApiSpecTableOfContentsHeight,
+  toggleEnvoyFleetInfoModal,
+} = uiSlice.actions;
 export default uiSlice.reducer;

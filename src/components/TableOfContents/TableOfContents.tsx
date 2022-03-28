@@ -1,12 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {LegacyRef, useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {ResizableBox} from 'react-resizable';
+import {useMeasure, useWindowSize} from 'react-use';
 
 import {DataNode} from 'antd/lib/tree';
 
 import {DownOutlined} from '@ant-design/icons';
 
-import {SUPPORTED_METHODS} from '@constants/constants';
+import {SIDEBAR_WIDTH, SUPPORTED_METHODS} from '@constants/constants';
 
 import {TableOfContentsItem} from '@models/swaggerUI';
+
+import {useAppSelector} from '@redux/hooks';
+import {setPostProcessedTabledOfContentsHeight, setRawApiSpecTableOfContentsHeight} from '@redux/reducers/ui';
 
 import {getOperationId} from '@swaggerUI/utils/operations';
 import {getPathId} from '@swaggerUI/utils/path';
@@ -23,10 +29,34 @@ interface IProps {
 const TableOfContents: React.FC<IProps> = props => {
   const {layoutActions, spec} = props;
 
+  const dispatch = useDispatch();
+  const apiInfoActiveTab = useAppSelector(state => state.ui.apiInfoActiveTab);
+  const tableOfContentsHeight = useAppSelector(state => state.ui.tableOfContentsHeight);
+
+  const [containerRef, {height, width}] = useMeasure<HTMLDivElement>();
+
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [tableContentStatus, setTableContentStatus] = useState<'collapsed' | 'expanded'>('expanded');
+  const [tableOfContentsWidth, setTableOfContentsWidth] = useState<number>(width);
 
   const treeData = createTableOfContentsTreeData(spec, layoutActions);
+
+  const resizableHandler = useCallback(
+    (_h: number, ref: LegacyRef<HTMLSpanElement>) => <span className="custom-handle" ref={ref} />,
+    []
+  );
+
+  const {width: windowWidth} = useWindowSize();
+
+  const resizeTableOfContentsHandler = useCallback(() => {
+    if (apiInfoActiveTab === 'raw-api-spec') {
+      dispatch(setRawApiSpecTableOfContentsHeight(height));
+    }
+
+    if (apiInfoActiveTab === 'post-processed-api-spec') {
+      dispatch(setPostProcessedTabledOfContentsHeight(height));
+    }
+  }, [apiInfoActiveTab, dispatch, height]);
 
   useEffect(() => {
     if (!treeData) {
@@ -44,6 +74,10 @@ const TableOfContents: React.FC<IProps> = props => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableContentStatus]);
+
+  useEffect(() => {
+    setTableOfContentsWidth((windowWidth - SIDEBAR_WIDTH) / 2 - 80);
+  }, [windowWidth]);
 
   if (!treeData.length) {
     return null;
@@ -67,25 +101,41 @@ const TableOfContents: React.FC<IProps> = props => {
         </S.ExpandCollapseButton>
       </S.TableOfContentsTitle>
 
-      <S.ContentContainer>
-        <S.Tree
-          expandedKeys={expandedKeys}
-          showLine={{showLeafIcon: false}}
-          showIcon={false}
-          switcherIcon={<DownOutlined />}
-          treeData={treeData}
-          onExpand={expandedKeysValue => {
-            if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
-              setTimeout(() => setTableContentStatus('collapsed'), 200);
-            }
+      <S.ContentContainer ref={containerRef}>
+        <ResizableBox
+          width={tableOfContentsWidth}
+          height={
+            height ||
+            (apiInfoActiveTab === 'raw-api-spec'
+              ? tableOfContentsHeight.rawApiSpec
+              : tableOfContentsHeight.postProcessedApiSpec)
+          }
+          minConstraints={[tableOfContentsWidth, 300]}
+          maxConstraints={[tableOfContentsWidth, 850]}
+          axis="y"
+          resizeHandles={['s']}
+          handle={resizableHandler}
+          onResizeStop={resizeTableOfContentsHandler}
+        >
+          <S.Tree
+            expandedKeys={expandedKeys}
+            showLine={{showLeafIcon: false}}
+            showIcon={false}
+            switcherIcon={<DownOutlined />}
+            treeData={treeData}
+            onExpand={expandedKeysValue => {
+              if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
+                setTimeout(() => setTableContentStatus('collapsed'), 200);
+              }
 
-            if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
-              setTimeout(() => setTableContentStatus('expanded'), 200);
-            }
+              if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
+                setTimeout(() => setTableContentStatus('expanded'), 200);
+              }
 
-            setExpandedKeys(expandedKeysValue);
-          }}
-        />
+              setExpandedKeys(expandedKeysValue);
+            }}
+          />
+        </ResizableBox>
       </S.ContentContainer>
     </S.TableOfContentsContainer>
   );

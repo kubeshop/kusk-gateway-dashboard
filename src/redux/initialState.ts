@@ -15,6 +15,10 @@ const initialUiState: UiState = {
     path: [],
     operation: [],
   },
+  tableOfContentsHeight: {
+    postProcessedApiSpec: 500,
+    rawApiSpec: 500,
+  },
 };
 
 export default {

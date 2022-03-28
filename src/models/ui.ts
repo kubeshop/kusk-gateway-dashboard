@@ -9,6 +9,10 @@ interface UiState {
   kuskExtensionsActiveKeys: {
     [key: string]: string[];
   };
+  tableOfContentsHeight: {
+    postProcessedApiSpec: number;
+    rawApiSpec: number;
+  };
 }
 
 export type {UiState};
