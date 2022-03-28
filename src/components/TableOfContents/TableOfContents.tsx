@@ -76,7 +76,7 @@ const TableOfContents: React.FC<IProps> = props => {
   }, [tableContentStatus]);
 
   useEffect(() => {
-    setTableOfContentsWidth((windowWidth - SIDEBAR_WIDTH) / 2 - 80);
+    setTableOfContentsWidth((windowWidth - SIDEBAR_WIDTH) / 2 - 89);
   }, [windowWidth]);
 
   if (!treeData.length) {
