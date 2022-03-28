@@ -1,4 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {LegacyRef, useCallback, useEffect, useState} from 'react';
+import {ResizableBox} from 'react-resizable';
+import {useMeasure} from 'react-use';
 
 import {DataNode} from 'antd/lib/tree';
 
@@ -26,7 +28,14 @@ const TableOfContents: React.FC<IProps> = props => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [tableContentStatus, setTableContentStatus] = useState<'collapsed' | 'expanded'>('expanded');
 
+  const [containerRef, {height, width}] = useMeasure<HTMLDivElement>();
+
   const treeData = createTableOfContentsTreeData(spec, layoutActions);
+
+  const resizableHandler = useCallback(
+    (_h: number, ref: LegacyRef<HTMLSpanElement>) => <span className="custom-handle" ref={ref} />,
+    []
+  );
 
   useEffect(() => {
     if (!treeData) {
@@ -67,25 +76,35 @@ const TableOfContents: React.FC<IProps> = props => {
         </S.ExpandCollapseButton>
       </S.TableOfContentsTitle>
 
-      <S.ContentContainer>
-        <S.Tree
-          expandedKeys={expandedKeys}
-          showLine={{showLeafIcon: false}}
-          showIcon={false}
-          switcherIcon={<DownOutlined />}
-          treeData={treeData}
-          onExpand={expandedKeysValue => {
-            if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
-              setTimeout(() => setTableContentStatus('collapsed'), 200);
-            }
+      <S.ContentContainer ref={containerRef}>
+        <ResizableBox
+          width={width}
+          height={height || 500}
+          minConstraints={[width, 350]}
+          maxConstraints={[width, 850]}
+          axis="y"
+          resizeHandles={['s']}
+          handle={resizableHandler}
+        >
+          <S.Tree
+            expandedKeys={expandedKeys}
+            showLine={{showLeafIcon: false}}
+            showIcon={false}
+            switcherIcon={<DownOutlined />}
+            treeData={treeData}
+            onExpand={expandedKeysValue => {
+              if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
+                setTimeout(() => setTableContentStatus('collapsed'), 200);
+              }
 
-            if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
-              setTimeout(() => setTableContentStatus('expanded'), 200);
-            }
+              if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
+                setTimeout(() => setTableContentStatus('expanded'), 200);
+              }
 
-            setExpandedKeys(expandedKeysValue);
-          }}
-        />
+              setExpandedKeys(expandedKeysValue);
+            }}
+          />
+        </ResizableBox>
       </S.ContentContainer>
     </S.TableOfContentsContainer>
   );

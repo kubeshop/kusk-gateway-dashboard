@@ -7,15 +7,27 @@ import {GlobalScrollbarStyle} from '@utils/scrollbar';
 import Colors from '@styles/colors';
 
 export const ContentContainer = styled.div`
+  position: relative;
   margin-top: 10px;
   color: ${Colors.grey9};
   border: 1px solid ${Colors.grey5};
   background: ${Colors.grey2};
-  padding: 5px 15px;
-  max-height: 700px;
-  overflow-y: auto;
 
-  ${GlobalScrollbarStyle};
+  & .react-resizable {
+    padding: 5px 15px;
+    overflow-y: auto;
+
+    ${GlobalScrollbarStyle}
+  }
+
+  & .custom-handle {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 3px;
+    cursor: row-resize;
+  }
 `;
 
 export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $ref?: string}>`
