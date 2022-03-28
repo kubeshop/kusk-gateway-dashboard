@@ -14,7 +14,6 @@ export const ContentContainer = styled.div`
   background: ${Colors.grey2};
 
   & .react-resizable {
-    width: 100% !important;
     padding: 5px 15px;
     overflow-y: auto;
 

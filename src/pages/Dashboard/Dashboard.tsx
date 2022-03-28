@@ -35,14 +35,6 @@ const Dashboard: React.FC = () => {
     }
   }, [dashboardWidth, dispatch, paneConfiguration, rightPaneWidth]);
 
-  const dashboardContainerGridTemplateColumns = useMemo(() => {
-    if (selectedApi) {
-      return '1fr max-content';
-    }
-
-    return '1fr';
-  }, [selectedApi]);
-
   const rightPaneResizableWidth = useMemo(() => {
     const paneWidth = dashboardWidth * rightWidth;
 
@@ -50,7 +42,7 @@ const Dashboard: React.FC = () => {
   }, [dashboardWidth, rightWidth]);
 
   return (
-    <S.DashboardContainer ref={dashboardContainerRef} $gridTemplateColumns={dashboardContainerGridTemplateColumns}>
+    <S.DashboardContainer ref={dashboardContainerRef} $isApiSelected={Boolean(selectedApi)}>
       <ApisList />
 
       <Suspense fallback={null}>

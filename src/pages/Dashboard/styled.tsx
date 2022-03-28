@@ -19,9 +19,9 @@ export const ApiInfoContainer = styled.div`
   }
 `;
 
-export const DashboardContainer = styled.div<{$gridTemplateColumns: string}>`
-  ${({$gridTemplateColumns}) => `
-    grid-template-columns: ${$gridTemplateColumns};
+export const DashboardContainer = styled.div<{$isApiSelected: boolean}>`
+  ${({$isApiSelected}) => `
+    grid-template-columns: 1fr ${$isApiSelected ? 'max-content' : ''};
   `}
 
   display: grid;

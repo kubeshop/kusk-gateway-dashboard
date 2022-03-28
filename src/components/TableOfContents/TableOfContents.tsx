@@ -1,4 +1,4 @@
-import React, {LegacyRef, useCallback, useEffect, useState} from 'react';
+import React, {LegacyRef, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {ResizableBox} from 'react-resizable';
 import useMeasure from 'react-use/lib/useMeasure';
@@ -55,6 +55,15 @@ const TableOfContents: React.FC<IProps> = props => {
     }
   }, [apiInfoActiveTab, dispatch, height]);
 
+  const tableOfContentsResizableHeight = useMemo(
+    () =>
+      height ||
+      (apiInfoActiveTab === 'raw-api-spec'
+        ? tableOfContentsHeight.rawApiSpec
+        : tableOfContentsHeight.postProcessedApiSpec),
+    [apiInfoActiveTab, height, tableOfContentsHeight.postProcessedApiSpec, tableOfContentsHeight.rawApiSpec]
+  );
+
   useEffect(() => {
     if (!treeData) {
       return;
@@ -96,13 +105,10 @@ const TableOfContents: React.FC<IProps> = props => {
 
       <S.ContentContainer ref={containerRef}>
         <ResizableBox
+          // Infinity as a placeholder because value 100% is not allowed
+          // by ResizableBox on the width property ( number required )
           width={Infinity}
-          height={
-            height ||
-            (apiInfoActiveTab === 'raw-api-spec'
-              ? tableOfContentsHeight.rawApiSpec
-              : tableOfContentsHeight.postProcessedApiSpec)
-          }
+          height={tableOfContentsResizableHeight}
           minConstraints={[Infinity, 300]}
           maxConstraints={[Infinity, 850]}
           axis="y"
