@@ -7,6 +7,7 @@ import {GlobalScrollbarStyle} from '@utils/scrollbar';
 import Colors from '@styles/colors';
 
 export const ApiInfoContainer = styled.div`
+  height: 100%;
   position: relative;
   background: ${Colors.grey4};
   padding: 40px 20px 20px 20px;

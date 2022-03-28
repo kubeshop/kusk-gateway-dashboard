@@ -14,13 +14,14 @@ export const ContentContainer = styled.div`
   background: ${Colors.grey2};
 
   & .react-resizable {
+    width: 100% !important;
     padding: 5px 15px;
     overflow-y: auto;
 
     ${GlobalScrollbarStyle}
   }
 
-  & .custom-handle {
+  & .toc-custom-handle {
     position: absolute;
     left: 0;
     right: 0;
