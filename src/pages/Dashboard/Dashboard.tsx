@@ -43,6 +43,12 @@ const Dashboard: React.FC = () => {
     return '1fr';
   }, [selectedApi]);
 
+  const rightPaneResizableWidth = useMemo(() => {
+    const paneWidth = dashboardWidth * rightWidth;
+
+    return paneWidth < 460 ? 460 : paneWidth;
+  }, [dashboardWidth, rightWidth]);
+
   return (
     <S.DashboardContainer ref={dashboardContainerRef} $gridTemplateColumns={dashboardContainerGridTemplateColumns}>
       <ApisList />
@@ -52,7 +58,7 @@ const Dashboard: React.FC = () => {
           <S.ApiInfoContainer ref={apiInfoContainerRef}>
             <ResizableBox
               height={rightPaneHeight}
-              width={dashboardWidth * rightWidth}
+              width={rightPaneResizableWidth}
               minConstraints={[DASHBOARD_PANE_MIN_WIDTH, rightPaneHeight]}
               maxConstraints={[dashboardWidth - DASHBOARD_PANE_MIN_WIDTH, rightPaneHeight]}
               axis="x"
