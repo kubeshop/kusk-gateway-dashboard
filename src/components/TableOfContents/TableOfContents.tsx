@@ -110,7 +110,7 @@ const TableOfContents: React.FC<IProps> = props => {
               ? tableOfContentsHeight.rawApiSpec
               : tableOfContentsHeight.postProcessedApiSpec)
           }
-          minConstraints={[tableOfContentsWidth, 350]}
+          minConstraints={[tableOfContentsWidth, 300]}
           maxConstraints={[tableOfContentsWidth, 850]}
           axis="y"
           resizeHandles={['s']}
