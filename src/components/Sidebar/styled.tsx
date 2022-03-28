@@ -11,7 +11,7 @@ import {SIDEBAR_WIDTH} from '@constants/constants';
 import Colors from '@styles/colors';
 
 export const Logo = styled.img`
-  height: 50px;
+  height: 80px;
   cursor: pointer;
 `;
 
