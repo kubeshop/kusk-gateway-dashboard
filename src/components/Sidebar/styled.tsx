@@ -11,7 +11,7 @@ import {SIDEBAR_WIDTH} from '@constants/constants';
 import Colors from '@styles/colors';
 
 export const Logo = styled.img`
-  height: 80px;
+  height: 50px;
   cursor: pointer;
 `;
 
@@ -56,7 +56,7 @@ export const SidebarContainer = styled.div`
   z-index: 1;
   width: ${SIDEBAR_WIDTH}px;
   background: ${Colors.blackPure};
-  padding: 15px 0px;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
