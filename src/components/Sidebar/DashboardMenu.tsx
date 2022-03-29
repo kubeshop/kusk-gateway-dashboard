@@ -28,7 +28,7 @@ const DashboardMenu: React.FC = () => {
       <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title="StaticRoutes List">
         <Link to="/static-routes">
           <S.Icon component={StaticRoute} $active={pathname === '/static-routes'} />
-        </Link>{' '}
+        </Link>
       </Tooltip>
     </S.DashboardMenuContainer>
   );
