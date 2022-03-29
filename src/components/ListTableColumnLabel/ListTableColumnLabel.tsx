@@ -1,4 +1,4 @@
-import * as S from './TableColumnLabel.styled';
+import * as S from './styled';
 
 interface IProps {
   itemKey: string;
@@ -8,7 +8,7 @@ interface IProps {
   onSelectArrowClick?: () => void;
 }
 
-const TableColumnLabel: React.FC<IProps> = props => {
+const ListTableColumnLabel: React.FC<IProps> = props => {
   const {itemKey, selectedKey = null, showSelectArrow = false, value, onSelectArrowClick} = props;
 
   const onSelectArrowClickHandler = () => {
@@ -18,12 +18,12 @@ const TableColumnLabel: React.FC<IProps> = props => {
   };
 
   return (
-    <S.TableColumnLabelContainer $selected={itemKey === selectedKey}>
+    <S.ListTableColumnLabelContainer $selected={itemKey === selectedKey}>
       {value}
 
       {showSelectArrow && <S.RightOutlined $disabled={itemKey === selectedKey} onClick={onSelectArrowClickHandler} />}
-    </S.TableColumnLabelContainer>
+    </S.ListTableColumnLabelContainer>
   );
 };
 
-export default TableColumnLabel;
+export default ListTableColumnLabel;

@@ -3,6 +3,7 @@ export {ApiInfo, ApisList} from './Dashboard';
 export {EnvoyFleetInfoModal} from './EnvoyFleetInfoModal';
 export {EnvoyFleetsList} from './EnvoyFleets';
 export {KuskExtensions} from './KuskExtensions';
+export {ListTableColumnLabel} from './ListTableColumnLabel';
 export {PostProcessedApiSpec} from './PostProcessedApiSpec';
 export {RawApiSpec} from './RawApiSpec';
 export {Sidebar} from './Sidebar';

@@ -1,9 +1,11 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
 import {ApiItem} from '@models/api';
 import {ApisTableDataSourceItem} from '@models/dashboard';
 
 import {useAppSelector} from '@redux/hooks';
+
+import {ListTableColumnLabel} from '@components';
 
 import * as S from './ApisListTable.styled';
 import ApisListTableServicesTag from './ApisListTableServicesTag';
@@ -16,26 +18,40 @@ const ApisListTable: React.FC<IProps> = props => {
   const {apis} = props;
 
   const selectedApi = useAppSelector(state => state.main.selectedApi);
+  const selectedApiKey = useMemo(() => {
+    if (!selectedApi) {
+      return null;
+    }
+
+    return `${selectedApi?.namespace}-${selectedApi?.name}`;
+  }, [selectedApi]);
 
   const [dataSource, setDataSource] = useState<ApisTableDataSourceItem[]>([]);
 
-  const renderColumnLabel = useCallback(
-    (columnKey: string, record: any) => {
-      const {key} = record;
-
-      return <S.ApiLabel $selected={key === `${selectedApi?.namespace}-${selectedApi?.name}`}>{columnKey}</S.ApiLabel>;
-    },
-    [selectedApi]
-  );
-
   const columns = [
-    {title: 'Name', dataIndex: 'name', key: 'name', render: renderColumnLabel},
-    {title: 'Version', dataIndex: 'version', key: 'version', render: renderColumnLabel},
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (value: string, record: any) => (
+        <ListTableColumnLabel itemKey={record.key} selectedKey={selectedApiKey} value={value} />
+      ),
+    },
+    {
+      title: 'Version',
+      dataIndex: 'version',
+      key: 'version',
+      render: (value: string, record: any) => (
+        <ListTableColumnLabel itemKey={record.key} selectedKey={selectedApiKey} value={value} />
+      ),
+    },
     {
       title: 'Services',
       dataIndex: 'services',
       key: 'services',
-      render: (_: any, record: any) => <ApisListTableServicesTag api={record.apiItem} apiKey={record.key} />,
+      render: (_: any, record: any) => (
+        <ApisListTableServicesTag api={record.apiItem} apiKey={record.key} selectedApiKey={selectedApiKey} />
+      ),
       width: '35%',
     },
   ];

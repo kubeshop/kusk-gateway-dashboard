@@ -6,8 +6,9 @@ import {EnvoyFleetsTableDataSourceItem} from '@models/dashboard';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 
+import {ListTableColumnLabel} from '@components';
+
 import * as S from './EnvoyFleetsListTable.styled';
-import TableColumnLabel from './TableColumnLabel';
 
 interface IProps {
   envoyFleets: EnvoyFleetItem[];
@@ -35,7 +36,7 @@ const EnvoyFleetsListTable: React.FC<IProps> = props => {
       dataIndex: 'name',
       key: 'name',
       render: (value: string, record: any) => (
-        <TableColumnLabel itemKey={record.key} selectedKey={selectedEnvoyFleetKey} value={value} />
+        <ListTableColumnLabel itemKey={record.key} selectedKey={selectedEnvoyFleetKey} value={value} />
       ),
     },
     {
@@ -43,7 +44,7 @@ const EnvoyFleetsListTable: React.FC<IProps> = props => {
       dataIndex: 'namespace',
       key: 'namespace',
       render: (value: string, record: any) => (
-        <TableColumnLabel
+        <ListTableColumnLabel
           itemKey={record.key}
           selectedKey={selectedEnvoyFleetKey}
           value={value}
