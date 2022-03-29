@@ -7,6 +7,11 @@ export interface ApisTableDataSourceItem {
   apiItem: ApiItem;
 }
 
+export interface EnvoyFleetsTableDataSourceItem {
+  key: string;
+  name: string;
+  namespace: string;
+}
 export interface KuskExtensionsItem {
   id: string;
   kuskExtension: any[];

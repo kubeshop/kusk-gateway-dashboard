@@ -45,24 +45,14 @@ const ApisListTable: React.FC<IProps> = props => {
       return;
     }
 
-    const getTableDataSource = () => {
-      let tableDataSource: ApisTableDataSourceItem[] = [];
+    let tableDataSource: ApisTableDataSourceItem[] = apis.map(api => ({
+      key: `${api.namespace}-${api.name}`,
+      name: api.name,
+      version: api.version,
+      apiItem: api,
+    }));
 
-      for (let i = 0; i < apis.length; i += 1) {
-        const api = apis[i];
-
-        tableDataSource.push({
-          key: `${api.namespace}-${api.name}`,
-          name: api.name,
-          version: api.version,
-          apiItem: api,
-        });
-      }
-
-      setDataSource(tableDataSource);
-    };
-
-    getTableDataSource();
+    setDataSource(tableDataSource);
   }, [apis]);
 
   return <S.Table columns={columns} dataSource={dataSource} pagination={false} tableLayout="fixed" />;
