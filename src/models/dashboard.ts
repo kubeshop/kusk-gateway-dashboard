@@ -1,4 +1,4 @@
-import {ApiItem} from './api';
+import {ApiItem, EnvoyFleetItem} from './api';
 
 export interface ApisTableDataSourceItem {
   key: string;
@@ -11,6 +11,7 @@ export interface EnvoyFleetsTableDataSourceItem {
   key: string;
   name: string;
   namespace: string;
+  envoyFleetItem: EnvoyFleetItem;
 }
 export interface KuskExtensionsItem {
   id: string;

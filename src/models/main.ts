@@ -1,8 +1,10 @@
-import {ApiItem} from './api';
+import {ApiItem, EnvoyFleetItem} from './api';
 
 interface MainState {
-  /** the ID of the currently selected API */
+  /**  currently selected API */
   selectedApi: ApiItem | null;
+  /**  currently selected EnvoyFleet */
+  selectedEnvoyFleet: EnvoyFleetItem | null;
 }
 
 export type {MainState};

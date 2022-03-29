@@ -1,9 +1,13 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 import {EnvoyFleetItem} from '@models/api';
 import {EnvoyFleetsTableDataSourceItem} from '@models/dashboard';
 
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {selectEnvoyFleet} from '@redux/reducers/main';
+
 import * as S from './EnvoyFleetsListTable.styled';
+import TableColumnLabel from './TableColumnLabel';
 
 interface IProps {
   envoyFleets: EnvoyFleetItem[];
@@ -12,11 +16,42 @@ interface IProps {
 const EnvoyFleetsListTable: React.FC<IProps> = props => {
   const {envoyFleets} = props;
 
+  const dispatch = useAppDispatch();
+  const selectedEnvoyFleet = useAppSelector(state => state.main.selectedEnvoyFleet);
+
   const [dataSource, setDataSource] = useState<EnvoyFleetsTableDataSourceItem[]>([]);
 
+  const selectedEnvoyFleetKey = useMemo(() => {
+    if (!selectEnvoyFleet) {
+      return null;
+    }
+
+    return `${selectedEnvoyFleet?.namespace}-${selectedEnvoyFleet?.name}`;
+  }, [selectedEnvoyFleet]);
+
   const columns = [
-    {title: 'Name', dataIndex: 'name', key: 'name'},
-    {title: 'Namespace', dataIndex: 'namespace', key: 'namespace'},
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (value: string, record: any) => (
+        <TableColumnLabel itemKey={record.key} selectedKey={selectedEnvoyFleetKey} value={value} />
+      ),
+    },
+    {
+      title: 'Namespace',
+      dataIndex: 'namespace',
+      key: 'namespace',
+      render: (value: string, record: any) => (
+        <TableColumnLabel
+          itemKey={record.key}
+          selectedKey={selectedEnvoyFleetKey}
+          value={value}
+          showSelectArrow
+          onSelectArrowClick={() => dispatch(selectEnvoyFleet(record.envoyFleetItem))}
+        />
+      ),
+    },
   ];
 
   useEffect(() => {
@@ -28,6 +63,7 @@ const EnvoyFleetsListTable: React.FC<IProps> = props => {
       key: `${envoyFleet.namespace}-${envoyFleet.name}`,
       name: envoyFleet.name,
       namespace: envoyFleet.namespace,
+      envoyFleetItem: envoyFleet,
     }));
 
     setDataSource(tableDataSource);

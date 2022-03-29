@@ -4,6 +4,9 @@ import {Skeleton} from 'antd';
 
 import {useGetEnvoyFleets} from '@models/api';
 
+import {useAppDispatch} from '@redux/hooks';
+import {selectEnvoyFleet} from '@redux/reducers/main';
+
 import EnvoyFleetsListTable from './EnvoyFleetsListTable.';
 
 import * as S from './styled';
@@ -11,6 +14,8 @@ import * as S from './styled';
 const {Option} = S.Select;
 
 const EnvoyFleetsList: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
 
   const {data, error, loading} = useGetEnvoyFleets({queryParams: {namespace: selectedNamespace}});
@@ -27,12 +32,12 @@ const EnvoyFleetsList: React.FC = () => {
 
   const onNamespaceSelectHandler = (namespace: string) => {
     setSelectedNamespace(namespace);
-    // dispatch(selectEnvoyFleet(null));
+    dispatch(selectEnvoyFleet(null));
   };
 
   const onNamespaceSelectionClearHandler = () => {
     setSelectedNamespace(undefined);
-    // dispatch(selectEnvoyFleet(null));
+    dispatch(selectEnvoyFleet(null));
   };
 
   return (

@@ -3,6 +3,7 @@ import {UiState} from '@models/ui';
 
 const initialMainState: MainState = {
   selectedApi: null,
+  selectedEnvoyFleet: null,
 };
 
 const initialUiState: UiState = {
