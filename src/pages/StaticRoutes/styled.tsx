@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const EnvoyFleetsContainer = styled.div`
+export const StaticRoutesContainer = styled.div`
   height: 100%;
   width: 100%;
 `;

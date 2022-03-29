@@ -8,17 +8,22 @@ export const DashboardMenuContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  border: 1px solid ${Colors.grey4};
 `;
 
-export const Icon = styled(AntdIcon)<{$active: boolean}>`
-  ${({$active}) => `
-    color: ${$active ? Colors.whitePure : Colors.grey0}}
-`}
+export const Icon = styled(AntdIcon)<{$active: boolean; $border?: boolean}>`
+  ${({$active, $border}) => `
+    color: ${$active ? Colors.whitePure : Colors.grey0}};
+    border-bottom: ${$border ? `1px solid ${Colors.grey4}` : ''};
+`};
 
   width: 100%;
   height: 100%;
   transition: all 0.2s ease-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 0px 16px 0px;
 
   &:hover {
     cursor: pointer;

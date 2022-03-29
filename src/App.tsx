@@ -13,6 +13,7 @@ import {Sidebar} from '@components/Sidebar';
 const Dashboard = lazy(() => import('@pages/Dashboard/Dashboard'));
 const EnvoyFleets = lazy(() => import('@pages/EnvoyFleets/EnvoyFleets'));
 const Settings = lazy(() => import('@pages/Settings/Settings'));
+const StaticRoutes = lazy(() => import('@pages/StaticRoutes/StaticRoutes'));
 
 const AppContainer = styled.div`
   height: 100%;
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/" element={<Dashboard />} />
           <Route path="/envoy-fleets" element={<EnvoyFleets />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/static-routes" element={<StaticRoutes />} />
         </Routes>
       </Suspense>
     </AppContainer>
