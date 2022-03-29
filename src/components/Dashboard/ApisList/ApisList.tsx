@@ -119,9 +119,7 @@ const ApisList: React.FC = () => {
 
             {loading ? (
               <Skeleton.Button />
-            ) : error ? (
-              <S.ErrorLabel>{error.message}</S.ErrorLabel>
-            ) : (
+            ) : error ? null : (
               <S.Select
                 allowClear
                 placeholder="Select a namespace"
