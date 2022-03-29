@@ -7,7 +7,7 @@ import {useGetEnvoyFleets} from '@models/api';
 import {useAppDispatch} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 
-import EnvoyFleetsListTable from './EnvoyFleetsListTable.';
+import EnvoyFleetsListTable from './EnvoyFleetsListTable';
 
 import * as S from './styled';
 

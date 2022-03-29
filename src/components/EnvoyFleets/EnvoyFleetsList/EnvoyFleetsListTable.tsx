@@ -6,8 +6,7 @@ import {EnvoyFleetsTableDataSourceItem} from '@models/dashboard';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 
-import {ListTableColumnLabel} from '@components';
-
+import {ListTableColumnLabel} from '../../ListTableColumnLabel';
 import * as S from './EnvoyFleetsListTable.styled';
 
 interface IProps {
