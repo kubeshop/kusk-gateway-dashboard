@@ -117,22 +117,28 @@ const ApisList: React.FC = () => {
               )}
             </S.EnvoyFleetFilterContainer>
 
-            <S.Select
-              allowClear
-              placeholder="Select a namespace"
-              value={selectedNamespace}
-              showSearch
-              onClear={onNamespaceSelectionClearHandler}
-              onSelect={(value: any) => {
-                onNamespaceSelectHandler(value);
-              }}
-            >
-              {apisNamespaces.map(namespace => (
-                <Option key={namespace} value={namespace}>
-                  {namespace}
-                </Option>
-              ))}
-            </S.Select>
+            {loading ? (
+              <Skeleton.Button />
+            ) : error ? (
+              <S.ErrorLabel>{error.message}</S.ErrorLabel>
+            ) : (
+              <S.Select
+                allowClear
+                placeholder="Select a namespace"
+                value={selectedNamespace}
+                showSearch
+                onClear={onNamespaceSelectionClearHandler}
+                onSelect={(value: any) => {
+                  onNamespaceSelectHandler(value);
+                }}
+              >
+                {apisNamespaces.map(namespace => (
+                  <Option key={namespace} value={namespace}>
+                    {namespace}
+                  </Option>
+                ))}
+              </S.Select>
+            )}
           </S.TitleFiltersContainer>
         </S.TitleContainer>
 
