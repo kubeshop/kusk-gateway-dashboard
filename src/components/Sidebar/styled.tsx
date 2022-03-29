@@ -34,6 +34,7 @@ export const OptionsContainer = styled.div`
   flex-direction: column;
   width: 100%;
   border: 1px solid ${Colors.grey4};
+  margin-top: auto;
 `;
 
 export const QuestionCircleFilled = styled(RawQuestionsCircleFilled)`
@@ -59,6 +60,6 @@ export const SidebarContainer = styled.div`
   padding-top: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
+  gap: 50px;
 `;
