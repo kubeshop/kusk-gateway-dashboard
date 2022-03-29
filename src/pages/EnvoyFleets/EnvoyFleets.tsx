@@ -1,4 +1,4 @@
-import {EnvoyFleetsList} from '@components/EnvoyFleets';
+import {EnvoyFleetsList} from '@components';
 
 import * as S from './styled';
 
