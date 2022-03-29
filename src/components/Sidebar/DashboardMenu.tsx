@@ -1,6 +1,6 @@
 import {Link, useLocation} from 'react-router-dom';
 
-import {Api} from '@components/Icons';
+import {Api, EnvoyFleet} from '@components/Icons';
 
 import * as S from './DashboardMenu.styled';
 
@@ -11,6 +11,10 @@ const DashboardMenu: React.FC = () => {
     <S.DashboardMenuContainer>
       <Link to="/">
         <S.Icon component={Api} $active={pathname === '/'} />
+      </Link>
+
+      <Link to="envoy-fleets">
+        <S.Icon component={EnvoyFleet} $active={pathname === '/envoy-fleets'} />
       </Link>
     </S.DashboardMenuContainer>
   );

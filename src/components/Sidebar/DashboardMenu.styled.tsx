@@ -8,7 +8,7 @@ export const DashboardMenuContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 `;
 
 export const Icon = styled(AntdIcon)<{$active: boolean}>`
