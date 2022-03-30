@@ -1,8 +1,14 @@
+import {Suspense} from 'react';
+
+import {Skeleton} from 'antd';
+
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 import {setEnvoyFleetInfoActiveTab} from '@redux/reducers/ui';
 
 import {InfoTabs} from '@components';
+
+import {APIs} from './APIs';
 
 import * as S from './styled';
 
@@ -24,6 +30,8 @@ const EnvoyFleetInfo: React.FC = () => {
   return (
     <S.EnvoyFleetInfoContainer>
       <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setEnvoyFleetInfoActiveTab} />
+
+      <Suspense fallback={<Skeleton />}>{activeTab === 'apis' && <APIs />}</Suspense>
 
       <S.CloseOutlined onClick={onCloseHandler} />
     </S.EnvoyFleetInfoContainer>
