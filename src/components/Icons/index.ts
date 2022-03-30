@@ -1,3 +1,3 @@
-export {default as Api} from './Api';
-export {default as EnvoyFleet} from './EnvoyFleet';
-export {default as StaticRoute} from './StaticRoute';
+export {default as ApiIcon} from './Api';
+export {default as EnvoyFleetIcon} from './EnvoyFleet';
+export {default as StaticRouteIcon} from './StaticRoute';

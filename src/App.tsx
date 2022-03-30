@@ -1,5 +1,4 @@
-import {Suspense, lazy} from 'react';
-import {Route, Routes} from 'react-router-dom';
+import {Suspense} from 'react';
 
 import {Skeleton} from 'antd';
 
@@ -10,10 +9,7 @@ import {SIDEBAR_WIDTH} from '@constants/constants';
 
 import {Sidebar} from '@components/Sidebar';
 
-const Dashboard = lazy(() => import('@pages/Dashboard/Dashboard'));
-const EnvoyFleets = lazy(() => import('@pages/EnvoyFleets/EnvoyFleets'));
-const Settings = lazy(() => import('@pages/Settings/Settings'));
-const StaticRoutes = lazy(() => import('@pages/StaticRoutes/StaticRoutes'));
+import Router from './routes';
 
 const AppContainer = styled.div`
   height: 100%;
@@ -28,12 +24,7 @@ const App = () => {
       <Sidebar />
 
       <Suspense fallback={<Skeleton />}>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/envoy-fleets" element={<EnvoyFleets />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/static-routes" element={<StaticRoutes />} />
-        </Routes>
+        <Router />
       </Suspense>
     </AppContainer>
   );
