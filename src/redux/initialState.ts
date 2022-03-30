@@ -12,6 +12,7 @@ const initialUiState: UiState = {
     leftPaneWidth: 0.5,
     rightPaneWidth: 0.5,
   },
+  envoyFleetInfoActiveTab: 'apis',
   envoyFleetModal: {
     envoyFleet: null,
   },

@@ -22,3 +22,4 @@ export interface KuskExtensionsItem {
 }
 
 export type ApiInfoTabs = 'raw-api-spec' | 'post-processed-api-spec' | 'kusk-extensions';
+export type EnvoyFleetInfoTabs = 'crd' | 'apis' | 'static-routes';

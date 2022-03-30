@@ -1,9 +1,10 @@
 import {EnvoyFleetItem} from './api';
-import {ApiInfoTabs} from './dashboard';
+import {ApiInfoTabs, EnvoyFleetInfoTabs} from './dashboard';
 
 interface UiState {
   apiInfoActiveTab: ApiInfoTabs;
   dashboardPaneConfiguration: DashboardPaneConfiguration;
+  envoyFleetInfoActiveTab: EnvoyFleetInfoTabs;
   envoyFleetModal: {
     envoyFleet: EnvoyFleetItem | null;
   };

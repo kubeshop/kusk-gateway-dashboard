@@ -40,3 +40,15 @@ export const EnvoyFleetInfoContainer = styled.div`
 
   ${GlobalScrollbarStyle};
 `;
+
+export const TabsContainer = styled.div`
+  display: flex;
+  gap: 20px;
+`;
+
+export const TabsLabel = styled.span`
+  color: ${Colors.grey1};
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+`;
