@@ -1,4 +1,4 @@
-import {Suspense} from 'react';
+import {Suspense, lazy} from 'react';
 
 import {Skeleton} from 'antd';
 
@@ -8,9 +8,10 @@ import {setEnvoyFleetInfoActiveTab} from '@redux/reducers/ui';
 
 import {InfoTabs} from '@components';
 
-import {APIs} from './APIs';
-
 import * as S from './styled';
+
+const APIs = lazy(() => import('./APIs/APIs'));
+const StaticRoutes = lazy(() => import('./StaticRoutes/StaticRoutes'));
 
 const TABS_ITEMS = [
   {key: 'crd', label: 'CRD'},
@@ -31,7 +32,10 @@ const EnvoyFleetInfo: React.FC = () => {
     <S.EnvoyFleetInfoContainer>
       <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setEnvoyFleetInfoActiveTab} />
 
-      <Suspense fallback={<Skeleton />}>{activeTab === 'apis' && <APIs />}</Suspense>
+      <Suspense fallback={<Skeleton />}>
+        {activeTab === 'apis' && <APIs />}
+        {activeTab === 'static-routes' && <StaticRoutes />}
+      </Suspense>
 
       <S.CloseOutlined onClick={onCloseHandler} />
     </S.EnvoyFleetInfoContainer>

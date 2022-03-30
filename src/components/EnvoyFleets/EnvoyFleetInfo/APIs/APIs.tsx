@@ -11,8 +11,8 @@ interface ApisTableDataSourceItem {
 }
 
 const columns = [
-  {title: 'Name', dataIndex: 'name', key: 'name'},
-  {title: 'Namespace', dataIndex: 'namespace', key: 'namespace'},
+  {title: 'Name', dataIndex: 'name', key: 'name', width: '50%'},
+  {title: 'Namespace', dataIndex: 'namespace', key: 'namespace', width: '50%'},
 ];
 
 const APIs: React.FC = () => {

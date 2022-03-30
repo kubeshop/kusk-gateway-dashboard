@@ -21,9 +21,15 @@ export interface EnvoyFleetItem {
   namespace: string;
   apis?: ApiItemFleet[];
   services?: ServiceItem[];
+  staticRoutes?: StaticRouteItemFleet[];
 }
 
 export interface ApiItemFleet {
+  name: string;
+  namespace: string;
+}
+
+export interface StaticRouteItemFleet {
   name: string;
   namespace: string;
 }
@@ -257,6 +263,13 @@ export type UseGetEnvoyFleetsProps = Omit<
 export const useGetEnvoyFleets = (props: UseGetEnvoyFleetsProps) =>
   useGet<EnvoyFleetItem[], unknown, GetEnvoyFleetsQueryParams, void>(`/fleets`, props);
 
+export interface GetEnvoyFleetQueryParams {
+  /**
+   * returns the fleet CRD
+   */
+  crd?: boolean;
+}
+
 export interface GetEnvoyFleetPathParams {
   /**
    * the namespace of the fleet
@@ -268,7 +281,10 @@ export interface GetEnvoyFleetPathParams {
   name: string;
 }
 
-export type GetEnvoyFleetProps = Omit<GetProps<EnvoyFleetItem, void, void, GetEnvoyFleetPathParams>, 'path'> &
+export type GetEnvoyFleetProps = Omit<
+  GetProps<EnvoyFleetItem, void, GetEnvoyFleetQueryParams, GetEnvoyFleetPathParams>,
+  'path'
+> &
   GetEnvoyFleetPathParams;
 
 /**
@@ -277,10 +293,16 @@ export type GetEnvoyFleetProps = Omit<GetProps<EnvoyFleetItem, void, void, GetEn
  * Returns an object containing info about the envoy fleet corresponding to the namespace and name
  */
 export const GetEnvoyFleet = ({namespace, name, ...props}: GetEnvoyFleetProps) => (
-  <Get<EnvoyFleetItem, void, void, GetEnvoyFleetPathParams> path={`/fleets/${namespace}/${name}`} {...props} />
+  <Get<EnvoyFleetItem, void, GetEnvoyFleetQueryParams, GetEnvoyFleetPathParams>
+    path={`/fleets/${namespace}/${name}`}
+    {...props}
+  />
 );
 
-export type UseGetEnvoyFleetProps = Omit<UseGetProps<EnvoyFleetItem, void, void, GetEnvoyFleetPathParams>, 'path'> &
+export type UseGetEnvoyFleetProps = Omit<
+  UseGetProps<EnvoyFleetItem, void, GetEnvoyFleetQueryParams, GetEnvoyFleetPathParams>,
+  'path'
+> &
   GetEnvoyFleetPathParams;
 
 /**
@@ -289,7 +311,7 @@ export type UseGetEnvoyFleetProps = Omit<UseGetProps<EnvoyFleetItem, void, void,
  * Returns an object containing info about the envoy fleet corresponding to the namespace and name
  */
 export const useGetEnvoyFleet = ({namespace, name, ...props}: UseGetEnvoyFleetProps) =>
-  useGet<EnvoyFleetItem, void, void, GetEnvoyFleetPathParams>(
+  useGet<EnvoyFleetItem, void, GetEnvoyFleetQueryParams, GetEnvoyFleetPathParams>(
     (paramsInPath: GetEnvoyFleetPathParams) => `/fleets/${paramsInPath.namespace}/${paramsInPath.name}`,
     {pathParams: {namespace, name}, ...props}
   );
