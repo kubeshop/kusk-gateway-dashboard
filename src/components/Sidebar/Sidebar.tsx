@@ -2,6 +2,8 @@ import {Link} from 'react-router-dom';
 
 import KuskLogo from '@assets/KuskLogo.svg';
 
+import DashboardMenu from './DashboardMenu';
+
 import * as S from './styled';
 
 const Sidebar = () => {
@@ -10,6 +12,8 @@ const Sidebar = () => {
       <Link to="/">
         <S.Logo id="sidebar-kusk-logo" src={KuskLogo} alt="Kusk" />
       </Link>
+
+      <DashboardMenu />
 
       <S.OptionsContainer>
         <S.IconContainer $border>
