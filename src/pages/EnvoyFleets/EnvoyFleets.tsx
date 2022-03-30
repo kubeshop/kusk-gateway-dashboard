@@ -7,7 +7,7 @@ import {DASHBOARD_PANE_MIN_WIDTH} from '@constants/constants';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setDashboardPaneConfiguration} from '@redux/reducers/ui';
 
-import {EnvoyFleetsList} from '@components';
+import {EnvoyFleetInfo, EnvoyFleetsList} from '@components';
 
 import * as S from './styled';
 
@@ -56,7 +56,7 @@ const EnvoyFleets: React.FC = () => {
               handle={resizableHandler}
               onResizeStop={resizeRightPane}
             >
-              Test
+              <EnvoyFleetInfo />
             </ResizableBox>
           </S.EnvoyFleetInfoContainer>
         )}

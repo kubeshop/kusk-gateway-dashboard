@@ -1,7 +1,7 @@
 export {AddServerModal} from './AddServerModal';
 export {ApiInfo, ApisList} from './Apis';
 export {EnvoyFleetInfoModal} from './EnvoyFleetInfoModal';
-export {EnvoyFleetsList} from './EnvoyFleets';
+export {EnvoyFleetInfo, EnvoyFleetsList} from './EnvoyFleets';
 export {KuskExtensions} from './KuskExtensions';
 export {ListTableColumnLabel} from './ListTableColumnLabel';
 export {PostProcessedApiSpec} from './PostProcessedApiSpec';
