@@ -14,6 +14,8 @@ export const ErrorLabel = styled.span`
 
 export const Select = styled(RawSelect)`
   width: 100%;
+  max-width: 300px;
+  min-width: 150px;
 
   & .ant-select-selection-item {
     display: flex;
@@ -30,8 +32,7 @@ export const TitleContainer = styled.div`
 
 export const TitleFiltersContainer = styled.div`
   width: 100%;
-  display: grid;
-  grid-template-columns: 200px;
+  display: flex;
 `;
 
 export const TitleLabel = styled.h2`
