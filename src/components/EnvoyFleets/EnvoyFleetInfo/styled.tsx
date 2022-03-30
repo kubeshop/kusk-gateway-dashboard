@@ -25,30 +25,5 @@ export const EnvoyFleetInfoContainer = styled.div`
   grid-row-gap: 30px;
   overflow-y: auto;
 
-  & .selected-tab {
-    color: ${Colors.grey9};
-  }
-
-  & .selected-tab::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -4px;
-    border: 1px solid ${Colors.grey9};
-  }
-
   ${GlobalScrollbarStyle};
-`;
-
-export const TabsContainer = styled.div`
-  display: flex;
-  gap: 20px;
-`;
-
-export const TabsLabel = styled.span`
-  color: ${Colors.grey1};
-  font-size: 16px;
-  cursor: pointer;
-  position: relative;
 `;

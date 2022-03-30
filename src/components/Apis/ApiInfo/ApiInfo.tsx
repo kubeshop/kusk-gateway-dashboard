@@ -6,7 +6,15 @@ import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
 import {setApiInfoActiveTab} from '@redux/reducers/ui';
 
+import {InfoTabs} from '@components';
+
 import * as S from './styled';
+
+const TABS_ITEMS = [
+  {key: 'raw-api-spec', label: 'Raw API Spec'},
+  {key: 'post-processed-api-spec', label: 'Post-Processed API Spec'},
+  {key: 'kusk-extensions', label: 'Kusk Extensions'},
+];
 
 const KuskExtensions = lazy(() => import('@components/KuskExtensions/KuskExtensions'));
 const PostProcessedApiSpec = lazy(() => import('@components/PostProcessedApiSpec/PostProcessedApiSpec'));
@@ -18,32 +26,12 @@ const ApiInfo: React.FC = () => {
 
   const onCloseHandler = () => {
     dispatch(selectApi(null));
+    dispatch(setApiInfoActiveTab('raw-api-spec'));
   };
 
   return (
     <S.ApiInfoContainer>
-      <S.TabsContainer>
-        <S.TabsLabel
-          className={activeTab === 'raw-api-spec' ? 'selected-tab' : ''}
-          onClick={() => dispatch(setApiInfoActiveTab('raw-api-spec'))}
-        >
-          Raw API Spec
-        </S.TabsLabel>
-
-        <S.TabsLabel
-          className={activeTab === 'post-processed-api-spec' ? 'selected-tab' : ''}
-          onClick={() => dispatch(setApiInfoActiveTab('post-processed-api-spec'))}
-        >
-          Post-Processed API Spec
-        </S.TabsLabel>
-
-        <S.TabsLabel
-          className={activeTab === 'kusk-extensions' ? 'selected-tab' : ''}
-          onClick={() => dispatch(setApiInfoActiveTab('kusk-extensions'))}
-        >
-          Kusk extensions
-        </S.TabsLabel>
-      </S.TabsContainer>
+      <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setApiInfoActiveTab} />
 
       <Suspense fallback={<Skeleton />}>
         {activeTab === 'raw-api-spec' && <RawApiSpec />}

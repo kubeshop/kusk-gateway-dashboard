@@ -2,7 +2,15 @@ import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 import {setEnvoyFleetInfoActiveTab} from '@redux/reducers/ui';
 
+import {InfoTabs} from '@components';
+
 import * as S from './styled';
+
+const TABS_ITEMS = [
+  {key: 'crd', label: 'CRD'},
+  {key: 'apis', label: 'APIs'},
+  {key: 'static-routes', label: 'Static Routes'},
+];
 
 const EnvoyFleetInfo: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -10,32 +18,12 @@ const EnvoyFleetInfo: React.FC = () => {
 
   const onCloseHandler = () => {
     dispatch(selectEnvoyFleet(null));
+    dispatch(setEnvoyFleetInfoActiveTab('crd'));
   };
 
   return (
     <S.EnvoyFleetInfoContainer>
-      <S.TabsContainer>
-        <S.TabsLabel
-          className={activeTab === 'crd' ? 'selected-tab' : ''}
-          onClick={() => dispatch(setEnvoyFleetInfoActiveTab('crd'))}
-        >
-          CRD
-        </S.TabsLabel>
-
-        <S.TabsLabel
-          className={activeTab === 'apis' ? 'selected-tab' : ''}
-          onClick={() => dispatch(setEnvoyFleetInfoActiveTab('apis'))}
-        >
-          APIs
-        </S.TabsLabel>
-
-        <S.TabsLabel
-          className={activeTab === 'static-routes' ? 'selected-tab' : ''}
-          onClick={() => dispatch(setEnvoyFleetInfoActiveTab('static-routes'))}
-        >
-          Static Routes
-        </S.TabsLabel>
-      </S.TabsContainer>
+      <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setEnvoyFleetInfoActiveTab} />
 
       <S.CloseOutlined onClick={onCloseHandler} />
     </S.EnvoyFleetInfoContainer>
