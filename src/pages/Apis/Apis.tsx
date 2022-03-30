@@ -11,16 +11,16 @@ import {ApisList} from '@components';
 
 import * as S from './styled';
 
-const ApiInfo = lazy(() => import('@components/Dashboard/ApiInfo/ApiInfo'));
+const ApiInfo = lazy(() => import('@components/Apis/ApiInfo/ApiInfo'));
 
-const Dashboard: React.FC = () => {
+const Apis: React.FC = () => {
   const dispatch = useAppDispatch();
   const paneConfiguration = useAppSelector(state => state.ui.dashboardPaneConfiguration);
   const rightWidth = useAppSelector(state => state.ui.dashboardPaneConfiguration.rightPaneWidth);
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
   const [apiInfoContainerRef, {height: rightPaneHeight, width: rightPaneWidth}] = useMeasure<HTMLDivElement>();
-  const [dashboardContainerRef, {width: dashboardWidth}] = useMeasure<HTMLDivElement>();
+  const [apisContainerRef, {width: dashboardWidth}] = useMeasure<HTMLDivElement>();
 
   const resizableHandler = useCallback(
     (_h: number, ref: LegacyRef<HTMLSpanElement>) => <span className="dashboard-custom-handle" ref={ref} />,
@@ -42,7 +42,7 @@ const Dashboard: React.FC = () => {
   }, [dashboardWidth, rightWidth]);
 
   return (
-    <S.DashboardContainer ref={dashboardContainerRef} $isApiSelected={Boolean(selectedApi)}>
+    <S.ApisContainer ref={apisContainerRef} $isApiSelected={Boolean(selectedApi)}>
       <ApisList />
 
       <Suspense fallback={null}>
@@ -63,8 +63,8 @@ const Dashboard: React.FC = () => {
           </S.ApiInfoContainer>
         )}
       </Suspense>
-    </S.DashboardContainer>
+    </S.ApisContainer>
   );
 };
 
-export default Dashboard;
+export default Apis;

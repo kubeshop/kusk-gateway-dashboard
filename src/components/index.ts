@@ -1,5 +1,5 @@
 export {AddServerModal} from './AddServerModal';
-export {ApiInfo, ApisList} from './Dashboard';
+export {ApiInfo, ApisList} from './Apis';
 export {EnvoyFleetInfoModal} from './EnvoyFleetInfoModal';
 export {EnvoyFleetsList} from './EnvoyFleets';
 export {KuskExtensions} from './KuskExtensions';

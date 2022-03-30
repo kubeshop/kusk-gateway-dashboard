@@ -31,7 +31,7 @@ export const TitleContainer = styled.div`
 export const TitleFiltersContainer = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: 300px;
+  grid-template-columns: 200px;
 `;
 
 export const TitleLabel = styled.h2`
