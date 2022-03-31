@@ -11,6 +11,7 @@ import {InfoTabs} from '@components';
 import * as S from './styled';
 
 const APIs = lazy(() => import('./APIs/APIs'));
+const CRD = lazy(() => import('./CRD/CRD'));
 const StaticRoutes = lazy(() => import('./StaticRoutes/StaticRoutes'));
 
 const TABS_ITEMS = [
@@ -33,6 +34,7 @@ const EnvoyFleetInfo: React.FC = () => {
       <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setEnvoyFleetInfoActiveTab} />
 
       <Suspense fallback={<Skeleton />}>
+        {activeTab === 'crd' && <CRD />}
         {activeTab === 'apis' && <APIs />}
         {activeTab === 'static-routes' && <StaticRoutes />}
       </Suspense>
