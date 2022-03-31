@@ -13,6 +13,8 @@ import {toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
 
 import {EnvoyFleetInfoModal} from '@components';
 
+import {getEnvoyFleetKey} from '@utils/envoyFleet';
+
 import ApisListTable from './ApisListTable';
 
 import * as S from './styled';
@@ -98,7 +100,7 @@ const ApisList: React.FC = () => {
                   >
                     {envoyFleetsState.data.map(envoyFleetItem => (
                       <Option
-                        key={`${envoyFleetItem.namespace}-${envoyFleetItem.name}`}
+                        key={getEnvoyFleetKey(envoyFleetItem)}
                         value={envoyFleetItem.name}
                         envoyfleet={envoyFleetItem}
                       >

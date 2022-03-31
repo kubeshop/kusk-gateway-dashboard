@@ -1,12 +1,13 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 
 import {EnvoyFleetItem} from '@models/api';
-import {EnvoyFleetsTableDataSourceItem} from '@models/dashboard';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 
 import {ListTableColumnLabel} from '@components';
+
+import {getEnvoyFleetKey} from '@utils/envoyFleet';
 
 import * as S from './EnvoyFleetsListTable.styled';
 
@@ -20,15 +21,20 @@ const EnvoyFleetsListTable: React.FC<IProps> = props => {
   const dispatch = useAppDispatch();
   const selectedEnvoyFleet = useAppSelector(state => state.main.selectedEnvoyFleet);
 
-  const [dataSource, setDataSource] = useState<EnvoyFleetsTableDataSourceItem[]>([]);
-
-  const selectedEnvoyFleetKey = useMemo(() => {
-    if (!selectEnvoyFleet) {
-      return null;
+  const dataSource = useMemo(() => {
+    if (!envoyFleets?.length) {
+      return [];
     }
 
-    return `${selectedEnvoyFleet?.namespace}-${selectedEnvoyFleet?.name}`;
-  }, [selectedEnvoyFleet]);
+    return envoyFleets.map(envoyFleet => ({
+      key: getEnvoyFleetKey(envoyFleet),
+      name: envoyFleet.name,
+      namespace: envoyFleet.namespace,
+      envoyFleetItem: envoyFleet,
+    }));
+  }, [envoyFleets]);
+
+  const selectedEnvoyFleetKey = useMemo(() => getEnvoyFleetKey(selectedEnvoyFleet), [selectedEnvoyFleet]);
 
   const columns = [
     {
@@ -54,21 +60,6 @@ const EnvoyFleetsListTable: React.FC<IProps> = props => {
       ),
     },
   ];
-
-  useEffect(() => {
-    if (!envoyFleets?.length) {
-      return;
-    }
-
-    let tableDataSource: EnvoyFleetsTableDataSourceItem[] = envoyFleets.map(envoyFleet => ({
-      key: `${envoyFleet.namespace}-${envoyFleet.name}`,
-      name: envoyFleet.name,
-      namespace: envoyFleet.namespace,
-      envoyFleetItem: envoyFleet,
-    }));
-
-    setDataSource(tableDataSource);
-  }, [envoyFleets]);
 
   return <S.Table columns={columns} dataSource={dataSource} pagination={false} tableLayout="fixed" />;
 };

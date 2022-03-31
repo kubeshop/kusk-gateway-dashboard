@@ -10,7 +10,7 @@ import * as S from './ApisListTableServicesTag.styled';
 interface IProps {
   api: ApiItem;
   apiKey: string;
-  selectedApiKey: string | null;
+  selectedApiKey: string;
 }
 
 const ApisListTableServicesTag: React.FC<IProps> = props => {

@@ -1,11 +1,12 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useMemo} from 'react';
 
 import {ApiItem} from '@models/api';
-import {ApisTableDataSourceItem} from '@models/dashboard';
 
 import {useAppSelector} from '@redux/hooks';
 
 import {ListTableColumnLabel} from '@components';
+
+import {getApiKey} from '@utils/api';
 
 import * as S from './ApisListTable.styled';
 import ApisListTableServicesTag from './ApisListTableServicesTag';
@@ -18,15 +19,20 @@ const ApisListTable: React.FC<IProps> = props => {
   const {apis} = props;
 
   const selectedApi = useAppSelector(state => state.main.selectedApi);
-  const selectedApiKey = useMemo(() => {
-    if (!selectedApi) {
-      return null;
+  const selectedApiKey = useMemo(() => getApiKey(selectedApi), [selectedApi]);
+
+  const dataSource = useMemo(() => {
+    if (!apis.length) {
+      return [];
     }
 
-    return `${selectedApi?.namespace}-${selectedApi?.name}`;
-  }, [selectedApi]);
-
-  const [dataSource, setDataSource] = useState<ApisTableDataSourceItem[]>([]);
+    return apis.map(api => ({
+      key: getApiKey(api),
+      name: api.name,
+      version: api.version,
+      apiItem: api,
+    }));
+  }, [apis]);
 
   const columns = [
     {
@@ -55,21 +61,6 @@ const ApisListTable: React.FC<IProps> = props => {
       width: '35%',
     },
   ];
-
-  useEffect(() => {
-    if (!apis.length) {
-      return;
-    }
-
-    let tableDataSource: ApisTableDataSourceItem[] = apis.map(api => ({
-      key: `${api.namespace}-${api.name}`,
-      name: api.name,
-      version: api.version,
-      apiItem: api,
-    }));
-
-    setDataSource(tableDataSource);
-  }, [apis]);
 
   return <S.Table columns={columns} dataSource={dataSource} pagination={false} tableLayout="fixed" />;
 };

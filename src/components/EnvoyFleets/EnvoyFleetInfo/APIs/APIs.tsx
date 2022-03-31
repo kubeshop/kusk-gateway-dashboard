@@ -1,14 +1,10 @@
-import {useEffect, useState} from 'react';
+import {useMemo} from 'react';
 
 import {useAppSelector} from '@redux/hooks';
 
-import * as S from './styled';
+import {getApiKey} from '@utils/api';
 
-interface ApisTableDataSourceItem {
-  key: string;
-  name: string;
-  namespace: string;
-}
+import * as S from './styled';
 
 const columns = [
   {title: 'Name', dataIndex: 'name', key: 'name', width: '50%'},
@@ -18,20 +14,16 @@ const columns = [
 const APIs: React.FC = () => {
   const apis = useAppSelector(state => state.main.selectedEnvoyFleet?.apis);
 
-  const [dataSource, setDataSource] = useState<ApisTableDataSourceItem[]>([]);
-
-  useEffect(() => {
+  const dataSource = useMemo(() => {
     if (!apis?.length) {
-      return;
+      return [];
     }
 
-    let tableDataSource: ApisTableDataSourceItem[] = apis.map(api => ({
-      key: `${api.namespace}-${api.name}`,
+    return apis.map(api => ({
+      key: getApiKey(api),
       name: api.name,
       namespace: api.namespace,
     }));
-
-    setDataSource(tableDataSource);
   }, [apis]);
 
   if (!apis?.length) {

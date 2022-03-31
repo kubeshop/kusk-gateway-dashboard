@@ -1,18 +1,3 @@
-import {ApiItem, EnvoyFleetItem} from './api';
-
-export interface ApisTableDataSourceItem {
-  key: string;
-  name: string;
-  version: string;
-  apiItem: ApiItem;
-}
-
-export interface EnvoyFleetsTableDataSourceItem {
-  key: string;
-  name: string;
-  namespace: string;
-  envoyFleetItem: EnvoyFleetItem;
-}
 export interface KuskExtensionsItem {
   id: string;
   kuskExtension: any[];

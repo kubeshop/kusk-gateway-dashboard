@@ -1,14 +1,8 @@
-import {useEffect, useState} from 'react';
+import {useMemo} from 'react';
 
 import {useAppSelector} from '@redux/hooks';
 
 import * as S from './styled';
-
-interface StaticRoutesTableDataSourceItem {
-  key: string;
-  name: string;
-  namespace: string;
-}
 
 const columns = [
   {title: 'Name', dataIndex: 'name', key: 'name', width: '50%'},
@@ -18,20 +12,16 @@ const columns = [
 const StaticRoutes: React.FC = () => {
   const staticRoutes = useAppSelector(state => state.main.selectedEnvoyFleet?.staticRoutes);
 
-  const [dataSource, setDataSource] = useState<StaticRoutesTableDataSourceItem[]>([]);
-
-  useEffect(() => {
+  const dataSource = useMemo(() => {
     if (!staticRoutes?.length) {
-      return;
+      return [];
     }
 
-    let tableDataSource: StaticRoutesTableDataSourceItem[] = staticRoutes.map(staticRoute => ({
+    return staticRoutes.map(staticRoute => ({
       key: `${staticRoute.namespace}-${staticRoute.name}`,
       name: staticRoute.name,
       namespace: staticRoute.namespace,
     }));
-
-    setDataSource(tableDataSource);
   }, [staticRoutes]);
 
   if (!staticRoutes?.length) {
