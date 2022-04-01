@@ -1,5 +1,3 @@
-import {useMemo} from 'react';
-
 import {Skeleton} from 'antd';
 
 import SwaggerUI from 'swagger-ui-react';
@@ -9,6 +7,8 @@ import {useGetApi} from '@models/api';
 import {useAppSelector} from '@redux/hooks';
 
 import {DynamicServersPlugin, TableOfContentsPlugin} from '@swaggerUI/plugins';
+
+import {useRawApiSpec} from '@utils/hooks';
 
 import * as S from './styled';
 
@@ -23,13 +23,7 @@ const PostProcessedApiSpec: React.FC = () => {
     queryParams: {crd: true},
   });
 
-  const parsedSpec = useMemo(() => {
-    if (!data?.raw) {
-      return null;
-    }
-
-    return parseSpec(data.raw);
-  }, [data]);
+  const rawApiSpec = useRawApiSpec(selectedApi?.name || '', selectedApi?.namespace || '');
 
   return (
     <S.PostProcessedApiSpecContainer>
@@ -38,7 +32,7 @@ const PostProcessedApiSpec: React.FC = () => {
       ) : error ? (
         <S.ErrorLabel>{error.message}</S.ErrorLabel>
       ) : (
-        data && <SwaggerUI spec={parsedSpec} plugins={[TableOfContentsPlugin, DynamicServersPlugin]} />
+        data && <SwaggerUI spec={parseSpec(rawApiSpec)} plugins={[TableOfContentsPlugin, DynamicServersPlugin]} />
       )}
     </S.PostProcessedApiSpecContainer>
   );

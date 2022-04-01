@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {Skeleton} from 'antd';
 
@@ -9,6 +9,8 @@ import {useGetApi} from '@models/api';
 import {useAppSelector} from '@redux/hooks';
 
 import {CollapseOperationsPlugin, TableOfContentsPlugin} from '@swaggerUI/plugins';
+
+import {useRawApiSpec} from '@utils/hooks';
 
 import * as S from './styled';
 
@@ -21,13 +23,7 @@ const RawApiSpec: React.FC = () => {
     queryParams: {crd: true},
   });
 
-  const rawApiSpec = useMemo(() => {
-    if (!data?.raw) {
-      return {};
-    }
-
-    return data.raw;
-  }, [data]);
+  const rawApiSpec = useRawApiSpec(selectedApi?.name || '', selectedApi?.namespace || '');
 
   return (
     <S.RawApiSpecContainer>

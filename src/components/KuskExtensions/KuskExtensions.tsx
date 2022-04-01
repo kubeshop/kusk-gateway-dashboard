@@ -1,5 +1,3 @@
-import {useMemo} from 'react';
-
 import {Collapse, Skeleton} from 'antd';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
@@ -12,6 +10,8 @@ import {setKuskExtensionsActiveKeys} from '@redux/reducers/ui';
 
 import {getOperationId} from '@swaggerUI/utils/operations';
 import {getPathId} from '@swaggerUI/utils/path';
+
+import {useRawApiSpec} from '@utils/hooks';
 
 import KuskExtensionsPanelContent from './KuskExtensionsPanelContent';
 import KuskExtensionsPanelHeader from './KuskExtensionsPanelHeader';
@@ -75,13 +75,7 @@ const KuskExtensions: React.FC = () => {
     queryParams: {crd: true},
   });
 
-  const rawApiSpec = useMemo(() => {
-    if (!data?.raw) {
-      return {};
-    }
-
-    return data.raw;
-  }, [data]);
+  const rawApiSpec = useRawApiSpec(selectedApi?.name || '', selectedApi?.namespace || '');
 
   return (
     <S.KuskExtensionsContainer>
