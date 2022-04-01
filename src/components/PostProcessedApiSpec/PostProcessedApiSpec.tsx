@@ -3,9 +3,8 @@ import {useMemo} from 'react';
 import {Skeleton} from 'antd';
 
 import SwaggerUI from 'swagger-ui-react';
-import YAML from 'yaml';
 
-import {useGetRawOpenApiSpec} from '@models/api';
+import {useGetApi} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
@@ -18,18 +17,18 @@ const KUSK_EXTENSION_PROPERTY = 'x-kusk';
 const PostProcessedApiSpec: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  // TODO: use postProcessed endpoint
-  const {data, error, loading} = useGetRawOpenApiSpec({
+  const {data, error, loading} = useGetApi({
     name: selectedApi?.name || '',
     namespace: selectedApi?.namespace || '',
+    queryParams: {crd: true},
   });
 
   const parsedSpec = useMemo(() => {
-    if (!data) {
+    if (!data?.raw) {
       return null;
     }
 
-    return parseSpec(YAML.parse(data));
+    return parseSpec(data.raw);
   }, [data]);
 
   return (
@@ -46,6 +45,10 @@ const PostProcessedApiSpec: React.FC = () => {
 };
 
 const parseSpec = (spec: any) => {
+  if (!spec) {
+    return {};
+  }
+
   const topLevelDisabled = spec[KUSK_EXTENSION_PROPERTY]?.disabled;
 
   delete spec[KUSK_EXTENSION_PROPERTY];

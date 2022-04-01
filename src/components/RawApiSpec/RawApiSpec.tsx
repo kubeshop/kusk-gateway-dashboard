@@ -1,11 +1,10 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {Skeleton} from 'antd';
 
 import SwaggerUI from 'swagger-ui-react';
-import YAML from 'yaml';
 
-import {useGetRawOpenApiSpec} from '@models/api';
+import {useGetApi} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
@@ -16,10 +15,19 @@ import * as S from './styled';
 const RawApiSpec: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const {data, error, loading} = useGetRawOpenApiSpec({
+  const {data, error, loading} = useGetApi({
     name: selectedApi?.name || '',
     namespace: selectedApi?.namespace || '',
+    queryParams: {crd: true},
   });
+
+  const rawApiSpec = useMemo(() => {
+    if (!data?.raw) {
+      return {};
+    }
+
+    return data.raw;
+  }, [data]);
 
   return (
     <S.RawApiSpecContainer>
@@ -30,7 +38,7 @@ const RawApiSpec: React.FC = () => {
       ) : (
         data && (
           <SwaggerUI
-            spec={YAML.parse(data)}
+            spec={rawApiSpec}
             plugins={[TableOfContentsPlugin, CollapseOperationsPlugin]}
             supportedSubmitMethods={[]}
           />

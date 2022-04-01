@@ -31,14 +31,16 @@
     {
       "name": "fleets",
       "description": "Get the list of all envoy fleets"
+    },
+    {
+      "name": "static routes",
+      "description": "Get the list of all static routes"
     }
   ],
   "paths": {
     "/apis": {
       "get": {
-        "tags": [
-          "apis"
-        ],
+        "tags": ["apis"],
         "summary": "Get a list of APIs",
         "description": "Returns the list of APIs available in the cluster",
         "operationId": "getApis",
@@ -88,11 +90,9 @@
         }
       }
     },
-    "/apis/{namespace}/{name}\"": {
+    "/apis/{namespace}/{name}": {
       "get": {
-        "tags": [
-          "apis"
-        ],
+        "tags": ["apis"],
         "summary": "Get an API instance by namespace and name",
         "operationId": "getApi",
         "parameters": [
@@ -112,6 +112,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "crd",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "returns the CRD of the API ( Raw Api Spec )"
           }
         ],
         "responses": {
@@ -131,99 +140,9 @@
         }
       }
     },
-    "/apis/{namespace}/{name}/rawOpenApiSpec": {
-      "get": {
-        "tags": [
-          "apis"
-        ],
-        "summary": "Get the raw OpenAPI spec by API id",
-        "description": "Returns the raw OpenAPI specification",
-        "operationId": "getRawOpenApiSpec",
-        "parameters": [
-          {
-            "name": "namespace",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "default"
-            }
-          },
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Raw OpenAPI spec",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Raw OpenAPI spec not found"
-          }
-        }
-      }
-    },
-    "/apis/{namespace}/{name}/postProcessedOpenApiSpec": {
-      "get": {
-        "tags": [
-          "apis"
-        ],
-        "summary": "Get the post-processed OpenAPI spec by API id",
-        "description": "Returns the post-processed OpenAPI specification",
-        "operationId": "getPostProcessedOpenApiSpec",
-        "parameters": [
-          {
-            "name": "namespace",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "default"
-            }
-          },
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Post-processed OpenAPI spec",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Post-processed OpenAPI spec not found"
-          }
-        }
-      }
-    },
     "/services": {
       "get": {
-        "tags": [
-          "services"
-        ],
+        "tags": ["services"],
         "summary": "Get a list of services handled by kusk-gateway",
         "description": "Returns the list of services available in the cluster that are related to kusk-gateway",
         "operationId": "getServices",
@@ -257,9 +176,7 @@
     },
     "/services/{namespace}/{name}": {
       "get": {
-        "tags": [
-          "services"
-        ],
+        "tags": ["services"],
         "summary": "Get details for a single service",
         "description": "Returns an object containing info about the service corresponding to the namespace and name",
         "operationId": "getService",
@@ -300,9 +217,7 @@
     },
     "/fleets": {
       "get": {
-        "tags": [
-          "fleets"
-        ],
+        "tags": ["fleets"],
         "summary": "Get a list of envoy fleets",
         "description": "Returns a list of envoy fleets that are available in the cluster",
         "operationId": "getEnvoyFleets",
@@ -336,9 +251,7 @@
     },
     "/fleets/{namespace}/{name}": {
       "get": {
-        "tags": [
-          "fleets"
-        ],
+        "tags": ["fleets"],
         "summary": "Get details for a single envoy fleet",
         "description": "Returns an object containing info about the envoy fleet corresponding to the namespace and name",
         "operationId": "getEnvoyFleet",
@@ -387,19 +300,99 @@
           }
         }
       }
+    },
+    "/staticroutes": {
+      "get": {
+        "tags": ["static routes"],
+        "summary": "Get a list of static routes",
+        "description": "Returns a list of static routes",
+        "operationId": "getStaticRoutes",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "optional filter on namespace"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "list of static routes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StaticRouteItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staticroutes/{namespace}/{name}": {
+      "get": {
+        "tags": ["static routes"],
+        "summary": "Get details for a single static route",
+        "description": "Returns an object containing info about the static route corresponding to the namespace and name",
+        "operationId": "getStaticRoute",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "the namespace of the static route"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "the name of the static route"
+          },
+          {
+            "name": "crd",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "return the static route CRD"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "get static route details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaticRouteItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Static Route not found by namespace-name combination"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
       "ApiItem": {
         "type": "object",
-        "required": [
-          "name",
-          "namespace",
-          "fleet",
-          "service",
-          "version"
-        ],
+        "required": ["name", "namespace", "fleet", "service", "version"],
         "properties": {
           "name": {
             "type": "string"
@@ -415,26 +408,22 @@
           },
           "version": {
             "type": "string"
+          },
+          "raw": {
+            "type": "object"
           }
         }
       },
       "ServiceItem": {
         "type": "object",
-        "required": [
-          "name",
-          "status",
-          "namespace"
-        ],
+        "required": ["name", "status", "namespace"],
         "properties": {
           "name": {
             "type": "string"
           },
           "status": {
             "type": "string",
-            "enum": [
-              "available",
-              "unavailable"
-            ]
+            "enum": ["available", "unavailable"]
           },
           "namespace": {
             "type": "string"
@@ -443,10 +432,7 @@
       },
       "EnvoyFleetItem": {
         "type": "object",
-        "required": [
-          "name",
-          "namespace"
-        ],
+        "required": ["name", "namespace"],
         "properties": {
           "name": {
             "type": "string"
@@ -471,15 +457,30 @@
             "items": {
               "$ref": "#/components/schemas/StaticRouteItem_Fleet"
             }
+          },
+          "raw": {
+            "type": "object"
+          }
+        }
+      },
+      "StaticRouteItem": {
+        "type": "object",
+        "required": ["name", "namespace"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "namespace": {
+            "type": "string"
+          },
+          "raw": {
+            "type": "object"
           }
         }
       },
       "ApiItem_Fleet": {
         "type": "object",
-        "required": [
-          "name",
-          "namespace"
-        ],
+        "required": ["name", "namespace"],
         "properties": {
           "name": {
             "type": "string"
@@ -491,10 +492,7 @@
       },
       "StaticRouteItem_Fleet": {
         "type": "object",
-        "required": [
-          "name",
-          "namespace"
-        ],
+        "required": ["name", "namespace"],
         "properties": {
           "name": {
             "type": "string"
@@ -506,10 +504,7 @@
       },
       "ApiItem_Service": {
         "type": "object",
-        "required": [
-          "name",
-          "namespace"
-        ],
+        "required": ["name", "namespace"],
         "properties": {
           "name": {
             "type": "string"
