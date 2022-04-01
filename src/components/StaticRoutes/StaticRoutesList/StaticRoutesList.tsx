@@ -7,6 +7,8 @@ import {useGetStaticRoutes} from '@models/api';
 import {useAppDispatch} from '@redux/hooks';
 import {selectStaticRoute} from '@redux/reducers/main';
 
+import StaticRoutesListTable from './StaticRoutesListTable';
+
 import * as S from './styled';
 
 const {Option} = S.Select;
@@ -66,7 +68,13 @@ const StaticRoutesList: React.FC = () => {
         </S.TitleFiltersContainer>
       </S.TitleContainer>
 
-      {loading ? <Skeleton /> : error ? <S.ErrorLabel>{error.message}</S.ErrorLabel> : data && null}
+      {loading ? (
+        <Skeleton />
+      ) : error ? (
+        <S.ErrorLabel>{error.message}</S.ErrorLabel>
+      ) : (
+        data && <StaticRoutesListTable staticRoutes={data} />
+      )}
     </S.StaticRoutesListContainer>
   );
 };
