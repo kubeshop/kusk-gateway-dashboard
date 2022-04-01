@@ -4,6 +4,7 @@ import {UiState} from '@models/ui';
 const initialMainState: MainState = {
   selectedApi: null,
   selectedEnvoyFleet: null,
+  selectedStaticRoute: null,
 };
 
 const initialUiState: UiState = {
