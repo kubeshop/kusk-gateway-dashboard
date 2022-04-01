@@ -1,0 +1,1 @@
+export {StaticRoutesList} from './StaticRoutesList';
