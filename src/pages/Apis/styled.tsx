@@ -19,7 +19,7 @@ export const ApiInfoContainer = styled.div`
   }
 `;
 
-export const DashboardContainer = styled.div<{$isApiSelected: boolean}>`
+export const ApisContainer = styled.div<{$isApiSelected: boolean}>`
   ${({$isApiSelected}) => `
     grid-template-columns: 1fr ${$isApiSelected ? 'max-content' : ''};
   `}

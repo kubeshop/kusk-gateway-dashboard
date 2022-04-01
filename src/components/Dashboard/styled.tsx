@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-export const EnvoyFleetsContainer = styled.div<{$isEnvoyFleetSelected: boolean}>`
-  ${({$isEnvoyFleetSelected}) => `
-    grid-template-columns: 1fr ${$isEnvoyFleetSelected ? 'max-content' : ''};
+export const DashboardContainer = styled.div<{$isTableItemSelected: boolean}>`
+  ${({$isTableItemSelected}) => `
+    grid-template-columns: 1fr ${$isTableItemSelected ? 'max-content' : ''};
   `}
 
   display: grid;
@@ -10,7 +10,7 @@ export const EnvoyFleetsContainer = styled.div<{$isEnvoyFleetSelected: boolean}>
   width: 100%;
 `;
 
-export const EnvoyFleetInfoContainer = styled.div`
+export const DashboardItemInfoContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;

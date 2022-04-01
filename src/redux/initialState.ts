@@ -3,6 +3,7 @@ import {UiState} from '@models/ui';
 
 const initialMainState: MainState = {
   selectedApi: null,
+  selectedEnvoyFleet: null,
 };
 
 const initialUiState: UiState = {
@@ -11,6 +12,7 @@ const initialUiState: UiState = {
     leftPaneWidth: 0.5,
     rightPaneWidth: 0.5,
   },
+  envoyFleetInfoActiveTab: 'crd',
   envoyFleetModal: {
     envoyFleet: null,
   },

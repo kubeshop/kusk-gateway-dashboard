@@ -360,6 +360,15 @@
               "type": "string"
             },
             "description": "the name of the fleet"
+          },
+          {
+            "name": "crd",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "returns the fleet CRD"
           }
         ],
         "responses": {
@@ -456,10 +465,31 @@
             "items": {
               "$ref": "#/components/schemas/ServiceItem"
             }
+          },
+          "staticRoutes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StaticRouteItem_Fleet"
+            }
           }
         }
       },
       "ApiItem_Fleet": {
+        "type": "object",
+        "required": [
+          "name",
+          "namespace"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "namespace": {
+            "type": "string"
+          }
+        }
+      },
+      "StaticRouteItem_Fleet": {
         "type": "object",
         "required": [
           "name",

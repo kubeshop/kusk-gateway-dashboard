@@ -1,2 +1,1 @@
-export {ApiInfo} from './ApiInfo';
-export {ApisList} from './ApisList';
+export {default as Dashboard} from './Dashboard';

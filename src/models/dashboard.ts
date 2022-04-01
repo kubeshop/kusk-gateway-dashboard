@@ -1,12 +1,3 @@
-import {ApiItem} from './api';
-
-export interface ApisTableDataSourceItem {
-  key: string;
-  name: string;
-  version: string;
-  apiItem: ApiItem;
-}
-
 export interface KuskExtensionsItem {
   id: string;
   kuskExtension: any[];
@@ -16,3 +7,4 @@ export interface KuskExtensionsItem {
 }
 
 export type ApiInfoTabs = 'raw-api-spec' | 'post-processed-api-spec' | 'kusk-extensions';
+export type EnvoyFleetInfoTabs = 'crd' | 'apis' | 'static-routes';

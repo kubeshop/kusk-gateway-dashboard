@@ -1,26 +1,32 @@
-import React, {LegacyRef, Suspense, lazy, useCallback, useMemo} from 'react';
+import {LegacyRef, ReactNode, Suspense, useCallback, useMemo} from 'react';
 import {ResizableBox} from 'react-resizable';
-import useMeasure from 'react-use/lib/useMeasure';
+import {useMeasure} from 'react-use';
 
 import {DASHBOARD_PANE_MIN_WIDTH} from '@constants/constants';
+
+import {ApiItem, EnvoyFleetItem} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setDashboardPaneConfiguration} from '@redux/reducers/ui';
 
-import {ApisList} from '@components';
-
 import * as S from './styled';
 
-const ApiInfo = lazy(() => import('@components/Dashboard/ApiInfo/ApiInfo'));
+interface IProps {
+  listElement: ReactNode;
+  infoElement: ReactNode;
+  selectedTableItem: ApiItem | EnvoyFleetItem | null;
+}
 
-const Dashboard: React.FC = () => {
+const Dashboard: React.FC<IProps> = props => {
+  const {listElement, infoElement, selectedTableItem} = props;
+
   const dispatch = useAppDispatch();
   const paneConfiguration = useAppSelector(state => state.ui.dashboardPaneConfiguration);
   const rightWidth = useAppSelector(state => state.ui.dashboardPaneConfiguration.rightPaneWidth);
-  const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const [apiInfoContainerRef, {height: rightPaneHeight, width: rightPaneWidth}] = useMeasure<HTMLDivElement>();
   const [dashboardContainerRef, {width: dashboardWidth}] = useMeasure<HTMLDivElement>();
+  const [dashboardItemInfoContainerRef, {height: rightPaneHeight, width: rightPaneWidth}] =
+    useMeasure<HTMLDivElement>();
 
   const resizableHandler = useCallback(
     (_h: number, ref: LegacyRef<HTMLSpanElement>) => <span className="dashboard-custom-handle" ref={ref} />,
@@ -42,12 +48,12 @@ const Dashboard: React.FC = () => {
   }, [dashboardWidth, rightWidth]);
 
   return (
-    <S.DashboardContainer ref={dashboardContainerRef} $isApiSelected={Boolean(selectedApi)}>
-      <ApisList />
+    <S.DashboardContainer ref={dashboardContainerRef} $isTableItemSelected={Boolean(selectedTableItem)}>
+      {listElement}
 
       <Suspense fallback={null}>
-        {selectedApi && (
-          <S.ApiInfoContainer ref={apiInfoContainerRef}>
+        {selectedTableItem && (
+          <S.DashboardItemInfoContainer ref={dashboardItemInfoContainerRef}>
             <ResizableBox
               height={rightPaneHeight}
               width={rightPaneResizableWidth}
@@ -58,9 +64,9 @@ const Dashboard: React.FC = () => {
               handle={resizableHandler}
               onResizeStop={resizeRightPane}
             >
-              <ApiInfo />
+              {infoElement}
             </ResizableBox>
-          </S.ApiInfoContainer>
+          </S.DashboardItemInfoContainer>
         )}
       </Suspense>
     </S.DashboardContainer>

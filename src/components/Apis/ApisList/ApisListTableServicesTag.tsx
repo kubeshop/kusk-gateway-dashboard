@@ -2,7 +2,7 @@ import {Skeleton} from 'antd';
 
 import {ApiItem, useGetService} from '@models/api';
 
-import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {useAppDispatch} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
 
 import * as S from './ApisListTableServicesTag.styled';
@@ -10,21 +10,13 @@ import * as S from './ApisListTableServicesTag.styled';
 interface IProps {
   api: ApiItem;
   apiKey: string;
+  selectedApiKey: string;
 }
 
 const ApisListTableServicesTag: React.FC<IProps> = props => {
-  const {api, apiKey} = props;
+  const {api, apiKey, selectedApiKey} = props;
 
   const dispatch = useAppDispatch();
-  const selectedApiKey = useAppSelector(state => {
-    const {selectedApi} = state.main;
-
-    if (!selectedApi) {
-      return null;
-    }
-
-    return `${selectedApi?.namespace}-${selectedApi?.name}`;
-  });
 
   const {data, error, loading} = useGetService({name: api.service.name, namespace: api.service.namespace});
 
