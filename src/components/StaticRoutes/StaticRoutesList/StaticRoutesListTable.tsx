@@ -20,7 +20,6 @@ const StaticRoutesListTable: React.FC<IProps> = props => {
 
   const dispatch = useAppDispatch();
   const selectedStaticRoute = useAppSelector(state => state.main.selectedStaticRoute);
-  console.log(selectedStaticRoute);
 
   const dataSource = useMemo(() => {
     if (!staticRoutes?.length) {
