@@ -22,6 +22,7 @@ const initialUiState: UiState = {
     path: [],
     operation: [],
   },
+  staticRouteInfoActiveTab: 'crd',
   tableOfContentsHeight: {
     postProcessedApiSpec: 500,
     rawApiSpec: 500,

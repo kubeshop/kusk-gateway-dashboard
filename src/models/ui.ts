@@ -1,5 +1,5 @@
 import {EnvoyFleetItem} from './api';
-import {ApiInfoTabs, EnvoyFleetInfoTabs} from './dashboard';
+import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from './dashboard';
 
 interface UiState {
   apiInfoActiveTab: ApiInfoTabs;
@@ -11,6 +11,7 @@ interface UiState {
   kuskExtensionsActiveKeys: {
     [key: string]: string[];
   };
+  staticRouteInfoActiveTab: StaticRouteInfoTabs;
   tableOfContentsHeight: {
     postProcessedApiSpec: number;
     rawApiSpec: number;
