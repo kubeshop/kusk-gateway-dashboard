@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 
 import {Skeleton} from 'antd';
 
-import {useGetEnvoyFleet} from '@models/api';
+import {useGetEnvoyFleetCRD} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
@@ -18,10 +18,9 @@ const CRD: React.FC = () => {
   const selectedEnvoyFleet = useAppSelector(state => state.main.selectedEnvoyFleet);
 
   // TODO: use data to show the actual CRD from endpoint
-  const {error, loading} = useGetEnvoyFleet({
+  const {error, loading} = useGetEnvoyFleetCRD({
     name: selectedEnvoyFleet?.name || '',
     namespace: selectedEnvoyFleet?.namespace || '',
-    queryParams: {crd: true},
   });
 
   useEffect(() => {

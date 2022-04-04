@@ -8,13 +8,13 @@ export interface ApiItem {
   fleet: ApiItemFleet;
   service: ApiItemService;
   version: string;
-  raw?: {[key: string]: any};
 }
 
 export interface ServiceItem {
   name: string;
   status: 'available' | 'unavailable';
   namespace: string;
+  ports: ServicePortItem;
 }
 
 export interface EnvoyFleetItem {
@@ -23,18 +23,24 @@ export interface EnvoyFleetItem {
   apis?: ApiItemFleet[];
   services?: ServiceItem[];
   staticRoutes?: StaticRouteItemFleet[];
-  raw?: {[key: string]: any};
 }
 
 export interface StaticRouteItem {
   name: string;
   namespace: string;
-  raw?: {[key: string]: any};
 }
 
 export interface ApiItemFleet {
   name: string;
   namespace: string;
+}
+
+export interface ServicePortItem {
+  name: string;
+  nodePort: number;
+  port: number;
+  protocol: string;
+  targetPort: string;
 }
 
 export interface StaticRouteItemFleet {
@@ -83,36 +89,99 @@ export type UseGetApisProps = Omit<UseGetProps<ApiItem[], unknown, GetApisQueryP
 export const useGetApis = (props: UseGetApisProps) =>
   useGet<ApiItem[], unknown, GetApisQueryParams, void>(`/apis`, props);
 
-export interface GetApiQueryParams {
-  /**
-   * returns the CRD of the API ( Raw Api Spec )
-   */
-  crd?: boolean;
-}
-
 export interface GetApiPathParams {
   namespace: string;
   name: string;
 }
 
-export type GetApiProps = Omit<GetProps<ApiItem, void, GetApiQueryParams, GetApiPathParams>, 'path'> & GetApiPathParams;
+export type GetApiProps = Omit<GetProps<ApiItem, void, void, GetApiPathParams>, 'path'> & GetApiPathParams;
 
 /**
  * Get an API instance by namespace and name
  */
 export const GetApi = ({namespace, name, ...props}: GetApiProps) => (
-  <Get<ApiItem, void, GetApiQueryParams, GetApiPathParams> path={`/apis/${namespace}/${name}`} {...props} />
+  <Get<ApiItem, void, void, GetApiPathParams> path={`/apis/${namespace}/${name}`} {...props} />
 );
 
-export type UseGetApiProps = Omit<UseGetProps<ApiItem, void, GetApiQueryParams, GetApiPathParams>, 'path'> &
-  GetApiPathParams;
+export type UseGetApiProps = Omit<UseGetProps<ApiItem, void, void, GetApiPathParams>, 'path'> & GetApiPathParams;
 
 /**
  * Get an API instance by namespace and name
  */
 export const useGetApi = ({namespace, name, ...props}: UseGetApiProps) =>
-  useGet<ApiItem, void, GetApiQueryParams, GetApiPathParams>(
+  useGet<ApiItem, void, void, GetApiPathParams>(
     (paramsInPath: GetApiPathParams) => `/apis/${paramsInPath.namespace}/${paramsInPath.name}`,
+    {pathParams: {namespace, name}, ...props}
+  );
+
+export interface GetApiCRDResponse {
+  [key: string]: any;
+}
+
+export interface GetApiCRDPathParams {
+  namespace: string;
+  name: string;
+}
+
+export type GetApiCRDProps = Omit<GetProps<GetApiCRDResponse, void, void, GetApiCRDPathParams>, 'path'> &
+  GetApiCRDPathParams;
+
+/**
+ * Get API CRD from cluster
+ */
+export const GetApiCRD = ({namespace, name, ...props}: GetApiCRDProps) => (
+  <Get<GetApiCRDResponse, void, void, GetApiCRDPathParams> path={`/apis/${namespace}/${name}/crd`} {...props} />
+);
+
+export type UseGetApiCRDProps = Omit<UseGetProps<GetApiCRDResponse, void, void, GetApiCRDPathParams>, 'path'> &
+  GetApiCRDPathParams;
+
+/**
+ * Get API CRD from cluster
+ */
+export const useGetApiCRD = ({namespace, name, ...props}: UseGetApiCRDProps) =>
+  useGet<GetApiCRDResponse, void, void, GetApiCRDPathParams>(
+    (paramsInPath: GetApiCRDPathParams) => `/apis/${paramsInPath.namespace}/${paramsInPath.name}/crd`,
+    {pathParams: {namespace, name}, ...props}
+  );
+
+export interface GetApiDefinitionResponse {
+  [key: string]: any;
+}
+
+export interface GetApiDefinitionPathParams {
+  namespace: string;
+  name: string;
+}
+
+export type GetApiDefinitionProps = Omit<
+  GetProps<GetApiDefinitionResponse, void, void, GetApiDefinitionPathParams>,
+  'path'
+> &
+  GetApiDefinitionPathParams;
+
+/**
+ * Get API definition ( Post-Processed version )
+ */
+export const GetApiDefinition = ({namespace, name, ...props}: GetApiDefinitionProps) => (
+  <Get<GetApiDefinitionResponse, void, void, GetApiDefinitionPathParams>
+    path={`/apis/${namespace}/${name}/definition`}
+    {...props}
+  />
+);
+
+export type UseGetApiDefinitionProps = Omit<
+  UseGetProps<GetApiDefinitionResponse, void, void, GetApiDefinitionPathParams>,
+  'path'
+> &
+  GetApiDefinitionPathParams;
+
+/**
+ * Get API definition ( Post-Processed version )
+ */
+export const useGetApiDefinition = ({namespace, name, ...props}: UseGetApiDefinitionProps) =>
+  useGet<GetApiDefinitionResponse, void, void, GetApiDefinitionPathParams>(
+    (paramsInPath: GetApiDefinitionPathParams) => `/apis/${paramsInPath.namespace}/${paramsInPath.name}/definition`,
     {pathParams: {namespace, name}, ...props}
   );
 
@@ -206,13 +275,6 @@ export type UseGetEnvoyFleetsProps = Omit<
 export const useGetEnvoyFleets = (props: UseGetEnvoyFleetsProps) =>
   useGet<EnvoyFleetItem[], unknown, GetEnvoyFleetsQueryParams, void>(`/fleets`, props);
 
-export interface GetEnvoyFleetQueryParams {
-  /**
-   * returns the fleet CRD
-   */
-  crd?: boolean;
-}
-
 export interface GetEnvoyFleetPathParams {
   /**
    * the namespace of the fleet
@@ -224,10 +286,7 @@ export interface GetEnvoyFleetPathParams {
   name: string;
 }
 
-export type GetEnvoyFleetProps = Omit<
-  GetProps<EnvoyFleetItem, void, GetEnvoyFleetQueryParams, GetEnvoyFleetPathParams>,
-  'path'
-> &
+export type GetEnvoyFleetProps = Omit<GetProps<EnvoyFleetItem, void, void, GetEnvoyFleetPathParams>, 'path'> &
   GetEnvoyFleetPathParams;
 
 /**
@@ -236,16 +295,10 @@ export type GetEnvoyFleetProps = Omit<
  * Returns an object containing info about the envoy fleet corresponding to the namespace and name
  */
 export const GetEnvoyFleet = ({namespace, name, ...props}: GetEnvoyFleetProps) => (
-  <Get<EnvoyFleetItem, void, GetEnvoyFleetQueryParams, GetEnvoyFleetPathParams>
-    path={`/fleets/${namespace}/${name}`}
-    {...props}
-  />
+  <Get<EnvoyFleetItem, void, void, GetEnvoyFleetPathParams> path={`/fleets/${namespace}/${name}`} {...props} />
 );
 
-export type UseGetEnvoyFleetProps = Omit<
-  UseGetProps<EnvoyFleetItem, void, GetEnvoyFleetQueryParams, GetEnvoyFleetPathParams>,
-  'path'
-> &
+export type UseGetEnvoyFleetProps = Omit<UseGetProps<EnvoyFleetItem, void, void, GetEnvoyFleetPathParams>, 'path'> &
   GetEnvoyFleetPathParams;
 
 /**
@@ -254,8 +307,48 @@ export type UseGetEnvoyFleetProps = Omit<
  * Returns an object containing info about the envoy fleet corresponding to the namespace and name
  */
 export const useGetEnvoyFleet = ({namespace, name, ...props}: UseGetEnvoyFleetProps) =>
-  useGet<EnvoyFleetItem, void, GetEnvoyFleetQueryParams, GetEnvoyFleetPathParams>(
+  useGet<EnvoyFleetItem, void, void, GetEnvoyFleetPathParams>(
     (paramsInPath: GetEnvoyFleetPathParams) => `/fleets/${paramsInPath.namespace}/${paramsInPath.name}`,
+    {pathParams: {namespace, name}, ...props}
+  );
+
+export interface GetEnvoyFleetCRDResponse {
+  [key: string]: any;
+}
+
+export interface GetEnvoyFleetCRDPathParams {
+  namespace: string;
+  name: string;
+}
+
+export type GetEnvoyFleetCRDProps = Omit<
+  GetProps<GetEnvoyFleetCRDResponse, void, void, GetEnvoyFleetCRDPathParams>,
+  'path'
+> &
+  GetEnvoyFleetCRDPathParams;
+
+/**
+ * Get envoy fleet CRD
+ */
+export const GetEnvoyFleetCRD = ({namespace, name, ...props}: GetEnvoyFleetCRDProps) => (
+  <Get<GetEnvoyFleetCRDResponse, void, void, GetEnvoyFleetCRDPathParams>
+    path={`/fleets/${namespace}/${name}/crd`}
+    {...props}
+  />
+);
+
+export type UseGetEnvoyFleetCRDProps = Omit<
+  UseGetProps<GetEnvoyFleetCRDResponse, void, void, GetEnvoyFleetCRDPathParams>,
+  'path'
+> &
+  GetEnvoyFleetCRDPathParams;
+
+/**
+ * Get envoy fleet CRD
+ */
+export const useGetEnvoyFleetCRD = ({namespace, name, ...props}: UseGetEnvoyFleetCRDProps) =>
+  useGet<GetEnvoyFleetCRDResponse, void, void, GetEnvoyFleetCRDPathParams>(
+    (paramsInPath: GetEnvoyFleetCRDPathParams) => `/fleets/${paramsInPath.namespace}/${paramsInPath.name}/crd`,
     {pathParams: {namespace, name}, ...props}
   );
 
@@ -290,13 +383,6 @@ export type UseGetStaticRoutesProps = Omit<
 export const useGetStaticRoutes = (props: UseGetStaticRoutesProps) =>
   useGet<StaticRouteItem[], unknown, GetStaticRoutesQueryParams, void>(`/staticroutes`, props);
 
-export interface GetStaticRouteQueryParams {
-  /**
-   * return the static route CRD
-   */
-  crd?: boolean;
-}
-
 export interface GetStaticRoutePathParams {
   /**
    * the namespace of the static route
@@ -308,10 +394,7 @@ export interface GetStaticRoutePathParams {
   name: string;
 }
 
-export type GetStaticRouteProps = Omit<
-  GetProps<StaticRouteItem, void, GetStaticRouteQueryParams, GetStaticRoutePathParams>,
-  'path'
-> &
+export type GetStaticRouteProps = Omit<GetProps<StaticRouteItem, void, void, GetStaticRoutePathParams>, 'path'> &
   GetStaticRoutePathParams;
 
 /**
@@ -320,16 +403,10 @@ export type GetStaticRouteProps = Omit<
  * Returns an object containing info about the static route corresponding to the namespace and name
  */
 export const GetStaticRoute = ({namespace, name, ...props}: GetStaticRouteProps) => (
-  <Get<StaticRouteItem, void, GetStaticRouteQueryParams, GetStaticRoutePathParams>
-    path={`/staticroutes/${namespace}/${name}`}
-    {...props}
-  />
+  <Get<StaticRouteItem, void, void, GetStaticRoutePathParams> path={`/staticroutes/${namespace}/${name}`} {...props} />
 );
 
-export type UseGetStaticRouteProps = Omit<
-  UseGetProps<StaticRouteItem, void, GetStaticRouteQueryParams, GetStaticRoutePathParams>,
-  'path'
-> &
+export type UseGetStaticRouteProps = Omit<UseGetProps<StaticRouteItem, void, void, GetStaticRoutePathParams>, 'path'> &
   GetStaticRoutePathParams;
 
 /**
@@ -338,7 +415,47 @@ export type UseGetStaticRouteProps = Omit<
  * Returns an object containing info about the static route corresponding to the namespace and name
  */
 export const useGetStaticRoute = ({namespace, name, ...props}: UseGetStaticRouteProps) =>
-  useGet<StaticRouteItem, void, GetStaticRouteQueryParams, GetStaticRoutePathParams>(
+  useGet<StaticRouteItem, void, void, GetStaticRoutePathParams>(
     (paramsInPath: GetStaticRoutePathParams) => `/staticroutes/${paramsInPath.namespace}/${paramsInPath.name}`,
+    {pathParams: {namespace, name}, ...props}
+  );
+
+export interface GetStaticRouteCRDResponse {
+  [key: string]: any;
+}
+
+export interface GetStaticRouteCRDPathParams {
+  namespace: string;
+  name: string;
+}
+
+export type GetStaticRouteCRDProps = Omit<
+  GetProps<GetStaticRouteCRDResponse, void, void, GetStaticRouteCRDPathParams>,
+  'path'
+> &
+  GetStaticRouteCRDPathParams;
+
+/**
+ * Get static route CRD
+ */
+export const GetStaticRouteCRD = ({namespace, name, ...props}: GetStaticRouteCRDProps) => (
+  <Get<GetStaticRouteCRDResponse, void, void, GetStaticRouteCRDPathParams>
+    path={`/staticroutes/${namespace}/${name}/crd`}
+    {...props}
+  />
+);
+
+export type UseGetStaticRouteCRDProps = Omit<
+  UseGetProps<GetStaticRouteCRDResponse, void, void, GetStaticRouteCRDPathParams>,
+  'path'
+> &
+  GetStaticRouteCRDPathParams;
+
+/**
+ * Get static route CRD
+ */
+export const useGetStaticRouteCRD = ({namespace, name, ...props}: UseGetStaticRouteCRDProps) =>
+  useGet<GetStaticRouteCRDResponse, void, void, GetStaticRouteCRDPathParams>(
+    (paramsInPath: GetStaticRouteCRDPathParams) => `/staticroutes/${paramsInPath.namespace}/${paramsInPath.name}/crd`,
     {pathParams: {namespace, name}, ...props}
   );
