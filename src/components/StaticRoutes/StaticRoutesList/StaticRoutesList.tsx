@@ -7,6 +7,8 @@ import {useGetStaticRoutes} from '@models/api';
 import {useAppDispatch} from '@redux/hooks';
 import {selectStaticRoute} from '@redux/reducers/main';
 
+import {ContentWrapper, ErrorLabel, ListTableTitleContainer, ListTableTitleLabel} from '@components/AntdCustom';
+
 import StaticRoutesListTable from './StaticRoutesListTable';
 
 import * as S from './styled';
@@ -40,9 +42,9 @@ const StaticRoutesList: React.FC = () => {
   };
 
   return (
-    <S.StaticRoutesListContainer>
-      <S.TitleContainer>
-        <S.TitleLabel>Static Routes</S.TitleLabel>
+    <ContentWrapper>
+      <ListTableTitleContainer>
+        <ListTableTitleLabel>Static Routes</ListTableTitleLabel>
 
         <S.TitleFiltersContainer>
           {loading ? (
@@ -66,16 +68,16 @@ const StaticRoutesList: React.FC = () => {
             </S.Select>
           )}
         </S.TitleFiltersContainer>
-      </S.TitleContainer>
+      </ListTableTitleContainer>
 
       {loading ? (
         <Skeleton />
       ) : error ? (
-        <S.ErrorLabel>{error.message}</S.ErrorLabel>
+        <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
         data && <StaticRoutesListTable staticRoutes={data} />
       )}
-    </S.StaticRoutesListContainer>
+    </ContentWrapper>
   );
 };
 

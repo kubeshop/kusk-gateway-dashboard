@@ -8,6 +8,8 @@ import {KuskExtensionsItem} from '@models/dashboard';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setKuskExtensionsActiveKeys} from '@redux/reducers/ui';
 
+import {ErrorLabel} from '@components/AntdCustom';
+
 import {getOperationId} from '@swaggerUI/utils/operations';
 import {getPathId} from '@swaggerUI/utils/path';
 
@@ -82,7 +84,7 @@ const KuskExtensions: React.FC = () => {
       {loading ? (
         <Skeleton />
       ) : error ? (
-        <S.ErrorLabel>{error.message}</S.ErrorLabel>
+        <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
         data &&
         Object.entries(createKuskExtensions(rawApiSpec)).map(kuskExtensionEntry => {

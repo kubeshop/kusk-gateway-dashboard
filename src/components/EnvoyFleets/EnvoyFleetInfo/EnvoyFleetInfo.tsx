@@ -7,8 +7,9 @@ import {selectEnvoyFleet} from '@redux/reducers/main';
 import {setEnvoyFleetInfoActiveTab} from '@redux/reducers/ui';
 
 import {InfoTabs} from '@components';
+import {ContentWrapper, InfoPaneCloseIcon, InfoPaneContainer} from '@components/AntdCustom';
 
-import * as S from './styled';
+import Colors from '@styles/colors';
 
 const APIs = lazy(() => import('./APIs/APIs'));
 const CRD = lazy(() => import('./CRD/CRD'));
@@ -30,17 +31,19 @@ const EnvoyFleetInfo: React.FC = () => {
   };
 
   return (
-    <S.EnvoyFleetInfoContainer>
-      <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setEnvoyFleetInfoActiveTab} />
+    <ContentWrapper $backgroundColor={Colors.grey4}>
+      <InfoPaneContainer>
+        <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setEnvoyFleetInfoActiveTab} />
 
-      <Suspense fallback={<Skeleton />}>
-        {activeTab === 'crd' && <CRD />}
-        {activeTab === 'apis' && <APIs />}
-        {activeTab === 'static-routes' && <StaticRoutes />}
-      </Suspense>
+        <Suspense fallback={<Skeleton />}>
+          {activeTab === 'crd' && <CRD />}
+          {activeTab === 'apis' && <APIs />}
+          {activeTab === 'static-routes' && <StaticRoutes />}
+        </Suspense>
 
-      <S.CloseOutlined onClick={onCloseHandler} />
-    </S.EnvoyFleetInfoContainer>
+        <InfoPaneCloseIcon onClick={onCloseHandler} />
+      </InfoPaneContainer>
+    </ContentWrapper>
   );
 };
 

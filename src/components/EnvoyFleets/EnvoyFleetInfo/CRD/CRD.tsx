@@ -1,6 +1,5 @@
 /// <reference path="../../../../../types.d.ts" />
 import {useEffect, useState} from 'react';
-import {atomDark} from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import {Skeleton} from 'antd';
 
@@ -8,9 +7,10 @@ import {useGetEnvoyFleet} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
-import yamlFile from '../../../../constants/fleetCRD.yaml';
+import {InfoPaneCRD} from '@components';
+import {ErrorLabel} from '@components/AntdCustom';
 
-import * as S from './styled';
+import yamlFile from '../../../../constants/fleetCRD.yaml';
 
 const CRD: React.FC = () => {
   const [yamlText, setYamlText] = useState<string>('');
@@ -32,15 +32,7 @@ const CRD: React.FC = () => {
       });
   }, []);
 
-  return loading ? (
-    <Skeleton />
-  ) : error ? (
-    <S.ErrorLabel>{error.message}</S.ErrorLabel>
-  ) : (
-    <S.CRDText language="yaml" style={atomDark} wrapLines wrapLongLines>
-      {yamlText}
-    </S.CRDText>
-  );
+  return loading ? <Skeleton /> : error ? <ErrorLabel>{error.message}</ErrorLabel> : <InfoPaneCRD yaml={yamlText} />;
 };
 
 export default CRD;

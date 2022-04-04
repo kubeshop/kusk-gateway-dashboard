@@ -12,6 +12,7 @@ import {selectApi} from '@redux/reducers/main';
 import {toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
 
 import {EnvoyFleetInfoModal} from '@components';
+import {ContentWrapper, ErrorLabel, ListTableTitleContainer, ListTableTitleLabel} from '@components/AntdCustom';
 
 import {getEnvoyFleetKey} from '@utils/envoyFleet';
 
@@ -77,16 +78,16 @@ const ApisList: React.FC = () => {
 
   return (
     <>
-      <S.ApisListContainer>
-        <S.TitleContainer>
-          <S.TitleLabel>APIs</S.TitleLabel>
+      <ContentWrapper>
+        <ListTableTitleContainer>
+          <ListTableTitleLabel>APIs</ListTableTitleLabel>
 
           <S.TitleFiltersContainer>
             <S.EnvoyFleetFilterContainer>
               {envoyFleetsState.loading ? (
                 <Skeleton.Button />
               ) : envoyFleetsState.error ? (
-                <S.ErrorLabel>{envoyFleetsState.error.message}</S.ErrorLabel>
+                <ErrorLabel>{envoyFleetsState.error.message}</ErrorLabel>
               ) : (
                 envoyFleetsState.data && (
                   <S.Select
@@ -140,16 +141,16 @@ const ApisList: React.FC = () => {
               </S.Select>
             )}
           </S.TitleFiltersContainer>
-        </S.TitleContainer>
+        </ListTableTitleContainer>
 
         {loading ? (
           <Skeleton />
         ) : error ? (
-          <S.ErrorLabel>{error.message}</S.ErrorLabel>
+          <ErrorLabel>{error.message}</ErrorLabel>
         ) : (
           data && <ApisListTable apis={data} />
         )}
-      </S.ApisListContainer>
+      </ContentWrapper>
 
       <Suspense fallback={null}>{envoyFleet && <EnvoyFleetInfoModal />}</Suspense>
     </>

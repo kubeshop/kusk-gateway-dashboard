@@ -2,10 +2,6 @@ import styled from 'styled-components';
 
 import Colors from '@styles/colors';
 
-export const ErrorLabel = styled.span`
-  color: red;
-`;
-
 export const KuskExtensionsContainer = styled.div`
   color: ${Colors.whitePure};
 `;
