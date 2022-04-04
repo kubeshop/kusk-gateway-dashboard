@@ -8,6 +8,8 @@ import {useGetStaticRoute} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
+import {ErrorLabel} from '@components/AntdCustom';
+
 import yamlFile from '../../../../constants/staticRouteCRD.yaml';
 
 import * as S from './styled';
@@ -35,7 +37,7 @@ const CRD: React.FC = () => {
   return loading ? (
     <Skeleton />
   ) : error ? (
-    <S.ErrorLabel>{error.message}</S.ErrorLabel>
+    <ErrorLabel>{error.message}</ErrorLabel>
   ) : (
     <S.CRDText language="yaml" style={atomDark} wrapLines wrapLongLines>
       {yamlText}

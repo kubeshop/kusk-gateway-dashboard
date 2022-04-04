@@ -7,7 +7,7 @@ import {useGetStaticRoutes} from '@models/api';
 import {useAppDispatch} from '@redux/hooks';
 import {selectStaticRoute} from '@redux/reducers/main';
 
-import {ContentWrapper} from '@components/AntdCustom';
+import {ContentWrapper, ErrorLabel} from '@components/AntdCustom';
 
 import StaticRoutesListTable from './StaticRoutesListTable';
 
@@ -73,7 +73,7 @@ const StaticRoutesList: React.FC = () => {
       {loading ? (
         <Skeleton />
       ) : error ? (
-        <S.ErrorLabel>{error.message}</S.ErrorLabel>
+        <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
         data && <StaticRoutesListTable staticRoutes={data} />
       )}

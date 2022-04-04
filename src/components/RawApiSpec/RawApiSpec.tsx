@@ -8,6 +8,8 @@ import {useGetApi} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
+import {ErrorLabel} from '@components/AntdCustom';
+
 import {CollapseOperationsPlugin, TableOfContentsPlugin} from '@swaggerUI/plugins';
 
 import {useRawApiSpec} from '@utils/hooks';
@@ -30,7 +32,7 @@ const RawApiSpec: React.FC = () => {
       {loading ? (
         <Skeleton />
       ) : error ? (
-        <S.ErrorLabel>{error.message}</S.ErrorLabel>
+        <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
         data && (
           <SwaggerUI

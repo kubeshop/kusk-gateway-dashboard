@@ -14,3 +14,7 @@ export const ContentWrapper = styled.div<{$backgroundColor?: string}>`
 
   ${GlobalScrollbarStyle};
 `;
+
+export const ErrorLabel = styled.span`
+  color: red;
+`;

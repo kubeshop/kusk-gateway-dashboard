@@ -15,7 +15,3 @@ export const CRDText = styled(SyntaxHighlighter)`
 
   ${GlobalScrollbarStyle};
 `;
-
-export const ErrorLabel = styled.span`
-  color: red;
-`;

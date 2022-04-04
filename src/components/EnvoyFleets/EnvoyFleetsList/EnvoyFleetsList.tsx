@@ -7,7 +7,7 @@ import {useGetEnvoyFleets} from '@models/api';
 import {useAppDispatch} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 
-import {ContentWrapper} from '@components/AntdCustom';
+import {ContentWrapper, ErrorLabel} from '@components/AntdCustom';
 
 import EnvoyFleetsListTable from './EnvoyFleetsListTable';
 
@@ -74,7 +74,7 @@ const EnvoyFleetsList: React.FC = () => {
       {loading ? (
         <Skeleton />
       ) : error ? (
-        <S.ErrorLabel>{error.message}</S.ErrorLabel>
+        <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
         data && <EnvoyFleetsListTable envoyFleets={data} />
       )}

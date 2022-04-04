@@ -6,6 +6,8 @@ import {useGetApi} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
+import {ErrorLabel} from '@components/AntdCustom';
+
 import {DynamicServersPlugin, TableOfContentsPlugin} from '@swaggerUI/plugins';
 
 import {useRawApiSpec} from '@utils/hooks';
@@ -30,7 +32,7 @@ const PostProcessedApiSpec: React.FC = () => {
       {loading ? (
         <Skeleton />
       ) : error ? (
-        <S.ErrorLabel>{error.message}</S.ErrorLabel>
+        <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
         data && <SwaggerUI spec={parseSpec(rawApiSpec)} plugins={[TableOfContentsPlugin, DynamicServersPlugin]} />
       )}

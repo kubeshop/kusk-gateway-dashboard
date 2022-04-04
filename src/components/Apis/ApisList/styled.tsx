@@ -12,10 +12,6 @@ export const EnvoyFleetFilterContainer = styled.div`
   gap: 10px;
 `;
 
-export const ErrorLabel = styled.span`
-  color: red;
-`;
-
 export const QuestionCircleOutlined = styled(RawQuestionsCircleOutlined)`
   cursor: pointer;
 `;

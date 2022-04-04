@@ -4,10 +4,6 @@ import styled from 'styled-components';
 
 import Colors from '@styles/colors';
 
-export const ErrorLabel = styled.span`
-  color: red;
-`;
-
 export const Select = styled(RawSelect)`
   width: 100%;
   max-width: 300px;

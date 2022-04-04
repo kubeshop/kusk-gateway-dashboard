@@ -12,7 +12,7 @@ import {selectApi} from '@redux/reducers/main';
 import {toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
 
 import {EnvoyFleetInfoModal} from '@components';
-import {ContentWrapper} from '@components/AntdCustom';
+import {ContentWrapper, ErrorLabel} from '@components/AntdCustom';
 
 import {getEnvoyFleetKey} from '@utils/envoyFleet';
 
@@ -87,7 +87,7 @@ const ApisList: React.FC = () => {
               {envoyFleetsState.loading ? (
                 <Skeleton.Button />
               ) : envoyFleetsState.error ? (
-                <S.ErrorLabel>{envoyFleetsState.error.message}</S.ErrorLabel>
+                <ErrorLabel>{envoyFleetsState.error.message}</ErrorLabel>
               ) : (
                 envoyFleetsState.data && (
                   <S.Select
@@ -146,7 +146,7 @@ const ApisList: React.FC = () => {
         {loading ? (
           <Skeleton />
         ) : error ? (
-          <S.ErrorLabel>{error.message}</S.ErrorLabel>
+          <ErrorLabel>{error.message}</ErrorLabel>
         ) : (
           data && <ApisListTable apis={data} />
         )}
