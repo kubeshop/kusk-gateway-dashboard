@@ -4,13 +4,6 @@ import styled from 'styled-components';
 
 import Colors from '@styles/colors';
 
-export const ApiInfoContainer = styled.div`
-  height: 100%;
-  display: grid;
-  grid-template-rows: max-content 1fr;
-  grid-row-gap: 30px;
-`;
-
 export const CloseOutlined = styled(RawCloseOutlined)`
   position: absolute;
   right: 20px;

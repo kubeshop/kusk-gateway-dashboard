@@ -7,7 +7,7 @@ import {selectEnvoyFleet} from '@redux/reducers/main';
 import {setEnvoyFleetInfoActiveTab} from '@redux/reducers/ui';
 
 import {InfoTabs} from '@components';
-import {ContentWrapper} from '@components/AntdCustom';
+import {ContentWrapper, RightPaneInfoContainer} from '@components/AntdCustom';
 
 import Colors from '@styles/colors';
 
@@ -34,7 +34,7 @@ const EnvoyFleetInfo: React.FC = () => {
 
   return (
     <ContentWrapper $backgroundColor={Colors.grey4}>
-      <S.EnvoyFleetInfoContainer>
+      <RightPaneInfoContainer>
         <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setEnvoyFleetInfoActiveTab} />
 
         <Suspense fallback={<Skeleton />}>
@@ -44,7 +44,7 @@ const EnvoyFleetInfo: React.FC = () => {
         </Suspense>
 
         <S.CloseOutlined onClick={onCloseHandler} />
-      </S.EnvoyFleetInfoContainer>
+      </RightPaneInfoContainer>
     </ContentWrapper>
   );
 };

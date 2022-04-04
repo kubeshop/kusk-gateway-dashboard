@@ -12,10 +12,3 @@ export const CloseOutlined = styled(RawCloseOutlined)`
   font-size: 18px;
   cursor: pointer;
 `;
-
-export const EnvoyFleetInfoContainer = styled.div`
-  height: 100%;
-  display: grid;
-  grid-template-rows: max-content 1fr;
-  grid-row-gap: 30px;
-`;

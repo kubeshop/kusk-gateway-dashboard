@@ -7,7 +7,7 @@ import {selectStaticRoute} from '@redux/reducers/main';
 import {setStaticRouteInfoActiveTab} from '@redux/reducers/ui';
 
 import {InfoTabs} from '@components';
-import {ContentWrapper} from '@components/AntdCustom';
+import {ContentWrapper, RightPaneInfoContainer} from '@components/AntdCustom';
 
 import Colors from '@styles/colors';
 
@@ -28,13 +28,13 @@ const StaticRouteInfo: React.FC = () => {
 
   return (
     <ContentWrapper $backgroundColor={Colors.grey4}>
-      <S.StaticRouteInfoContainer>
+      <RightPaneInfoContainer>
         <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setStaticRouteInfoActiveTab} />
 
         <Suspense fallback={<Skeleton />}>{activeTab === 'crd' && <CRD />}</Suspense>
 
         <S.CloseOutlined onClick={onCloseHandler} />
-      </S.StaticRouteInfoContainer>
+      </RightPaneInfoContainer>
     </ContentWrapper>
   );
 };

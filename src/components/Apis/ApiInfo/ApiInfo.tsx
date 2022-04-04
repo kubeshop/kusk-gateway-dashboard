@@ -7,7 +7,7 @@ import {selectApi} from '@redux/reducers/main';
 import {setApiInfoActiveTab} from '@redux/reducers/ui';
 
 import {InfoTabs} from '@components';
-import {ContentWrapper} from '@components/AntdCustom';
+import {ContentWrapper, RightPaneInfoContainer} from '@components/AntdCustom';
 
 import Colors from '@styles/colors';
 
@@ -34,7 +34,7 @@ const ApiInfo: React.FC = () => {
 
   return (
     <ContentWrapper $backgroundColor={Colors.grey4}>
-      <S.ApiInfoContainer>
+      <RightPaneInfoContainer>
         <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setApiInfoActiveTab} />
 
         <Suspense fallback={<Skeleton />}>
@@ -44,7 +44,7 @@ const ApiInfo: React.FC = () => {
         </Suspense>
 
         <S.CloseOutlined onClick={onCloseHandler} />
-      </S.ApiInfoContainer>
+      </RightPaneInfoContainer>
     </ContentWrapper>
   );
 };
