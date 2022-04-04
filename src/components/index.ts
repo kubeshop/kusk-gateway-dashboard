@@ -9,4 +9,5 @@ export {ListTableColumnLabel} from './ListTableColumnLabel';
 export {PostProcessedApiSpec} from './PostProcessedApiSpec';
 export {RawApiSpec} from './RawApiSpec';
 export {Sidebar} from './Sidebar';
+export {StaticRoutesList, StaticRouteInfo} from './StaticRoutes';
 export {TableOfContents} from './TableOfContents';
