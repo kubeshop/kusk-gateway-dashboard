@@ -1,10 +1,8 @@
 import {Collapse, Skeleton} from 'antd';
 
-import YAML from 'yaml';
-
 import {SUPPORTED_METHODS} from '@constants/constants';
 
-import {useGetRawOpenApiSpec} from '@models/api';
+import {useGetApi} from '@models/api';
 import {KuskExtensionsItem} from '@models/dashboard';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
@@ -12,6 +10,8 @@ import {setKuskExtensionsActiveKeys} from '@redux/reducers/ui';
 
 import {getOperationId} from '@swaggerUI/utils/operations';
 import {getPathId} from '@swaggerUI/utils/path';
+
+import {useRawApiSpec} from '@utils/hooks';
 
 import KuskExtensionsPanelContent from './KuskExtensionsPanelContent';
 import KuskExtensionsPanelHeader from './KuskExtensionsPanelHeader';
@@ -69,10 +69,13 @@ const KuskExtensions: React.FC = () => {
   const kuskExtensionsActiveKeys = useAppSelector(state => state.ui.kuskExtensionsActiveKeys);
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const {data, loading, error} = useGetRawOpenApiSpec({
+  const {data, loading, error} = useGetApi({
     name: selectedApi?.name || '',
     namespace: selectedApi?.namespace || '',
+    queryParams: {crd: true},
   });
+
+  const rawApiSpec = useRawApiSpec(selectedApi?.name || '', selectedApi?.namespace || '');
 
   return (
     <S.KuskExtensionsContainer>
@@ -82,7 +85,7 @@ const KuskExtensions: React.FC = () => {
         <S.ErrorLabel>{error.message}</S.ErrorLabel>
       ) : (
         data &&
-        Object.entries(createKuskExtensions(YAML.parse(data))).map(kuskExtensionEntry => {
+        Object.entries(createKuskExtensions(rawApiSpec)).map(kuskExtensionEntry => {
           const [level, entry] = kuskExtensionEntry;
 
           const title = level.charAt(0).toUpperCase() + level.substring(1);

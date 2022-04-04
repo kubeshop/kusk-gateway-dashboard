@@ -1,15 +1,14 @@
-import {useMemo} from 'react';
-
 import {Skeleton} from 'antd';
 
 import SwaggerUI from 'swagger-ui-react';
-import YAML from 'yaml';
 
-import {useGetRawOpenApiSpec} from '@models/api';
+import {useGetApi} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
 import {DynamicServersPlugin, TableOfContentsPlugin} from '@swaggerUI/plugins';
+
+import {useRawApiSpec} from '@utils/hooks';
 
 import * as S from './styled';
 
@@ -18,19 +17,13 @@ const KUSK_EXTENSION_PROPERTY = 'x-kusk';
 const PostProcessedApiSpec: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  // TODO: use postProcessed endpoint
-  const {data, error, loading} = useGetRawOpenApiSpec({
+  const {data, error, loading} = useGetApi({
     name: selectedApi?.name || '',
     namespace: selectedApi?.namespace || '',
+    queryParams: {crd: true},
   });
 
-  const parsedSpec = useMemo(() => {
-    if (!data) {
-      return null;
-    }
-
-    return parseSpec(YAML.parse(data));
-  }, [data]);
+  const rawApiSpec = useRawApiSpec(selectedApi?.name || '', selectedApi?.namespace || '');
 
   return (
     <S.PostProcessedApiSpecContainer>
@@ -39,13 +32,17 @@ const PostProcessedApiSpec: React.FC = () => {
       ) : error ? (
         <S.ErrorLabel>{error.message}</S.ErrorLabel>
       ) : (
-        data && <SwaggerUI spec={parsedSpec} plugins={[TableOfContentsPlugin, DynamicServersPlugin]} />
+        data && <SwaggerUI spec={parseSpec(rawApiSpec)} plugins={[TableOfContentsPlugin, DynamicServersPlugin]} />
       )}
     </S.PostProcessedApiSpecContainer>
   );
 };
 
 const parseSpec = (spec: any) => {
+  if (!spec) {
+    return {};
+  }
+
   const topLevelDisabled = spec[KUSK_EXTENSION_PROPERTY]?.disabled;
 
   delete spec[KUSK_EXTENSION_PROPERTY];
