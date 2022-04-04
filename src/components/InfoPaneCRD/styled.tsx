@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import {GlobalScrollbarStyle} from '@utils/scrollbar';
 
-export const CRDText = styled(SyntaxHighlighter)`
+export const InfoPaneCRD = styled(SyntaxHighlighter)`
   height: 100%;
   overflow-x: hidden !important;
   margin: 0 !important;
