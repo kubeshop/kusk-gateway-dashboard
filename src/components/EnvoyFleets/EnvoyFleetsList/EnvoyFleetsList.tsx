@@ -7,7 +7,7 @@ import {useGetEnvoyFleets} from '@models/api';
 import {useAppDispatch} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 
-import {ContentWrapper, ErrorLabel} from '@components/AntdCustom';
+import {ContentWrapper, ErrorLabel, ListTableTitleContainer, ListTableTitleLabel} from '@components/AntdCustom';
 
 import EnvoyFleetsListTable from './EnvoyFleetsListTable';
 
@@ -44,8 +44,8 @@ const EnvoyFleetsList: React.FC = () => {
 
   return (
     <ContentWrapper>
-      <S.TitleContainer>
-        <S.TitleLabel>Envoy Fleets</S.TitleLabel>
+      <ListTableTitleContainer>
+        <ListTableTitleLabel>Envoy Fleets</ListTableTitleLabel>
 
         <S.TitleFiltersContainer>
           {loading ? (
@@ -69,7 +69,7 @@ const EnvoyFleetsList: React.FC = () => {
             </S.Select>
           )}
         </S.TitleFiltersContainer>
-      </S.TitleContainer>
+      </ListTableTitleContainer>
 
       {loading ? (
         <Skeleton />

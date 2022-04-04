@@ -12,7 +12,7 @@ import {selectApi} from '@redux/reducers/main';
 import {toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
 
 import {EnvoyFleetInfoModal} from '@components';
-import {ContentWrapper, ErrorLabel} from '@components/AntdCustom';
+import {ContentWrapper, ErrorLabel, ListTableTitleContainer, ListTableTitleLabel} from '@components/AntdCustom';
 
 import {getEnvoyFleetKey} from '@utils/envoyFleet';
 
@@ -79,8 +79,8 @@ const ApisList: React.FC = () => {
   return (
     <>
       <ContentWrapper>
-        <S.TitleContainer>
-          <S.TitleLabel>APIs</S.TitleLabel>
+        <ListTableTitleContainer>
+          <ListTableTitleLabel>APIs</ListTableTitleLabel>
 
           <S.TitleFiltersContainer>
             <S.EnvoyFleetFilterContainer>
@@ -141,7 +141,7 @@ const ApisList: React.FC = () => {
               </S.Select>
             )}
           </S.TitleFiltersContainer>
-        </S.TitleContainer>
+        </ListTableTitleContainer>
 
         {loading ? (
           <Skeleton />

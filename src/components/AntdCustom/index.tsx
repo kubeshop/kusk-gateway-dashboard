@@ -38,3 +38,18 @@ export const InfoPaneContainer = styled.div`
   grid-template-rows: max-content 1fr;
   grid-row-gap: 30px;
 `;
+
+export const ListTableTitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 10px;
+`;
+
+export const ListTableTitleLabel = styled.h2`
+  color: ${Colors.grey9};
+  font-size: 20px;
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  white-space: nowrap;
+`;
