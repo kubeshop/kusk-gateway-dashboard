@@ -7,11 +7,9 @@ import {selectApi} from '@redux/reducers/main';
 import {setApiInfoActiveTab} from '@redux/reducers/ui';
 
 import {InfoTabs} from '@components';
-import {ContentWrapper, RightPaneInfoContainer} from '@components/AntdCustom';
+import {ContentWrapper, InfoPaneCloseIcon, InfoPaneContainer} from '@components/AntdCustom';
 
 import Colors from '@styles/colors';
-
-import * as S from './styled';
 
 const TABS_ITEMS = [
   {key: 'raw-api-spec', label: 'Raw API Spec'},
@@ -34,7 +32,7 @@ const ApiInfo: React.FC = () => {
 
   return (
     <ContentWrapper $backgroundColor={Colors.grey4}>
-      <RightPaneInfoContainer>
+      <InfoPaneContainer>
         <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setApiInfoActiveTab} />
 
         <Suspense fallback={<Skeleton />}>
@@ -43,8 +41,8 @@ const ApiInfo: React.FC = () => {
           {activeTab === 'kusk-extensions' && <KuskExtensions />}
         </Suspense>
 
-        <S.CloseOutlined onClick={onCloseHandler} />
-      </RightPaneInfoContainer>
+        <InfoPaneCloseIcon onClick={onCloseHandler} />
+      </InfoPaneContainer>
     </ContentWrapper>
   );
 };
