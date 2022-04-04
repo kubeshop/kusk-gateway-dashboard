@@ -7,6 +7,9 @@ import {selectEnvoyFleet} from '@redux/reducers/main';
 import {setEnvoyFleetInfoActiveTab} from '@redux/reducers/ui';
 
 import {InfoTabs} from '@components';
+import {ContentWrapper} from '@components/AntdCustom';
+
+import Colors from '@styles/colors';
 
 import * as S from './styled';
 
@@ -30,17 +33,19 @@ const EnvoyFleetInfo: React.FC = () => {
   };
 
   return (
-    <S.EnvoyFleetInfoContainer>
-      <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setEnvoyFleetInfoActiveTab} />
+    <ContentWrapper $backgroundColor={Colors.grey4}>
+      <S.EnvoyFleetInfoContainer>
+        <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setEnvoyFleetInfoActiveTab} />
 
-      <Suspense fallback={<Skeleton />}>
-        {activeTab === 'crd' && <CRD />}
-        {activeTab === 'apis' && <APIs />}
-        {activeTab === 'static-routes' && <StaticRoutes />}
-      </Suspense>
+        <Suspense fallback={<Skeleton />}>
+          {activeTab === 'crd' && <CRD />}
+          {activeTab === 'apis' && <APIs />}
+          {activeTab === 'static-routes' && <StaticRoutes />}
+        </Suspense>
 
-      <S.CloseOutlined onClick={onCloseHandler} />
-    </S.EnvoyFleetInfoContainer>
+        <S.CloseOutlined onClick={onCloseHandler} />
+      </S.EnvoyFleetInfoContainer>
+    </ContentWrapper>
   );
 };
 

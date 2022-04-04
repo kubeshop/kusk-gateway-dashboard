@@ -7,6 +7,8 @@ import {useGetStaticRoutes} from '@models/api';
 import {useAppDispatch} from '@redux/hooks';
 import {selectStaticRoute} from '@redux/reducers/main';
 
+import {ContentWrapper} from '@components/AntdCustom';
+
 import StaticRoutesListTable from './StaticRoutesListTable';
 
 import * as S from './styled';
@@ -40,7 +42,7 @@ const StaticRoutesList: React.FC = () => {
   };
 
   return (
-    <S.StaticRoutesListContainer>
+    <ContentWrapper>
       <S.TitleContainer>
         <S.TitleLabel>Static Routes</S.TitleLabel>
 
@@ -75,7 +77,7 @@ const StaticRoutesList: React.FC = () => {
       ) : (
         data && <StaticRoutesListTable staticRoutes={data} />
       )}
-    </S.StaticRoutesListContainer>
+    </ContentWrapper>
   );
 };
 

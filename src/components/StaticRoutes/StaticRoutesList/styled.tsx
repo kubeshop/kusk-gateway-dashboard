@@ -19,10 +19,6 @@ export const Select = styled(RawSelect)`
   }
 `;
 
-export const StaticRoutesListContainer = styled.div`
-  padding: 40px 20px 20px 20px;
-`;
-
 export const TitleContainer = styled.div`
   display: flex;
   align-items: center;

@@ -12,6 +12,7 @@ import {selectApi} from '@redux/reducers/main';
 import {toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
 
 import {EnvoyFleetInfoModal} from '@components';
+import {ContentWrapper} from '@components/AntdCustom';
 
 import {getEnvoyFleetKey} from '@utils/envoyFleet';
 
@@ -77,7 +78,7 @@ const ApisList: React.FC = () => {
 
   return (
     <>
-      <S.ApisListContainer>
+      <ContentWrapper>
         <S.TitleContainer>
           <S.TitleLabel>APIs</S.TitleLabel>
 
@@ -149,7 +150,7 @@ const ApisList: React.FC = () => {
         ) : (
           data && <ApisListTable apis={data} />
         )}
-      </S.ApisListContainer>
+      </ContentWrapper>
 
       <Suspense fallback={null}>{envoyFleet && <EnvoyFleetInfoModal />}</Suspense>
     </>

@@ -4,10 +4,6 @@ import styled from 'styled-components';
 
 import Colors from '@styles/colors';
 
-export const EnvoyFleetsListContainer = styled.div`
-  padding: 40px 20px 20px 20px;
-`;
-
 export const ErrorLabel = styled.span`
   color: red;
 `;

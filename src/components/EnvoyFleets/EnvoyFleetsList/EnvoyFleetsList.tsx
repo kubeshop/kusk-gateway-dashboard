@@ -7,6 +7,8 @@ import {useGetEnvoyFleets} from '@models/api';
 import {useAppDispatch} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 
+import {ContentWrapper} from '@components/AntdCustom';
+
 import EnvoyFleetsListTable from './EnvoyFleetsListTable';
 
 import * as S from './styled';
@@ -41,7 +43,7 @@ const EnvoyFleetsList: React.FC = () => {
   };
 
   return (
-    <S.EnvoyFleetsListContainer>
+    <ContentWrapper>
       <S.TitleContainer>
         <S.TitleLabel>Envoy Fleets</S.TitleLabel>
 
@@ -76,7 +78,7 @@ const EnvoyFleetsList: React.FC = () => {
       ) : (
         data && <EnvoyFleetsListTable envoyFleets={data} />
       )}
-    </S.EnvoyFleetsListContainer>
+    </ContentWrapper>
   );
 };
 

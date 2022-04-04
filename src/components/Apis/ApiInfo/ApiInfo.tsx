@@ -7,6 +7,9 @@ import {selectApi} from '@redux/reducers/main';
 import {setApiInfoActiveTab} from '@redux/reducers/ui';
 
 import {InfoTabs} from '@components';
+import {ContentWrapper} from '@components/AntdCustom';
+
+import Colors from '@styles/colors';
 
 import * as S from './styled';
 
@@ -30,17 +33,19 @@ const ApiInfo: React.FC = () => {
   };
 
   return (
-    <S.ApiInfoContainer>
-      <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setApiInfoActiveTab} />
+    <ContentWrapper $backgroundColor={Colors.grey4}>
+      <S.ApiInfoContainer>
+        <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setApiInfoActiveTab} />
 
-      <Suspense fallback={<Skeleton />}>
-        {activeTab === 'raw-api-spec' && <RawApiSpec />}
-        {activeTab === 'post-processed-api-spec' && <PostProcessedApiSpec />}
-        {activeTab === 'kusk-extensions' && <KuskExtensions />}
-      </Suspense>
+        <Suspense fallback={<Skeleton />}>
+          {activeTab === 'raw-api-spec' && <RawApiSpec />}
+          {activeTab === 'post-processed-api-spec' && <PostProcessedApiSpec />}
+          {activeTab === 'kusk-extensions' && <KuskExtensions />}
+        </Suspense>
 
-      <S.CloseOutlined onClick={onCloseHandler} />
-    </S.ApiInfoContainer>
+        <S.CloseOutlined onClick={onCloseHandler} />
+      </S.ApiInfoContainer>
+    </ContentWrapper>
   );
 };
 

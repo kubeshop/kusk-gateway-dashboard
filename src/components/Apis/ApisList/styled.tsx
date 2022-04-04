@@ -6,10 +6,6 @@ import styled from 'styled-components';
 
 import Colors from '@styles/colors';
 
-export const ApisListContainer = styled.div`
-  padding: 40px 20px 20px 20px;
-`;
-
 export const EnvoyFleetFilterContainer = styled.div`
   display: flex;
   align-items: center;
