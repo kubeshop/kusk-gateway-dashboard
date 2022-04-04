@@ -2,7 +2,7 @@ import {Collapse, Skeleton} from 'antd';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
 
-import {useGetApi} from '@models/api';
+import {useGetApiCRD} from '@models/api';
 import {KuskExtensionsItem} from '@models/dashboard';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
@@ -13,14 +13,71 @@ import {ErrorLabel} from '@components/AntdCustom';
 import {getOperationId} from '@swaggerUI/utils/operations';
 import {getPathId} from '@swaggerUI/utils/path';
 
-import {useRawApiSpec} from '@utils/hooks';
-
 import KuskExtensionsPanelContent from './KuskExtensionsPanelContent';
 import KuskExtensionsPanelHeader from './KuskExtensionsPanelHeader';
 
 import * as S from './styled';
 
 const {Panel} = Collapse;
+
+const KuskExtensions: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const kuskExtensionsActiveKeys = useAppSelector(state => state.ui.kuskExtensionsActiveKeys);
+  const selectedApi = useAppSelector(state => state.main.selectedApi);
+
+  const {data, loading, error} = useGetApiCRD({name: selectedApi?.name || '', namespace: selectedApi?.namespace || ''});
+
+  return (
+    <S.KuskExtensionsContainer>
+      {loading ? (
+        <Skeleton />
+      ) : error ? (
+        <ErrorLabel>{error.message}</ErrorLabel>
+      ) : (
+        data &&
+        Object.entries(createKuskExtensions(data)).map(kuskExtensionEntry => {
+          const [level, entry] = kuskExtensionEntry;
+
+          const title = level.charAt(0).toUpperCase() + level.substring(1);
+
+          if (entry && entry.length) {
+            return (
+              <S.LevelContainer key={level}>
+                <S.LevelTitle>{title} level</S.LevelTitle>
+
+                <Collapse
+                  activeKey={kuskExtensionsActiveKeys[level]}
+                  onChange={keys => dispatch(setKuskExtensionsActiveKeys({keys: keys as string[], level}))}
+                >
+                  {entry
+                    .sort((a: any, b: any) => a.path.localeCompare(b.path))
+                    .map(item => (
+                      <Panel
+                        header={
+                          <KuskExtensionsPanelHeader
+                            level={level}
+                            method={item.method}
+                            path={item.path}
+                            tag={item.tag}
+                          />
+                        }
+                        key={item.id}
+                        id={item.id}
+                      >
+                        <KuskExtensionsPanelContent kuskExtension={item.kuskExtension} />
+                      </Panel>
+                    ))}
+                </Collapse>
+              </S.LevelContainer>
+            );
+          }
+
+          return null;
+        })
+      )}
+    </S.KuskExtensionsContainer>
+  );
+};
 
 const createKuskExtensions = (spec: any) => {
   let kuskExtensions: {top: KuskExtensionsItem[]; path: KuskExtensionsItem[]; operation: KuskExtensionsItem[]} = {
@@ -64,71 +121,6 @@ const createKuskExtensions = (spec: any) => {
   });
 
   return kuskExtensions;
-};
-
-const KuskExtensions: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const kuskExtensionsActiveKeys = useAppSelector(state => state.ui.kuskExtensionsActiveKeys);
-  const selectedApi = useAppSelector(state => state.main.selectedApi);
-
-  const {data, loading, error} = useGetApi({
-    name: selectedApi?.name || '',
-    namespace: selectedApi?.namespace || '',
-    queryParams: {crd: true},
-  });
-
-  const rawApiSpec = useRawApiSpec(selectedApi?.name || '', selectedApi?.namespace || '');
-
-  return (
-    <S.KuskExtensionsContainer>
-      {loading ? (
-        <Skeleton />
-      ) : error ? (
-        <ErrorLabel>{error.message}</ErrorLabel>
-      ) : (
-        data &&
-        Object.entries(createKuskExtensions(rawApiSpec)).map(kuskExtensionEntry => {
-          const [level, entry] = kuskExtensionEntry;
-
-          const title = level.charAt(0).toUpperCase() + level.substring(1);
-
-          if (entry && entry.length) {
-            return (
-              <S.LevelContainer key={level}>
-                <S.LevelTitle>{title} level</S.LevelTitle>
-
-                <Collapse
-                  activeKey={kuskExtensionsActiveKeys[level]}
-                  onChange={keys => dispatch(setKuskExtensionsActiveKeys({keys: keys as string[], level}))}
-                >
-                  {entry
-                    .sort((a: any, b: any) => a.path.localeCompare(b.path))
-                    .map(item => (
-                      <Panel
-                        header={
-                          <KuskExtensionsPanelHeader
-                            level={level}
-                            method={item.method}
-                            path={item.path}
-                            tag={item.tag}
-                          />
-                        }
-                        key={item.id}
-                        id={item.id}
-                      >
-                        <KuskExtensionsPanelContent kuskExtension={item.kuskExtension} />
-                      </Panel>
-                    ))}
-                </Collapse>
-              </S.LevelContainer>
-            );
-          }
-
-          return null;
-        })
-      )}
-    </S.KuskExtensionsContainer>
-  );
 };
 
 export default KuskExtensions;

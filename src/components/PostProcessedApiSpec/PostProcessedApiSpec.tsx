@@ -2,15 +2,13 @@ import {Skeleton} from 'antd';
 
 import SwaggerUI from 'swagger-ui-react';
 
-import {useGetApi} from '@models/api';
+import {useGetApiCRD} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
 import {ErrorLabel} from '@components/AntdCustom';
 
 import {DynamicServersPlugin, TableOfContentsPlugin} from '@swaggerUI/plugins';
-
-import {useRawApiSpec} from '@utils/hooks';
 
 import * as S from './styled';
 
@@ -19,13 +17,8 @@ const KUSK_EXTENSION_PROPERTY = 'x-kusk';
 const PostProcessedApiSpec: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const {data, error, loading} = useGetApi({
-    name: selectedApi?.name || '',
-    namespace: selectedApi?.namespace || '',
-    queryParams: {crd: true},
-  });
-
-  const rawApiSpec = useRawApiSpec(selectedApi?.name || '', selectedApi?.namespace || '');
+  // TODO: use api definition endpoint
+  const {data, error, loading} = useGetApiCRD({name: selectedApi?.name || '', namespace: selectedApi?.namespace || ''});
 
   return (
     <S.PostProcessedApiSpecContainer>
@@ -34,7 +27,7 @@ const PostProcessedApiSpec: React.FC = () => {
       ) : error ? (
         <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
-        data && <SwaggerUI spec={parseSpec(rawApiSpec)} plugins={[TableOfContentsPlugin, DynamicServersPlugin]} />
+        data && <SwaggerUI spec={parseSpec(data)} plugins={[TableOfContentsPlugin, DynamicServersPlugin]} />
       )}
     </S.PostProcessedApiSpecContainer>
   );

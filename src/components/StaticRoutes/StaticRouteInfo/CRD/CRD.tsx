@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 
 import {Skeleton} from 'antd';
 
-import {useGetStaticRoute} from '@models/api';
+import {useGetStaticRouteCRD} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
@@ -18,10 +18,9 @@ const CRD: React.FC = () => {
   const selectedStaticRoute = useAppSelector(state => state.main.selectedStaticRoute);
 
   // TODO: use data to show the actual CRD from endpoint
-  const {error, loading} = useGetStaticRoute({
+  const {error, loading} = useGetStaticRouteCRD({
     name: selectedStaticRoute?.name || '',
     namespace: selectedStaticRoute?.namespace || '',
-    queryParams: {crd: true},
   });
 
   useEffect(() => {
