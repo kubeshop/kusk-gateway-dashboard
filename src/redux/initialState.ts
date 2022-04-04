@@ -4,6 +4,7 @@ import {UiState} from '@models/ui';
 const initialMainState: MainState = {
   selectedApi: null,
   selectedEnvoyFleet: null,
+  selectedStaticRoute: null,
 };
 
 const initialUiState: UiState = {
@@ -21,6 +22,7 @@ const initialUiState: UiState = {
     path: [],
     operation: [],
   },
+  staticRouteInfoActiveTab: 'crd',
   tableOfContentsHeight: {
     postProcessedApiSpec: 500,
     rawApiSpec: 500,
