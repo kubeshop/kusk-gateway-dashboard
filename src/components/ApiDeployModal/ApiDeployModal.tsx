@@ -12,7 +12,7 @@ import * as S from './styled';
 const ApiDeployModal: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const [activeStep, setActiveStep] = useState<number>(0);
+  const [activeStep, setActiveStep] = useState<number>(1);
   const [apiContent, setApiContent] = useState<{[key: string]: any}>();
 
   const [form] = Form.useForm();
@@ -27,8 +27,9 @@ const ApiDeployModal: React.FC = () => {
 
   const onOkHandler = () => {
     if (activeStep) {
-      form.validateFields().then(() => {
+      form.validateFields().then(values => {
         console.log(apiContent);
+        console.log(values);
       });
 
       //   const apiContent = YAML.parse(JSON.parse(JSON.stringify(values.content)));
@@ -85,9 +86,31 @@ const ApiDeployModal: React.FC = () => {
               <S.Textarea rows={20} placeholder="Enter API content in YAML/JSON format" />
             </Form.Item>
           ) : (
-            <Form.Item name="test">
-              <S.Textarea />
-            </Form.Item>
+            <>
+              <Form.Item
+                label="Name"
+                name={['upstream', 'service', 'name']}
+                rules={[{required: true, message: 'Please enter a name!'}]}
+              >
+                <S.Input />
+              </Form.Item>
+
+              <Form.Item
+                label="Namespace"
+                name={['upstream', 'service', 'namespace']}
+                rules={[{required: true, message: 'Please enter a namespace!'}]}
+              >
+                <S.Input />
+              </Form.Item>
+
+              <Form.Item
+                label="Port"
+                name={['upstream', 'service', 'port']}
+                rules={[{required: true, message: 'Please enter a valid port!'}]}
+              >
+                <S.Input type="number" />
+              </Form.Item>
+            </>
           )}
         </Form>
       </S.Container>

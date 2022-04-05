@@ -1,4 +1,4 @@
-import {Input, Steps} from 'antd';
+import {Input as RawInput, Steps} from 'antd';
 
 import styled from 'styled-components';
 
@@ -10,6 +10,20 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: 200px 1fr;
   grid-column-gap: 10px;
+
+  & input::-webkit-outer-spin-button,
+  & input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  & input[type='number'] {
+    -moz-appearance: textfield;
+  }
+`;
+
+export const Input = styled(RawInput)`
+  background-color: ${Colors.grey2};
 `;
 
 export const Step = styled(Steps.Step)`
@@ -36,6 +50,4 @@ export const StepsContainer = styled.div`
   ${GlobalScrollbarStyle};
 `;
 
-export const Textarea = styled(Input.TextArea)`
-  background-color: ${Colors.grey2};
-`;
+export const Textarea = styled(Input.TextArea)``;
