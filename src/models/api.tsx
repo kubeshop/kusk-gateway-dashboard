@@ -14,7 +14,7 @@ export interface ServiceItem {
   name: string;
   status: 'available' | 'unavailable';
   namespace: string;
-  ports: ServicePortItem;
+  ports: ServicePortItem[];
 }
 
 export interface EnvoyFleetItem {

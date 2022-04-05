@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
 import {Form, Modal, Select, Skeleton, Steps, Tag} from 'antd';
 
@@ -20,7 +20,15 @@ const ApiDeployModal: React.FC = () => {
 
   const [activeStep, setActiveStep] = useState<number>(1);
   const [apiContent, setApiContent] = useState<{[key: string]: any}>();
-  const [selectedService, setSelectedService] = useState();
+  const [selectedService, setSelectedService] = useState<ServiceItem>();
+
+  const selectedServicePorts = useMemo(() => {
+    if (!selectedService) {
+      return [];
+    }
+
+    return selectedService.ports.map(port => port.port);
+  }, [selectedService]);
 
   const {data, error, loading} = useGetServices({});
 
@@ -57,13 +65,35 @@ const ApiDeployModal: React.FC = () => {
   };
 
   const onServiceSelectHandler = (service: ServiceItem) => {
-    console.log(selectedService);
-    console.log(service);
+    setSelectedService(service);
   };
+
+  useEffect(() => {
+    if (selectedService) {
+      form.setFieldsValue({
+        upstream: {service: {name: selectedService.name, namespace: selectedService.namespace, port: undefined}},
+      });
+
+      return;
+    }
+
+    form.resetFields();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedService]);
 
   return (
     <Modal
       cancelText={activeStep ? 'Back' : 'Cancel'}
+      // footer={
+      //   activeStep ? (
+      //     <>
+      //       <Button>Back</Button> <Button>Deploy</Button>
+      //     </>
+      //   ) : (
+      //     <Button>Next</Button>
+      //   )
+      // }
       title="Deploy New API"
       visible
       width="800px"
@@ -137,7 +167,7 @@ const ApiDeployModal: React.FC = () => {
                 name={['upstream', 'service', 'name']}
                 rules={[{required: true, message: 'Please enter a name!'}]}
               >
-                <S.Input />
+                <S.Input disabled={Boolean(selectedService)} />
               </Form.Item>
 
               <Form.Item
@@ -145,15 +175,25 @@ const ApiDeployModal: React.FC = () => {
                 name={['upstream', 'service', 'namespace']}
                 rules={[{required: true, message: 'Please enter a namespace!'}]}
               >
-                <S.Input />
+                <S.Input disabled={Boolean(selectedService)} />
               </Form.Item>
 
               <Form.Item
                 label="Port"
                 name={['upstream', 'service', 'port']}
-                rules={[{required: true, message: 'Please enter a valid port!'}]}
+                rules={[{required: true, message: `Please ${selectedService ? 'choose' : 'enter'} a valid port!`}]}
               >
-                <S.Input type="number" />
+                {selectedService ? (
+                  <S.Select placeholder="Select port">
+                    {selectedServicePorts.map(port => (
+                      <Option key={port} value={port}>
+                        {port}
+                      </Option>
+                    ))}
+                  </S.Select>
+                ) : (
+                  <S.Input type="number" />
+                )}
               </Form.Item>
             </>
           )}

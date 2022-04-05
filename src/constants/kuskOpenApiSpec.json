@@ -563,7 +563,10 @@
             "type": "string"
           },
           "ports": {
-            "$ref": "#/components/schemas/ServicePortItem"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServicePortItem"
+            }
           }
         }
       },
@@ -629,10 +632,10 @@
             "type": "string"
           },
           "nodePort": {
-            "type": "number"
+            "type": "integer"
           },
           "port": {
-            "type": "number"
+            "type": "integer"
           },
           "protocol": {
             "type": "string"
