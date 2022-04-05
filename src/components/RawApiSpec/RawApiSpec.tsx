@@ -3,6 +3,7 @@ import React from 'react';
 import {Skeleton} from 'antd';
 
 import SwaggerUI from 'swagger-ui-react';
+import YAML from 'yaml';
 
 import {useGetApiCRD} from '@models/api';
 
@@ -28,7 +29,7 @@ const RawApiSpec: React.FC = () => {
       ) : (
         data && (
           <SwaggerUI
-            spec={data}
+            spec={YAML.parse(data.spec.spec)}
             plugins={[TableOfContentsPlugin, CollapseOperationsPlugin]}
             supportedSubmitMethods={[]}
           />

@@ -1,5 +1,7 @@
 import {Collapse, Skeleton} from 'antd';
 
+import YAML from 'yaml';
+
 import {SUPPORTED_METHODS} from '@constants/constants';
 
 import {useGetApiCRD} from '@models/api';
@@ -35,7 +37,7 @@ const KuskExtensions: React.FC = () => {
         <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
         data &&
-        Object.entries(createKuskExtensions(data)).map(kuskExtensionEntry => {
+        Object.entries(createKuskExtensions(YAML.parse(data.spec.spec))).map(kuskExtensionEntry => {
           const [level, entry] = kuskExtensionEntry;
 
           const title = level.charAt(0).toUpperCase() + level.substring(1);

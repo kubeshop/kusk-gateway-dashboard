@@ -1,6 +1,7 @@
 import {Skeleton} from 'antd';
 
 import SwaggerUI from 'swagger-ui-react';
+import YAML from 'yaml';
 
 import {useGetApiCRD} from '@models/api';
 
@@ -27,7 +28,12 @@ const PostProcessedApiSpec: React.FC = () => {
       ) : error ? (
         <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
-        data && <SwaggerUI spec={parseSpec(data)} plugins={[TableOfContentsPlugin, DynamicServersPlugin]} />
+        data && (
+          <SwaggerUI
+            spec={parseSpec(YAML.parse(data.spec.spec))}
+            plugins={[TableOfContentsPlugin, DynamicServersPlugin]}
+          />
+        )
       )}
     </S.PostProcessedApiSpecContainer>
   );
