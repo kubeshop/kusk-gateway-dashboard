@@ -8,12 +8,12 @@ export const DashboardMenuContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid ${Colors.grey4};
+  border-bottom: 1px solid ${Colors.grey4};
 `;
 
 export const Icon = styled(AntdIcon)<{$active: boolean; $border?: boolean}>`
   ${({$active, $border}) => `
-    color: ${$active ? Colors.whitePure : Colors.grey0}};
+    color: ${$active ? Colors.whitePure : Colors.grey1}};
     border-bottom: ${$border ? `1px solid ${Colors.grey4}` : ''};
 `};
 
