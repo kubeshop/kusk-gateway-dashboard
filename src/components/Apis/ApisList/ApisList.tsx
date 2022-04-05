@@ -152,10 +152,12 @@ const ApisList: React.FC = () => {
         ) : error ? (
           <ErrorLabel>{error.message}</ErrorLabel>
         ) : (
-          data && <ApisListTable apis={data} />
+          data && (
+            <>
+              <ApisListTable apis={data} /> <S.Button onClick={showApiDeployModalHandler}>Deploy new API</S.Button>
+            </>
+          )
         )}
-
-        <S.Button onClick={showApiDeployModalHandler}>Deploy new API</S.Button>
       </ContentWrapper>
 
       <Suspense fallback={null}>{envoyFleet && <EnvoyFleetInfoModal />}</Suspense>
