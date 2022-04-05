@@ -9,7 +9,7 @@ import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
-import {toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
+import {openApiDeployModal, toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
 
 import {EnvoyFleetInfoModal} from '@components';
 import {ContentWrapper, ErrorLabel, ListTableTitleContainer, ListTableTitleLabel} from '@components/AntdCustom';
@@ -74,6 +74,10 @@ const ApisList: React.FC = () => {
   const onNamespaceSelectionClearHandler = () => {
     setSelectedNamespace(undefined);
     dispatch(selectApi(null));
+  };
+
+  const showApiDeployModalHandler = () => {
+    dispatch(openApiDeployModal());
   };
 
   return (
@@ -150,6 +154,8 @@ const ApisList: React.FC = () => {
         ) : (
           data && <ApisListTable apis={data} />
         )}
+
+        <S.Button onClick={showApiDeployModalHandler}>Deploy new API</S.Button>
       </ContentWrapper>
 
       <Suspense fallback={null}>{envoyFleet && <EnvoyFleetInfoModal />}</Suspense>

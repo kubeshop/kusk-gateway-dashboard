@@ -8,6 +8,9 @@ const initialMainState: MainState = {
 };
 
 const initialUiState: UiState = {
+  apiDeployModal: {
+    isOpen: false,
+  },
   apiInfoActiveTab: 'raw-api-spec',
   dashboardPaneConfiguration: {
     leftPaneWidth: 0.5,

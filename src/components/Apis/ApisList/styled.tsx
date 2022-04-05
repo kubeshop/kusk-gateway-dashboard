@@ -1,8 +1,14 @@
-import {Select as RawSelect} from 'antd';
+import {Button as RawButton, Select as RawSelect} from 'antd';
 
 import {QuestionCircleOutlined as RawQuestionsCircleOutlined} from '@ant-design/icons';
 
 import styled from 'styled-components';
+
+export const Button = styled(RawButton)`
+  margin-top: 20px;
+  color: #54bcb4;
+  border-color: #54bcb4;
+`;
 
 export const EnvoyFleetFilterContainer = styled.div`
   display: flex;
