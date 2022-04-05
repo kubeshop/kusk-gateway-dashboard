@@ -1,4 +1,4 @@
-import {Input as RawInput, Steps} from 'antd';
+import {Input as RawInput, Select as RawSelect, Steps} from 'antd';
 
 import styled from 'styled-components';
 
@@ -23,6 +23,10 @@ export const Container = styled.div`
 `;
 
 export const Input = styled(RawInput)`
+  background-color: ${Colors.grey2};
+`;
+
+export const Select = styled(RawSelect)`
   background-color: ${Colors.grey2};
 `;
 

@@ -1,19 +1,28 @@
 import {useState} from 'react';
 
-import {Form, Modal, Steps} from 'antd';
+import {Form, Modal, Select, Skeleton, Steps, Tag} from 'antd';
 
 import YAML from 'yaml';
+
+import {ServiceItem, useGetServices} from '@models/api';
 
 import {useAppDispatch} from '@redux/hooks';
 import {closeApiDeployModal} from '@redux/reducers/ui';
 
+import {ErrorLabel} from '@components/AntdCustom';
+
 import * as S from './styled';
+
+const {Option} = Select;
 
 const ApiDeployModal: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const [activeStep, setActiveStep] = useState<number>(1);
   const [apiContent, setApiContent] = useState<{[key: string]: any}>();
+  const [selectedService, setSelectedService] = useState();
+
+  const {data, error, loading} = useGetServices({});
 
   const [form] = Form.useForm();
 
@@ -41,6 +50,15 @@ const ApiDeployModal: React.FC = () => {
         setActiveStep(1);
       });
     }
+  };
+
+  const onServiceSelectClearHandler = () => {
+    setSelectedService(undefined);
+  };
+
+  const onServiceSelectHandler = (service: ServiceItem) => {
+    console.log(selectedService);
+    console.log(service);
   };
 
   return (
@@ -87,6 +105,33 @@ const ApiDeployModal: React.FC = () => {
             </Form.Item>
           ) : (
             <>
+              {loading ? (
+                <Skeleton.Button />
+              ) : error ? (
+                <ErrorLabel>{error.message}</ErrorLabel>
+              ) : (
+                data && (
+                  <Form.Item name="service" label="Cluster Services">
+                    <S.Select
+                      allowClear
+                      placeholder="Select service"
+                      showSearch
+                      onClear={onServiceSelectClearHandler}
+                      onSelect={(value: any, option: any) => {
+                        onServiceSelectHandler(option.service);
+                      }}
+                    >
+                      {data.map(serviceItem => (
+                        <Option key={`${serviceItem.namespace}-${serviceItem.name}`} service={serviceItem}>
+                          <Tag>{serviceItem.namespace}</Tag>
+                          {serviceItem.name}
+                        </Option>
+                      ))}
+                    </S.Select>
+                  </Form.Item>
+                )
+              )}
+
               <Form.Item
                 label="Name"
                 name={['upstream', 'service', 'name']}
