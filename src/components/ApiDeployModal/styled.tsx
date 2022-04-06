@@ -55,5 +55,7 @@ export const StepsContainer = styled.div`
 `;
 
 export const Textarea = styled(Input.TextArea)`
+  background-color: ${Colors.grey2};
+
   ${GlobalScrollbarStyle}
 `;

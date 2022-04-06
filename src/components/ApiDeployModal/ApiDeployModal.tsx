@@ -19,7 +19,7 @@ const ApiDeployModal: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const [activeStep, setActiveStep] = useState<number>(0);
-  const [apiContent, setApiContent] = useState<{[key: string]: any}>();
+  const [apiContent, setApiContent] = useState<{name: string; namespace: string; openapi: {[key: string]: any}}>();
   const [selectedService, setSelectedService] = useState<ServiceItem>();
 
   const selectedServicePorts = useMemo(() => {
@@ -44,18 +44,26 @@ const ApiDeployModal: React.FC = () => {
     }
 
     form.validateFields().then(values => {
-      const deployedApiContent = {
-        ...apiContent,
-        'x-kusk': {...apiContent['x-kusk'], upstream: {...values.upstream}},
+      const deployedOpenApiSpec = {
+        ...apiContent.openapi,
+        'x-kusk': {...apiContent.openapi['x-kusk'], upstream: {...values.upstream}},
       };
 
-      console.log(JSON.stringify(YAML.stringify(deployedApiContent)));
+      const body = {
+        name: apiContent.name,
+        namespace: apiContent.namespace,
+        openapi: YAML.stringify(deployedOpenApiSpec),
+      };
+
+      console.log(body);
     });
   };
 
   const onNextHandler = () => {
     form.validateFields().then(values => {
-      setApiContent(YAML.parse(JSON.parse(JSON.stringify(values.content))));
+      const {name, namespace, openapi} = values;
+
+      setApiContent({name, namespace, openapi: YAML.parse(JSON.parse(JSON.stringify(openapi)))});
       setActiveStep(1);
     });
   };
@@ -83,18 +91,26 @@ const ApiDeployModal: React.FC = () => {
   }, [selectedService]);
 
   useEffect(() => {
-    if (!activeStep || !apiContent) {
-      return;
-    }
-
-    const upstreamService = apiContent['x-kusk']?.upstream?.service;
-
-    if (upstreamService) {
+    if (!activeStep && apiContent) {
       form.setFieldsValue({
-        upstream: {
-          service: {name: upstreamService.name, namespace: upstreamService.namespace, port: upstreamService.port},
-        },
+        name: apiContent.name,
+        namespace: apiContent.namespace,
+        openapi: YAML.stringify(apiContent.openapi),
       });
+    } else {
+      if (!activeStep || !apiContent) {
+        return;
+      }
+
+      const upstreamService = apiContent.openapi['x-kusk']?.upstream?.service;
+
+      if (upstreamService) {
+        form.setFieldsValue({
+          upstream: {
+            service: {name: upstreamService.name, namespace: upstreamService.namespace, port: upstreamService.port},
+          },
+        });
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -131,28 +147,47 @@ const ApiDeployModal: React.FC = () => {
 
         <Form form={form} initialValues={{content: ''}} layout="vertical">
           {activeStep === 0 ? (
-            <Form.Item
-              name="content"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter your API content!',
-                },
-                () => {
-                  return {
-                    validator(_, value) {
-                      if (typeof YAML.parse(JSON.parse(JSON.stringify(value))) === 'object') {
-                        return Promise.resolve();
-                      }
+            <>
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[{required: true, message: 'Please provide a name for the API!'}]}
+              >
+                <S.Input placeholder="Enter API name" type="text" />
+              </Form.Item>
 
-                      return Promise.reject(new Error('Please enter a valid API content!'));
-                    },
-                  };
-                },
-              ]}
-            >
-              <S.Textarea rows={20} placeholder="Enter API content in YAML/JSON format" />
-            </Form.Item>
+              <Form.Item
+                label="Namespace"
+                name="namespace"
+                rules={[{required: true, message: 'Please provide a namespace for the API!'}]}
+              >
+                <S.Input placeholder="Enter API namespace" type="text" />
+              </Form.Item>
+
+              <Form.Item
+                label="OpenAPI Spec"
+                name="openapi"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter your API content!',
+                  },
+                  () => {
+                    return {
+                      validator(_, value) {
+                        if (typeof YAML.parse(JSON.parse(JSON.stringify(value))) === 'object') {
+                          return Promise.resolve();
+                        }
+
+                        return Promise.reject(new Error('Please enter a valid API content!'));
+                      },
+                    };
+                  },
+                ]}
+              >
+                <S.Textarea rows={20} placeholder="Enter OpenAPI Spec in YAML/JSON format" />
+              </Form.Item>
+            </>
           ) : (
             <>
               {loading ? (
