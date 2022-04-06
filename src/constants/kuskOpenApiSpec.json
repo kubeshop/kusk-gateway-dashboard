@@ -40,7 +40,9 @@
   "paths": {
     "/apis": {
       "get": {
-        "tags": ["apis"],
+        "tags": [
+          "apis"
+        ],
         "summary": "Get a list of APIs",
         "description": "Returns the list of APIs available in the cluster",
         "operationId": "getApis",
@@ -88,11 +90,47 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "apis"
+        ],
+        "summary": "Deploy new API",
+        "description": "Deploys a new API to the cluster",
+        "operationId": "deployApi",
+        "requestBody": {
+          "description": "API content that needs to be deployed",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "API deployed"
+          },
+          "400": {
+            "description": "The content of the API is malformed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/apis/{namespace}/{name}": {
       "get": {
-        "tags": ["apis"],
+        "tags": [
+          "apis"
+        ],
         "summary": "Get an API instance by namespace and name",
         "operationId": "getApi",
         "parameters": [
@@ -133,7 +171,9 @@
     },
     "/apis/{namespace}/{name}/crd": {
       "get": {
-        "tags": ["apis"],
+        "tags": [
+          "apis"
+        ],
         "summary": "Get API CRD from cluster",
         "operationId": "getApiCRD",
         "parameters": [
@@ -174,7 +214,9 @@
     },
     "/apis/{namespace}/{name}/definition": {
       "get": {
-        "tags": ["apis"],
+        "tags": [
+          "apis"
+        ],
         "summary": "Get API definition ( Post-Processed version )",
         "operationId": "getApiDefinition",
         "parameters": [
@@ -215,7 +257,9 @@
     },
     "/services": {
       "get": {
-        "tags": ["services"],
+        "tags": [
+          "services"
+        ],
         "summary": "Get a list of services handled by kusk-gateway",
         "description": "Returns the list of services available in the cluster that are related to kusk-gateway",
         "operationId": "getServices",
@@ -249,7 +293,9 @@
     },
     "/services/{namespace}/{name}": {
       "get": {
-        "tags": ["services"],
+        "tags": [
+          "services"
+        ],
         "summary": "Get details for a single service",
         "description": "Returns an object containing info about the service corresponding to the namespace and name",
         "operationId": "getService",
@@ -290,7 +336,9 @@
     },
     "/fleets": {
       "get": {
-        "tags": ["fleets"],
+        "tags": [
+          "fleets"
+        ],
         "summary": "Get a list of envoy fleets",
         "description": "Returns a list of envoy fleets that are available in the cluster",
         "operationId": "getEnvoyFleets",
@@ -324,7 +372,9 @@
     },
     "/fleets/{namespace}/{name}": {
       "get": {
-        "tags": ["fleets"],
+        "tags": [
+          "fleets"
+        ],
         "summary": "Get details for a single envoy fleet",
         "description": "Returns an object containing info about the envoy fleet corresponding to the namespace and name",
         "operationId": "getEnvoyFleet",
@@ -367,7 +417,9 @@
     },
     "/fleets/{namespace}/{name}/crd": {
       "get": {
-        "tags": ["fleets"],
+        "tags": [
+          "fleets"
+        ],
         "summary": "Get envoy fleet CRD",
         "operationId": "getEnvoyFleetCRD",
         "parameters": [
@@ -408,7 +460,9 @@
     },
     "/staticroutes": {
       "get": {
-        "tags": ["static routes"],
+        "tags": [
+          "static routes"
+        ],
         "summary": "Get a list of static routes",
         "description": "Returns a list of static routes",
         "operationId": "getStaticRoutes",
@@ -442,7 +496,9 @@
     },
     "/staticroutes/{namespace}/{name}": {
       "get": {
-        "tags": ["static routes"],
+        "tags": [
+          "static routes"
+        ],
         "summary": "Get details for a single static route",
         "description": "Returns an object containing info about the static route corresponding to the namespace and name",
         "operationId": "getStaticRoute",
@@ -485,7 +541,9 @@
     },
     "/staticroutes/{namespace}/{name}/crd": {
       "get": {
-        "tags": ["static routes"],
+        "tags": [
+          "static routes"
+        ],
         "summary": "Get static route CRD",
         "operationId": "getStaticRouteCRD",
         "parameters": [
@@ -529,7 +587,13 @@
     "schemas": {
       "ApiItem": {
         "type": "object",
-        "required": ["name", "namespace", "fleet", "service", "version"],
+        "required": [
+          "name",
+          "namespace",
+          "fleet",
+          "service",
+          "version"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -550,14 +614,22 @@
       },
       "ServiceItem": {
         "type": "object",
-        "required": ["name", "status", "namespace", "ports"],
+        "required": [
+          "name",
+          "status",
+          "namespace",
+          "ports"
+        ],
         "properties": {
           "name": {
             "type": "string"
           },
           "status": {
             "type": "string",
-            "enum": ["available", "unavailable"]
+            "enum": [
+              "available",
+              "unavailable"
+            ]
           },
           "namespace": {
             "type": "string"
@@ -572,7 +644,10 @@
       },
       "EnvoyFleetItem": {
         "type": "object",
-        "required": ["name", "namespace"],
+        "required": [
+          "name",
+          "namespace"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -602,7 +677,10 @@
       },
       "StaticRouteItem": {
         "type": "object",
-        "required": ["name", "namespace"],
+        "required": [
+          "name",
+          "namespace"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -614,7 +692,10 @@
       },
       "ApiItem_Fleet": {
         "type": "object",
-        "required": ["name", "namespace"],
+        "required": [
+          "name",
+          "namespace"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -626,7 +707,13 @@
       },
       "ServicePortItem": {
         "type": "object",
-        "required": ["name", "nodePort", "port", "protocol", "targetPort"],
+        "required": [
+          "name",
+          "nodePort",
+          "port",
+          "protocol",
+          "targetPort"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -647,7 +734,10 @@
       },
       "StaticRouteItem_Fleet": {
         "type": "object",
-        "required": ["name", "namespace"],
+        "required": [
+          "name",
+          "namespace"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -659,7 +749,10 @@
       },
       "ApiItem_Service": {
         "type": "object",
-        "required": ["name", "namespace"],
+        "required": [
+          "name",
+          "namespace"
+        ],
         "properties": {
           "name": {
             "type": "string"

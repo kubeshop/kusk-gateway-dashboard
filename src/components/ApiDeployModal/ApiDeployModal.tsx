@@ -49,7 +49,7 @@ const ApiDeployModal: React.FC = () => {
         'x-kusk': {...apiContent['x-kusk'], upstream: {...values.upstream}},
       };
 
-      console.log(deployedApiContent);
+      console.log(JSON.stringify(YAML.stringify(deployedApiContent)));
     });
   };
 
