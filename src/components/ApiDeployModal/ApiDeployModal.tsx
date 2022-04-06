@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 
-import {Form, Modal, Select, Skeleton, Steps, Tag} from 'antd';
+import {Button, Form, Modal, Select, Skeleton, Steps, Tag} from 'antd';
 
 import YAML from 'yaml';
 
@@ -18,7 +18,7 @@ const {Option} = Select;
 const ApiDeployModal: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const [activeStep, setActiveStep] = useState<number>(1);
+  const [activeStep, setActiveStep] = useState<number>(0);
   const [apiContent, setApiContent] = useState<{[key: string]: any}>();
   const [selectedService, setSelectedService] = useState<ServiceItem>();
 
@@ -35,29 +35,21 @@ const ApiDeployModal: React.FC = () => {
   const [form] = Form.useForm();
 
   const onCancelHandler = () => {
-    if (activeStep) {
-      setActiveStep(0);
-    } else {
-      dispatch(closeApiDeployModal());
-    }
+    dispatch(closeApiDeployModal());
   };
 
-  const onOkHandler = () => {
-    if (activeStep) {
-      form.validateFields().then(values => {
-        console.log(apiContent);
-        console.log(values);
-      });
+  const onDeployHandler = () => {
+    form.validateFields().then(values => {
+      console.log(apiContent);
+      console.log(values);
+    });
+  };
 
-      //   const apiContent = YAML.parse(JSON.parse(JSON.stringify(values.content)));
-
-      //   console.log(apiContent);
-    } else {
-      form.validateFields().then(values => {
-        setApiContent(YAML.parse(JSON.parse(JSON.stringify(values.content))));
-        setActiveStep(1);
-      });
-    }
+  const onNextHandler = () => {
+    form.validateFields().then(values => {
+      setApiContent(YAML.parse(JSON.parse(JSON.stringify(values.content))));
+      setActiveStep(1);
+    });
   };
 
   const onServiceSelectClearHandler = () => {
@@ -102,22 +94,24 @@ const ApiDeployModal: React.FC = () => {
 
   return (
     <Modal
-      cancelText={activeStep ? 'Back' : 'Cancel'}
-      // footer={
-      //   activeStep ? (
-      //     <>
-      //       <Button>Back</Button> <Button>Deploy</Button>
-      //     </>
-      //   ) : (
-      //     <Button>Next</Button>
-      //   )
-      // }
+      footer={
+        activeStep ? (
+          <>
+            <Button onClick={() => setActiveStep(0)}>Back</Button>
+            <Button type="primary" onClick={onDeployHandler}>
+              Deploy
+            </Button>
+          </>
+        ) : (
+          <Button type="primary" onClick={onNextHandler}>
+            Next
+          </Button>
+        )
+      }
       title="Deploy New API"
       visible
       width="800px"
       onCancel={onCancelHandler}
-      okText={activeStep ? 'Deploy' : 'Next'}
-      onOk={onOkHandler}
     >
       <S.Container>
         <S.StepsContainer>
@@ -127,7 +121,7 @@ const ApiDeployModal: React.FC = () => {
           </Steps>
         </S.StepsContainer>
 
-        <Form form={form} layout="vertical">
+        <Form form={form} initialValues={{content: ''}} layout="vertical">
           {activeStep === 0 ? (
             <Form.Item
               name="content"
