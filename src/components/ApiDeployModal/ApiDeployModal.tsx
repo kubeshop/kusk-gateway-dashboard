@@ -39,9 +39,17 @@ const ApiDeployModal: React.FC = () => {
   };
 
   const onDeployHandler = () => {
+    if (!apiContent) {
+      return;
+    }
+
     form.validateFields().then(values => {
-      console.log(apiContent);
-      console.log(values);
+      const deployedApiContent = {
+        ...apiContent,
+        'x-kusk': {...apiContent['x-kusk'], upstream: {...values.upstream}},
+      };
+
+      console.log(deployedApiContent);
     });
   };
 
