@@ -54,4 +54,6 @@ export const StepsContainer = styled.div`
   ${GlobalScrollbarStyle};
 `;
 
-export const Textarea = styled(Input.TextArea)``;
+export const Textarea = styled(Input.TextArea)`
+  ${GlobalScrollbarStyle}
+`;

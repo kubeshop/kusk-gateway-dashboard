@@ -82,6 +82,24 @@ const ApiDeployModal: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedService]);
 
+  useEffect(() => {
+    if (!activeStep || !apiContent) {
+      return;
+    }
+
+    const upstreamService = apiContent['x-kusk']?.upstream?.service;
+
+    if (upstreamService) {
+      form.setFieldsValue({
+        upstream: {
+          service: {name: upstreamService.name, namespace: upstreamService.namespace, port: upstreamService.port},
+        },
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeStep]);
+
   return (
     <Modal
       cancelText={activeStep ? 'Back' : 'Cancel'}
