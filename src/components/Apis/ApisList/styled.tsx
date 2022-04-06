@@ -32,6 +32,6 @@ export const Select = styled(RawSelect)`
 export const TitleFiltersContainer = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, minmax(150px, 300px));
+  grid-template-columns: repeat(2, minmax(150px, 250px));
   grid-gap: 20px;
 `;
