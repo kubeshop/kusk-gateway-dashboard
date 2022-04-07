@@ -11,41 +11,45 @@ import {SIDEBAR_WIDTH} from '@constants/constants';
 import Colors from '@styles/colors';
 
 export const Logo = styled.img`
-  height: 50px;
+  height: 36px;
   cursor: pointer;
 `;
 
 export const GithubFilled = styled(RawGithubFilled)`
   color: ${Colors.whitePure};
-  font-size: 24px;
+  font-size: 18px;
   cursor: pointer;
 `;
 
-export const IconContainer = styled.div<{$border?: boolean}>`
+export const IconContainer = styled.div`
   display: flex;
   justify-content: center;
-  padding: 19px 0;
+  padding: 8px 0;
+  opacity: 0.5;
+  transition: all 0.2s ease-in;
 
-  ${({$border}) => `border-bottom: ${$border ? `1px solid ${Colors.grey4}` : ''}`}
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 export const OptionsContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  border: 1px solid ${Colors.grey4};
   margin-top: auto;
+  padding-bottom: 16px;
 `;
 
 export const QuestionCircleFilled = styled(RawQuestionsCircleFilled)`
   color: ${Colors.whitePure};
-  font-size: 24px;
+  font-size: 18px;
   cursor: pointer;
 `;
 
 export const SettingsFilled = styled(RawSettingFilled)`
   color: ${Colors.whitePure};
-  font-size: 24px;
+  font-size: 18px;
   cursor: pointer;
 `;
 

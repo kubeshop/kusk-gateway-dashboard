@@ -11,7 +11,7 @@ enum Colors {
 
   cyan2 = '#9AF2EC',
   cyan1 = '#5CDBD3',
-  cyan0 = '#32BAB5',
+  cyan0 = '#135452',
 
   magenta2 = '#CB2B83',
   magenta1 = '#551C3B',
