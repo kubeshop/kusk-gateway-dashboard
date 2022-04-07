@@ -185,7 +185,7 @@ const ApiDeployModal: React.FC = () => {
                   },
                 ]}
               >
-                <S.Textarea rows={20} placeholder="Enter OpenAPI Spec in YAML/JSON format" />
+                <S.Textarea rows={10} placeholder="Enter OpenAPI Spec in YAML/JSON format" />
               </Form.Item>
             </>
           ) : (
