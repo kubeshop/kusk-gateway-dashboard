@@ -4,7 +4,7 @@ import {Button, Form, Modal, Select, Skeleton, Steps, Tag} from 'antd';
 
 import YAML from 'yaml';
 
-import {ApiItem, ServiceItem, useGetServices} from '@models/api';
+import {ApiItem, ServiceItem, useDeployApi, useGetServices} from '@models/api';
 
 import {useAppDispatch} from '@redux/hooks';
 import {closeApiDeployModal} from '@redux/reducers/ui';
@@ -27,6 +27,8 @@ const ApiDeployModal: React.FC<IProps> = props => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [apiContent, setApiContent] = useState<{name: string; namespace: string; openapi: {[key: string]: any}}>();
   const [selectedService, setSelectedService] = useState<ServiceItem>();
+
+  const {mutate: deployAPI} = useDeployApi({});
 
   const selectedServicePorts = useMemo(() => {
     if (!selectedService) {
@@ -61,7 +63,7 @@ const ApiDeployModal: React.FC<IProps> = props => {
         openapi: YAML.stringify(deployedOpenApiSpec),
       };
 
-      console.log(body);
+      deployAPI(body).then(response => console.log(response));
     });
   };
 
