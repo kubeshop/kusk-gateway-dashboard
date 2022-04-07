@@ -16,13 +16,13 @@ const Sidebar = () => {
       <DashboardMenu />
 
       <S.OptionsContainer>
-        <S.IconContainer $border>
+        <S.IconContainer>
           <Link to="/settings">
             <S.SettingsFilled />
           </Link>
         </S.IconContainer>
-
-        <S.IconContainer $border>
+        
+        <S.IconContainer>
           <a href="https://github.com/kubeshop/kusk-gateway" target="_blank" rel="noopener noreferrer">
             <S.GithubFilled />
           </a>
