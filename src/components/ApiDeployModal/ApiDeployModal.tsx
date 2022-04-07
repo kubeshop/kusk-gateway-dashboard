@@ -6,7 +6,7 @@ import YAML from 'yaml';
 
 import {ApiItem, ServiceItem, useDeployApi, useGetServices} from '@models/api';
 
-import {useAppDispatch} from '@redux/hooks';
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {closeApiDeployModal} from '@redux/reducers/ui';
 
 import {ErrorLabel} from '@components/AntdCustom';
@@ -15,14 +15,9 @@ import * as S from './styled';
 
 const {Option} = Select;
 
-interface IProps {
-  apis: ApiItem[];
-}
-
-const ApiDeployModal: React.FC<IProps> = props => {
-  const {apis} = props;
-
+const ApiDeployModal: React.FC = () => {
   const dispatch = useAppDispatch();
+  const apis = useAppSelector(state => state.main.apis);
 
   const [activeStep, setActiveStep] = useState<number>(0);
   const [apiContent, setApiContent] = useState<{name: string; namespace: string; openapi: {[key: string]: any}}>();
@@ -63,7 +58,9 @@ const ApiDeployModal: React.FC<IProps> = props => {
         openapi: YAML.stringify(deployedOpenApiSpec),
       };
 
-      deployAPI(body).then(response => console.log(response));
+      deployAPI(body).then(response => {
+        console.log(response);
+      });
     });
   };
 

@@ -19,8 +19,11 @@ export const mainSlice = createSlice({
     selectStaticRoute: (state: Draft<MainState>, action: PayloadAction<StaticRouteItem | null>) => {
       state.selectedStaticRoute = action.payload;
     },
+    setApis: (state: Draft<MainState>, action: PayloadAction<ApiItem[]>) => {
+      state.apis = action.payload;
+    },
   },
 });
 
-export const {selectApi, selectEnvoyFleet, selectStaticRoute} = mainSlice.actions;
+export const {selectApi, selectEnvoyFleet, selectStaticRoute, setApis} = mainSlice.actions;
 export default mainSlice.reducer;
