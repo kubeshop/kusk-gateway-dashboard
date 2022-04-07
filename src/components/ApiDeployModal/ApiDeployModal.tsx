@@ -4,7 +4,7 @@ import {Button, Form, Modal, Select, Skeleton, Steps, Tag} from 'antd';
 
 import YAML from 'yaml';
 
-import {ServiceItem, useGetServices} from '@models/api';
+import {ApiItem, ServiceItem, useGetServices} from '@models/api';
 
 import {useAppDispatch} from '@redux/hooks';
 import {closeApiDeployModal} from '@redux/reducers/ui';
@@ -15,7 +15,13 @@ import * as S from './styled';
 
 const {Option} = Select;
 
-const ApiDeployModal: React.FC = () => {
+interface IProps {
+  apis: ApiItem[];
+}
+
+const ApiDeployModal: React.FC<IProps> = props => {
+  const {apis} = props;
+
   const dispatch = useAppDispatch();
 
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -63,7 +69,11 @@ const ApiDeployModal: React.FC = () => {
     form.validateFields().then(values => {
       const {name, namespace, openapi} = values;
 
-      setApiContent({name, namespace, openapi: YAML.parse(JSON.parse(JSON.stringify(openapi)))});
+      setApiContent({
+        name,
+        namespace: namespace || 'default',
+        openapi: YAML.parse(JSON.parse(JSON.stringify(openapi))),
+      });
       setActiveStep(1);
     });
   };
@@ -145,13 +155,28 @@ const ApiDeployModal: React.FC = () => {
           </Steps>
         </S.StepsContainer>
 
-        <Form form={form} initialValues={{content: ''}} layout="vertical">
+        <Form form={form} initialValues={{openapi: ''}} layout="vertical">
           {activeStep === 0 ? (
             <>
               <Form.Item
                 label="Name"
                 name="name"
-                rules={[{required: true, message: 'Please provide a name for the API!'}]}
+                rules={[
+                  {required: true, message: 'Please provide a name for the API!'},
+                  () => {
+                    return {
+                      validator(_, value) {
+                        const namespace = form.getFieldValue('namespace') || 'default';
+
+                        if (checkDuplicateAPI(apis, `${namespace}-${value}`)) {
+                          return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
+                        }
+
+                        return Promise.resolve();
+                      },
+                    };
+                  },
+                ]}
               >
                 <S.Input placeholder="Enter API name" type="text" />
               </Form.Item>
@@ -257,5 +282,8 @@ const ApiDeployModal: React.FC = () => {
     </Modal>
   );
 };
+
+const checkDuplicateAPI = (apis: ApiItem[], apiKey: string) =>
+  apis.find(api => `${api.namespace}-${api.name}` === apiKey);
 
 export default ApiDeployModal;

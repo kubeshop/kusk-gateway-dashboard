@@ -1,4 +1,4 @@
-import {Suspense, useMemo, useState} from 'react';
+import {Suspense, lazy, useMemo, useState} from 'react';
 
 import {Select, Skeleton, Tag, Tooltip} from 'antd';
 
@@ -11,7 +11,6 @@ import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
 import {openApiDeployModal, toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
 
-import {EnvoyFleetInfoModal} from '@components';
 import {ContentWrapper, ErrorLabel, ListTableTitleContainer, ListTableTitleLabel} from '@components/AntdCustom';
 
 import {getEnvoyFleetKey} from '@utils/envoyFleet';
@@ -20,11 +19,15 @@ import ApisListTable from './ApisListTable';
 
 import * as S from './styled';
 
+const ApiDeployModal = lazy(() => import('@components/ApiDeployModal/ApiDeployModal'));
+const EnvoyFleetInfoModal = lazy(() => import('@components/EnvoyFleetInfoModal/EnvoyFleetInfoModal'));
+
 const {Option} = Select;
 
 const ApisList: React.FC = () => {
   const dispatch = useAppDispatch();
   const envoyFleet = useAppSelector(state => state.ui.envoyFleetModal.envoyFleet);
+  const isApiDeployModalVisible = useAppSelector(state => state.ui.apiDeployModal.isOpen);
 
   const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
@@ -160,7 +163,9 @@ const ApisList: React.FC = () => {
         )}
       </ContentWrapper>
 
-      <Suspense fallback={null}>{envoyFleet && <EnvoyFleetInfoModal />}</Suspense>
+      <Suspense fallback={null}>
+        {envoyFleet && <EnvoyFleetInfoModal />} {isApiDeployModalVisible && data && <ApiDeployModal apis={data} />}
+      </Suspense>
     </>
   );
 };
