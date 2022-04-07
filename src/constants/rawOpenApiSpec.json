@@ -23,7 +23,8 @@
     "upstream": {
       "service": {
         "namespace": "default",
-        "name": "todo-backend"
+        "name": "todo-backend",
+        "port": 43
       }
     },
     "path": {

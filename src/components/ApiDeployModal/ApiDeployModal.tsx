@@ -181,11 +181,7 @@ const ApiDeployModal: React.FC<IProps> = props => {
                 <S.Input placeholder="Enter API name" type="text" />
               </Form.Item>
 
-              <Form.Item
-                label="Namespace"
-                name="namespace"
-                rules={[{required: true, message: 'Please provide a namespace for the API!'}]}
-              >
+              <Form.Item label="Namespace" name="namespace">
                 <S.Input placeholder="Enter API namespace" type="text" />
               </Form.Item>
 
