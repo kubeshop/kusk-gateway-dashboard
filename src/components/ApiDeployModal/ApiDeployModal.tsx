@@ -7,6 +7,7 @@ import YAML from 'yaml';
 import {ApiItem, ServiceItem, useDeployApi, useGetServices} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {setApis} from '@redux/reducers/main';
 import {closeApiDeployModal} from '@redux/reducers/ui';
 
 import {ErrorLabel} from '@components/AntdCustom';
@@ -30,7 +31,7 @@ const ApiDeployModal: React.FC = () => {
       return [];
     }
 
-    return selectedService.ports.map(port => port.port);
+    return selectedService.ports?.map(port => port.port);
   }, [selectedService]);
 
   const {data, error, loading} = useGetServices({});
@@ -58,9 +59,16 @@ const ApiDeployModal: React.FC = () => {
         openapi: YAML.stringify(deployedOpenApiSpec),
       };
 
-      deployAPI(body).then(response => {
-        console.log(response);
-      });
+      deployAPI(body)
+        .then((response: any) => {
+          const apiData: ApiItem = response;
+
+          dispatch(setApis([...apis, apiData]));
+          dispatch(closeApiDeployModal());
+        })
+        .catch(err => {
+          console.log(err.data);
+        });
     });
   };
 

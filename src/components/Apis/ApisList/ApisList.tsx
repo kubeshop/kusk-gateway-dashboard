@@ -7,7 +7,7 @@ import {EnvoyFleetInfoTooltip} from '@constants/tooltips';
 
 import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets} from '@models/api';
 
-import {useAppDispatch} from '@redux/hooks';
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi, setApis} from '@redux/reducers/main';
 import {openApiDeployModal, toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
 
@@ -23,6 +23,7 @@ const {Option} = Select;
 
 const ApisList: React.FC = () => {
   const dispatch = useAppDispatch();
+  const apis = useAppSelector(state => state.main.apis);
 
   const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
@@ -159,9 +160,9 @@ const ApisList: React.FC = () => {
       ) : error ? (
         <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
-        data && (
+        apis && (
           <>
-            <ApisListTable apis={data} /> <S.Button onClick={showApiDeployModalHandler}>Deploy new API</S.Button>
+            <ApisListTable apis={apis} /> <S.Button onClick={showApiDeployModalHandler}>Deploy new API</S.Button>
           </>
         )
       )}
