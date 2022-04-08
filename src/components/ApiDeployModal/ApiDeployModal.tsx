@@ -22,6 +22,7 @@ const ApiDeployModal: React.FC = () => {
 
   const [activeStep, setActiveStep] = useState<number>(0);
   const [apiContent, setApiContent] = useState<{name: string; namespace: string; openapi: {[key: string]: any}}>();
+  const [errorMessage, setErrorMessage] = useState<string>();
   const [selectedService, setSelectedService] = useState<ServiceItem>();
 
   const {mutate: deployAPI} = useDeployApi({});
@@ -67,7 +68,7 @@ const ApiDeployModal: React.FC = () => {
           dispatch(closeApiDeployModal());
         })
         .catch(err => {
-          console.log(err.data);
+          setErrorMessage(err.data);
         });
     });
   };
@@ -108,6 +109,8 @@ const ApiDeployModal: React.FC = () => {
   }, [selectedService]);
 
   useEffect(() => {
+    setErrorMessage('');
+
     if (!activeStep && apiContent) {
       form.setFieldsValue({
         name: apiContent.name,
@@ -162,125 +165,138 @@ const ApiDeployModal: React.FC = () => {
           </Steps>
         </S.StepsContainer>
 
-        <Form form={form} initialValues={{openapi: ''}} layout="vertical">
-          {activeStep === 0 ? (
-            <>
-              <Form.Item
-                label="Name"
-                name="name"
-                rules={[
-                  {required: true, message: 'Please provide a name for the API!'},
-                  () => {
-                    return {
-                      validator(_, value) {
-                        const namespace = form.getFieldValue('namespace') || 'default';
+        <div>
+          <Form
+            form={form}
+            initialValues={{openapi: ''}}
+            layout="vertical"
+            onValuesChange={() => {
+              if (errorMessage) {
+                setErrorMessage('');
+              }
+            }}
+          >
+            {activeStep === 0 ? (
+              <>
+                <Form.Item
+                  label="Name"
+                  name="name"
+                  rules={[
+                    {required: true, message: 'Please provide a name for the API!'},
+                    () => {
+                      return {
+                        validator(_, value) {
+                          const namespace = form.getFieldValue('namespace') || 'default';
 
-                        if (checkDuplicateAPI(apis, `${namespace}-${value}`)) {
-                          return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
-                        }
+                          if (checkDuplicateAPI(apis, `${namespace}-${value}`)) {
+                            return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
+                          }
 
-                        return Promise.resolve();
-                      },
-                    };
-                  },
-                ]}
-              >
-                <S.Input placeholder="Enter API name" type="text" />
-              </Form.Item>
-
-              <Form.Item label="Namespace" name="namespace">
-                <S.Input placeholder="Enter API namespace" type="text" />
-              </Form.Item>
-
-              <Form.Item
-                label="OpenAPI Spec"
-                name="openapi"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter your API content!',
-                  },
-                  () => {
-                    return {
-                      validator(_, value) {
-                        if (typeof YAML.parse(JSON.parse(JSON.stringify(value))) === 'object') {
                           return Promise.resolve();
-                        }
+                        },
+                      };
+                    },
+                  ]}
+                >
+                  <S.Input placeholder="Enter API name" type="text" />
+                </Form.Item>
 
-                        return Promise.reject(new Error('Please enter a valid API content!'));
-                      },
-                    };
-                  },
-                ]}
-              >
-                <S.Textarea rows={10} placeholder="Enter OpenAPI Spec in YAML/JSON format" />
-              </Form.Item>
-            </>
-          ) : (
-            <>
-              {loading ? (
-                <Skeleton.Button />
-              ) : error ? (
-                <ErrorLabel>{error.message}</ErrorLabel>
-              ) : (
-                data && (
-                  <Form.Item name="service" label="Cluster Services">
-                    <S.Select
-                      allowClear
-                      placeholder="Select service"
-                      showSearch
-                      onClear={onServiceSelectClearHandler}
-                      onSelect={(value: any, option: any) => {
-                        onServiceSelectHandler(option.service);
-                      }}
-                    >
-                      {data.map(serviceItem => (
-                        <Option key={`${serviceItem.namespace}-${serviceItem.name}`} service={serviceItem}>
-                          <Tag>{serviceItem.namespace}</Tag>
-                          {serviceItem.name}
+                <Form.Item label="Namespace" name="namespace">
+                  <S.Input placeholder="Enter API namespace" type="text" />
+                </Form.Item>
+
+                <Form.Item
+                  label="OpenAPI Spec"
+                  name="openapi"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter your API content!',
+                    },
+                    () => {
+                      return {
+                        validator(_, value) {
+                          if (typeof YAML.parse(JSON.parse(JSON.stringify(value))) === 'object') {
+                            return Promise.resolve();
+                          }
+
+                          return Promise.reject(new Error('Please enter a valid API content!'));
+                        },
+                      };
+                    },
+                  ]}
+                >
+                  <S.Textarea rows={10} placeholder="Enter OpenAPI Spec in YAML/JSON format" />
+                </Form.Item>
+              </>
+            ) : (
+              <>
+                {loading ? (
+                  <Skeleton.Button />
+                ) : error ? (
+                  <ErrorLabel>{error.message}</ErrorLabel>
+                ) : (
+                  data && (
+                    <Form.Item name="service" label="Cluster Services">
+                      <S.Select
+                        allowClear
+                        placeholder="Select service"
+                        showSearch
+                        onClear={onServiceSelectClearHandler}
+                        onSelect={(value: any, option: any) => {
+                          onServiceSelectHandler(option.service);
+                        }}
+                      >
+                        {data.map(serviceItem => (
+                          <Option key={`${serviceItem.namespace}-${serviceItem.name}`} service={serviceItem}>
+                            <Tag>{serviceItem.namespace}</Tag>
+                            {serviceItem.name}
+                          </Option>
+                        ))}
+                      </S.Select>
+                    </Form.Item>
+                  )
+                )}
+
+                <Form.Item
+                  label="Name"
+                  name={['upstream', 'service', 'name']}
+                  rules={[{required: true, message: 'Please enter a name!'}]}
+                >
+                  <S.Input disabled={Boolean(selectedService)} />
+                </Form.Item>
+
+                <Form.Item
+                  label="Namespace"
+                  name={['upstream', 'service', 'namespace']}
+                  rules={[{required: true, message: 'Please enter a namespace!'}]}
+                >
+                  <S.Input disabled={Boolean(selectedService)} />
+                </Form.Item>
+
+                <Form.Item
+                  label="Port"
+                  name={['upstream', 'service', 'port']}
+                  rules={[{required: true, message: `Please ${selectedService ? 'choose' : 'enter'} a valid port!`}]}
+                >
+                  {selectedService ? (
+                    <S.Select placeholder="Select port">
+                      {selectedServicePorts.map(port => (
+                        <Option key={port} value={port}>
+                          {port}
                         </Option>
                       ))}
                     </S.Select>
-                  </Form.Item>
-                )
-              )}
+                  ) : (
+                    <S.Input type="number" />
+                  )}
+                </Form.Item>
+              </>
+            )}
+          </Form>
 
-              <Form.Item
-                label="Name"
-                name={['upstream', 'service', 'name']}
-                rules={[{required: true, message: 'Please enter a name!'}]}
-              >
-                <S.Input disabled={Boolean(selectedService)} />
-              </Form.Item>
-
-              <Form.Item
-                label="Namespace"
-                name={['upstream', 'service', 'namespace']}
-                rules={[{required: true, message: 'Please enter a namespace!'}]}
-              >
-                <S.Input disabled={Boolean(selectedService)} />
-              </Form.Item>
-
-              <Form.Item
-                label="Port"
-                name={['upstream', 'service', 'port']}
-                rules={[{required: true, message: `Please ${selectedService ? 'choose' : 'enter'} a valid port!`}]}
-              >
-                {selectedService ? (
-                  <S.Select placeholder="Select port">
-                    {selectedServicePorts.map(port => (
-                      <Option key={port} value={port}>
-                        {port}
-                      </Option>
-                    ))}
-                  </S.Select>
-                ) : (
-                  <S.Input type="number" />
-                )}
-              </Form.Item>
-            </>
-          )}
-        </Form>
+          {errorMessage && <ErrorLabel>*{errorMessage}</ErrorLabel>}
+        </div>
       </S.Container>
     </Modal>
   );
