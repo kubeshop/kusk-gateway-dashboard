@@ -2,6 +2,9 @@ import {EnvoyFleetItem} from './api';
 import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from './dashboard';
 
 interface UiState {
+  apiDeployModal: {
+    isOpen: boolean;
+  };
   apiInfoActiveTab: ApiInfoTabs;
   dashboardPaneConfiguration: DashboardPaneConfiguration;
   envoyFleetInfoActiveTab: EnvoyFleetInfoTabs;

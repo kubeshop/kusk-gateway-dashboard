@@ -23,7 +23,8 @@
     "upstream": {
       "service": {
         "namespace": "default",
-        "name": "todo-backend"
+        "name": "todo-backend",
+        "port": 43
       }
     },
     "path": {
@@ -32,14 +33,6 @@
   },
   "paths": {
     "/todos/{id}": {
-      "x-kusk": {
-        "upstream": {
-          "service": {
-            "namespace": "default",
-            "name": "todo-backend"
-          }
-        }
-      },
       "get": {
         "responses": {
           "200": {

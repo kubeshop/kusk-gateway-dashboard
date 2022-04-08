@@ -2,12 +2,16 @@ import {MainState} from '@models/main';
 import {UiState} from '@models/ui';
 
 const initialMainState: MainState = {
+  apis: [],
   selectedApi: null,
   selectedEnvoyFleet: null,
   selectedStaticRoute: null,
 };
 
 const initialUiState: UiState = {
+  apiDeployModal: {
+    isOpen: false,
+  },
   apiInfoActiveTab: 'raw-api-spec',
   dashboardPaneConfiguration: {
     leftPaneWidth: 0.5,

@@ -88,6 +88,49 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": ["apis"],
+        "summary": "Deploy new API",
+        "description": "Deploys a new API to the cluster",
+        "operationId": "deployApi",
+        "requestBody": {
+          "description": "API content that needs to be deployed",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "openapi": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "API deployed"
+          },
+          "400": {
+            "description": "The content of the API is malformed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/apis/{namespace}/{name}": {
@@ -563,7 +606,10 @@
             "type": "string"
           },
           "ports": {
-            "$ref": "#/components/schemas/ServicePortItem"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServicePortItem"
+            }
           }
         }
       },
@@ -629,10 +675,10 @@
             "type": "string"
           },
           "nodePort": {
-            "type": "number"
+            "type": "integer"
           },
           "port": {
-            "type": "number"
+            "type": "integer"
           },
           "protocol": {
             "type": "string"

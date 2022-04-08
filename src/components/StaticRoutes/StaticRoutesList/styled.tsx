@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 export const Select = styled(RawSelect)`
   width: 100%;
-  max-width: 300px;
+  max-width: 250px;
   min-width: 150px;
 
   & .ant-select-selection-item {
