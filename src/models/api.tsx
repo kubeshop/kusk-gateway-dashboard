@@ -90,7 +90,9 @@ export const useGetApis = (props: UseGetApisProps) =>
   useGet<ApiItem[], unknown, GetApisQueryParams, void>(`/apis`, props);
 
 export interface DeployApiRequestBody {
-  [key: string]: any;
+  name?: string;
+  namespace?: string;
+  openapi?: string;
 }
 
 export type DeployApiProps = Omit<MutateProps<void, string, void, DeployApiRequestBody, void>, 'path' | 'verb'>;
