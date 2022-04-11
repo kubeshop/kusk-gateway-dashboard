@@ -1,6 +1,9 @@
-import {Suspense, lazy} from 'react';
+import {Suspense, lazy, useEffect} from 'react';
 
-import {useAppSelector} from '@redux/hooks';
+import {ServiceItem, useGetServices} from '@models/api';
+
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {setServices} from '@redux/reducers/main';
 
 import {ApisList, Dashboard} from '@components';
 
@@ -9,9 +12,34 @@ const ApiInfo = lazy(() => import('@components/Apis/ApiInfo/ApiInfo'));
 const EnvoyFleetInfoModal = lazy(() => import('@components/EnvoyFleetInfoModal/EnvoyFleetInfoModal'));
 
 const Apis: React.FC = () => {
+  const dispatch = useAppDispatch();
   const isApiDeployModalVisible = useAppSelector(state => state.ui.apiDeployModal.isOpen);
   const isEnvoyFleetInfoModalVisible = useAppSelector(state => state.ui.envoyFleetModal.envoyFleet);
   const selectedApi = useAppSelector(state => state.main.selectedApi);
+
+  const {data, error, loading} = useGetServices({});
+
+  useEffect(() => {
+    let items: ServiceItem[] = [];
+
+    if (loading) {
+      dispatch(setServices({items, isLoading: true}));
+      return;
+    }
+
+    if (error) {
+      dispatch(setServices({error: error.message, items, isLoading: true}));
+      return;
+    }
+
+    if (data) {
+      items = data;
+    }
+
+    dispatch(setServices({items, isLoading: false}));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, error, loading]);
 
   return (
     <>
