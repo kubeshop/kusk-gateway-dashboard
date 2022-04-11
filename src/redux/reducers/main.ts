@@ -1,6 +1,6 @@
 import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
 
-import {MainState} from 'src/models/main';
+import {MainState, ServicesData} from 'src/models/main';
 
 import {ApiItem, EnvoyFleetItem, StaticRouteItem} from '@models/api';
 
@@ -22,8 +22,11 @@ export const mainSlice = createSlice({
     setApis: (state: Draft<MainState>, action: PayloadAction<ApiItem[]>) => {
       state.apis = action.payload;
     },
+    setServices: (state: Draft<MainState>, action: PayloadAction<ServicesData>) => {
+      state.services = action.payload;
+    },
   },
 });
 
-export const {selectApi, selectEnvoyFleet, selectStaticRoute, setApis} = mainSlice.actions;
+export const {selectApi, selectEnvoyFleet, selectStaticRoute, setApis, setServices} = mainSlice.actions;
 export default mainSlice.reducer;
