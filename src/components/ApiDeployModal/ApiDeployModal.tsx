@@ -202,7 +202,15 @@ const ApiDeployModal: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item label="Namespace" name="namespace">
-                  <S.Input placeholder="Enter API namespace" type="text" />
+                  <S.Input
+                    placeholder="Enter API namespace"
+                    type="text"
+                    onChange={() => {
+                      if (form.getFieldValue('name')) {
+                        form.validateFields(['name']);
+                      }
+                    }}
+                  />
                 </Form.Item>
 
                 <Form.Item
