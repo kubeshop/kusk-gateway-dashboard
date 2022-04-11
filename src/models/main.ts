@@ -1,4 +1,10 @@
-import {ApiItem, EnvoyFleetItem, StaticRouteItem} from './api';
+import {ApiItem, EnvoyFleetItem, ServiceItem, StaticRouteItem} from './api';
+
+interface ServicesData {
+  isLoading: boolean;
+  items: ServiceItem[];
+  error?: string;
+}
 
 interface MainState {
   /** list of apis */
@@ -9,6 +15,8 @@ interface MainState {
   selectedEnvoyFleet: EnvoyFleetItem | null;
   /**  currently selected Static Route */
   selectedStaticRoute: StaticRouteItem | null;
+  /** list of services */
+  services: ServicesData;
 }
 
-export type {MainState};
+export type {MainState, ServicesData};

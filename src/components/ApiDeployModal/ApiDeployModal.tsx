@@ -4,7 +4,7 @@ import {Button, Form, Modal, Select, Skeleton, Steps, Tag} from 'antd';
 
 import YAML from 'yaml';
 
-import {ApiItem, ServiceItem, useDeployApi, useGetServices} from '@models/api';
+import {ApiItem, ServiceItem, useDeployApi} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setApis} from '@redux/reducers/main';
@@ -19,6 +19,7 @@ const {Option} = Select;
 const ApiDeployModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const apis = useAppSelector(state => state.main.apis);
+  const services = useAppSelector(state => state.main.services);
 
   const [activeStep, setActiveStep] = useState<number>(0);
   const [apiContent, setApiContent] = useState<{name: string; namespace: string; openapi: {[key: string]: any}}>();
@@ -34,8 +35,6 @@ const ApiDeployModal: React.FC = () => {
 
     return selectedService.ports?.map(port => port.port);
   }, [selectedService]);
-
-  const {data, error, loading} = useGetServices({});
 
   const [form] = Form.useForm();
 
@@ -202,7 +201,15 @@ const ApiDeployModal: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item label="Namespace" name="namespace">
-                  <S.Input placeholder="Enter API namespace" type="text" />
+                  <S.Input
+                    placeholder="Enter API namespace"
+                    type="text"
+                    onChange={() => {
+                      if (form.getFieldValue('name')) {
+                        form.validateFields(['name']);
+                      }
+                    }}
+                  />
                 </Form.Item>
 
                 <Form.Item
@@ -231,31 +238,29 @@ const ApiDeployModal: React.FC = () => {
               </>
             ) : (
               <>
-                {loading ? (
+                {services.isLoading ? (
                   <Skeleton.Button />
-                ) : error ? (
-                  <ErrorLabel>{error.message}</ErrorLabel>
+                ) : services.error ? (
+                  <ErrorLabel>{services.error}</ErrorLabel>
                 ) : (
-                  data && (
-                    <Form.Item name="service" label="Cluster Services">
-                      <S.Select
-                        allowClear
-                        placeholder="Select service"
-                        showSearch
-                        onClear={onServiceSelectClearHandler}
-                        onSelect={(value: any, option: any) => {
-                          onServiceSelectHandler(option.service);
-                        }}
-                      >
-                        {data.map(serviceItem => (
-                          <Option key={`${serviceItem.namespace}-${serviceItem.name}`} service={serviceItem}>
-                            <Tag>{serviceItem.namespace}</Tag>
-                            {serviceItem.name}
-                          </Option>
-                        ))}
-                      </S.Select>
-                    </Form.Item>
-                  )
+                  <Form.Item name="service" label="Cluster Services">
+                    <S.Select
+                      allowClear
+                      placeholder="Select service"
+                      showSearch
+                      onClear={onServiceSelectClearHandler}
+                      onSelect={(value: any, option: any) => {
+                        onServiceSelectHandler(option.service);
+                      }}
+                    >
+                      {services.items.map(serviceItem => (
+                        <Option key={`${serviceItem.namespace}-${serviceItem.name}`} service={serviceItem}>
+                          <Tag>{serviceItem.namespace}</Tag>
+                          {serviceItem.name}
+                        </Option>
+                      ))}
+                    </S.Select>
+                  </Form.Item>
                 )}
 
                 <Form.Item

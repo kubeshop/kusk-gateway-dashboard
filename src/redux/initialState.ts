@@ -6,6 +6,10 @@ const initialMainState: MainState = {
   selectedApi: null,
   selectedEnvoyFleet: null,
   selectedStaticRoute: null,
+  services: {
+    isLoading: true,
+    items: [],
+  },
 };
 
 const initialUiState: UiState = {

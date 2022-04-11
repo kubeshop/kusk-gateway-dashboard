@@ -1,8 +1,10 @@
+import {useMemo} from 'react';
+
 import {Skeleton} from 'antd';
 
-import {ApiItem, useGetService} from '@models/api';
+import {ApiItem} from '@models/api';
 
-import {useAppDispatch} from '@redux/hooks';
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
 
 import * as S from './ApisListTableServicesTag.styled';
@@ -17,17 +19,21 @@ const ApisListTableServicesTag: React.FC<IProps> = props => {
   const {api, apiKey, selectedApiKey} = props;
 
   const dispatch = useAppDispatch();
+  const services = useAppSelector(state => state.main.services);
 
-  const {data, error, loading} = useGetService({name: api.service.name, namespace: api.service.namespace});
+  const service = useMemo(
+    () => services.items.find(s => s.name === api.service.name && s.namespace === api.service.namespace),
+    [api.service.name, api.service.namespace, services.items]
+  );
 
   return (
     <S.Container>
-      {loading ? (
+      {services.isLoading ? (
         <Skeleton.Button />
-      ) : error || data?.status === 'unavailable' ? (
+      ) : services.error || service?.status === 'unavailable' ? (
         <S.FalseTag>Unavailable</S.FalseTag>
       ) : (
-        data?.status === 'available' && <S.TrueTag>Available</S.TrueTag>
+        service?.status === 'available' && <S.TrueTag>Available</S.TrueTag>
       )}
 
       <S.RightOutlined
