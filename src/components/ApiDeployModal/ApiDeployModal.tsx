@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 
-import {Button, Form, Modal, Select, Skeleton, Steps, Tag} from 'antd';
+import {Button, Form, Modal, Select, Skeleton, Steps, Tabs, Tag} from 'antd';
 
 import YAML from 'yaml';
 
@@ -14,16 +14,19 @@ import {ErrorLabel} from '@components/AntdCustom';
 
 import * as S from './styled';
 
+const {TabPane} = Tabs;
+
 const {Option} = Select;
 
 const ApiDeployModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const apis = useAppSelector(state => state.main.apis);
 
-  const [activeStep, setActiveStep] = useState<number>(0);
+  const [activeStep, setActiveStep] = useState<number>(1);
   const [apiContent, setApiContent] = useState<{name: string; namespace: string; openapi: {[key: string]: any}}>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [selectedService, setSelectedService] = useState<ServiceItem>();
+  const [upstreamReference, setUpstreamReference] = useState<string>('service');
 
   const {mutate: deployAPI} = useDeployApi({});
 
@@ -161,7 +164,7 @@ const ApiDeployModal: React.FC = () => {
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStep}>
             <S.Step title="API Content" />
-            <S.Step title="Upstream Service" />
+            <S.Step title="Kusk Extensions" />
           </Steps>
         </S.StepsContainer>
 
@@ -230,68 +233,111 @@ const ApiDeployModal: React.FC = () => {
                 </Form.Item>
               </>
             ) : (
-              <>
-                {loading ? (
-                  <Skeleton.Button />
-                ) : error ? (
-                  <ErrorLabel>{error.message}</ErrorLabel>
-                ) : (
-                  data && (
-                    <Form.Item name="service" label="Cluster Services">
-                      <S.Select
-                        allowClear
-                        placeholder="Select service"
-                        showSearch
-                        onClear={onServiceSelectClearHandler}
-                        onSelect={(value: any, option: any) => {
-                          onServiceSelectHandler(option.service);
-                        }}
-                      >
-                        {data.map(serviceItem => (
-                          <Option key={`${serviceItem.namespace}-${serviceItem.name}`} service={serviceItem}>
-                            <Tag>{serviceItem.namespace}</Tag>
-                            {serviceItem.name}
-                          </Option>
-                        ))}
-                      </S.Select>
+              <S.ExtensionContainer>
+                <S.ExtensionHeading>Upstream</S.ExtensionHeading>
+
+                <Tabs defaultActiveKey={upstreamReference} onChange={key => setUpstreamReference(key)}>
+                  <TabPane tab="Service" key="service">
+                    {loading ? (
+                      <Skeleton.Button />
+                    ) : error ? (
+                      <ErrorLabel>{error.message}</ErrorLabel>
+                    ) : (
+                      data && (
+                        <Form.Item label="Cluster service" name="service">
+                          <S.Select
+                            allowClear
+                            placeholder="Select cluster service"
+                            showSearch
+                            onClear={onServiceSelectClearHandler}
+                            onSelect={(value: any, option: any) => {
+                              onServiceSelectHandler(option.service);
+                            }}
+                          >
+                            {data.map(serviceItem => (
+                              <Option key={`${serviceItem.namespace}-${serviceItem.name}`} service={serviceItem}>
+                                <Tag>{serviceItem.namespace}</Tag>
+                                {serviceItem.name}
+                              </Option>
+                            ))}
+                          </S.Select>
+                        </Form.Item>
+                      )
+                    )}
+
+                    <Form.Item
+                      label="Name"
+                      name={['upstream', 'service', 'name']}
+                      rules={[{required: true, message: 'Please enter name!'}]}
+                    >
+                      <S.Input disabled={Boolean(selectedService)} />
                     </Form.Item>
-                  )
-                )}
 
+                    <Form.Item
+                      label="Namespace"
+                      name={['upstream', 'service', 'namespace']}
+                      rules={[{required: true, message: 'Please enter namespace!'}]}
+                    >
+                      <S.Input disabled={Boolean(selectedService)} />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Port"
+                      name={['upstream', 'service', 'port']}
+                      rules={[
+                        {required: true, message: `Please ${selectedService ? 'choose' : 'enter'} a valid port!`},
+                      ]}
+                    >
+                      {selectedService ? (
+                        <S.Select placeholder="Select port">
+                          {selectedServicePorts.map(port => (
+                            <Option key={port} value={port}>
+                              {port}
+                            </Option>
+                          ))}
+                        </S.Select>
+                      ) : (
+                        <S.Input type="number" />
+                      )}
+                    </Form.Item>
+                  </TabPane>
+
+                  <TabPane tab="Host" key="host">
+                    <Form.Item
+                      label="Hostname"
+                      name={['upstream', 'host', 'hostname']}
+                      rules={[{required: true, message: 'Please enter hostname!'}]}
+                    >
+                      <S.Input placeholder="e.g. example.com" />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Port"
+                      name={['upstream', 'host', 'port']}
+                      rules={[{required: true, message: 'Please enter port!'}]}
+                    >
+                      <S.Input type="number" />
+                    </Form.Item>
+                  </TabPane>
+                </Tabs>
+
+                <S.ExtensionSubHeading>Rewrite</S.ExtensionSubHeading>
                 <Form.Item
-                  label="Name"
-                  name={['upstream', 'service', 'name']}
-                  rules={[{required: true, message: 'Please enter a name!'}]}
+                  label="Pattern"
+                  name={['upstream', 'rewrite', 'rewrite_regex', 'pattern']}
+                  rules={[{required: true, message: 'Please enter pattern!'}]}
                 >
-                  <S.Input disabled={Boolean(selectedService)} />
+                  <S.Input />
                 </Form.Item>
 
                 <Form.Item
-                  label="Namespace"
-                  name={['upstream', 'service', 'namespace']}
-                  rules={[{required: true, message: 'Please enter a namespace!'}]}
+                  label="Substitution"
+                  name={['upstream', 'rewrite', 'rewrite_regex', 'substitution']}
+                  rules={[{required: true, message: 'Please enter substitution!'}]}
                 >
-                  <S.Input disabled={Boolean(selectedService)} />
+                  <S.Input />
                 </Form.Item>
-
-                <Form.Item
-                  label="Port"
-                  name={['upstream', 'service', 'port']}
-                  rules={[{required: true, message: `Please ${selectedService ? 'choose' : 'enter'} a valid port!`}]}
-                >
-                  {selectedService ? (
-                    <S.Select placeholder="Select port">
-                      {selectedServicePorts.map(port => (
-                        <Option key={port} value={port}>
-                          {port}
-                        </Option>
-                      ))}
-                    </S.Select>
-                  ) : (
-                    <S.Input type="number" />
-                  )}
-                </Form.Item>
-              </>
+              </S.ExtensionContainer>
             )}
           </Form>
 
