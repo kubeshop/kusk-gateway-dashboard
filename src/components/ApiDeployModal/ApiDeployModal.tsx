@@ -181,7 +181,9 @@ const ApiDeployModal: React.FC = () => {
                   label="Name"
                   name="name"
                   rules={[
-                    {required: true, message: 'Please provide a name for the API!'},
+                    {required: true, message: 'Enter API name!'},
+                    {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern!'},
+                    {max: 63, type: 'string', message: 'Name is too long!'},
                     () => {
                       return {
                         validator(_, value) {
