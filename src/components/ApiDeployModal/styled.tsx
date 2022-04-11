@@ -26,10 +26,6 @@ export const ExtensionContainer = styled.div`
   margin-bottom: 10px;
 `;
 
-export const ExtensionHeading = styled.h3`
-  font-size: 18px;
-`;
-
 export const ExtensionSubHeading = styled.h4`
   font-size: 16px;
 `;

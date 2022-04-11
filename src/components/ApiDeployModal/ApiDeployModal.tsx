@@ -163,7 +163,7 @@ const ApiDeployModal: React.FC = () => {
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStep}>
             <S.Step title="API Content" />
-            <S.Step title="Kusk Extensions" />
+            <S.Step title="Upstream" />
           </Steps>
         </S.StepsContainer>
 
@@ -243,8 +243,6 @@ const ApiDeployModal: React.FC = () => {
               </>
             ) : (
               <S.ExtensionContainer>
-                <S.ExtensionHeading>Upstream</S.ExtensionHeading>
-
                 <Tabs defaultActiveKey={upstreamReference} onChange={key => setUpstreamReference(key)}>
                   <TabPane tab="Service" key="service">
                     {services.isLoading ? (
