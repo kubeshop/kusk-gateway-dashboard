@@ -12,6 +12,7 @@ import {ErrorLabel} from '@components/AntdCustom';
 
 import ApiContent from './ApiContent';
 import Hosts from './Hosts';
+import QOS from './QOS';
 import Upstream from './Upstream';
 
 import * as S from './styled';
@@ -93,8 +94,10 @@ const ApiDeployModal: React.FC = () => {
 
         if (upstreamReference === 'service') {
           delete openApiSpec['x-kusk'].upstream.host;
+          openApiSpec['x-kusk'].upstream.service.port = parseInt(upstream.service.port, 10);
         } else {
           delete openApiSpec['x-kusk'].upstream.service;
+          openApiSpec['x-kusk'].upstream.host.port = parseInt(upstream.host.port, 10);
         }
 
         if (!pattern && !substitution) {
@@ -110,14 +113,27 @@ const ApiDeployModal: React.FC = () => {
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], hosts}};
 
-        if (!hosts.length) {
+        if (!hosts?.length) {
           delete openApiSpec['x-kusk'].hosts;
         }
 
-        setApiContent({
-          ...apiContent,
-          openapi: openApiSpec,
-        });
+        setApiContent({...apiContent, openapi: openApiSpec});
+      }
+
+      // qos extension
+      if (activeStep === 3) {
+        const {qos} = values;
+        qos['idle_timeout'] = parseInt(qos['idle_timeout'], 10);
+        qos['retries'] = parseInt(qos['retries'], 10);
+        qos['request_timeout'] = parseInt(qos['request_timeout'], 10);
+
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], qos}};
+
+        if (!qos['idle_timeout'] && !qos.retries && !qos['request_timeout']) {
+          delete openApiSpec['x-kusk'].qos;
+        }
+
+        setApiContent({...apiContent, openapi: openApiSpec});
       }
 
       setActiveStep(activeStep + 1);
@@ -162,6 +178,7 @@ const ApiDeployModal: React.FC = () => {
             <S.Step title="API Content" />
             <S.Step title="Upstream" />
             <S.Step title="Hosts" />
+            <S.Step title="QOS" />
           </Steps>
         </S.StepsContainer>
 
@@ -186,8 +203,10 @@ const ApiDeployModal: React.FC = () => {
                   reference={upstreamReference}
                   setReference={reference => setUpstreamReference(reference)}
                 />
-              ) : (
+              ) : activeStep === 2 ? (
                 <Hosts form={form} openApiSpec={apiContent.openapi} />
+              ) : (
+                <QOS form={form} openApiSpec={apiContent.openapi} />
               )
             ) : null}
           </Form>
