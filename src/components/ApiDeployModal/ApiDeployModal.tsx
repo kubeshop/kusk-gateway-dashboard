@@ -11,6 +11,7 @@ import {closeApiDeployModal} from '@redux/reducers/ui';
 import {ErrorLabel} from '@components/AntdCustom';
 
 import ApiContent from './ApiContent';
+import Hosts from './Hosts';
 import Upstream from './Upstream';
 
 import * as S from './styled';
@@ -83,6 +84,7 @@ const ApiDeployModal: React.FC = () => {
         return;
       }
 
+      // upstream extension
       if (activeStep === 1) {
         const {upstream} = values;
         const {pattern, substitution} = upstream['rewrite']['rewrite_regex'];
@@ -98,11 +100,31 @@ const ApiDeployModal: React.FC = () => {
         if (!pattern && !substitution) {
           delete openApiSpec['x-kusk'].upstream.rewrite;
         }
+
+        setApiContent({...apiContent, openapi: openApiSpec});
+      }
+
+      // hosts extension
+      if (activeStep === 2) {
+        const {hosts} = values;
+
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], hosts}};
+
+        if (!hosts.length) {
+          delete openApiSpec['x-kusk'].hosts;
+        }
+
+        setApiContent({
+          ...apiContent,
+          openapi: openApiSpec,
+        });
       }
 
       setActiveStep(activeStep + 1);
     });
   };
+
+  console.log(apiContent);
 
   const onBackHandler = () => {
     setActiveStep(activeStep - 1);
@@ -139,6 +161,7 @@ const ApiDeployModal: React.FC = () => {
           <Steps direction="vertical" current={activeStep}>
             <S.Step title="API Content" />
             <S.Step title="Upstream" />
+            <S.Step title="Hosts" />
           </Steps>
         </S.StepsContainer>
 
@@ -155,16 +178,18 @@ const ApiDeployModal: React.FC = () => {
           >
             {activeStep === 0 ? (
               <ApiContent apiContent={apiContent} form={form} />
-            ) : (
-              apiContent && (
+            ) : apiContent ? (
+              activeStep === 1 ? (
                 <Upstream
                   form={form}
                   openApiSpec={apiContent.openapi}
                   reference={upstreamReference}
                   setReference={reference => setUpstreamReference(reference)}
                 />
+              ) : (
+                <Hosts form={form} openApiSpec={apiContent.openapi} />
               )
-            )}
+            ) : null}
           </Form>
 
           {errorMessage && <ErrorLabel>*{errorMessage}</ErrorLabel>}

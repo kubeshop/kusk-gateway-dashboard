@@ -1,4 +1,4 @@
-import {Input as RawInput, Select as RawSelect, Steps} from 'antd';
+import {Input as RawInput, Select as RawSelect, Space as RawSpace, Steps} from 'antd';
 
 import styled from 'styled-components';
 
@@ -28,10 +28,20 @@ export const ExtensionSubHeading = styled.h4`
 
 export const Input = styled(RawInput)`
   background-color: ${Colors.grey2};
+  width: 100%;
 `;
 
 export const Select = styled(RawSelect)`
   background-color: ${Colors.grey2};
+`;
+
+export const Space = styled(RawSpace)`
+  display: flex;
+  margin-bottom: 10px;
+
+  & .ant-space-item:first-child {
+    width: 100%;
+  }
 `;
 
 export const Step = styled(Steps.Step)`
