@@ -16,15 +16,16 @@ const {Option} = Select;
 interface IProps {
   form: FormInstance<any>;
   openApiSpec: {[key: string]: any};
+  reference: string;
+  setReference: (reference: string) => void;
 }
 
 const Upstream: React.FC<IProps> = props => {
-  const {form, openApiSpec} = props;
+  const {form, openApiSpec, reference, setReference} = props;
 
   const services = useAppSelector(state => state.main.services);
 
   const [selectedService, setSelectedService] = useState<ServiceItem>();
-  const [upstreamReference, setUpstreamReference] = useState<string>('service');
 
   const selectedServicePorts = useMemo(() => {
     if (!selectedService) {
@@ -45,16 +46,33 @@ const Upstream: React.FC<IProps> = props => {
 
   useEffect(() => {
     const upstreamService = openApiSpec['x-kusk']?.upstream?.service;
+    const upstreamHost = openApiSpec['x-kusk']?.upstream?.host;
 
-    if (!upstreamService) {
+    if (upstreamService) {
+      form.setFieldsValue({
+        upstream: {
+          service: {name: upstreamService.name, namespace: upstreamService.namespace, port: upstreamService.port},
+        },
+      });
+
+      if (reference === 'host') {
+        setReference('service');
+      }
+
       return;
     }
 
-    form.setFieldsValue({
-      upstream: {
-        service: {name: upstreamService.name, namespace: upstreamService.namespace, port: upstreamService.port},
-      },
-    });
+    if (upstreamHost) {
+      form.setFieldsValue({
+        upstream: {
+          host: {hostname: upstreamHost.hostname, port: upstreamHost.port},
+        },
+      });
+
+      if (reference === 'service') {
+        setReference('host');
+      }
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openApiSpec]);
@@ -73,7 +91,7 @@ const Upstream: React.FC<IProps> = props => {
 
   return (
     <>
-      <Tabs defaultActiveKey={upstreamReference} onChange={key => setUpstreamReference(key)}>
+      <Tabs defaultActiveKey="service" activeKey={reference} onChange={key => setReference(key)}>
         <TabPane tab="Service" key="service">
           {services.isLoading ? (
             <Skeleton.Button />
@@ -105,7 +123,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'service', 'name']}
             rules={[
               {
-                required: requiredUpstreamReference(upstreamReference, 'service'),
+                required: requiredUpstreamReference(reference, 'service'),
                 message: 'Please enter name!',
               },
             ]}
@@ -118,7 +136,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'service', 'namespace']}
             rules={[
               {
-                required: requiredUpstreamReference(upstreamReference, 'service'),
+                required: requiredUpstreamReference(reference, 'service'),
                 message: 'Please enter namespace!',
               },
             ]}
@@ -131,7 +149,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'service', 'port']}
             rules={[
               {
-                required: requiredUpstreamReference(upstreamReference, 'service'),
+                required: requiredUpstreamReference(reference, 'service'),
                 message: `Please ${selectedService ? 'choose' : 'enter'} a valid port!`,
               },
             ]}
@@ -156,7 +174,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'host', 'hostname']}
             rules={[
               {
-                required: requiredUpstreamReference(upstreamReference, 'host'),
+                required: requiredUpstreamReference(reference, 'host'),
                 message: 'Please enter hostname!',
               },
             ]}
@@ -167,7 +185,7 @@ const Upstream: React.FC<IProps> = props => {
           <Form.Item
             label="Port"
             name={['upstream', 'host', 'port']}
-            rules={[{required: requiredUpstreamReference(upstreamReference, 'host'), message: 'Please enter port!'}]}
+            rules={[{required: requiredUpstreamReference(reference, 'host'), message: 'Please enter port!'}]}
           >
             <S.Input type="number" />
           </Form.Item>

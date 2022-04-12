@@ -21,6 +21,7 @@ const ApiDeployModal: React.FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [apiContent, setApiContent] = useState<{name: string; namespace: string; openapi: {[key: string]: any}}>();
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [upstreamReference, setUpstreamReference] = useState<string>('service');
 
   // const {mutate: deployAPI} = useDeployApi({});
 
@@ -82,31 +83,22 @@ const ApiDeployModal: React.FC = () => {
         return;
       }
 
-      // upstream
-      // if (activeStep === 1) {
-      //   const {upstream} = values;
-      //   const {pattern, substitution} = upstream.rewrite?.['rewrite_regex'];
+      if (activeStep === 1) {
+        const {upstream} = values;
+        const {pattern, substitution} = upstream['rewrite']['rewrite_regex'];
 
-      //   let openApiSpec = {...apiContent.openapi};
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], upstream}};
 
-      //   if (pattern) {
-      //     assignNestedProperty(openApiSpec, ['x-kusk', 'upstream', 'rewrite', 'rewrite_regex', 'pattern'], pattern);
-      //   }
+        if (upstreamReference === 'service') {
+          delete openApiSpec['x-kusk'].upstream.host;
+        } else {
+          delete openApiSpec['x-kusk'].upstream.service;
+        }
 
-      //   if (substitution) {
-      //     assignNestedProperty(
-      //       openApiSpec,
-      //       ['x-kusk', 'upstream', 'rewrite', 'rewrite_regex', 'substitution'],
-      //       substitution
-      //     );
-      //   }
-
-      //   console.log(values);
-
-      //   if (upstreamReference === 'service') {
-      //     openApiSpec['x-kusk'] = {...openApiSpec['x-kusk'], upstream: {...values.upstream}};
-      //   }
-      // }
+        if (!pattern && !substitution) {
+          delete openApiSpec['x-kusk'].upstream.rewrite;
+        }
+      }
 
       setActiveStep(activeStep + 1);
     });
@@ -164,7 +156,14 @@ const ApiDeployModal: React.FC = () => {
             {activeStep === 0 ? (
               <ApiContent apiContent={apiContent} form={form} />
             ) : (
-              apiContent && <Upstream form={form} openApiSpec={apiContent.openapi} />
+              apiContent && (
+                <Upstream
+                  form={form}
+                  openApiSpec={apiContent.openapi}
+                  reference={upstreamReference}
+                  setReference={reference => setUpstreamReference(reference)}
+                />
+              )
             )}
           </Form>
 
