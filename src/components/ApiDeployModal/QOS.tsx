@@ -19,13 +19,7 @@ const QOS: React.FC<IProps> = props => {
       return;
     }
 
-    form.setFieldsValue({
-      qos: {
-        idle_timeout: qos['idle_timeout'],
-        retries: qos['retries'],
-        request_timeout: qos['request_timeout'],
-      },
-    });
+    form.setFieldsValue({qos});
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openApiSpec]);

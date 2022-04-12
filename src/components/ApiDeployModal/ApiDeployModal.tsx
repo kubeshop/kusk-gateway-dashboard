@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 
 import {Button, Form, Modal, Steps} from 'antd';
 
@@ -12,6 +12,7 @@ import {ErrorLabel} from '@components/AntdCustom';
 
 import ApiContent from './ApiContent';
 import Hosts from './Hosts';
+import Path from './Path';
 import QOS from './QOS';
 import Upstream from './Upstream';
 
@@ -28,6 +29,17 @@ const ApiDeployModal: React.FC = () => {
   // const {mutate: deployAPI} = useDeployApi({});
 
   const [form] = Form.useForm();
+
+  const renderedNextButtonText: {[key: number]: string} = useMemo(
+    () => ({
+      0: 'Add Upstream',
+      1: 'Add Hosts',
+      2: 'Add QOS',
+      3: 'Add Path',
+      4: 'Deploy',
+    }),
+    []
+  );
 
   const onCancelHandler = () => {
     dispatch(closeApiDeployModal());
@@ -136,6 +148,19 @@ const ApiDeployModal: React.FC = () => {
         setApiContent({...apiContent, openapi: openApiSpec});
       }
 
+      // path extension
+      if (activeStep === 4) {
+        const {path} = values;
+
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
+
+        if (!path.prefix) {
+          delete openApiSpec['x-kusk'].path;
+        }
+
+        setApiContent({...apiContent, openapi: openApiSpec});
+      }
+
       setActiveStep(activeStep + 1);
     });
   };
@@ -163,7 +188,7 @@ const ApiDeployModal: React.FC = () => {
               }
             }}
           >
-            {activeStep === 5 ? 'Deploy' : 'Next'}
+            {renderedNextButtonText[activeStep]}
           </Button>
         </>
       }
@@ -179,6 +204,7 @@ const ApiDeployModal: React.FC = () => {
             <S.Step title="Upstream" />
             <S.Step title="Hosts" />
             <S.Step title="QOS" />
+            <S.Step title="Path" />
           </Steps>
         </S.StepsContainer>
 
@@ -205,8 +231,10 @@ const ApiDeployModal: React.FC = () => {
                 />
               ) : activeStep === 2 ? (
                 <Hosts form={form} openApiSpec={apiContent.openapi} />
-              ) : (
+              ) : activeStep === 3 ? (
                 <QOS form={form} openApiSpec={apiContent.openapi} />
+              ) : (
+                <Path form={form} openApiSpec={apiContent.openapi} />
               )
             ) : null}
           </Form>
