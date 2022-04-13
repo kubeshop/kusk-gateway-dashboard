@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 
-import {Form, FormInstance} from 'antd';
+import {Checkbox, Form, FormInstance} from 'antd';
 
 import YAML from 'yaml';
 
@@ -95,6 +95,10 @@ const ApiContent: React.FC<IProps> = props => {
         ]}
       >
         <S.Textarea rows={10} placeholder="Enter OpenAPI Spec in YAML/JSON format" />
+      </Form.Item>
+
+      <Form.Item name={['mocking', 'enabled']} valuePropName="checked">
+        <Checkbox>This is a mock API</Checkbox>
       </Form.Item>
     </>
   );

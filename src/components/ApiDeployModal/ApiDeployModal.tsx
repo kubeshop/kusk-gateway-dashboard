@@ -4,8 +4,10 @@ import {Button, Form, Modal, Steps, Tabs} from 'antd';
 
 import YAML from 'yaml';
 
-import {useAppDispatch} from '@redux/hooks';
-// import {setApis} from '@redux/reducers/main';
+import {ApiItem, useDeployApi} from '@models/api';
+
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {setApis} from '@redux/reducers/main';
 import {closeApiDeployModal} from '@redux/reducers/ui';
 
 import {ErrorLabel} from '@components/AntdCustom';
@@ -25,6 +27,7 @@ const {TabPane} = Tabs;
 
 const ApiDeployModal: React.FC = () => {
   const dispatch = useAppDispatch();
+  const apis = useAppSelector(state => state.main.apis);
 
   const [activeStep, setActiveStep] = useState<number>(0);
   const [apiContent, setApiContent] = useState<{name: string; namespace: string; openapi: {[key: string]: any}}>();
@@ -33,7 +36,7 @@ const ApiDeployModal: React.FC = () => {
   const [upstreamRedirectTabSelection, setUpstreamRedirectTabSelection] = useState<string>('upstream');
   const [upstreamReference, setUpstreamReference] = useState<string>('service');
 
-  // const {mutate: deployAPI} = useDeployApi({});
+  const {mutate: deployAPI} = useDeployApi({});
 
   const [form] = Form.useForm();
 
@@ -80,19 +83,16 @@ const ApiDeployModal: React.FC = () => {
         openapi: YAML.stringify(deployedOpenApiSpec),
       };
 
-      console.log(deployedOpenApiSpec);
-      console.log(body);
+      deployAPI(body)
+        .then((response: any) => {
+          const apiData: ApiItem = response;
 
-      // deployAPI(body)
-      //   .then((response: any) => {
-      //     const apiData: ApiItem = response;
-
-      //     dispatch(setApis([...apis, apiData]));
-      //     dispatch(closeApiDeployModal());
-      //   })
-      //   .catch(err => {
-      //     setErrorMessage(err.data);
-      //   });
+          dispatch(setApis([...apis, apiData]));
+          dispatch(closeApiDeployModal());
+        })
+        .catch(err => {
+          setErrorMessage(err.data);
+        });
     });
   };
 
@@ -250,7 +250,7 @@ const ApiDeployModal: React.FC = () => {
           </Button>
         </>
       }
-      title="Deploy New API"
+      title="Publish New API"
       visible
       width="900px"
       onCancel={onCancelHandler}
@@ -287,21 +287,25 @@ const ApiDeployModal: React.FC = () => {
               ) : activeStep === 2 ? (
                 <Tabs activeKey={upstreamRedirectTabSelection} onChange={key => setUpstreamRedirectTabSelection(key)}>
                   <TabPane tab="Upstream" key="upstream">
-                    <Upstream
-                      form={form}
-                      openApiSpec={apiContent.openapi}
-                      reference={upstreamReference}
-                      setReference={reference => setUpstreamReference(reference)}
-                    />
+                    {upstreamRedirectTabSelection === 'upstream' && (
+                      <Upstream
+                        form={form}
+                        openApiSpec={apiContent.openapi}
+                        reference={upstreamReference}
+                        setReference={reference => setUpstreamReference(reference)}
+                      />
+                    )}
                   </TabPane>
 
                   <TabPane tab="Redirect" key="redirect">
-                    <Redirect
-                      form={form}
-                      openApiSpec={apiContent.openapi}
-                      selectedTab={redirectTabSelection}
-                      setSelectedTab={tabKey => setRedirectTabSelection(tabKey)}
-                    />
+                    {upstreamRedirectTabSelection === 'redirect' && (
+                      <Redirect
+                        form={form}
+                        openApiSpec={apiContent.openapi}
+                        selectedTab={redirectTabSelection}
+                        setSelectedTab={tabKey => setRedirectTabSelection(tabKey)}
+                      />
+                    )}
                   </TabPane>
                 </Tabs>
               ) : activeStep === 3 ? (
