@@ -1,10 +1,8 @@
 import {useEffect} from 'react';
 
-import {Button, Form, FormInstance} from 'antd';
+import {FormInstance} from 'antd';
 
-import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
-
-import * as S from './styled';
+import {FormList} from '@components';
 
 interface IProps {
   form: FormInstance<any>;
@@ -27,30 +25,12 @@ const Hosts: React.FC<IProps> = props => {
   }, [openApiSpec]);
 
   return (
-    <Form.List name="hosts">
-      {(fields, {add, remove}) => (
-        <>
-          {fields.map(field => (
-            <S.Space key={field.key} align="baseline">
-              <Form.Item
-                {...field}
-                rules={[{required: true, whitespace: true, message: 'Enter host or delete this field.'}]}
-              >
-                <S.Input placeholder="e.g. example.com" />
-              </Form.Item>
-
-              <MinusCircleOutlined className="dynamic-delete-button" onClick={() => remove(field.name)} />
-            </S.Space>
-          ))}
-
-          <Form.Item>
-            <Button icon={<PlusOutlined />} type="primary" onClick={() => add('', 0)}>
-              Add host
-            </Button>
-          </Form.Item>
-        </>
-      )}
-    </Form.List>
+    <FormList
+      addButtonText="Add host"
+      name="hosts"
+      placeholder="e.g. example.com"
+      requiredMessage="Enter host or delete this field."
+    />
   );
 };
 
