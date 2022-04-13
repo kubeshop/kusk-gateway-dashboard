@@ -26,6 +26,13 @@ export const ExtensionSubHeading = styled.h4`
   font-size: 16px;
 `;
 
+export const FormContainer = styled.div`
+  padding-right: 10px;
+  height: 550px;
+  overflow-y: auto;
+  ${GlobalScrollbarStyle}
+`;
+
 export const Input = styled(RawInput)`
   background-color: ${Colors.grey2};
   width: 100%;

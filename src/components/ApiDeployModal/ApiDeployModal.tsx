@@ -231,6 +231,7 @@ const ApiDeployModal: React.FC = () => {
 
   return (
     <Modal
+      bodyStyle={{height: '600px'}}
       footer={
         <>
           {activeStep ? <Button onClick={onBackHandler}>Back</Button> : null}
@@ -267,7 +268,7 @@ const ApiDeployModal: React.FC = () => {
           </Steps>
         </S.StepsContainer>
 
-        <div>
+        <S.FormContainer>
           <Form
             form={form}
             initialValues={{openapi: ''}}
@@ -316,7 +317,7 @@ const ApiDeployModal: React.FC = () => {
           </Form>
 
           {errorMessage && <ErrorLabel>*{errorMessage}</ErrorLabel>}
-        </div>
+        </S.FormContainer>
       </S.Container>
     </Modal>
   );
