@@ -162,7 +162,7 @@ const ApisList: React.FC = () => {
       ) : (
         apis && (
           <>
-            <ApisListTable apis={apis} /> <S.Button onClick={showApiDeployModalHandler}>Deploy new API</S.Button>
+            <ApisListTable apis={apis} /> <S.Button onClick={showApiDeployModalHandler}>Publish new API</S.Button>
           </>
         )
       )}

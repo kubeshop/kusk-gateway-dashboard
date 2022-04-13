@@ -43,13 +43,12 @@ const ApiDeployModal: React.FC = () => {
   const renderedNextButtonText: {[key: number]: string} = useMemo(
     () => ({
       0: 'Add Validation & Websocket',
-      1: 'Add Upstream',
+      1: 'Add Upstream | Redirect',
       2: 'Add Hosts',
-      3: 'Add Redirect',
-      4: 'Add QOS',
-      5: 'Add Path',
-      6: 'Add CORS',
-      7: 'Deploy',
+      3: 'Add QOS',
+      4: 'Add Path',
+      5: 'Add CORS',
+      6: 'Deploy',
     }),
     []
   );
