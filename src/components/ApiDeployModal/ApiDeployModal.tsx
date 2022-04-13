@@ -1,6 +1,6 @@
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
-import {Button, Form, Modal, Steps} from 'antd';
+import {Button, Form, Modal, Steps, Tabs} from 'antd';
 
 import YAML from 'yaml';
 
@@ -21,6 +21,8 @@ import ValidationAndWebsocket from './ValidationAndWebsocket';
 
 import * as S from './styled';
 
+const {TabPane} = Tabs;
+
 const ApiDeployModal: React.FC = () => {
   const dispatch = useAppDispatch();
 
@@ -28,6 +30,7 @@ const ApiDeployModal: React.FC = () => {
   const [apiContent, setApiContent] = useState<{name: string; namespace: string; openapi: {[key: string]: any}}>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [redirectTabSelection, setRedirectTabSelection] = useState<string>('path_redirect');
+  const [upstreamRedirectTabSelection, setUpstreamRedirectTabSelection] = useState<string>('upstream');
   const [upstreamReference, setUpstreamReference] = useState<string>('service');
 
   // const {mutate: deployAPI} = useDeployApi({});
@@ -121,18 +124,46 @@ const ApiDeployModal: React.FC = () => {
         setApiContent({...apiContent, openapi: openApiSpec});
       }
 
-      // upstream extension
+      // upstream and redirect extension
       if (activeStep === 2) {
-        const {upstream} = values;
+        const {redirect, upstream} = values;
 
-        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], upstream}};
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk']}};
 
-        if (upstreamReference === 'service') {
-          delete openApiSpec['x-kusk'].upstream.host;
-          openApiSpec['x-kusk'].upstream.service.port = parseInt(upstream.service.port, 10);
+        if (upstreamRedirectTabSelection === 'redirect') {
+          if (redirect['port_redirect']) {
+            redirect['port_redirect'] = parseInt(redirect['port_redirect'], 10);
+          }
+
+          if (redirect['response_code']) {
+            redirect['response_code'] = parseInt(redirect['response_code'], 10);
+          }
+
+          openApiSpec['x-kusk'].redirect = redirect;
+
+          if (redirectTabSelection === 'path_redirect') {
+            delete openApiSpec['x-kusk'].redirect['rewrite_regex'];
+          } else {
+            delete openApiSpec['x-kusk'].redirect['path_redirect'];
+          }
+
+          if (openApiSpec['x-kusk'].upstream) {
+            delete openApiSpec['x-kusk'].upstream;
+          }
         } else {
-          delete openApiSpec['x-kusk'].upstream.service;
-          openApiSpec['x-kusk'].upstream.host.port = parseInt(upstream.host.port, 10);
+          openApiSpec['x-kusk'].upstream = upstream;
+
+          if (upstreamReference === 'service') {
+            delete openApiSpec['x-kusk'].upstream.host;
+            openApiSpec['x-kusk'].upstream.service.port = parseInt(upstream.service.port, 10);
+          } else {
+            delete openApiSpec['x-kusk'].upstream.service;
+            openApiSpec['x-kusk'].upstream.host.port = parseInt(upstream.host.port, 10);
+          }
+
+          if (openApiSpec['x-kusk'].redirect) {
+            delete openApiSpec['x-kusk'].redirect;
+          }
         }
 
         setApiContent({...apiContent, openapi: openApiSpec});
@@ -147,31 +178,8 @@ const ApiDeployModal: React.FC = () => {
         setApiContent({...apiContent, openapi: openApiSpec});
       }
 
-      // redirect extension
-      if (activeStep === 4) {
-        const {redirect} = values;
-
-        if (redirect['port_redirect']) {
-          redirect['port_redirect'] = parseInt(redirect['port_redirect'], 10);
-        }
-
-        if (redirect['response_code']) {
-          redirect['response_code'] = parseInt(redirect['response_code'], 10);
-        }
-
-        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], redirect}};
-
-        if (redirectTabSelection === 'path_redirect') {
-          delete openApiSpec['x-kusk'].redirect['rewrite_regex'];
-        } else {
-          delete openApiSpec['x-kusk'].redirect['path_redirect'];
-        }
-
-        setApiContent({...apiContent, openapi: openApiSpec});
-      }
-
       // qos extension
-      if (activeStep === 5) {
+      if (activeStep === 4) {
         const {qos} = values;
 
         if (qos['idle_timeout']) {
@@ -192,7 +200,7 @@ const ApiDeployModal: React.FC = () => {
       }
 
       // path extension
-      if (activeStep === 6) {
+      if (activeStep === 5) {
         const {path} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
@@ -209,6 +217,18 @@ const ApiDeployModal: React.FC = () => {
     setErrorMessage('');
   };
 
+  useEffect(() => {
+    if (activeStep !== 2 || !apiContent) {
+      return;
+    }
+
+    if (!apiContent.openapi['x-kusk']?.upstream && apiContent.openapi['x-kusk']?.redirect) {
+      setUpstreamRedirectTabSelection('redirect');
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeStep]);
+
   return (
     <Modal
       footer={
@@ -218,7 +238,7 @@ const ApiDeployModal: React.FC = () => {
           <Button
             type="primary"
             onClick={() => {
-              if (activeStep === 7) {
+              if (activeStep === 6) {
                 onDeployHandler();
               } else {
                 onNextHandler();
@@ -239,9 +259,8 @@ const ApiDeployModal: React.FC = () => {
           <Steps direction="vertical" current={activeStep}>
             <S.Step title="API Content" />
             <S.Step title="Validation & Websocket" />
-            <S.Step title="Upstream" />
+            <S.Step title="Upstream | Redirect" />
             <S.Step title="Hosts" />
-            <S.Step title="Redirect" />
             <S.Step title="QOS" />
             <S.Step title="Path" />
             <S.Step title="CORS" />
@@ -265,24 +284,30 @@ const ApiDeployModal: React.FC = () => {
               activeStep === 1 ? (
                 <ValidationAndWebsocket form={form} openApiSpec={apiContent.openapi} />
               ) : activeStep === 2 ? (
-                <Upstream
-                  form={form}
-                  openApiSpec={apiContent.openapi}
-                  reference={upstreamReference}
-                  setReference={reference => setUpstreamReference(reference)}
-                />
+                <Tabs activeKey={upstreamRedirectTabSelection} onChange={key => setUpstreamRedirectTabSelection(key)}>
+                  <TabPane tab="Upstream" key="upstream">
+                    <Upstream
+                      form={form}
+                      openApiSpec={apiContent.openapi}
+                      reference={upstreamReference}
+                      setReference={reference => setUpstreamReference(reference)}
+                    />
+                  </TabPane>
+
+                  <TabPane tab="Redirect" key="redirect">
+                    <Redirect
+                      form={form}
+                      openApiSpec={apiContent.openapi}
+                      selectedTab={redirectTabSelection}
+                      setSelectedTab={tabKey => setRedirectTabSelection(tabKey)}
+                    />
+                  </TabPane>
+                </Tabs>
               ) : activeStep === 3 ? (
                 <Hosts form={form} openApiSpec={apiContent.openapi} />
               ) : activeStep === 4 ? (
-                <Redirect
-                  form={form}
-                  openApiSpec={apiContent.openapi}
-                  selectedTab={redirectTabSelection}
-                  setSelectedTab={tabKey => setRedirectTabSelection(tabKey)}
-                />
-              ) : activeStep === 5 ? (
                 <QOS form={form} openApiSpec={apiContent.openapi} />
-              ) : activeStep === 6 ? (
+              ) : activeStep === 5 ? (
                 <Path form={form} openApiSpec={apiContent.openapi} />
               ) : (
                 <CORS form={form} openApiSpec={apiContent.openapi} />
