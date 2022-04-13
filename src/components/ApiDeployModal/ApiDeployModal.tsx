@@ -17,6 +17,7 @@ import Path from './Path';
 import QOS from './QOS';
 import Redirect from './Redirect';
 import Upstream from './Upstream';
+import ValidationAndWebsocket from './ValidationAndWebsocket';
 
 import * as S from './styled';
 
@@ -35,13 +36,14 @@ const ApiDeployModal: React.FC = () => {
 
   const renderedNextButtonText: {[key: number]: string} = useMemo(
     () => ({
-      0: 'Add Upstream',
-      1: 'Add Hosts',
-      2: 'Add Redirect',
-      3: 'Add QOS',
-      4: 'Add Path',
-      5: 'Add CORS',
-      6: 'Deploy',
+      0: 'Add Validation & Websocket',
+      1: 'Add Upstream',
+      2: 'Add Hosts',
+      3: 'Add Redirect',
+      4: 'Add QOS',
+      5: 'Add Path',
+      6: 'Add CORS',
+      7: 'Deploy',
     }),
     []
   );
@@ -110,10 +112,18 @@ const ApiDeployModal: React.FC = () => {
         return;
       }
 
-      // upstream extension
+      // validation & websocket extension
       if (activeStep === 1) {
+        const {validation, websocket} = values;
+
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation, websocket}};
+
+        setApiContent({...apiContent, openapi: openApiSpec});
+      }
+
+      // upstream extension
+      if (activeStep === 2) {
         const {upstream} = values;
-        const {pattern, substitution} = upstream['rewrite']['rewrite_regex'];
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], upstream}};
 
@@ -125,28 +135,20 @@ const ApiDeployModal: React.FC = () => {
           openApiSpec['x-kusk'].upstream.host.port = parseInt(upstream.host.port, 10);
         }
 
-        if (!pattern && !substitution) {
-          delete openApiSpec['x-kusk'].upstream.rewrite;
-        }
-
         setApiContent({...apiContent, openapi: openApiSpec});
       }
 
       // hosts extension
-      if (activeStep === 2) {
+      if (activeStep === 3) {
         const {hosts} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], hosts}};
-
-        if (!hosts?.length) {
-          delete openApiSpec['x-kusk'].hosts;
-        }
 
         setApiContent({...apiContent, openapi: openApiSpec});
       }
 
       // redirect extension
-      if (activeStep === 3) {
+      if (activeStep === 4) {
         const {redirect} = values;
 
         if (redirect['port_redirect']) {
@@ -169,7 +171,7 @@ const ApiDeployModal: React.FC = () => {
       }
 
       // qos extension
-      if (activeStep === 4) {
+      if (activeStep === 5) {
         const {qos} = values;
 
         if (qos['idle_timeout']) {
@@ -186,22 +188,14 @@ const ApiDeployModal: React.FC = () => {
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], qos}};
 
-        if (!qos['idle_timeout'] && !qos.retries && !qos['request_timeout']) {
-          delete openApiSpec['x-kusk'].qos;
-        }
-
         setApiContent({...apiContent, openapi: openApiSpec});
       }
 
       // path extension
-      if (activeStep === 5) {
+      if (activeStep === 6) {
         const {path} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
-
-        if (!path.prefix) {
-          delete openApiSpec['x-kusk'].path;
-        }
 
         setApiContent({...apiContent, openapi: openApiSpec});
       }
@@ -224,7 +218,7 @@ const ApiDeployModal: React.FC = () => {
           <Button
             type="primary"
             onClick={() => {
-              if (activeStep === 6) {
+              if (activeStep === 7) {
                 onDeployHandler();
               } else {
                 onNextHandler();
@@ -237,13 +231,14 @@ const ApiDeployModal: React.FC = () => {
       }
       title="Deploy New API"
       visible
-      width="800px"
+      width="900px"
       onCancel={onCancelHandler}
     >
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStep}>
             <S.Step title="API Content" />
+            <S.Step title="Validation & Websocket" />
             <S.Step title="Upstream" />
             <S.Step title="Hosts" />
             <S.Step title="Redirect" />
@@ -268,24 +263,26 @@ const ApiDeployModal: React.FC = () => {
               <ApiContent apiContent={apiContent} form={form} />
             ) : apiContent ? (
               activeStep === 1 ? (
+                <ValidationAndWebsocket form={form} openApiSpec={apiContent.openapi} />
+              ) : activeStep === 2 ? (
                 <Upstream
                   form={form}
                   openApiSpec={apiContent.openapi}
                   reference={upstreamReference}
                   setReference={reference => setUpstreamReference(reference)}
                 />
-              ) : activeStep === 2 ? (
-                <Hosts form={form} openApiSpec={apiContent.openapi} />
               ) : activeStep === 3 ? (
+                <Hosts form={form} openApiSpec={apiContent.openapi} />
+              ) : activeStep === 4 ? (
                 <Redirect
                   form={form}
                   openApiSpec={apiContent.openapi}
                   selectedTab={redirectTabSelection}
                   setSelectedTab={tabKey => setRedirectTabSelection(tabKey)}
                 />
-              ) : activeStep === 4 ? (
-                <QOS form={form} openApiSpec={apiContent.openapi} />
               ) : activeStep === 5 ? (
+                <QOS form={form} openApiSpec={apiContent.openapi} />
+              ) : activeStep === 6 ? (
                 <Path form={form} openApiSpec={apiContent.openapi} />
               ) : (
                 <CORS form={form} openApiSpec={apiContent.openapi} />

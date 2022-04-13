@@ -8,7 +8,7 @@ import Colors from '@styles/colors';
 
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 250px 1fr;
   grid-column-gap: 10px;
 
   & input::-webkit-outer-spin-button,
@@ -44,7 +44,7 @@ export const Step = styled(Steps.Step)`
   }
 
   & .ant-steps-item-title {
-    width: 155px;
+    width: 100%;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
