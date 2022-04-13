@@ -11,6 +11,7 @@ import {closeApiDeployModal} from '@redux/reducers/ui';
 import {ErrorLabel} from '@components/AntdCustom';
 
 import ApiContent from './ApiContent';
+import CORS from './CORS';
 import Hosts from './Hosts';
 import Path from './Path';
 import QOS from './QOS';
@@ -39,7 +40,8 @@ const ApiDeployModal: React.FC = () => {
       2: 'Add Redirect',
       3: 'Add QOS',
       4: 'Add Path',
-      5: 'Deploy',
+      5: 'Add CORS',
+      6: 'Deploy',
     }),
     []
   );
@@ -54,10 +56,18 @@ const ApiDeployModal: React.FC = () => {
     }
 
     form.validateFields().then(values => {
+      const {cors} = values;
+
+      if (cors['max_age']) {
+        cors['max_age'] = parseInt(cors['max_age'], 10);
+      }
+
       const deployedOpenApiSpec = {
         ...apiContent.openapi,
-        'x-kusk': {...apiContent.openapi['x-kusk'], upstream: {...values.upstream}},
+        'x-kusk': {...apiContent.openapi['x-kusk'], cors},
       };
+
+      cleanseObject(deployedOpenApiSpec);
 
       const body = {
         name: apiContent.name,
@@ -65,7 +75,7 @@ const ApiDeployModal: React.FC = () => {
         openapi: YAML.stringify(deployedOpenApiSpec),
       };
 
-      console.log(values);
+      console.log(deployedOpenApiSpec);
       console.log(body);
 
       // deployAPI(body)
@@ -200,8 +210,6 @@ const ApiDeployModal: React.FC = () => {
     });
   };
 
-  console.log(apiContent);
-
   const onBackHandler = () => {
     setActiveStep(activeStep - 1);
     setErrorMessage('');
@@ -216,7 +224,7 @@ const ApiDeployModal: React.FC = () => {
           <Button
             type="primary"
             onClick={() => {
-              if (activeStep === 5) {
+              if (activeStep === 6) {
                 onDeployHandler();
               } else {
                 onNextHandler();
@@ -241,6 +249,7 @@ const ApiDeployModal: React.FC = () => {
             <S.Step title="Redirect" />
             <S.Step title="QOS" />
             <S.Step title="Path" />
+            <S.Step title="CORS" />
           </Steps>
         </S.StepsContainer>
 
@@ -276,8 +285,10 @@ const ApiDeployModal: React.FC = () => {
                 />
               ) : activeStep === 4 ? (
                 <QOS form={form} openApiSpec={apiContent.openapi} />
-              ) : (
+              ) : activeStep === 5 ? (
                 <Path form={form} openApiSpec={apiContent.openapi} />
+              ) : (
+                <CORS form={form} openApiSpec={apiContent.openapi} />
               )
             ) : null}
           </Form>
@@ -289,21 +300,21 @@ const ApiDeployModal: React.FC = () => {
   );
 };
 
-// const cleanseObject = (obj: {[key: string]: any}) => {
-//   Object.keys(obj).forEach(key => {
-//     let value = obj[key];
-//     let type = typeof value;
+const cleanseObject = (obj: {[key: string]: any}) => {
+  Object.keys(obj).forEach(key => {
+    let value = obj[key];
+    let type = typeof value;
 
-//     if (type === 'object') {
-//       cleanseObject(value);
+    if (type === 'object') {
+      cleanseObject(value);
 
-//       if (!Object.keys(value).length) {
-//         delete obj[key];
-//       }
-//     } else if (type === 'undefined') {
-//       delete obj[key];
-//     }
-//   });
-// };
+      if (!Object.keys(value).length) {
+        delete obj[key];
+      }
+    } else if (type === 'undefined') {
+      delete obj[key];
+    }
+  });
+};
 
 export default ApiDeployModal;
