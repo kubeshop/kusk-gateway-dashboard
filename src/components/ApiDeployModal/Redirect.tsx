@@ -25,6 +25,10 @@ const Redirect: React.FC<IProps> = props => {
 
     form.setFieldsValue({redirect});
 
+    if (!redirect['path_redirect'] && redirect['rewrite_regex']) {
+      setSelectedTab('rewrite_regex');
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openApiSpec]);
 
