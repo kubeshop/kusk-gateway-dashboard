@@ -289,4 +289,21 @@ const ApiDeployModal: React.FC = () => {
   );
 };
 
+// const cleanseObject = (obj: {[key: string]: any}) => {
+//   Object.keys(obj).forEach(key => {
+//     let value = obj[key];
+//     let type = typeof value;
+
+//     if (type === 'object') {
+//       cleanseObject(value);
+
+//       if (!Object.keys(value).length) {
+//         delete obj[key];
+//       }
+//     } else if (type === 'undefined') {
+//       delete obj[key];
+//     }
+//   });
+// };
+
 export default ApiDeployModal;

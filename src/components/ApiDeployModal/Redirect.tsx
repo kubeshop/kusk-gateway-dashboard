@@ -64,8 +64,8 @@ const Redirect: React.FC<IProps> = props => {
         </TabPane>
       </Tabs>
 
-      <Form.Item label="Strip query" name={['redirect', 'strip_query']}>
-        <Switch checked={openApiSpec['x-kusk'].redirect?.['strip_query']} />
+      <Form.Item label="Strip query" name={['redirect', 'strip_query']} valuePropName="checked">
+        <Switch />
       </Form.Item>
     </>
   );
