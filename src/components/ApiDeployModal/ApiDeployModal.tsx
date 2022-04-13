@@ -14,6 +14,7 @@ import ApiContent from './ApiContent';
 import Hosts from './Hosts';
 import Path from './Path';
 import QOS from './QOS';
+import Redirect from './Redirect';
 import Upstream from './Upstream';
 
 import * as S from './styled';
@@ -24,6 +25,7 @@ const ApiDeployModal: React.FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [apiContent, setApiContent] = useState<{name: string; namespace: string; openapi: {[key: string]: any}}>();
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [redirectTabSelection, setRedirectTabSelection] = useState<string>('path_redirect');
   const [upstreamReference, setUpstreamReference] = useState<string>('service');
 
   // const {mutate: deployAPI} = useDeployApi({});
@@ -34,9 +36,10 @@ const ApiDeployModal: React.FC = () => {
     () => ({
       0: 'Add Upstream',
       1: 'Add Hosts',
-      2: 'Add QOS',
-      3: 'Add Path',
-      4: 'Deploy',
+      2: 'Add Redirect',
+      3: 'Add QOS',
+      4: 'Add Path',
+      5: 'Deploy',
     }),
     []
   );
@@ -132,12 +135,44 @@ const ApiDeployModal: React.FC = () => {
         setApiContent({...apiContent, openapi: openApiSpec});
       }
 
-      // qos extension
+      // redirect extension
       if (activeStep === 3) {
+        const {redirect} = values;
+
+        if (redirect['port_redirect']) {
+          redirect['port_redirect'] = parseInt(redirect['port_redirect'], 10);
+        }
+
+        if (redirect['response_code']) {
+          redirect['response_code'] = parseInt(redirect['response_code'], 10);
+        }
+
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], redirect}};
+
+        if (redirectTabSelection === 'path_redirect') {
+          delete openApiSpec['x-kusk'].redirect['rewrite_regex'];
+        } else {
+          delete openApiSpec['x-kusk'].redirect['path_redirect'];
+        }
+
+        setApiContent({...apiContent, openapi: openApiSpec});
+      }
+
+      // qos extension
+      if (activeStep === 4) {
         const {qos} = values;
-        qos['idle_timeout'] = parseInt(qos['idle_timeout'], 10);
-        qos['retries'] = parseInt(qos['retries'], 10);
-        qos['request_timeout'] = parseInt(qos['request_timeout'], 10);
+
+        if (qos['idle_timeout']) {
+          qos['idle_timeout'] = parseInt(qos['idle_timeout'], 10);
+        }
+
+        if (qos['retries']) {
+          qos['retries'] = parseInt(qos['retries'], 10);
+        }
+
+        if (qos['request_timeout']) {
+          qos['request_timeout'] = parseInt(qos['request_timeout'], 10);
+        }
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], qos}};
 
@@ -149,7 +184,7 @@ const ApiDeployModal: React.FC = () => {
       }
 
       // path extension
-      if (activeStep === 4) {
+      if (activeStep === 5) {
         const {path} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
@@ -203,6 +238,7 @@ const ApiDeployModal: React.FC = () => {
             <S.Step title="API Content" />
             <S.Step title="Upstream" />
             <S.Step title="Hosts" />
+            <S.Step title="Redirect" />
             <S.Step title="QOS" />
             <S.Step title="Path" />
           </Steps>
@@ -232,6 +268,13 @@ const ApiDeployModal: React.FC = () => {
               ) : activeStep === 2 ? (
                 <Hosts form={form} openApiSpec={apiContent.openapi} />
               ) : activeStep === 3 ? (
+                <Redirect
+                  form={form}
+                  openApiSpec={apiContent.openapi}
+                  selectedTab={redirectTabSelection}
+                  setSelectedTab={tabKey => setRedirectTabSelection(tabKey)}
+                />
+              ) : activeStep === 4 ? (
                 <QOS form={form} openApiSpec={apiContent.openapi} />
               ) : (
                 <Path form={form} openApiSpec={apiContent.openapi} />
@@ -245,17 +288,5 @@ const ApiDeployModal: React.FC = () => {
     </Modal>
   );
 };
-
-// const assignNestedProperty = (obj: {[key: string]: any}, keyPath: string[], value: string | number | boolean) => {
-//   const lastKeyIndex = keyPath.length - 1;
-//   for (let i = 0; i < lastKeyIndex; i += 1) {
-//     const key = keyPath[i];
-//     if (!(key in obj)) {
-//       obj[key] = {};
-//     }
-//     obj = obj[key];
-//   }
-//   obj[keyPath[lastKeyIndex]] = value;
-// };
 
 export default ApiDeployModal;
