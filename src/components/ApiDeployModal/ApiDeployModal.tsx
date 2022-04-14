@@ -13,13 +13,14 @@ import {closeApiDeployModal} from '@redux/reducers/ui';
 import {ErrorLabel} from '@components/AntdCustom';
 
 import ApiContent from './ApiContent';
-import CORS from './CORS';
-import Hosts from './Hosts';
-import Path from './Path';
-import QOS from './QOS';
-import Redirect from './Redirect';
-import Upstream from './Upstream';
-import ValidationAndWebsocket from './ValidationAndWebsocket';
+import CORS from './extensions/CORS';
+import Hosts from './extensions/Hosts';
+import Path from './extensions/Path';
+import QOS from './extensions/QOS';
+import Redirect from './extensions/Redirect';
+import Upstream from './extensions/Upstream';
+import Validation from './extensions/Validation';
+import Websocket from './extensions/Websocket';
 
 import * as S from './styled';
 
@@ -42,13 +43,14 @@ const ApiDeployModal: React.FC = () => {
 
   const renderedNextButtonText: {[key: number]: string} = useMemo(
     () => ({
-      0: 'Add Validation & Websocket',
+      0: 'Add Validation ',
       1: 'Add Upstream | Redirect',
       2: 'Add Hosts',
       3: 'Add QOS',
       4: 'Add Path',
       5: 'Add CORS',
-      6: 'Deploy',
+      6: 'Add Websocket',
+      7: 'Deploy',
     }),
     []
   );
@@ -63,16 +65,12 @@ const ApiDeployModal: React.FC = () => {
     }
 
     form.validateFields().then(values => {
-      const {cors} = values;
-
-      if (cors['max_age']) {
-        cors['max_age'] = parseInt(cors['max_age'], 10);
-      }
+      const {websocket} = values;
 
       const deployedOpenApiSpec = JSON.parse(
         JSON.stringify({
           ...apiContent.openapi,
-          'x-kusk': {...apiContent.openapi['x-kusk'], cors},
+          'x-kusk': {...apiContent.openapi['x-kusk'], websocket},
         })
       );
 
@@ -120,11 +118,11 @@ const ApiDeployModal: React.FC = () => {
         return;
       }
 
-      // validation & websocket extension
+      // validation
       if (activeStep === 1) {
-        const {validation, websocket} = values;
+        const {validation} = values;
 
-        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation, websocket}};
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation}};
 
         dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
@@ -213,6 +211,19 @@ const ApiDeployModal: React.FC = () => {
         dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
 
+      // cors extension
+      if (activeStep === 6) {
+        const {cors} = values;
+
+        if (cors['max_age']) {
+          cors['max_age'] = parseInt(cors['max_age'], 10);
+        }
+
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], cors}};
+
+        dispatch(updateNewApiOpenApiSpec(openApiSpec));
+      }
+
       setActiveStep(activeStep + 1);
     });
   };
@@ -244,7 +255,7 @@ const ApiDeployModal: React.FC = () => {
           <Button
             type="primary"
             onClick={() => {
-              if (activeStep === 6) {
+              if (activeStep === 7) {
                 onDeployHandler();
               } else {
                 onNextHandler();
@@ -264,12 +275,13 @@ const ApiDeployModal: React.FC = () => {
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStep}>
             <S.Step title="API Content" />
-            <S.Step title="Validation & Websocket" />
+            <S.Step title="Validation" />
             <S.Step title="Upstream | Redirect" />
             <S.Step title="Hosts" />
             <S.Step title="QOS" />
             <S.Step title="Path" />
             <S.Step title="CORS" />
+            <S.Step title="Websocket" />
           </Steps>
         </S.StepsContainer>
 
@@ -288,7 +300,7 @@ const ApiDeployModal: React.FC = () => {
               <ApiContent apiContent={apiContent} form={form} />
             ) : apiContent ? (
               activeStep === 1 ? (
-                <ValidationAndWebsocket form={form} openApiSpec={apiContent.openapi} />
+                <Validation form={form} openApiSpec={apiContent.openapi} />
               ) : activeStep === 2 ? (
                 <Tabs activeKey={upstreamRedirectTabSelection} onChange={key => setUpstreamRedirectTabSelection(key)}>
                   <TabPane tab="Upstream" key="upstream">
@@ -319,8 +331,10 @@ const ApiDeployModal: React.FC = () => {
                 <QOS form={form} openApiSpec={apiContent.openapi} />
               ) : activeStep === 5 ? (
                 <Path form={form} openApiSpec={apiContent.openapi} />
-              ) : (
+              ) : activeStep === 6 ? (
                 <CORS form={form} openApiSpec={apiContent.openapi} />
+              ) : (
+                <Websocket form={form} openApiSpec={apiContent.openapi} />
               )
             ) : null}
           </Form>

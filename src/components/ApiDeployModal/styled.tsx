@@ -1,10 +1,8 @@
-import {Input as RawInput, Select as RawSelect, Steps} from 'antd';
+import {Steps} from 'antd';
 
 import styled from 'styled-components';
 
 import {GlobalScrollbarStyle} from '@utils/scrollbar';
-
-import Colors from '@styles/colors';
 
 export const Container = styled.div`
   display: grid;
@@ -22,24 +20,11 @@ export const Container = styled.div`
   }
 `;
 
-export const ExtensionSubHeading = styled.h4`
-  font-size: 16px;
-`;
-
 export const FormContainer = styled.div`
   padding-right: 10px;
   height: 550px;
   overflow-y: auto;
   ${GlobalScrollbarStyle}
-`;
-
-export const Input = styled(RawInput)`
-  background-color: ${Colors.grey2};
-  width: 100%;
-`;
-
-export const Select = styled(RawSelect)`
-  background-color: ${Colors.grey2};
 `;
 
 export const Step = styled(Steps.Step)`
@@ -64,10 +49,4 @@ export const StepsContainer = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   ${GlobalScrollbarStyle};
-`;
-
-export const Textarea = styled(Input.TextArea)`
-  background-color: ${Colors.grey2};
-
-  ${GlobalScrollbarStyle}
 `;

@@ -9,7 +9,7 @@ import {ApiContent as ApiContentType} from '@models/main';
 
 import {useAppSelector} from '@redux/hooks';
 
-import * as S from './styled';
+import * as S from './ApiContent.styled';
 
 interface IProps {
   apiContent: ApiContentType | null;
