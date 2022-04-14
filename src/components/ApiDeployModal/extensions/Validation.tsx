@@ -6,10 +6,11 @@ import {useAppSelector} from '@redux/hooks';
 
 interface IProps {
   form: FormInstance<any>;
+  isApiMocked: boolean;
 }
 
 const Validation: React.FC<IProps> = props => {
-  const {form} = props;
+  const {form, isApiMocked} = props;
 
   const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
 
@@ -20,14 +21,18 @@ const Validation: React.FC<IProps> = props => {
       return;
     }
 
-    form.setFieldsValue({validation});
+    if (isApiMocked) {
+      form.resetFields();
+    } else {
+      form.setFieldsValue({validation});
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openApiSpec]);
+  }, [isApiMocked, openApiSpec]);
 
   return (
     <Form.Item label="Request validation" name={['validation', 'request', 'enabled']} valuePropName="checked">
-      <Switch />
+      <Switch disabled={isApiMocked} />
     </Form.Item>
   );
 };

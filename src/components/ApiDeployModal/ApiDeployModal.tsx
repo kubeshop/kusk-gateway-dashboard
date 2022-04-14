@@ -44,6 +44,7 @@ const ApiDeployModal: React.FC = () => {
 
   const [activeStep, setActiveStep] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [isApiMocked, setIsApiMocked] = useState<boolean>(false);
   const [redirectTabSelection, setRedirectTabSelection] = useState<string>('path_redirect');
   const [upstreamRedirectTabSelection, setUpstreamRedirectTabSelection] = useState<string>('upstream');
   const [upstreamReference, setUpstreamReference] = useState<string>('service');
@@ -70,6 +71,10 @@ const ApiDeployModal: React.FC = () => {
           'x-kusk': {...apiContent.openapi['x-kusk'], websocket},
         })
       );
+
+      if (isApiMocked) {
+        delete deployedOpenApiSpec['x-kusk'].validation;
+      }
 
       cleanseObject(deployedOpenApiSpec);
       dispatch(updateNewApiOpenApiSpec(deployedOpenApiSpec));
@@ -98,15 +103,18 @@ const ApiDeployModal: React.FC = () => {
     form.validateFields().then(values => {
       // api content
       if (!activeStep) {
-        const {name, namespace, openapi} = values;
+        const {name, namespace, openapi, mocking} = values;
 
-        dispatch(
-          setNewApiContent({
-            name,
-            namespace: namespace || 'default',
-            openapi: YAML.parse(JSON.parse(JSON.stringify(openapi))),
-          })
-        );
+        let parsedOpenApi = YAML.parse(JSON.parse(JSON.stringify(openapi)));
+        parsedOpenApi = {...parsedOpenApi, 'x-kusk': {...parsedOpenApi['x-kusk'], mocking}};
+
+        dispatch(setNewApiContent({name, namespace: namespace || 'default', openapi: parsedOpenApi}));
+
+        if (mocking?.enabled) {
+          setIsApiMocked(true);
+        } else if (isApiMocked) {
+          setIsApiMocked(false);
+        }
 
         setActiveStep(activeStep + 1);
       }
@@ -239,6 +247,15 @@ const ApiDeployModal: React.FC = () => {
   };
 
   useEffect(() => {
+    if (activeStep === 0) {
+      const mocking = apiContent?.openapi['x-kusk'].mocking;
+
+      if (mocking) {
+        form.setFieldsValue({mocking});
+      }
+      return;
+    }
+
     if (activeStep !== 2 || !apiContent) {
       return;
     }
@@ -294,7 +311,7 @@ const ApiDeployModal: React.FC = () => {
           >
             <Suspense fallback={<Skeleton />}>
               {activeStep === 0 && <ApiContent form={form} />}
-              {activeStep === 1 && <Validation form={form} />}
+              {activeStep === 1 && <Validation form={form} isApiMocked={isApiMocked} />}
               {activeStep === 2 && (
                 <Tabs activeKey={upstreamRedirectTabSelection} onChange={key => setUpstreamRedirectTabSelection(key)}>
                   <TabPane tab="Upstream" key="upstream">
