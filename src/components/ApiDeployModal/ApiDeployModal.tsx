@@ -318,6 +318,7 @@ const ApiDeployModal: React.FC = () => {
                     {upstreamRedirectTabSelection === 'upstream' && (
                       <Upstream
                         form={form}
+                        isApiMocked={isApiMocked}
                         reference={upstreamReference}
                         setReference={reference => setUpstreamReference(reference)}
                       />

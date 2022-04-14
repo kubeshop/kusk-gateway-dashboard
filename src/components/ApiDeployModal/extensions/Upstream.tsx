@@ -15,12 +15,13 @@ const {Option} = Select;
 
 interface IProps {
   form: FormInstance<any>;
+  isApiMocked: boolean;
   reference: string;
   setReference: (reference: string) => void;
 }
 
 const Upstream: React.FC<IProps> = props => {
-  const {form, reference, setReference} = props;
+  const {form, isApiMocked, reference, setReference} = props;
 
   const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
   const services = useAppSelector(state => state.main.services);
@@ -106,7 +107,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'service', 'name']}
             rules={[
               {
-                required: requiredUpstreamReference(reference, 'service'),
+                required: isApiMocked ? false : requiredUpstreamReference(reference, 'service'),
                 message: 'Please enter name!',
               },
             ]}
@@ -119,7 +120,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'service', 'namespace']}
             rules={[
               {
-                required: requiredUpstreamReference(reference, 'service'),
+                required: isApiMocked ? false : requiredUpstreamReference(reference, 'service'),
                 message: 'Please enter namespace!',
               },
             ]}
@@ -132,7 +133,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'service', 'port']}
             rules={[
               {
-                required: requiredUpstreamReference(reference, 'service'),
+                required: isApiMocked ? false : requiredUpstreamReference(reference, 'service'),
                 message: `Please ${selectedService ? 'choose' : 'enter'} a valid port!`,
               },
             ]}
@@ -157,7 +158,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'host', 'hostname']}
             rules={[
               {
-                required: requiredUpstreamReference(reference, 'host'),
+                required: isApiMocked ? false : requiredUpstreamReference(reference, 'host'),
                 message: 'Please enter hostname!',
               },
             ]}
@@ -168,7 +169,12 @@ const Upstream: React.FC<IProps> = props => {
           <Form.Item
             label="Port"
             name={['upstream', 'host', 'port']}
-            rules={[{required: requiredUpstreamReference(reference, 'host'), message: 'Please enter port!'}]}
+            rules={[
+              {
+                required: isApiMocked ? false : requiredUpstreamReference(reference, 'host'),
+                message: 'Please enter port!',
+              },
+            ]}
           >
             <S.Input type="number" />
           </Form.Item>
