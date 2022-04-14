@@ -1,6 +1,6 @@
-import {useEffect, useMemo, useState} from 'react';
+import {Suspense, lazy, useEffect, useState} from 'react';
 
-import {Button, Form, Modal, Steps, Tabs} from 'antd';
+import {Button, Form, Modal, Skeleton, Steps, Tabs} from 'antd';
 
 import YAML from 'yaml';
 
@@ -12,19 +12,30 @@ import {closeApiDeployModal} from '@redux/reducers/ui';
 
 import {ErrorLabel} from '@components/AntdCustom';
 
-import ApiContent from './ApiContent';
-import CORS from './extensions/CORS';
-import Hosts from './extensions/Hosts';
-import Path from './extensions/Path';
-import QOS from './extensions/QOS';
-import Redirect from './extensions/Redirect';
-import Upstream from './extensions/Upstream';
-import Validation from './extensions/Validation';
-import Websocket from './extensions/Websocket';
-
 import * as S from './styled';
 
+const ApiContent = lazy(() => import('./ApiContent'));
+const CORS = lazy(() => import('./extensions/CORS'));
+const Hosts = lazy(() => import('./extensions/Hosts'));
+const Path = lazy(() => import('./extensions/Path'));
+const QOS = lazy(() => import('./extensions/QOS'));
+const Redirect = lazy(() => import('./extensions/Redirect'));
+const Upstream = lazy(() => import('./extensions/Upstream'));
+const Validation = lazy(() => import('./extensions/Validation'));
+const Websocket = lazy(() => import('./extensions/Websocket'));
+
 const {TabPane} = Tabs;
+
+const renderedNextButtonText: {[key: number]: string} = {
+  0: 'Add Validation ',
+  1: 'Add Upstream | Redirect',
+  2: 'Add Hosts',
+  3: 'Add QOS',
+  4: 'Add Path',
+  5: 'Add CORS',
+  6: 'Add Websocket',
+  7: 'Publish',
+};
 
 const ApiDeployModal: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -40,20 +51,6 @@ const ApiDeployModal: React.FC = () => {
   const {mutate: deployAPI} = useDeployApi({});
 
   const [form] = Form.useForm();
-
-  const renderedNextButtonText: {[key: number]: string} = useMemo(
-    () => ({
-      0: 'Add Validation ',
-      1: 'Add Upstream | Redirect',
-      2: 'Add Hosts',
-      3: 'Add QOS',
-      4: 'Add Path',
-      5: 'Add CORS',
-      6: 'Add Websocket',
-      7: 'Deploy',
-    }),
-    []
-  );
 
   const onCancelHandler = () => {
     dispatch(closeApiDeployModal());
@@ -233,6 +230,14 @@ const ApiDeployModal: React.FC = () => {
     setErrorMessage('');
   };
 
+  const onSubmitHandler = () => {
+    if (activeStep === 7) {
+      onDeployHandler();
+    } else {
+      onNextHandler();
+    }
+  };
+
   useEffect(() => {
     if (activeStep !== 2 || !apiContent) {
       return;
@@ -252,16 +257,7 @@ const ApiDeployModal: React.FC = () => {
         <>
           {activeStep ? <Button onClick={onBackHandler}>Back</Button> : null}
 
-          <Button
-            type="primary"
-            onClick={() => {
-              if (activeStep === 7) {
-                onDeployHandler();
-              } else {
-                onNextHandler();
-              }
-            }}
-          >
+          <Button type="primary" onClick={onSubmitHandler}>
             {renderedNextButtonText[activeStep]}
           </Button>
         </>
@@ -296,12 +292,10 @@ const ApiDeployModal: React.FC = () => {
               }
             }}
           >
-            {activeStep === 0 ? (
-              <ApiContent apiContent={apiContent} form={form} />
-            ) : apiContent ? (
-              activeStep === 1 ? (
-                <Validation form={form} />
-              ) : activeStep === 2 ? (
+            <Suspense fallback={<Skeleton />}>
+              {activeStep === 0 && <ApiContent form={form} />}
+              {activeStep === 1 && <Validation form={form} />}
+              {activeStep === 2 && (
                 <Tabs activeKey={upstreamRedirectTabSelection} onChange={key => setUpstreamRedirectTabSelection(key)}>
                   <TabPane tab="Upstream" key="upstream">
                     {upstreamRedirectTabSelection === 'upstream' && (
@@ -323,18 +317,13 @@ const ApiDeployModal: React.FC = () => {
                     )}
                   </TabPane>
                 </Tabs>
-              ) : activeStep === 3 ? (
-                <Hosts form={form} />
-              ) : activeStep === 4 ? (
-                <QOS form={form} />
-              ) : activeStep === 5 ? (
-                <Path form={form} />
-              ) : activeStep === 6 ? (
-                <CORS form={form} />
-              ) : (
-                <Websocket form={form} />
-              )
-            ) : null}
+              )}
+              {activeStep === 3 && <Hosts form={form} />}
+              {activeStep === 4 && <QOS form={form} />}
+              {activeStep === 5 && <Path form={form} />}
+              {activeStep === 6 && <CORS form={form} />}
+              {activeStep === 7 && <Websocket form={form} />}
+            </Suspense>
           </Form>
 
           {errorMessage && <ErrorLabel>*{errorMessage}</ErrorLabel>}

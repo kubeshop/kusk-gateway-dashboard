@@ -5,20 +5,19 @@ import {Checkbox, Form, FormInstance} from 'antd';
 import YAML from 'yaml';
 
 import {ApiItem} from '@models/api';
-import {ApiContent as ApiContentType} from '@models/main';
 
 import {useAppSelector} from '@redux/hooks';
 
 import * as S from './ApiContent.styled';
 
 interface IProps {
-  apiContent: ApiContentType | null;
   form: FormInstance<any>;
 }
 
 const ApiContent: React.FC<IProps> = props => {
-  const {apiContent, form} = props;
+  const {form} = props;
 
+  const apiContent = useAppSelector(state => state.main.newApiContent);
   const apis = useAppSelector(state => state.main.apis);
 
   useEffect(() => {
