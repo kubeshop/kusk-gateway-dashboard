@@ -2,15 +2,18 @@ import {useEffect} from 'react';
 
 import {FormInstance} from 'antd';
 
+import {useAppSelector} from '@redux/hooks';
+
 import {FormList} from '@components';
 
 interface IProps {
   form: FormInstance<any>;
-  openApiSpec: {[key: string]: any};
 }
 
 const Hosts: React.FC<IProps> = props => {
-  const {form, openApiSpec} = props;
+  const {form} = props;
+
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
 
   useEffect(() => {
     const hosts = openApiSpec['x-kusk']?.hosts;

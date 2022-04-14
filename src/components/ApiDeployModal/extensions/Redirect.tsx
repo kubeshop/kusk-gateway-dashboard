@@ -2,19 +2,22 @@ import {useEffect} from 'react';
 
 import {Form, FormInstance, Switch, Tabs} from 'antd';
 
+import {useAppSelector} from '@redux/hooks';
+
 import * as S from './styled';
 
 const {TabPane} = Tabs;
 
 interface IProps {
   form: FormInstance<any>;
-  openApiSpec: {[key: string]: any};
   selectedTab: string;
   setSelectedTab: (tabKey: string) => void;
 }
 
 const Redirect: React.FC<IProps> = props => {
-  const {form, openApiSpec, selectedTab, setSelectedTab} = props;
+  const {form, selectedTab, setSelectedTab} = props;
+
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
 
   useEffect(() => {
     const redirect = openApiSpec['x-kusk'].redirect;

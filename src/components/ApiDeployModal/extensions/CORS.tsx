@@ -2,17 +2,20 @@ import {useEffect} from 'react';
 
 import {Form, FormInstance, Switch} from 'antd';
 
+import {useAppSelector} from '@redux/hooks';
+
 import {FormList} from '@components';
 
 import * as S from './styled';
 
 interface IProps {
   form: FormInstance<any>;
-  openApiSpec: {[key: string]: any};
 }
 
 const CORS: React.FC<IProps> = props => {
-  const {form, openApiSpec} = props;
+  const {form} = props;
+
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
 
   useEffect(() => {
     const cors = openApiSpec['x-kusk'].cors;

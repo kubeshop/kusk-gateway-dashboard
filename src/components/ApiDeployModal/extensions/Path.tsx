@@ -2,15 +2,18 @@ import {useEffect} from 'react';
 
 import {Form, FormInstance} from 'antd';
 
+import {useAppSelector} from '@redux/hooks';
+
 import * as S from './styled';
 
 interface IProps {
   form: FormInstance<any>;
-  openApiSpec: {[key: string]: any};
 }
 
 const Path: React.FC<IProps> = props => {
-  const {form, openApiSpec} = props;
+  const {form} = props;
+
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
 
   useEffect(() => {
     const path = openApiSpec['x-kusk']?.path;

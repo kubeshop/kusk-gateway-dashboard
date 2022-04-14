@@ -15,14 +15,14 @@ const {Option} = Select;
 
 interface IProps {
   form: FormInstance<any>;
-  openApiSpec: {[key: string]: any};
   reference: string;
   setReference: (reference: string) => void;
 }
 
 const Upstream: React.FC<IProps> = props => {
-  const {form, openApiSpec, reference, setReference} = props;
+  const {form, reference, setReference} = props;
 
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
   const services = useAppSelector(state => state.main.services);
 
   const [selectedService, setSelectedService] = useState<ServiceItem>();

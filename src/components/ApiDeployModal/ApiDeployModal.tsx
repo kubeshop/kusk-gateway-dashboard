@@ -300,14 +300,13 @@ const ApiDeployModal: React.FC = () => {
               <ApiContent apiContent={apiContent} form={form} />
             ) : apiContent ? (
               activeStep === 1 ? (
-                <Validation form={form} openApiSpec={apiContent.openapi} />
+                <Validation form={form} />
               ) : activeStep === 2 ? (
                 <Tabs activeKey={upstreamRedirectTabSelection} onChange={key => setUpstreamRedirectTabSelection(key)}>
                   <TabPane tab="Upstream" key="upstream">
                     {upstreamRedirectTabSelection === 'upstream' && (
                       <Upstream
                         form={form}
-                        openApiSpec={apiContent.openapi}
                         reference={upstreamReference}
                         setReference={reference => setUpstreamReference(reference)}
                       />
@@ -318,7 +317,6 @@ const ApiDeployModal: React.FC = () => {
                     {upstreamRedirectTabSelection === 'redirect' && (
                       <Redirect
                         form={form}
-                        openApiSpec={apiContent.openapi}
                         selectedTab={redirectTabSelection}
                         setSelectedTab={tabKey => setRedirectTabSelection(tabKey)}
                       />
@@ -326,15 +324,15 @@ const ApiDeployModal: React.FC = () => {
                   </TabPane>
                 </Tabs>
               ) : activeStep === 3 ? (
-                <Hosts form={form} openApiSpec={apiContent.openapi} />
+                <Hosts form={form} />
               ) : activeStep === 4 ? (
-                <QOS form={form} openApiSpec={apiContent.openapi} />
+                <QOS form={form} />
               ) : activeStep === 5 ? (
-                <Path form={form} openApiSpec={apiContent.openapi} />
+                <Path form={form} />
               ) : activeStep === 6 ? (
-                <CORS form={form} openApiSpec={apiContent.openapi} />
+                <CORS form={form} />
               ) : (
-                <Websocket form={form} openApiSpec={apiContent.openapi} />
+                <Websocket form={form} />
               )
             ) : null}
           </Form>
@@ -357,7 +355,7 @@ const cleanseObject = (obj: {[key: string]: any}) => {
       if (!Object.keys(value).length) {
         delete obj[key];
       }
-    } else if (type === 'undefined') {
+    } else if (!value) {
       delete obj[key];
     }
   });

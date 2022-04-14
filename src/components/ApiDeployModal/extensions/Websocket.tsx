@@ -2,13 +2,16 @@ import {useEffect} from 'react';
 
 import {Form, FormInstance, Switch} from 'antd';
 
+import {useAppSelector} from '@redux/hooks';
+
 interface IProps {
   form: FormInstance<any>;
-  openApiSpec: {[key: string]: any};
 }
 
 const Websocket: React.FC<IProps> = props => {
-  const {form, openApiSpec} = props;
+  const {form} = props;
+
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
 
   useEffect(() => {
     const websocket = openApiSpec['x-kusk'].websocket;
