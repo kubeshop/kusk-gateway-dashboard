@@ -45,33 +45,16 @@ const Upstream: React.FC<IProps> = props => {
   };
 
   useEffect(() => {
-    const upstreamService = openApiSpec['x-kusk']?.upstream?.service;
-    const upstreamHost = openApiSpec['x-kusk']?.upstream?.host;
+    const upstream = openApiSpec['x-kusk'].upstream;
 
-    if (upstreamService) {
-      form.setFieldsValue({
-        upstream: {
-          service: {name: upstreamService.name, namespace: upstreamService.namespace, port: upstreamService.port},
-        },
-      });
-
-      if (reference === 'host') {
-        setReference('service');
-      }
-
+    if (!upstream) {
       return;
     }
 
-    if (upstreamHost) {
-      form.setFieldsValue({
-        upstream: {
-          host: {hostname: upstreamHost.hostname, port: upstreamHost.port},
-        },
-      });
+    form.setFieldsValue({upstream});
 
-      if (reference === 'service') {
-        setReference('host');
-      }
+    if (!upstream.service && upstream.host) {
+      setReference('host');
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

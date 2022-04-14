@@ -7,7 +7,7 @@ import YAML from 'yaml';
 import {ApiItem, useDeployApi} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
-import {setApis} from '@redux/reducers/main';
+import {setApis, setNewApiContent, updateNewApiOpenApiSpec} from '@redux/reducers/main';
 import {closeApiDeployModal} from '@redux/reducers/ui';
 
 import {ErrorLabel} from '@components/AntdCustom';
@@ -27,10 +27,10 @@ const {TabPane} = Tabs;
 
 const ApiDeployModal: React.FC = () => {
   const dispatch = useAppDispatch();
+  const apiContent = useAppSelector(state => state.main.newApiContent);
   const apis = useAppSelector(state => state.main.apis);
 
   const [activeStep, setActiveStep] = useState<number>(0);
-  const [apiContent, setApiContent] = useState<{name: string; namespace: string; openapi: {[key: string]: any}}>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [redirectTabSelection, setRedirectTabSelection] = useState<string>('path_redirect');
   const [upstreamRedirectTabSelection, setUpstreamRedirectTabSelection] = useState<string>('upstream');
@@ -69,12 +69,15 @@ const ApiDeployModal: React.FC = () => {
         cors['max_age'] = parseInt(cors['max_age'], 10);
       }
 
-      const deployedOpenApiSpec = {
-        ...apiContent.openapi,
-        'x-kusk': {...apiContent.openapi['x-kusk'], cors},
-      };
+      const deployedOpenApiSpec = JSON.parse(
+        JSON.stringify({
+          ...apiContent.openapi,
+          'x-kusk': {...apiContent.openapi['x-kusk'], cors},
+        })
+      );
 
       cleanseObject(deployedOpenApiSpec);
+      dispatch(updateNewApiOpenApiSpec(deployedOpenApiSpec));
 
       const body = {
         name: apiContent.name,
@@ -88,6 +91,7 @@ const ApiDeployModal: React.FC = () => {
 
           dispatch(setApis([...apis, apiData]));
           dispatch(closeApiDeployModal());
+          dispatch(setNewApiContent(null));
         })
         .catch(err => {
           setErrorMessage(err.data);
@@ -101,11 +105,13 @@ const ApiDeployModal: React.FC = () => {
       if (!activeStep) {
         const {name, namespace, openapi} = values;
 
-        setApiContent({
-          name,
-          namespace: namespace || 'default',
-          openapi: YAML.parse(JSON.parse(JSON.stringify(openapi))),
-        });
+        dispatch(
+          setNewApiContent({
+            name,
+            namespace: namespace || 'default',
+            openapi: YAML.parse(JSON.parse(JSON.stringify(openapi))),
+          })
+        );
 
         setActiveStep(activeStep + 1);
       }
@@ -120,7 +126,7 @@ const ApiDeployModal: React.FC = () => {
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation, websocket}};
 
-        setApiContent({...apiContent, openapi: openApiSpec});
+        dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
 
       // upstream and redirect extension
@@ -165,7 +171,7 @@ const ApiDeployModal: React.FC = () => {
           }
         }
 
-        setApiContent({...apiContent, openapi: openApiSpec});
+        dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
 
       // hosts extension
@@ -174,7 +180,7 @@ const ApiDeployModal: React.FC = () => {
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], hosts}};
 
-        setApiContent({...apiContent, openapi: openApiSpec});
+        dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
 
       // qos extension
@@ -195,7 +201,7 @@ const ApiDeployModal: React.FC = () => {
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], qos}};
 
-        setApiContent({...apiContent, openapi: openApiSpec});
+        dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
 
       // path extension
@@ -204,7 +210,7 @@ const ApiDeployModal: React.FC = () => {
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
 
-        setApiContent({...apiContent, openapi: openApiSpec});
+        dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
 
       setActiveStep(activeStep + 1);

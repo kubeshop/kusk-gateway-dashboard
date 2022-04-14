@@ -5,13 +5,14 @@ import {Checkbox, Form, FormInstance} from 'antd';
 import YAML from 'yaml';
 
 import {ApiItem} from '@models/api';
+import {ApiContent as ApiContentType} from '@models/main';
 
 import {useAppSelector} from '@redux/hooks';
 
 import * as S from './styled';
 
 interface IProps {
-  apiContent: {name: string; namespace: string; openapi: {[key: string]: any}} | undefined;
+  apiContent: ApiContentType | null;
   form: FormInstance<any>;
 }
 
