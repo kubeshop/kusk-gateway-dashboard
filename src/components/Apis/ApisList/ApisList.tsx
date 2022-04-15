@@ -9,7 +9,7 @@ import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi, setApis} from '@redux/reducers/main';
-import {openApiDeployModal, toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
+import {openApiPublishModal, toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
 
 import {ContentWrapper, ErrorLabel, ListTableTitleContainer, ListTableTitleLabel} from '@components/AntdCustom';
 
@@ -75,8 +75,8 @@ const ApisList: React.FC = () => {
     dispatch(selectApi(null));
   };
 
-  const showApiDeployModalHandler = () => {
-    dispatch(openApiDeployModal());
+  const showApiPublishModalHandler = () => {
+    dispatch(openApiPublishModal());
   };
 
   useEffect(() => {
@@ -162,7 +162,7 @@ const ApisList: React.FC = () => {
       ) : (
         apis && (
           <>
-            <ApisListTable apis={apis} /> <S.Button onClick={showApiDeployModalHandler}>Publish new API</S.Button>
+            <ApisListTable apis={apis} /> <S.Button onClick={showApiPublishModalHandler}>Publish new API</S.Button>
           </>
         )
       )}

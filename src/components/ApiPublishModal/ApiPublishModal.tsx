@@ -8,7 +8,7 @@ import {ApiItem, useDeployApi} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setApis, setNewApiContent, updateNewApiOpenApiSpec} from '@redux/reducers/main';
-import {closeApiDeployModal} from '@redux/reducers/ui';
+import {closeApiPublishModal} from '@redux/reducers/ui';
 
 import {ErrorLabel} from '@components/AntdCustom';
 
@@ -37,7 +37,7 @@ const renderedNextButtonText: {[key: number]: string} = {
   7: 'Publish',
 };
 
-const ApiDeployModal: React.FC = () => {
+const ApiPublishModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const apiContent = useAppSelector(state => state.main.newApiContent);
   const apis = useAppSelector(state => state.main.apis);
@@ -54,7 +54,7 @@ const ApiDeployModal: React.FC = () => {
   const [form] = Form.useForm();
 
   const onCancelHandler = () => {
-    dispatch(closeApiDeployModal());
+    dispatch(closeApiPublishModal());
   };
 
   const onDeployHandler = () => {
@@ -90,7 +90,7 @@ const ApiDeployModal: React.FC = () => {
           const apiData: ApiItem = response;
 
           dispatch(setApis([...apis, apiData]));
-          dispatch(closeApiDeployModal());
+          dispatch(closeApiPublishModal());
           dispatch(setNewApiContent(null));
         })
         .catch(err => {
@@ -368,4 +368,4 @@ const cleanseObject = (obj: {[key: string]: any}) => {
   });
 };
 
-export default ApiDeployModal;
+export default ApiPublishModal;
