@@ -15,7 +15,7 @@ interface IProps {
 const CORS: React.FC<IProps> = props => {
   const {form} = props;
 
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
 
   useEffect(() => {
     const cors = openApiSpec['x-kusk'].cors;

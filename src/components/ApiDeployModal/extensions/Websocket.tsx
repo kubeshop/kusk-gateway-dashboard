@@ -11,7 +11,7 @@ interface IProps {
 const Websocket: React.FC<IProps> = props => {
   const {form} = props;
 
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
 
   useEffect(() => {
     const websocket = openApiSpec['x-kusk'].websocket;

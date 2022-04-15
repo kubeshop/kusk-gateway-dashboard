@@ -23,7 +23,7 @@ interface IProps {
 const Upstream: React.FC<IProps> = props => {
   const {form, isApiMocked, reference, setReference} = props;
 
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
   const services = useAppSelector(state => state.main.services);
 
   const [selectedService, setSelectedService] = useState<ServiceItem>();

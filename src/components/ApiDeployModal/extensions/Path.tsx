@@ -13,7 +13,7 @@ interface IProps {
 const Path: React.FC<IProps> = props => {
   const {form} = props;
 
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
 
   useEffect(() => {
     const path = openApiSpec['x-kusk']?.path;

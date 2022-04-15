@@ -13,7 +13,7 @@ interface IProps {
 const QOS: React.FC<IProps> = props => {
   const {form} = props;
 
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
 
   useEffect(() => {
     const qos = openApiSpec['x-kusk']?.qos;

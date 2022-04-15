@@ -12,7 +12,7 @@ interface IProps {
 const Validation: React.FC<IProps> = props => {
   const {form, isApiMocked} = props;
 
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
 
   useEffect(() => {
     const validation = openApiSpec['x-kusk'].validation;

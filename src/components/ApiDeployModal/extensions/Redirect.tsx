@@ -17,7 +17,7 @@ interface IProps {
 const Redirect: React.FC<IProps> = props => {
   const {form, selectedTab, setSelectedTab} = props;
 
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi) || {};
+  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
 
   useEffect(() => {
     const redirect = openApiSpec['x-kusk'].redirect;
