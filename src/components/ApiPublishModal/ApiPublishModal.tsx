@@ -14,9 +14,10 @@ import {ErrorLabel} from '@components/AntdCustom';
 
 import * as S from './styled';
 
-const ApiContent = lazy(() => import('./ApiContent'));
+const ApiInfo = lazy(() => import('./ApiInfo'));
 const CORS = lazy(() => import('./extensions/CORS'));
 const Hosts = lazy(() => import('./extensions/Hosts'));
+const OpenApiSpec = lazy(() => import('./OpenApiSpec'));
 const Path = lazy(() => import('./extensions/Path'));
 const QOS = lazy(() => import('./extensions/QOS'));
 const Redirect = lazy(() => import('./extensions/Redirect'));
@@ -27,14 +28,15 @@ const Websocket = lazy(() => import('./extensions/Websocket'));
 const {TabPane} = Tabs;
 
 const renderedNextButtonText: {[key: number]: string} = {
-  0: 'Add Validation ',
-  1: 'Add Upstream | Redirect',
-  2: 'Add Hosts',
-  3: 'Add QOS',
-  4: 'Add Path',
-  5: 'Add CORS',
-  6: 'Add Websocket',
-  7: 'Publish',
+  0: 'Add API Info',
+  1: 'Add Validation ',
+  2: 'Add Upstream | Redirect',
+  3: 'Add Hosts',
+  4: 'Add QOS',
+  5: 'Add Path',
+  6: 'Add CORS',
+  7: 'Add Websocket',
+  8: 'Publish',
 };
 
 const ApiPublishModal: React.FC = () => {
@@ -101,20 +103,39 @@ const ApiPublishModal: React.FC = () => {
 
   const onNextHandler = () => {
     form.validateFields().then(values => {
-      // api content
+      // openApiSpec and mocking
       if (!activeStep) {
-        const {name, namespace, openapi, mocking} = values;
+        const {openapi, mocking} = values;
 
         let parsedOpenApi = YAML.parse(JSON.parse(JSON.stringify(openapi)));
         parsedOpenApi = {...parsedOpenApi, 'x-kusk': {...parsedOpenApi['x-kusk'], mocking}};
 
-        dispatch(setNewApiContent({name, namespace: namespace || 'default', openapi: parsedOpenApi}));
+        dispatch(
+          setNewApiContent({
+            name: apiContent?.name || '',
+            namespace: apiContent?.namespace || '',
+            openapi: parsedOpenApi,
+          })
+        );
 
         if (mocking?.enabled) {
           setIsApiMocked(true);
         } else if (isApiMocked) {
           setIsApiMocked(false);
         }
+
+        setActiveStep(activeStep + 1);
+      }
+
+      if (!apiContent?.openapi) {
+        return;
+      }
+
+      // api info
+      if (activeStep === 1) {
+        const {name, namespace} = values;
+
+        dispatch(setNewApiContent({name, namespace: namespace || 'default', openapi: apiContent.openapi}));
 
         setActiveStep(activeStep + 1);
       }
@@ -247,15 +268,6 @@ const ApiPublishModal: React.FC = () => {
   };
 
   useEffect(() => {
-    if (activeStep === 0) {
-      const mocking = apiContent?.openapi['x-kusk'].mocking;
-
-      if (mocking) {
-        form.setFieldsValue({mocking});
-      }
-      return;
-    }
-
     if (activeStep !== 2 || !apiContent) {
       return;
     }
@@ -287,6 +299,7 @@ const ApiPublishModal: React.FC = () => {
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStep}>
+            <S.Step title="OpenAPI Spec" />
             <S.Step title="API Content" />
             <S.Step title="Validation" />
             <S.Step title="Upstream | Redirect" />
@@ -310,9 +323,10 @@ const ApiPublishModal: React.FC = () => {
             }}
           >
             <Suspense fallback={<Skeleton />}>
-              {activeStep === 0 && <ApiContent form={form} />}
-              {activeStep === 1 && <Validation form={form} isApiMocked={isApiMocked} />}
-              {activeStep === 2 && (
+              {activeStep === 0 && <OpenApiSpec form={form} />}
+              {activeStep === 1 && <ApiInfo form={form} />}
+              {activeStep === 2 && <Validation form={form} isApiMocked={isApiMocked} />}
+              {activeStep === 3 && (
                 <Tabs activeKey={upstreamRedirectTabSelection} onChange={key => setUpstreamRedirectTabSelection(key)}>
                   <TabPane tab="Upstream" key="upstream">
                     {upstreamRedirectTabSelection === 'upstream' && (
@@ -336,11 +350,11 @@ const ApiPublishModal: React.FC = () => {
                   </TabPane>
                 </Tabs>
               )}
-              {activeStep === 3 && <Hosts form={form} />}
-              {activeStep === 4 && <QOS form={form} />}
-              {activeStep === 5 && <Path form={form} />}
-              {activeStep === 6 && <CORS form={form} />}
-              {activeStep === 7 && <Websocket form={form} />}
+              {activeStep === 4 && <Hosts form={form} />}
+              {activeStep === 5 && <QOS form={form} />}
+              {activeStep === 6 && <Path form={form} />}
+              {activeStep === 7 && <CORS form={form} />}
+              {activeStep === 8 && <Websocket form={form} />}
             </Suspense>
           </Form>
 
