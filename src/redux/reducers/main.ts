@@ -1,8 +1,7 @@
 import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
 
-import {MainState, ServicesData} from 'src/models/main';
-
 import {ApiItem, EnvoyFleetItem, StaticRouteItem} from '@models/api';
+import {ApiContent, MainState, ServicesData} from '@models/main';
 
 import initialState from '@redux/initialState';
 
@@ -22,11 +21,29 @@ export const mainSlice = createSlice({
     setApis: (state: Draft<MainState>, action: PayloadAction<ApiItem[]>) => {
       state.apis = action.payload;
     },
+    setNewApiContent: (state: Draft<MainState>, action: PayloadAction<ApiContent | null>) => {
+      state.newApiContent = action.payload;
+    },
     setServices: (state: Draft<MainState>, action: PayloadAction<ServicesData>) => {
       state.services = action.payload;
+    },
+    updateNewApiOpenApiSpec: (state: Draft<MainState>, action: PayloadAction<{[key: string]: any}>) => {
+      if (!state.newApiContent) {
+        return;
+      }
+
+      state.newApiContent.openapi = action.payload;
     },
   },
 });
 
-export const {selectApi, selectEnvoyFleet, selectStaticRoute, setApis, setServices} = mainSlice.actions;
+export const {
+  selectApi,
+  selectEnvoyFleet,
+  selectStaticRoute,
+  setApis,
+  setNewApiContent,
+  setServices,
+  updateNewApiOpenApiSpec,
+} = mainSlice.actions;
 export default mainSlice.reducer;

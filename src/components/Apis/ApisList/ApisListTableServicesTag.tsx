@@ -30,7 +30,7 @@ const ApisListTableServicesTag: React.FC<IProps> = props => {
     <S.Container>
       {services.isLoading ? (
         <Skeleton.Button />
-      ) : services.error || service?.status === 'unavailable' ? (
+      ) : services.error || !service || service.status === 'unavailable' ? (
         <S.FalseTag>Unavailable</S.FalseTag>
       ) : (
         service?.status === 'available' && <S.TrueTag>Available</S.TrueTag>

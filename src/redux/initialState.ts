@@ -3,6 +3,7 @@ import {UiState} from '@models/ui';
 
 const initialMainState: MainState = {
   apis: [],
+  newApiContent: null,
   selectedApi: null,
   selectedEnvoyFleet: null,
   selectedStaticRoute: null,

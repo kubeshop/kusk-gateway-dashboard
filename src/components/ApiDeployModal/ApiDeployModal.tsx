@@ -1,40 +1,55 @@
-import {useEffect, useMemo, useState} from 'react';
+import {Suspense, lazy, useEffect, useState} from 'react';
 
-import {Button, Form, Modal, Select, Skeleton, Steps, Tag} from 'antd';
+import {Button, Form, Modal, Skeleton, Steps, Tabs} from 'antd';
 
 import YAML from 'yaml';
 
-import {ApiItem, ServiceItem, useDeployApi} from '@models/api';
+import {ApiItem, useDeployApi} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
-import {setApis} from '@redux/reducers/main';
+import {setApis, setNewApiContent, updateNewApiOpenApiSpec} from '@redux/reducers/main';
 import {closeApiDeployModal} from '@redux/reducers/ui';
 
 import {ErrorLabel} from '@components/AntdCustom';
 
 import * as S from './styled';
 
-const {Option} = Select;
+const ApiContent = lazy(() => import('./ApiContent'));
+const CORS = lazy(() => import('./extensions/CORS'));
+const Hosts = lazy(() => import('./extensions/Hosts'));
+const Path = lazy(() => import('./extensions/Path'));
+const QOS = lazy(() => import('./extensions/QOS'));
+const Redirect = lazy(() => import('./extensions/Redirect'));
+const Upstream = lazy(() => import('./extensions/Upstream'));
+const Validation = lazy(() => import('./extensions/Validation'));
+const Websocket = lazy(() => import('./extensions/Websocket'));
+
+const {TabPane} = Tabs;
+
+const renderedNextButtonText: {[key: number]: string} = {
+  0: 'Add Validation ',
+  1: 'Add Upstream | Redirect',
+  2: 'Add Hosts',
+  3: 'Add QOS',
+  4: 'Add Path',
+  5: 'Add CORS',
+  6: 'Add Websocket',
+  7: 'Publish',
+};
 
 const ApiDeployModal: React.FC = () => {
   const dispatch = useAppDispatch();
+  const apiContent = useAppSelector(state => state.main.newApiContent);
   const apis = useAppSelector(state => state.main.apis);
-  const services = useAppSelector(state => state.main.services);
 
   const [activeStep, setActiveStep] = useState<number>(0);
-  const [apiContent, setApiContent] = useState<{name: string; namespace: string; openapi: {[key: string]: any}}>();
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [selectedService, setSelectedService] = useState<ServiceItem>();
+  const [isApiMocked, setIsApiMocked] = useState<boolean>(false);
+  const [redirectTabSelection, setRedirectTabSelection] = useState<string>('path_redirect');
+  const [upstreamRedirectTabSelection, setUpstreamRedirectTabSelection] = useState<string>('upstream');
+  const [upstreamReference, setUpstreamReference] = useState<string>('service');
 
   const {mutate: deployAPI} = useDeployApi({});
-
-  const selectedServicePorts = useMemo(() => {
-    if (!selectedService) {
-      return [];
-    }
-
-    return selectedService.ports?.map(port => port.port);
-  }, [selectedService]);
 
   const [form] = Form.useForm();
 
@@ -48,10 +63,21 @@ const ApiDeployModal: React.FC = () => {
     }
 
     form.validateFields().then(values => {
-      const deployedOpenApiSpec = {
-        ...apiContent.openapi,
-        'x-kusk': {...apiContent.openapi['x-kusk'], upstream: {...values.upstream}},
-      };
+      const {websocket} = values;
+
+      const deployedOpenApiSpec = JSON.parse(
+        JSON.stringify({
+          ...apiContent.openapi,
+          'x-kusk': {...apiContent.openapi['x-kusk'], websocket},
+        })
+      );
+
+      if (isApiMocked) {
+        delete deployedOpenApiSpec['x-kusk'].validation;
+      }
+
+      cleanseObject(deployedOpenApiSpec);
+      dispatch(updateNewApiOpenApiSpec(deployedOpenApiSpec));
 
       const body = {
         name: apiContent.name,
@@ -65,6 +91,7 @@ const ApiDeployModal: React.FC = () => {
 
           dispatch(setApis([...apis, apiData]));
           dispatch(closeApiDeployModal());
+          dispatch(setNewApiContent(null));
         })
         .catch(err => {
           setErrorMessage(err.data);
@@ -74,62 +101,167 @@ const ApiDeployModal: React.FC = () => {
 
   const onNextHandler = () => {
     form.validateFields().then(values => {
-      const {name, namespace, openapi} = values;
+      // api content
+      if (!activeStep) {
+        const {name, namespace, openapi, mocking} = values;
 
-      setApiContent({
-        name,
-        namespace: namespace || 'default',
-        openapi: YAML.parse(JSON.parse(JSON.stringify(openapi))),
-      });
-      setActiveStep(1);
-    });
-  };
+        let parsedOpenApi = YAML.parse(JSON.parse(JSON.stringify(openapi)));
+        parsedOpenApi = {...parsedOpenApi, 'x-kusk': {...parsedOpenApi['x-kusk'], mocking}};
 
-  const onServiceSelectClearHandler = () => {
-    setSelectedService(undefined);
-  };
+        dispatch(setNewApiContent({name, namespace: namespace || 'default', openapi: parsedOpenApi}));
 
-  const onServiceSelectHandler = (service: ServiceItem) => {
-    setSelectedService(service);
-  };
+        if (mocking?.enabled) {
+          setIsApiMocked(true);
+        } else if (isApiMocked) {
+          setIsApiMocked(false);
+        }
 
-  useEffect(() => {
-    if (selectedService) {
-      form.setFieldsValue({
-        upstream: {service: {name: selectedService.name, namespace: selectedService.namespace, port: undefined}},
-      });
+        setActiveStep(activeStep + 1);
+      }
 
-      return;
-    }
-
-    form.resetFields();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedService]);
-
-  useEffect(() => {
-    setErrorMessage('');
-
-    if (!activeStep && apiContent) {
-      form.setFieldsValue({
-        name: apiContent.name,
-        namespace: apiContent.namespace,
-        openapi: YAML.stringify(apiContent.openapi),
-      });
-    } else {
-      if (!activeStep || !apiContent) {
+      if (!apiContent) {
         return;
       }
 
-      const upstreamService = apiContent.openapi['x-kusk']?.upstream?.service;
+      // validation
+      if (activeStep === 1) {
+        const {validation} = values;
 
-      if (upstreamService) {
-        form.setFieldsValue({
-          upstream: {
-            service: {name: upstreamService.name, namespace: upstreamService.namespace, port: upstreamService.port},
-          },
-        });
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation}};
+
+        dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
+
+      // upstream and redirect extension
+      if (activeStep === 2) {
+        const {redirect, upstream} = values;
+
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk']}};
+
+        if (upstreamRedirectTabSelection === 'redirect') {
+          if (redirect['port_redirect']) {
+            redirect['port_redirect'] = parseInt(redirect['port_redirect'], 10);
+          }
+
+          if (redirect['response_code']) {
+            redirect['response_code'] = parseInt(redirect['response_code'], 10);
+          }
+
+          openApiSpec['x-kusk'].redirect = redirect;
+
+          if (redirectTabSelection === 'path_redirect') {
+            delete openApiSpec['x-kusk'].redirect['rewrite_regex'];
+          } else {
+            delete openApiSpec['x-kusk'].redirect['path_redirect'];
+          }
+
+          if (openApiSpec['x-kusk'].upstream) {
+            delete openApiSpec['x-kusk'].upstream;
+          }
+        } else {
+          openApiSpec['x-kusk'].upstream = upstream;
+
+          if (upstreamReference === 'service') {
+            delete openApiSpec['x-kusk'].upstream.host;
+            openApiSpec['x-kusk'].upstream.service.port = parseInt(upstream.service.port, 10);
+          } else {
+            delete openApiSpec['x-kusk'].upstream.service;
+            openApiSpec['x-kusk'].upstream.host.port = parseInt(upstream.host.port, 10);
+          }
+
+          if (openApiSpec['x-kusk'].redirect) {
+            delete openApiSpec['x-kusk'].redirect;
+          }
+        }
+
+        dispatch(updateNewApiOpenApiSpec(openApiSpec));
+      }
+
+      // hosts extension
+      if (activeStep === 3) {
+        const {hosts} = values;
+
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], hosts}};
+
+        dispatch(updateNewApiOpenApiSpec(openApiSpec));
+      }
+
+      // qos extension
+      if (activeStep === 4) {
+        const {qos} = values;
+
+        if (qos['idle_timeout']) {
+          qos['idle_timeout'] = parseInt(qos['idle_timeout'], 10);
+        }
+
+        if (qos['retries']) {
+          qos['retries'] = parseInt(qos['retries'], 10);
+        }
+
+        if (qos['request_timeout']) {
+          qos['request_timeout'] = parseInt(qos['request_timeout'], 10);
+        }
+
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], qos}};
+
+        dispatch(updateNewApiOpenApiSpec(openApiSpec));
+      }
+
+      // path extension
+      if (activeStep === 5) {
+        const {path} = values;
+
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
+
+        dispatch(updateNewApiOpenApiSpec(openApiSpec));
+      }
+
+      // cors extension
+      if (activeStep === 6) {
+        const {cors} = values;
+
+        if (cors['max_age']) {
+          cors['max_age'] = parseInt(cors['max_age'], 10);
+        }
+
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], cors}};
+
+        dispatch(updateNewApiOpenApiSpec(openApiSpec));
+      }
+
+      setActiveStep(activeStep + 1);
+    });
+  };
+
+  const onBackHandler = () => {
+    setActiveStep(activeStep - 1);
+    setErrorMessage('');
+  };
+
+  const onSubmitHandler = () => {
+    if (activeStep === 7) {
+      onDeployHandler();
+    } else {
+      onNextHandler();
+    }
+  };
+
+  useEffect(() => {
+    if (activeStep === 0) {
+      const mocking = apiContent?.openapi['x-kusk'].mocking;
+
+      if (mocking) {
+        form.setFieldsValue({mocking});
+      }
+      return;
+    }
+
+    if (activeStep !== 2 || !apiContent) {
+      return;
+    }
+
+    if (!apiContent.openapi['x-kusk']?.upstream && apiContent.openapi['x-kusk']?.redirect) {
+      setUpstreamRedirectTabSelection('redirect');
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,34 +269,36 @@ const ApiDeployModal: React.FC = () => {
 
   return (
     <Modal
+      bodyStyle={{height: '600px'}}
       footer={
-        activeStep ? (
-          <>
-            <Button onClick={() => setActiveStep(0)}>Back</Button>
-            <Button type="primary" onClick={onDeployHandler}>
-              Deploy
-            </Button>
-          </>
-        ) : (
-          <Button type="primary" onClick={onNextHandler}>
-            Next
+        <>
+          {activeStep ? <Button onClick={onBackHandler}>Back</Button> : null}
+
+          <Button type="primary" onClick={onSubmitHandler}>
+            {renderedNextButtonText[activeStep]}
           </Button>
-        )
+        </>
       }
-      title="Deploy New API"
+      title="Publish New API"
       visible
-      width="800px"
+      width="900px"
       onCancel={onCancelHandler}
     >
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStep}>
             <S.Step title="API Content" />
-            <S.Step title="Upstream Service" />
+            <S.Step title="Validation" />
+            <S.Step title="Upstream | Redirect" />
+            <S.Step title="Hosts" />
+            <S.Step title="QOS" />
+            <S.Step title="Path" />
+            <S.Step title="CORS" />
+            <S.Step title="Websocket" />
           </Steps>
         </S.StepsContainer>
 
-        <div>
+        <S.FormContainer>
           <Form
             form={form}
             initialValues={{openapi: ''}}
@@ -175,141 +309,63 @@ const ApiDeployModal: React.FC = () => {
               }
             }}
           >
-            {activeStep === 0 ? (
-              <>
-                <Form.Item
-                  label="Name"
-                  name="name"
-                  rules={[
-                    {required: true, message: 'Enter API name!'},
-                    {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern!'},
-                    {max: 63, type: 'string', message: 'Name is too long!'},
-                    () => {
-                      return {
-                        validator(_, value) {
-                          const namespace = form.getFieldValue('namespace') || 'default';
+            <Suspense fallback={<Skeleton />}>
+              {activeStep === 0 && <ApiContent form={form} />}
+              {activeStep === 1 && <Validation form={form} isApiMocked={isApiMocked} />}
+              {activeStep === 2 && (
+                <Tabs activeKey={upstreamRedirectTabSelection} onChange={key => setUpstreamRedirectTabSelection(key)}>
+                  <TabPane tab="Upstream" key="upstream">
+                    {upstreamRedirectTabSelection === 'upstream' && (
+                      <Upstream
+                        form={form}
+                        isApiMocked={isApiMocked}
+                        reference={upstreamReference}
+                        setReference={reference => setUpstreamReference(reference)}
+                      />
+                    )}
+                  </TabPane>
 
-                          if (checkDuplicateAPI(apis, `${namespace}-${value}`)) {
-                            return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
-                          }
-
-                          return Promise.resolve();
-                        },
-                      };
-                    },
-                  ]}
-                >
-                  <S.Input placeholder="Enter API name" type="text" />
-                </Form.Item>
-
-                <Form.Item label="Namespace" name="namespace">
-                  <S.Input
-                    placeholder="Enter API namespace"
-                    type="text"
-                    onChange={() => {
-                      if (form.getFieldValue('name')) {
-                        form.validateFields(['name']);
-                      }
-                    }}
-                  />
-                </Form.Item>
-
-                <Form.Item
-                  label="OpenAPI Spec"
-                  name="openapi"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please enter your API content!',
-                    },
-                    () => {
-                      return {
-                        validator(_, value) {
-                          if (typeof YAML.parse(JSON.parse(JSON.stringify(value))) === 'object') {
-                            return Promise.resolve();
-                          }
-
-                          return Promise.reject(new Error('Please enter a valid API content!'));
-                        },
-                      };
-                    },
-                  ]}
-                >
-                  <S.Textarea rows={10} placeholder="Enter OpenAPI Spec in YAML/JSON format" />
-                </Form.Item>
-              </>
-            ) : (
-              <>
-                {services.isLoading ? (
-                  <Skeleton.Button />
-                ) : services.error ? (
-                  <ErrorLabel>{services.error}</ErrorLabel>
-                ) : (
-                  <Form.Item name="service" label="Cluster Services">
-                    <S.Select
-                      allowClear
-                      placeholder="Select service"
-                      showSearch
-                      onClear={onServiceSelectClearHandler}
-                      onSelect={(value: any, option: any) => {
-                        onServiceSelectHandler(option.service);
-                      }}
-                    >
-                      {services.items.map(serviceItem => (
-                        <Option key={`${serviceItem.namespace}-${serviceItem.name}`} service={serviceItem}>
-                          <Tag>{serviceItem.namespace}</Tag>
-                          {serviceItem.name}
-                        </Option>
-                      ))}
-                    </S.Select>
-                  </Form.Item>
-                )}
-
-                <Form.Item
-                  label="Name"
-                  name={['upstream', 'service', 'name']}
-                  rules={[{required: true, message: 'Please enter a name!'}]}
-                >
-                  <S.Input disabled={Boolean(selectedService)} />
-                </Form.Item>
-
-                <Form.Item
-                  label="Namespace"
-                  name={['upstream', 'service', 'namespace']}
-                  rules={[{required: true, message: 'Please enter a namespace!'}]}
-                >
-                  <S.Input disabled={Boolean(selectedService)} />
-                </Form.Item>
-
-                <Form.Item
-                  label="Port"
-                  name={['upstream', 'service', 'port']}
-                  rules={[{required: true, message: `Please ${selectedService ? 'choose' : 'enter'} a valid port!`}]}
-                >
-                  {selectedService ? (
-                    <S.Select placeholder="Select port">
-                      {selectedServicePorts.map(port => (
-                        <Option key={port} value={port}>
-                          {port}
-                        </Option>
-                      ))}
-                    </S.Select>
-                  ) : (
-                    <S.Input type="number" />
-                  )}
-                </Form.Item>
-              </>
-            )}
+                  <TabPane tab="Redirect" key="redirect">
+                    {upstreamRedirectTabSelection === 'redirect' && (
+                      <Redirect
+                        form={form}
+                        selectedTab={redirectTabSelection}
+                        setSelectedTab={tabKey => setRedirectTabSelection(tabKey)}
+                      />
+                    )}
+                  </TabPane>
+                </Tabs>
+              )}
+              {activeStep === 3 && <Hosts form={form} />}
+              {activeStep === 4 && <QOS form={form} />}
+              {activeStep === 5 && <Path form={form} />}
+              {activeStep === 6 && <CORS form={form} />}
+              {activeStep === 7 && <Websocket form={form} />}
+            </Suspense>
           </Form>
 
           {errorMessage && <ErrorLabel>*{errorMessage}</ErrorLabel>}
-        </div>
+        </S.FormContainer>
       </S.Container>
     </Modal>
   );
 };
 
-const checkDuplicateAPI = (apis: ApiItem[], apiKey: string) =>
-  apis.find(api => `${api.namespace}-${api.name}` === apiKey);
+const cleanseObject = (obj: {[key: string]: any}) => {
+  Object.keys(obj).forEach(key => {
+    let value = obj[key];
+    let type = typeof value;
+
+    if (type === 'object') {
+      cleanseObject(value);
+
+      if (!Object.keys(value).length) {
+        delete obj[key];
+      }
+    } else if (!value) {
+      delete obj[key];
+    }
+  });
+};
 
 export default ApiDeployModal;

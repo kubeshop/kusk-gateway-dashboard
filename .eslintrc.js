@@ -29,6 +29,7 @@ module.exports = {
     'comma-dangle': 'off',
     'no-multiple-empty-lines': 1,
     'no-useless-escape': 'off',
+    'no-unsafe-optional-chaining': 'off',
     'object-curly-newline': 'off',
     'lines-between-class-members': 'off',
     'unused-imports/no-unused-imports-ts': 'error',
