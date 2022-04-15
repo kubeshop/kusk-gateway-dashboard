@@ -1,4 +1,4 @@
-import {Suspense, lazy, useEffect, useState} from 'react';
+import {Suspense, lazy, useEffect, useMemo, useState} from 'react';
 
 import {Button, Form, Modal, Skeleton, Steps, Tabs} from 'antd';
 
@@ -39,12 +39,25 @@ const renderedNextButtonText: {[key: number]: string} = {
   8: 'Publish',
 };
 
+const orderedSteps = [
+  'openApiSpec',
+  'apiInfo',
+  'validation',
+  'upstreamOrRedirect',
+  'hosts',
+  'qos',
+  'path',
+  'cors',
+  'websocket',
+] as const;
+type StepType = typeof orderedSteps[number];
+
 const ApiPublishModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const apiContent = useAppSelector(state => state.main.newApiContent);
   const apis = useAppSelector(state => state.main.apis);
 
-  const [activeStep, setActiveStep] = useState<number>(0);
+  const [activeStep, setActiveStep] = useState<StepType>('openApiSpec');
   const [errorMessage, setErrorMessage] = useState<string>();
   const [isApiMocked, setIsApiMocked] = useState<boolean>(false);
   const [redirectTabSelection, setRedirectTabSelection] = useState<string>('path_redirect');
@@ -54,6 +67,8 @@ const ApiPublishModal: React.FC = () => {
   const {mutate: deployAPI} = useDeployApi({});
 
   const [form] = Form.useForm();
+
+  const activeStepIndex = useMemo(() => orderedSteps.indexOf(activeStep), [activeStep]);
 
   const onCancelHandler = () => {
     dispatch(closeApiPublishModal());
@@ -103,8 +118,7 @@ const ApiPublishModal: React.FC = () => {
 
   const onNextHandler = () => {
     form.validateFields().then(values => {
-      // openApiSpec and mocking
-      if (!activeStep) {
+      if (activeStep === 'openApiSpec') {
         const {openapi, mocking} = values;
 
         let parsedOpenApi = YAML.parse(JSON.parse(JSON.stringify(openapi)));
@@ -137,28 +151,26 @@ const ApiPublishModal: React.FC = () => {
           setIsApiMocked(false);
         }
 
-        setActiveStep(activeStep + 1);
+        setActiveStep('apiInfo');
       }
 
       if (!apiContent?.openapi) {
         return;
       }
 
-      // api info
-      if (activeStep === 1) {
+      if (activeStep === 'apiInfo') {
         const {name, namespace} = values;
 
         dispatch(setNewApiContent({name, namespace: namespace || 'default', openapi: apiContent.openapi}));
 
-        setActiveStep(activeStep + 1);
+        setActiveStep('validation');
       }
 
       if (!apiContent) {
         return;
       }
 
-      // validation
-      if (activeStep === 2) {
+      if (activeStep === 'validation') {
         const {validation} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation}};
@@ -166,8 +178,7 @@ const ApiPublishModal: React.FC = () => {
         dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
 
-      // upstream and redirect extension
-      if (activeStep === 3) {
+      if (activeStep === 'upstreamOrRedirect') {
         const {redirect, upstream} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk']}};
@@ -211,8 +222,7 @@ const ApiPublishModal: React.FC = () => {
         dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
 
-      // hosts extension
-      if (activeStep === 4) {
+      if (activeStep === 'hosts') {
         const {hosts} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], hosts}};
@@ -220,8 +230,7 @@ const ApiPublishModal: React.FC = () => {
         dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
 
-      // qos extension
-      if (activeStep === 5) {
+      if (activeStep === 'qos') {
         const {qos} = values;
 
         if (qos['idle_timeout']) {
@@ -241,8 +250,7 @@ const ApiPublishModal: React.FC = () => {
         dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
 
-      // path extension
-      if (activeStep === 6) {
+      if (activeStep === 'path') {
         const {path} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
@@ -250,8 +258,7 @@ const ApiPublishModal: React.FC = () => {
         dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
 
-      // cors extension
-      if (activeStep === 7) {
+      if (activeStep === 'cors') {
         const {cors} = values;
 
         if (cors['max_age']) {
@@ -263,17 +270,17 @@ const ApiPublishModal: React.FC = () => {
         dispatch(updateNewApiOpenApiSpec(openApiSpec));
       }
 
-      setActiveStep(activeStep + 1);
+      setActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]);
     });
   };
 
   const onBackHandler = () => {
-    setActiveStep(activeStep - 1);
+    setActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) - 1]);
     setErrorMessage('');
   };
 
   const onSubmitHandler = () => {
-    if (activeStep === 8) {
+    if (activeStep === 'websocket') {
       onDeployHandler();
     } else {
       onNextHandler();
@@ -281,7 +288,7 @@ const ApiPublishModal: React.FC = () => {
   };
 
   useEffect(() => {
-    if (activeStep !== 3 || !apiContent) {
+    if (activeStep !== 'upstreamOrRedirect' || !apiContent) {
       return;
     }
 
@@ -297,10 +304,10 @@ const ApiPublishModal: React.FC = () => {
       bodyStyle={{height: '600px'}}
       footer={
         <>
-          {activeStep ? <Button onClick={onBackHandler}>Back</Button> : null}
+          {activeStep !== 'openApiSpec' ? <Button onClick={onBackHandler}>Back</Button> : null}
 
           <Button type="primary" onClick={onSubmitHandler}>
-            {renderedNextButtonText[activeStep]}
+            {renderedNextButtonText[activeStepIndex]}
           </Button>
         </>
       }
@@ -311,7 +318,7 @@ const ApiPublishModal: React.FC = () => {
     >
       <S.Container>
         <S.StepsContainer>
-          <Steps direction="vertical" current={activeStep}>
+          <Steps direction="vertical" current={activeStepIndex}>
             <S.Step title="OpenAPI Spec" />
             <S.Step title="API Content" />
             <S.Step title="Validation" />
@@ -336,10 +343,10 @@ const ApiPublishModal: React.FC = () => {
             }}
           >
             <Suspense fallback={<Skeleton />}>
-              {activeStep === 0 && <OpenApiSpec form={form} />}
-              {activeStep === 1 && <ApiInfo form={form} />}
-              {activeStep === 2 && <Validation form={form} isApiMocked={isApiMocked} />}
-              {activeStep === 3 && (
+              {activeStep === 'openApiSpec' && <OpenApiSpec form={form} />}
+              {activeStep === 'apiInfo' && <ApiInfo form={form} />}
+              {activeStep === 'validation' && <Validation form={form} isApiMocked={isApiMocked} />}
+              {activeStep === 'upstreamOrRedirect' && (
                 <Tabs activeKey={upstreamRedirectTabSelection} onChange={key => setUpstreamRedirectTabSelection(key)}>
                   <TabPane tab="Upstream" key="upstream">
                     {upstreamRedirectTabSelection === 'upstream' && (
@@ -363,11 +370,11 @@ const ApiPublishModal: React.FC = () => {
                   </TabPane>
                 </Tabs>
               )}
-              {activeStep === 4 && <Hosts form={form} />}
-              {activeStep === 5 && <QOS form={form} />}
-              {activeStep === 6 && <Path form={form} />}
-              {activeStep === 7 && <CORS form={form} />}
-              {activeStep === 8 && <Websocket form={form} />}
+              {activeStep === 'hosts' && <Hosts form={form} />}
+              {activeStep === 'qos' && <QOS form={form} />}
+              {activeStep === 'path' && <Path form={form} />}
+              {activeStep === 'cors' && <CORS form={form} />}
+              {activeStep === 'websocket' && <Websocket form={form} />}
             </Suspense>
           </Form>
 
