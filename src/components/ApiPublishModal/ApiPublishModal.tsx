@@ -114,7 +114,9 @@ const ApiPublishModal: React.FC = () => {
         let namespace = apiContent?.namespace || '';
 
         if (mocking?.enabled) {
-          namespace = 'kusk';
+          if (!apiContent) {
+            namespace = 'kusk';
+          }
 
           if (!name.startsWith('mock-')) {
             name = `mock-${name}`;
