@@ -110,13 +110,24 @@ const ApiPublishModal: React.FC = () => {
         let parsedOpenApi = YAML.parse(JSON.parse(JSON.stringify(openapi)));
         parsedOpenApi = {...parsedOpenApi, 'x-kusk': {...parsedOpenApi['x-kusk'], mocking}};
 
-        dispatch(
-          setNewApiContent({
-            name: apiContent?.name || '',
-            namespace: apiContent?.namespace || '',
-            openapi: parsedOpenApi,
-          })
-        );
+        let name = apiContent?.name || formatApiName(parsedOpenApi.info.title) || '';
+        let namespace = apiContent?.namespace || '';
+
+        if (mocking?.enabled) {
+          namespace = 'kusk';
+
+          if (!name.startsWith('mock-')) {
+            name = `mock-${name}`;
+          }
+        } else if (!mocking?.enabled && name.startsWith('mock-')) {
+          namespace = '';
+
+          if (name.startsWith('mock-')) {
+            name = name.replace('mock-', '');
+          }
+        }
+
+        dispatch(setNewApiContent({name, namespace, openapi: parsedOpenApi}));
 
         if (mocking?.enabled) {
           setIsApiMocked(true);
@@ -381,5 +392,7 @@ const cleanseObject = (obj: {[key: string]: any}) => {
     }
   });
 };
+
+const formatApiName = (name: string) => name.replace(/\s/g, '-').toLowerCase();
 
 export default ApiPublishModal;
