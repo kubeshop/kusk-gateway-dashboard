@@ -14,7 +14,7 @@ const initialMainState: MainState = {
 };
 
 const initialUiState: UiState = {
-  apiDeployModal: {
+  apiPublishModal: {
     isOpen: false,
   },
   apiInfoActiveTab: 'raw-api-spec',

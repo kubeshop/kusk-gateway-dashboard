@@ -11,12 +11,12 @@ export const uiSlice = createSlice({
   name: 'ui',
   initialState: initialState.ui,
   reducers: {
-    closeApiDeployModal: (state: Draft<UiState>) => {
-      state.apiDeployModal.isOpen = false;
+    closeApiPublishModal: (state: Draft<UiState>) => {
+      state.apiPublishModal.isOpen = false;
     },
 
-    openApiDeployModal: (state: Draft<UiState>) => {
-      state.apiDeployModal.isOpen = true;
+    openApiPublishModal: (state: Draft<UiState>) => {
+      state.apiPublishModal.isOpen = true;
     },
 
     setApiInfoActiveTab: (state: Draft<UiState>, action: PayloadAction<ApiInfoTabs>) => {
@@ -68,8 +68,8 @@ export const uiSlice = createSlice({
 });
 
 export const {
-  closeApiDeployModal,
-  openApiDeployModal,
+  closeApiPublishModal,
+  openApiPublishModal,
   setApiInfoActiveTab,
   setEnvoyFleetInfoActiveTab,
   setKuskExtensionsActiveKeys,

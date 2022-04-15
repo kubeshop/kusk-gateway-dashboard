@@ -2,19 +2,17 @@ import {useEffect} from 'react';
 
 import {Form, FormInstance} from 'antd';
 
-import YAML from 'yaml';
-
 import {ApiItem} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
-import * as S from './ApiContent.styled';
+import * as S from './ApiInfo.styled';
 
 interface IProps {
   form: FormInstance<any>;
 }
 
-const ApiContent: React.FC<IProps> = props => {
+const ApiInfo: React.FC<IProps> = props => {
   const {form} = props;
 
   const apiContent = useAppSelector(state => state.main.newApiContent);
@@ -25,11 +23,7 @@ const ApiContent: React.FC<IProps> = props => {
       return;
     }
 
-    form.setFieldsValue({
-      name: apiContent.name,
-      namespace: apiContent.namespace,
-      openapi: YAML.stringify(apiContent.openapi),
-    });
+    form.setFieldsValue({name: apiContent.name, namespace: apiContent.namespace});
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiContent]);
@@ -72,34 +66,6 @@ const ApiContent: React.FC<IProps> = props => {
           }}
         />
       </Form.Item>
-
-      <Form.Item
-        label="OpenAPI Spec"
-        name="openapi"
-        rules={[
-          {
-            required: true,
-            message: 'Please enter your API content!',
-          },
-          () => {
-            return {
-              validator(_, value) {
-                if (typeof YAML.parse(JSON.parse(JSON.stringify(value))) === 'object') {
-                  return Promise.resolve();
-                }
-
-                return Promise.reject(new Error('Please enter a valid API content!'));
-              },
-            };
-          },
-        ]}
-      >
-        <S.Textarea rows={10} placeholder="Enter OpenAPI Spec in YAML/JSON format" />
-      </Form.Item>
-
-      {/* <Form.Item name={['mocking', 'enabled']} valuePropName="checked">
-        <Checkbox>Enable mocking</Checkbox>
-      </Form.Item> */}
     </>
   );
 };
@@ -107,4 +73,4 @@ const ApiContent: React.FC<IProps> = props => {
 const checkDuplicateAPI = (apis: ApiItem[], apiKey: string) =>
   apis.find(api => `${api.namespace}-${api.name}` === apiKey);
 
-export default ApiContent;
+export default ApiInfo;
