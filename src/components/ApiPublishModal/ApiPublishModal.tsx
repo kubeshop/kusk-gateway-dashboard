@@ -78,7 +78,7 @@ const ApiPublishModal: React.FC = () => {
         delete deployedOpenApiSpec['x-kusk'].validation;
       }
 
-      cleanseObject(deployedOpenApiSpec);
+      cleanseObject(deployedOpenApiSpec['x-kusk']);
       dispatch(updateNewApiOpenApiSpec(deployedOpenApiSpec));
 
       const body = {
@@ -156,7 +156,7 @@ const ApiPublishModal: React.FC = () => {
       }
 
       // validation
-      if (activeStep === 1) {
+      if (activeStep === 2) {
         const {validation} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation}};
@@ -165,7 +165,7 @@ const ApiPublishModal: React.FC = () => {
       }
 
       // upstream and redirect extension
-      if (activeStep === 2) {
+      if (activeStep === 3) {
         const {redirect, upstream} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk']}};
@@ -210,7 +210,7 @@ const ApiPublishModal: React.FC = () => {
       }
 
       // hosts extension
-      if (activeStep === 3) {
+      if (activeStep === 4) {
         const {hosts} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], hosts}};
@@ -219,7 +219,7 @@ const ApiPublishModal: React.FC = () => {
       }
 
       // qos extension
-      if (activeStep === 4) {
+      if (activeStep === 5) {
         const {qos} = values;
 
         if (qos['idle_timeout']) {
@@ -240,7 +240,7 @@ const ApiPublishModal: React.FC = () => {
       }
 
       // path extension
-      if (activeStep === 5) {
+      if (activeStep === 6) {
         const {path} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
@@ -249,7 +249,7 @@ const ApiPublishModal: React.FC = () => {
       }
 
       // cors extension
-      if (activeStep === 6) {
+      if (activeStep === 7) {
         const {cors} = values;
 
         if (cors['max_age']) {
@@ -271,7 +271,7 @@ const ApiPublishModal: React.FC = () => {
   };
 
   const onSubmitHandler = () => {
-    if (activeStep === 7) {
+    if (activeStep === 8) {
       onDeployHandler();
     } else {
       onNextHandler();
@@ -279,7 +279,7 @@ const ApiPublishModal: React.FC = () => {
   };
 
   useEffect(() => {
-    if (activeStep !== 2 || !apiContent) {
+    if (activeStep !== 3 || !apiContent) {
       return;
     }
 
@@ -381,7 +381,7 @@ const cleanseObject = (obj: {[key: string]: any}) => {
     let value = obj[key];
     let type = typeof value;
 
-    if (type === 'object') {
+    if (type === 'object' && value) {
       cleanseObject(value);
 
       if (!Object.keys(value).length) {
