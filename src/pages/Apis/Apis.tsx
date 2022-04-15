@@ -13,6 +13,7 @@ const EnvoyFleetInfoModal = lazy(() => import('@components/EnvoyFleetInfoModal/E
 
 const Apis: React.FC = () => {
   const dispatch = useAppDispatch();
+  const apis = useAppSelector(state => state.main.apis);
   const isApiDeployModalVisible = useAppSelector(state => state.ui.apiDeployModal.isOpen);
   const isEnvoyFleetInfoModalVisible = useAppSelector(state => state.ui.envoyFleetModal.envoyFleet);
   const selectedApi = useAppSelector(state => state.main.selectedApi);
@@ -39,7 +40,7 @@ const Apis: React.FC = () => {
     dispatch(setServices({items, isLoading: false}));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, error, loading]);
+  }, [apis, data, error, loading]);
 
   return (
     <>
