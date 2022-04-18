@@ -2,9 +2,11 @@ import {Suspense, lazy, useEffect, useMemo, useState} from 'react';
 
 import {Button, Form, Modal, Skeleton, Steps, Tabs} from 'antd';
 
+import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
 import {ApiItem, useDeployApi} from '@models/api';
+import {ApiContent} from '@models/main';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setApis, setNewApiContent, updateNewApiOpenApiSpec} from '@redux/reducers/main';
@@ -60,6 +62,7 @@ const ApiPublishModal: React.FC = () => {
   const [activeStep, setActiveStep] = useState<StepType>('openApiSpec');
   const [errorMessage, setErrorMessage] = useState<string>();
   const [isApiMocked, setIsApiMocked] = useState<boolean>(false);
+  const [isPublishDisabled, setIsPublishedDisabled] = useState<boolean>(true);
   const [redirectTabSelection, setRedirectTabSelection] = useState<string>('path_redirect');
   const [upstreamRedirectTabSelection, setUpstreamRedirectTabSelection] = useState<string>('upstream');
   const [upstreamReference, setUpstreamReference] = useState<string>('service');
@@ -74,50 +77,10 @@ const ApiPublishModal: React.FC = () => {
     dispatch(closeApiPublishModal());
   };
 
-  const onDeployHandler = () => {
-    if (!apiContent) {
-      return;
-    }
-
+  const onSubmitHandler = (deploy?: boolean) => {
     form.validateFields().then(values => {
-      const {websocket} = values;
+      let newApiContent: ApiContent | null = null;
 
-      const deployedOpenApiSpec = JSON.parse(
-        JSON.stringify({
-          ...apiContent.openapi,
-          'x-kusk': {...apiContent.openapi['x-kusk'], websocket},
-        })
-      );
-
-      if (isApiMocked) {
-        delete deployedOpenApiSpec['x-kusk'].validation;
-      }
-
-      cleanseObject(deployedOpenApiSpec['x-kusk']);
-      dispatch(updateNewApiOpenApiSpec(deployedOpenApiSpec));
-
-      const body = {
-        name: apiContent.name,
-        namespace: apiContent.namespace,
-        openapi: YAML.stringify(deployedOpenApiSpec),
-      };
-
-      deployAPI(body)
-        .then((response: any) => {
-          const apiData: ApiItem = response;
-
-          dispatch(setApis([...apis, apiData]));
-          dispatch(closeApiPublishModal());
-          dispatch(setNewApiContent(null));
-        })
-        .catch(err => {
-          setErrorMessage(err.data);
-        });
-    });
-  };
-
-  const onNextHandler = () => {
-    form.validateFields().then(values => {
       if (activeStep === 'openApiSpec') {
         const {openapi, mocking} = values;
 
@@ -143,42 +106,44 @@ const ApiPublishModal: React.FC = () => {
           }
         }
 
-        dispatch(setNewApiContent({name, namespace, openapi: parsedOpenApi}));
+        newApiContent = {name, namespace, openapi: parsedOpenApi};
 
-        if (mocking?.enabled) {
-          setIsApiMocked(true);
-        } else if (isApiMocked) {
-          setIsApiMocked(false);
+        if (!deploy) {
+          dispatch(setNewApiContent(newApiContent));
+
+          if (mocking?.enabled) {
+            setIsApiMocked(true);
+          } else if (isApiMocked) {
+            setIsApiMocked(false);
+          }
+
+          setActiveStep('apiInfo');
         }
-
-        setActiveStep('apiInfo');
       }
 
-      if (!apiContent?.openapi) {
-        return;
-      }
-
-      if (activeStep === 'apiInfo') {
+      if (activeStep === 'apiInfo' && apiContent) {
         const {name, namespace} = values;
 
-        dispatch(setNewApiContent({name, namespace: namespace || 'default', openapi: apiContent.openapi}));
+        newApiContent = {name, namespace: namespace || 'default', openapi: apiContent.openapi};
 
-        setActiveStep('validation');
+        if (!deploy) {
+          setActiveStep('validation');
+          dispatch(setNewApiContent(newApiContent));
+        }
       }
 
-      if (!apiContent) {
-        return;
-      }
-
-      if (activeStep === 'validation') {
+      if (activeStep === 'validation' && apiContent) {
         const {validation} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation}};
+        newApiContent = {...apiContent, openapi: openApiSpec};
 
-        dispatch(updateNewApiOpenApiSpec(openApiSpec));
+        if (!deploy) {
+          dispatch(updateNewApiOpenApiSpec(openApiSpec));
+        }
       }
 
-      if (activeStep === 'upstreamOrRedirect') {
+      if (activeStep === 'upstreamOrRedirect' && apiContent) {
         const {redirect, upstream} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk']}};
@@ -219,18 +184,25 @@ const ApiPublishModal: React.FC = () => {
           }
         }
 
-        dispatch(updateNewApiOpenApiSpec(openApiSpec));
+        newApiContent = {...apiContent, openapi: openApiSpec};
+
+        if (!deploy) {
+          dispatch(updateNewApiOpenApiSpec(openApiSpec));
+        }
       }
 
-      if (activeStep === 'hosts') {
+      if (activeStep === 'hosts' && apiContent) {
         const {hosts} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], hosts}};
+        newApiContent = {...apiContent, openapi: openApiSpec};
 
-        dispatch(updateNewApiOpenApiSpec(openApiSpec));
+        if (!deploy) {
+          dispatch(updateNewApiOpenApiSpec(openApiSpec));
+        }
       }
 
-      if (activeStep === 'qos') {
+      if (activeStep === 'qos' && apiContent) {
         const {qos} = values;
 
         if (qos['idle_timeout']) {
@@ -246,19 +218,25 @@ const ApiPublishModal: React.FC = () => {
         }
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], qos}};
+        newApiContent = {...apiContent, openapi: openApiSpec};
 
-        dispatch(updateNewApiOpenApiSpec(openApiSpec));
+        if (!deploy) {
+          dispatch(updateNewApiOpenApiSpec(openApiSpec));
+        }
       }
 
-      if (activeStep === 'path') {
+      if (activeStep === 'path' && apiContent) {
         const {path} = values;
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
+        newApiContent = {...apiContent, openapi: openApiSpec};
 
-        dispatch(updateNewApiOpenApiSpec(openApiSpec));
+        if (!deploy) {
+          dispatch(updateNewApiOpenApiSpec(openApiSpec));
+        }
       }
 
-      if (activeStep === 'cors') {
+      if (activeStep === 'cors' && apiContent) {
         const {cors} = values;
 
         if (cors['max_age']) {
@@ -266,25 +244,53 @@ const ApiPublishModal: React.FC = () => {
         }
 
         let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], cors}};
+        newApiContent = {...apiContent, openapi: openApiSpec};
 
-        dispatch(updateNewApiOpenApiSpec(openApiSpec));
+        if (!deploy) {
+          dispatch(updateNewApiOpenApiSpec(openApiSpec));
+        }
       }
 
-      setActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]);
+      if (activeStep === 'websocket' && apiContent) {
+        const {websocket} = values;
+
+        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], websocket}};
+        newApiContent = {...apiContent, openapi: openApiSpec};
+      }
+
+      if (!deploy && activeStep !== 'websocket') {
+        setActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]);
+      }
+
+      if (deploy && newApiContent) {
+        if (isApiMocked) {
+          delete newApiContent.openapi['x-kusk'].validation;
+        }
+
+        const body = {
+          name: newApiContent.name,
+          namespace: newApiContent.namespace,
+          openapi: YAML.stringify(cleanDeep(newApiContent.openapi)),
+        };
+
+        deployAPI(body)
+          .then((response: any) => {
+            const apiData: ApiItem = response;
+
+            dispatch(setApis([...apis, apiData]));
+            dispatch(closeApiPublishModal());
+            dispatch(setNewApiContent(null));
+          })
+          .catch(err => {
+            setErrorMessage(err.data);
+          });
+      }
     });
   };
 
   const onBackHandler = () => {
     setActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) - 1]);
     setErrorMessage('');
-  };
-
-  const onSubmitHandler = () => {
-    if (activeStep === 'websocket') {
-      onDeployHandler();
-    } else {
-      onNextHandler();
-    }
   };
 
   useEffect(() => {
@@ -299,6 +305,22 @@ const ApiPublishModal: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStep]);
 
+  useEffect(() => {
+    if (!apiContent) {
+      return;
+    }
+
+    const mocking = apiContent.openapi['x-kusk']?.mocking?.enabled;
+
+    if ((mocking || activeStepIndex > 2) && isPublishDisabled) {
+      setIsPublishedDisabled(false);
+    } else if ((activeStepIndex <= 2 && !mocking && !isPublishDisabled) || !activeStepIndex) {
+      setIsPublishedDisabled(true);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiContent, activeStepIndex]);
+
   return (
     <Modal
       bodyStyle={{height: '600px'}}
@@ -306,8 +328,12 @@ const ApiPublishModal: React.FC = () => {
         <>
           {activeStep !== 'openApiSpec' ? <Button onClick={onBackHandler}>Back</Button> : null}
 
-          <Button type="primary" onClick={onSubmitHandler}>
+          <Button type="primary" onClick={() => onSubmitHandler()}>
             {renderedNextButtonText[activeStepIndex]}
+          </Button>
+
+          <Button type="primary" disabled={isPublishDisabled} onClick={() => onSubmitHandler(true)}>
+            Publish
           </Button>
         </>
       }
@@ -320,7 +346,7 @@ const ApiPublishModal: React.FC = () => {
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStepIndex}>
             <S.Step title="OpenAPI Spec" />
-            <S.Step title="API Content" />
+            <S.Step title="API Info" />
             <S.Step title="Validation" />
             <S.Step title="Upstream | Redirect" />
             <S.Step title="Hosts" />
@@ -383,23 +409,6 @@ const ApiPublishModal: React.FC = () => {
       </S.Container>
     </Modal>
   );
-};
-
-const cleanseObject = (obj: {[key: string]: any}) => {
-  Object.keys(obj).forEach(key => {
-    let value = obj[key];
-    let type = typeof value;
-
-    if (type === 'object' && value) {
-      cleanseObject(value);
-
-      if (!Object.keys(value).length) {
-        delete obj[key];
-      }
-    } else if (!value) {
-      delete obj[key];
-    }
-  });
 };
 
 const formatApiName = (name: string) => name.replace(/\s/g, '-').toLowerCase();
