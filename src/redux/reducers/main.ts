@@ -27,23 +27,9 @@ export const mainSlice = createSlice({
     setServices: (state: Draft<MainState>, action: PayloadAction<ServicesData>) => {
       state.services = action.payload;
     },
-    updateNewApiOpenApiSpec: (state: Draft<MainState>, action: PayloadAction<{[key: string]: any}>) => {
-      if (!state.newApiContent) {
-        return;
-      }
-
-      state.newApiContent.openapi = action.payload;
-    },
   },
 });
 
-export const {
-  selectApi,
-  selectEnvoyFleet,
-  selectStaticRoute,
-  setApis,
-  setNewApiContent,
-  setServices,
-  updateNewApiOpenApiSpec,
-} = mainSlice.actions;
+export const {selectApi, selectEnvoyFleet, selectStaticRoute, setApis, setNewApiContent, setServices} =
+  mainSlice.actions;
 export default mainSlice.reducer;
