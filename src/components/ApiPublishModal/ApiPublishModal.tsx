@@ -14,6 +14,8 @@ import {closeApiPublishModal} from '@redux/reducers/ui';
 
 import {ErrorLabel} from '@components/AntdCustom';
 
+import StepTitle from './StepTitle';
+
 import * as S from './styled';
 
 const ApiInfo = lazy(() => import('./ApiInfo'));
@@ -107,14 +109,6 @@ const ApiPublishModal: React.FC = () => {
         }
 
         newApiContent = {name, namespace, openapi: parsedOpenApi};
-
-        if (!deploy) {
-          if (mocking?.enabled) {
-            setIsApiMocked(true);
-          } else if (isApiMocked) {
-            setIsApiMocked(false);
-          }
-        }
       }
 
       if (apiContent) {
@@ -317,15 +311,15 @@ const ApiPublishModal: React.FC = () => {
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStepIndex}>
-            <S.Step title="OpenAPI Spec" />
-            <S.Step title="API Info" />
-            <S.Step title="Validation" />
-            <S.Step title="Upstream | Redirect" />
-            <S.Step title="Hosts" />
-            <S.Step title="QOS" />
-            <S.Step title="Path" />
-            <S.Step title="CORS" />
-            <S.Step title="Websocket" />
+            <S.Step title={<StepTitle title="OpenAPI Spec" />} />
+            <S.Step title={<StepTitle title="API Info" />} />
+            <S.Step title={<StepTitle title="Validation" isStepApplicable={!isApiMocked} />} />
+            <S.Step title={<StepTitle title="Upstream | Redirect" isStepApplicable={!isApiMocked} />} />
+            <S.Step title={<StepTitle title="Hosts" />} />
+            <S.Step title={<StepTitle title="QOS" isStepApplicable={!isApiMocked} />} />
+            <S.Step title={<StepTitle title="Path" />} />
+            <S.Step title={<StepTitle title="CORS" />} />
+            <S.Step title={<StepTitle title="Websocket" isStepApplicable={!isApiMocked} />} />
           </Steps>
         </S.StepsContainer>
 
@@ -341,7 +335,9 @@ const ApiPublishModal: React.FC = () => {
             }}
           >
             <Suspense fallback={<Skeleton />}>
-              {activeStep === 'openApiSpec' && <OpenApiSpec form={form} />}
+              {activeStep === 'openApiSpec' && (
+                <OpenApiSpec form={form} setIsApiMocked={value => setIsApiMocked(value)} />
+              )}
               {activeStep === 'apiInfo' && <ApiInfo form={form} />}
               {activeStep === 'validation' && <Validation form={form} isApiMocked={isApiMocked} />}
               {activeStep === 'upstreamOrRedirect' && (
