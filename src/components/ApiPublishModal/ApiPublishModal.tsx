@@ -9,7 +9,7 @@ import {ApiItem, useDeployApi} from '@models/api';
 import {ApiContent} from '@models/main';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
-import {setApis, setNewApiContent, updateNewApiOpenApiSpec} from '@redux/reducers/main';
+import {setApis, setNewApiContent} from '@redux/reducers/main';
 import {closeApiPublishModal} from '@redux/reducers/ui';
 
 import {ErrorLabel} from '@components/AntdCustom';
@@ -109,156 +109,126 @@ const ApiPublishModal: React.FC = () => {
         newApiContent = {name, namespace, openapi: parsedOpenApi};
 
         if (!deploy) {
-          dispatch(setNewApiContent(newApiContent));
-
           if (mocking?.enabled) {
             setIsApiMocked(true);
           } else if (isApiMocked) {
             setIsApiMocked(false);
           }
-
-          setActiveStep('apiInfo');
         }
       }
 
-      if (activeStep === 'apiInfo' && apiContent) {
-        const {name, namespace} = values;
+      if (apiContent) {
+        if (activeStep === 'apiInfo') {
+          const {name, namespace} = values;
 
-        newApiContent = {name, namespace: namespace || 'default', openapi: apiContent.openapi};
-
-        if (!deploy) {
-          setActiveStep('validation');
-          dispatch(setNewApiContent(newApiContent));
+          newApiContent = {name, namespace: namespace || 'default', openapi: apiContent.openapi};
         }
-      }
 
-      if (activeStep === 'validation' && apiContent) {
-        const {validation} = values;
+        if (activeStep === 'validation') {
+          const {validation} = values;
 
-        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation}};
-        newApiContent = {...apiContent, openapi: openApiSpec};
-
-        if (!deploy) {
-          dispatch(updateNewApiOpenApiSpec(openApiSpec));
+          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation}};
+          newApiContent = {...apiContent, openapi: openApiSpec};
         }
-      }
 
-      if (activeStep === 'upstreamOrRedirect' && apiContent) {
-        const {redirect, upstream} = values;
+        if (activeStep === 'upstreamOrRedirect') {
+          const {redirect, upstream} = values;
 
-        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk']}};
+          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk']}};
 
-        if (upstreamRedirectTabSelection === 'redirect') {
-          if (redirect['port_redirect']) {
-            redirect['port_redirect'] = parseInt(redirect['port_redirect'], 10);
-          }
+          if (upstreamRedirectTabSelection === 'redirect') {
+            if (redirect['port_redirect']) {
+              redirect['port_redirect'] = parseInt(redirect['port_redirect'], 10);
+            }
 
-          if (redirect['response_code']) {
-            redirect['response_code'] = parseInt(redirect['response_code'], 10);
-          }
+            if (redirect['response_code']) {
+              redirect['response_code'] = parseInt(redirect['response_code'], 10);
+            }
 
-          openApiSpec['x-kusk'].redirect = redirect;
+            openApiSpec['x-kusk'].redirect = redirect;
 
-          if (redirectTabSelection === 'path_redirect') {
-            delete openApiSpec['x-kusk'].redirect['rewrite_regex'];
+            if (redirectTabSelection === 'path_redirect') {
+              delete openApiSpec['x-kusk'].redirect['rewrite_regex'];
+            } else {
+              delete openApiSpec['x-kusk'].redirect['path_redirect'];
+            }
+
+            if (openApiSpec['x-kusk'].upstream) {
+              delete openApiSpec['x-kusk'].upstream;
+            }
           } else {
-            delete openApiSpec['x-kusk'].redirect['path_redirect'];
+            openApiSpec['x-kusk'].upstream = upstream;
+
+            if (upstreamReference === 'service') {
+              delete openApiSpec['x-kusk'].upstream.host;
+              openApiSpec['x-kusk'].upstream.service.port = parseInt(upstream.service.port, 10);
+            } else {
+              delete openApiSpec['x-kusk'].upstream.service;
+              openApiSpec['x-kusk'].upstream.host.port = parseInt(upstream.host.port, 10);
+            }
+
+            if (openApiSpec['x-kusk'].redirect) {
+              delete openApiSpec['x-kusk'].redirect;
+            }
           }
 
-          if (openApiSpec['x-kusk'].upstream) {
-            delete openApiSpec['x-kusk'].upstream;
+          newApiContent = {...apiContent, openapi: openApiSpec};
+        }
+
+        if (activeStep === 'hosts') {
+          const {hosts} = values;
+
+          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], hosts}};
+          newApiContent = {...apiContent, openapi: openApiSpec};
+        }
+
+        if (activeStep === 'qos') {
+          const {qos} = values;
+
+          if (qos['idle_timeout']) {
+            qos['idle_timeout'] = parseInt(qos['idle_timeout'], 10);
           }
-        } else {
-          openApiSpec['x-kusk'].upstream = upstream;
 
-          if (upstreamReference === 'service') {
-            delete openApiSpec['x-kusk'].upstream.host;
-            openApiSpec['x-kusk'].upstream.service.port = parseInt(upstream.service.port, 10);
-          } else {
-            delete openApiSpec['x-kusk'].upstream.service;
-            openApiSpec['x-kusk'].upstream.host.port = parseInt(upstream.host.port, 10);
+          if (qos['retries']) {
+            qos['retries'] = parseInt(qos['retries'], 10);
           }
 
-          if (openApiSpec['x-kusk'].redirect) {
-            delete openApiSpec['x-kusk'].redirect;
+          if (qos['request_timeout']) {
+            qos['request_timeout'] = parseInt(qos['request_timeout'], 10);
           }
+
+          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], qos}};
+          newApiContent = {...apiContent, openapi: openApiSpec};
         }
 
-        newApiContent = {...apiContent, openapi: openApiSpec};
+        if (activeStep === 'path') {
+          const {path} = values;
 
-        if (!deploy) {
-          dispatch(updateNewApiOpenApiSpec(openApiSpec));
-        }
-      }
-
-      if (activeStep === 'hosts' && apiContent) {
-        const {hosts} = values;
-
-        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], hosts}};
-        newApiContent = {...apiContent, openapi: openApiSpec};
-
-        if (!deploy) {
-          dispatch(updateNewApiOpenApiSpec(openApiSpec));
-        }
-      }
-
-      if (activeStep === 'qos' && apiContent) {
-        const {qos} = values;
-
-        if (qos['idle_timeout']) {
-          qos['idle_timeout'] = parseInt(qos['idle_timeout'], 10);
+          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
+          newApiContent = {...apiContent, openapi: openApiSpec};
         }
 
-        if (qos['retries']) {
-          qos['retries'] = parseInt(qos['retries'], 10);
+        if (activeStep === 'cors') {
+          const {cors} = values;
+
+          if (cors['max_age']) {
+            cors['max_age'] = parseInt(cors['max_age'], 10);
+          }
+
+          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], cors}};
+          newApiContent = {...apiContent, openapi: openApiSpec};
         }
 
-        if (qos['request_timeout']) {
-          qos['request_timeout'] = parseInt(qos['request_timeout'], 10);
+        if (activeStep === 'websocket') {
+          const {websocket} = values;
+
+          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], websocket}};
+          newApiContent = {...apiContent, openapi: openApiSpec};
         }
-
-        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], qos}};
-        newApiContent = {...apiContent, openapi: openApiSpec};
-
-        if (!deploy) {
-          dispatch(updateNewApiOpenApiSpec(openApiSpec));
-        }
-      }
-
-      if (activeStep === 'path' && apiContent) {
-        const {path} = values;
-
-        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
-        newApiContent = {...apiContent, openapi: openApiSpec};
-
-        if (!deploy) {
-          dispatch(updateNewApiOpenApiSpec(openApiSpec));
-        }
-      }
-
-      if (activeStep === 'cors' && apiContent) {
-        const {cors} = values;
-
-        if (cors['max_age']) {
-          cors['max_age'] = parseInt(cors['max_age'], 10);
-        }
-
-        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], cors}};
-        newApiContent = {...apiContent, openapi: openApiSpec};
-
-        if (!deploy) {
-          dispatch(updateNewApiOpenApiSpec(openApiSpec));
-        }
-      }
-
-      if (activeStep === 'websocket' && apiContent) {
-        const {websocket} = values;
-
-        let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], websocket}};
-        newApiContent = {...apiContent, openapi: openApiSpec};
       }
 
       if (!deploy && activeStep !== 'websocket') {
+        dispatch(setNewApiContent(newApiContent));
         setActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]);
       }
 
@@ -328,9 +298,11 @@ const ApiPublishModal: React.FC = () => {
         <>
           {activeStep !== 'openApiSpec' ? <Button onClick={onBackHandler}>Back</Button> : null}
 
-          <Button type="primary" onClick={() => onSubmitHandler()}>
-            {renderedNextButtonText[activeStepIndex]}
-          </Button>
+          {activeStep !== 'websocket' ? (
+            <Button type="primary" onClick={() => onSubmitHandler()}>
+              {renderedNextButtonText[activeStepIndex]}
+            </Button>
+          ) : null}
 
           <Button type="primary" disabled={isPublishDisabled} onClick={() => onSubmitHandler(true)}>
             Publish
