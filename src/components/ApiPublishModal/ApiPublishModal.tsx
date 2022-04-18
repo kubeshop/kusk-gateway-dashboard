@@ -311,15 +311,83 @@ const ApiPublishModal: React.FC = () => {
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStepIndex}>
-            <S.Step title={<StepTitle title="OpenAPI Spec" />} />
+            <S.Step
+              title={
+                <StepTitle
+                  title="OpenAPI Spec"
+                  documentationLink="https://swagger.io/specification/"
+                  isStepActive={activeStep === 'openApiSpec'}
+                />
+              }
+            />
             <S.Step title={<StepTitle title="API Info" />} />
-            <S.Step title={<StepTitle title="Validation" isStepApplicable={!isApiMocked} />} />
-            <S.Step title={<StepTitle title="Upstream | Redirect" isStepApplicable={!isApiMocked} />} />
-            <S.Step title={<StepTitle title="Hosts" />} />
-            <S.Step title={<StepTitle title="QOS" isStepApplicable={!isApiMocked} />} />
-            <S.Step title={<StepTitle title="Path" />} />
-            <S.Step title={<StepTitle title="CORS" />} />
-            <S.Step title={<StepTitle title="Websocket" isStepApplicable={!isApiMocked} />} />
+            <S.Step
+              title={
+                <StepTitle
+                  title="Validation"
+                  documentationLink="https://kubeshop.github.io/kusk-gateway/extension/#validation"
+                  isStepActive={activeStep === 'validation'}
+                  isStepApplicable={!isApiMocked}
+                />
+              }
+            />
+            <S.Step
+              title={
+                <StepTitle
+                  title="Upstream | Redirect"
+                  documentationLink={`https://kubeshop.github.io/kusk-gateway/extension/#${upstreamRedirectTabSelection}`}
+                  isStepActive={activeStep === 'upstreamOrRedirect'}
+                  isStepApplicable={!isApiMocked}
+                />
+              }
+            />
+            <S.Step
+              title={
+                <StepTitle
+                  title="Hosts"
+                  documentationLink="https://kubeshop.github.io/kusk-gateway/extension/#hosts"
+                  isStepActive={activeStep === 'hosts'}
+                />
+              }
+            />
+            <S.Step
+              title={
+                <StepTitle
+                  title="QOS"
+                  documentationLink="https://kubeshop.github.io/kusk-gateway/extension/#qos"
+                  isStepActive={activeStep === 'qos'}
+                  isStepApplicable={!isApiMocked}
+                />
+              }
+            />
+            <S.Step
+              title={
+                <StepTitle
+                  title="Path"
+                  documentationLink="https://kubeshop.github.io/kusk-gateway/extension/#path"
+                  isStepActive={activeStep === 'path'}
+                />
+              }
+            />
+            <S.Step
+              title={
+                <StepTitle
+                  title="CORS"
+                  documentationLink="https://kubeshop.github.io/kusk-gateway/extension/#cors"
+                  isStepActive={activeStep === 'cors'}
+                />
+              }
+            />
+            <S.Step
+              title={
+                <StepTitle
+                  title="Websocket"
+                  documentationLink="https://kubeshop.github.io/kusk-gateway/extension/#websocket"
+                  isStepActive={activeStep === 'websocket'}
+                  isStepApplicable={!isApiMocked}
+                />
+              }
+            />
           </Steps>
         </S.StepsContainer>
 

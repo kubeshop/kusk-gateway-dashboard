@@ -19,6 +19,10 @@ enum Colors {
 
   yellow400 = '#FACC15',
 
+  blue600 = '#2563EB',
+  blue500 = '#3B82F6',
+  blue400 = '#60A5FA',
+
   blackPure = '#000000',
   whitePure = '#ffffff',
 }
