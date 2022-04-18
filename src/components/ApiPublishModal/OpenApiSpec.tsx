@@ -10,10 +10,11 @@ import * as S from './OpenApiSpec.styled';
 
 interface IProps {
   form: FormInstance<any>;
+  setIsApiMocked: (value: boolean) => void;
 }
 
 const OpenApiSpec: React.FC<IProps> = props => {
-  const {form} = props;
+  const {form, setIsApiMocked} = props;
 
   const apiContent = useAppSelector(state => state.main.newApiContent);
 
@@ -60,7 +61,7 @@ const OpenApiSpec: React.FC<IProps> = props => {
       </Form.Item>
 
       <Form.Item name={['mocking', 'enabled']} valuePropName="checked">
-        <Checkbox>Enable mocking</Checkbox>
+        <Checkbox onChange={e => setIsApiMocked(e.target.checked)}>Enable mocking</Checkbox>
       </Form.Item>
     </>
   );
