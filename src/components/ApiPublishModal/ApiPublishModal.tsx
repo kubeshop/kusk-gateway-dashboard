@@ -1,6 +1,6 @@
 import {Suspense, lazy, useEffect, useMemo, useState} from 'react';
 
-import {Button, Form, Modal, Skeleton, Steps, Tabs} from 'antd';
+import {Button, Form, Modal, Skeleton, Steps, Tabs, notification} from 'antd';
 
 import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
@@ -89,7 +89,7 @@ const ApiPublishModal: React.FC = () => {
         let parsedOpenApi = YAML.parse(JSON.parse(JSON.stringify(openapi)));
         parsedOpenApi = {...parsedOpenApi, 'x-kusk': {...parsedOpenApi['x-kusk'], mocking}};
 
-        let name = apiContent?.name || formatApiName(parsedOpenApi.info.title) || '';
+        let name = apiContent?.name || formatApiName(parsedOpenApi?.info?.title) || '';
         let namespace = apiContent?.namespace || '';
 
         if (mocking?.enabled) {
@@ -244,6 +244,13 @@ const ApiPublishModal: React.FC = () => {
             dispatch(setApis([...apis, apiData]));
             dispatch(closeApiPublishModal());
             dispatch(setNewApiContent(null));
+
+            notification.success({
+              message: 'API deployed successfully',
+              description: `${apiData.name} was deployed successfully in ${apiData.namespace} namespace!`,
+              placement: 'bottomRight',
+              duration: 7,
+            });
           })
           .catch(err => {
             setErrorMessage(err.data);
@@ -447,6 +454,6 @@ const ApiPublishModal: React.FC = () => {
   );
 };
 
-const formatApiName = (name: string) => name.replace(/\s/g, '-').toLowerCase();
+const formatApiName = (name: string) => (name ? name.replace(/\s/g, '-').toLowerCase() : '');
 
 export default ApiPublishModal;
