@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 
 import {notification} from 'antd';
 
-import {AlertEnum} from '@models/alert';
+import {alertTypes} from '@models/alert';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {clearAlert} from '@redux/reducers/alert';
@@ -16,17 +16,10 @@ const NotificationBox: React.FC = () => {
       return;
     }
 
-    let type: string =
-      alert.type === AlertEnum.Error
-        ? 'error'
-        : alert.type === AlertEnum.Warning
-        ? 'warning'
-        : alert.type === AlertEnum.Success
-        ? 'success'
-        : 'info';
+    const alertType = alertTypes[alert.type];
 
     // @ts-ignore
-    notification[type]({
+    notification[alertType]({
       message: alert.title,
       description: alert.description,
       duration: alert.duration || 5,

@@ -17,3 +17,10 @@ export type AlertType = {
   description?: string;
   placement?: string;
 };
+
+export const alertTypes: {[key in AlertEnum]: string} = {
+  [AlertEnum.Success]: 'success',
+  [AlertEnum.Info]: 'info',
+  [AlertEnum.Warning]: 'warning',
+  [AlertEnum.Error]: 'error',
+};
