@@ -1,14 +1,16 @@
 import {Suspense, lazy, useEffect, useMemo, useState} from 'react';
 
-import {Button, Form, Modal, Skeleton, Steps, Tabs, notification} from 'antd';
+import {Button, Form, Modal, Skeleton, Steps, Tabs} from 'antd';
 
 import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
+import {AlertEnum} from '@models/alert';
 import {ApiItem, useDeployApi} from '@models/api';
 import {ApiContent} from '@models/main';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {setAlert} from '@redux/reducers/alert';
 import {setApis, setNewApiContent} from '@redux/reducers/main';
 import {closeApiPublishModal} from '@redux/reducers/ui';
 
@@ -245,12 +247,13 @@ const ApiPublishModal: React.FC = () => {
             dispatch(closeApiPublishModal());
             dispatch(setNewApiContent(null));
 
-            notification.success({
-              message: 'API deployed successfully',
-              description: `${apiData.name} was deployed successfully in ${apiData.namespace} namespace!`,
-              placement: 'bottomRight',
-              duration: 7,
-            });
+            dispatch(
+              setAlert({
+                title: 'API deployed successfully',
+                description: `${apiData.name} was deployed successfully in ${apiData.namespace} namespace!`,
+                type: AlertEnum.Success,
+              })
+            );
           })
           .catch(err => {
             setErrorMessage(err.data);

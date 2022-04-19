@@ -1,5 +1,10 @@
+import {AlertState} from '@models/alert';
 import {MainState} from '@models/main';
 import {UiState} from '@models/ui';
+
+const initialAlertState: AlertState = {
+  alert: null,
+};
 
 const initialMainState: MainState = {
   apis: [],
@@ -39,6 +44,7 @@ const initialUiState: UiState = {
 };
 
 export default {
+  alert: initialAlertState,
   main: initialMainState,
   ui: initialUiState,
 };
