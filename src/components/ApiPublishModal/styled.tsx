@@ -1,8 +1,12 @@
-import {Steps} from 'antd';
+import {Alert as RawAlert, Steps} from 'antd';
 
 import styled from 'styled-components';
 
 import {GlobalScrollbarStyle} from '@utils/scrollbar';
+
+export const Alert = styled(RawAlert)`
+  margin-bottom: 20px;
+`;
 
 export const Container = styled.div`
   display: grid;

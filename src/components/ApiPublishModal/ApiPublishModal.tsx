@@ -5,14 +5,14 @@ import {Button, Form, Modal, Skeleton, Steps, Tabs} from 'antd';
 import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
+import {AlertEnum} from '@models/alert';
 import {ApiItem, useDeployApi} from '@models/api';
 import {ApiContent} from '@models/main';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {setAlert} from '@redux/reducers/alert';
 import {setApis, setNewApiContent} from '@redux/reducers/main';
 import {closeApiPublishModal} from '@redux/reducers/ui';
-
-import {ErrorLabel} from '@components/AntdCustom';
 
 import StepTitle from './StepTitle';
 
@@ -89,7 +89,7 @@ const ApiPublishModal: React.FC = () => {
         let parsedOpenApi = YAML.parse(JSON.parse(JSON.stringify(openapi)));
         parsedOpenApi = {...parsedOpenApi, 'x-kusk': {...parsedOpenApi['x-kusk'], mocking}};
 
-        let name = apiContent?.name || formatApiName(parsedOpenApi.info.title) || '';
+        let name = apiContent?.name || formatApiName(parsedOpenApi?.info?.title) || '';
         let namespace = apiContent?.namespace || '';
 
         if (mocking?.enabled) {
@@ -244,6 +244,14 @@ const ApiPublishModal: React.FC = () => {
             dispatch(setApis([...apis, apiData]));
             dispatch(closeApiPublishModal());
             dispatch(setNewApiContent(null));
+
+            dispatch(
+              setAlert({
+                title: 'API deployed successfully',
+                description: `${apiData.name} was deployed successfully in ${apiData.namespace} namespace!`,
+                type: AlertEnum.Success,
+              })
+            );
           })
           .catch(err => {
             setErrorMessage(err.data);
@@ -308,6 +316,8 @@ const ApiPublishModal: React.FC = () => {
       width="900px"
       onCancel={onCancelHandler}
     >
+      {errorMessage && <S.Alert description={errorMessage} message="Error" showIcon type="error" />}
+
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStepIndex}>
@@ -439,14 +449,12 @@ const ApiPublishModal: React.FC = () => {
               {activeStep === 'websocket' && <Websocket form={form} />}
             </Suspense>
           </Form>
-
-          {errorMessage && <ErrorLabel>*{errorMessage}</ErrorLabel>}
         </S.FormContainer>
       </S.Container>
     </Modal>
   );
 };
 
-const formatApiName = (name: string) => name.replace(/\s/g, '-').toLowerCase();
+const formatApiName = (name: string) => (name ? name.replace(/\s/g, '-').toLowerCase() : '');
 
 export default ApiPublishModal;
