@@ -20,6 +20,7 @@ const initialMainState: MainState = {
 
 const initialUiState: UiState = {
   apiPublishModal: {
+    activeStep: 'openApiSpec',
     isOpen: false,
   },
   apiInfoActiveTab: 'raw-api-spec',

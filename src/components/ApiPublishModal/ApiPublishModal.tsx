@@ -12,7 +12,7 @@ import {ApiContent} from '@models/main';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 import {setApis, setNewApiContent} from '@redux/reducers/main';
-import {closeApiPublishModal} from '@redux/reducers/ui';
+import {closeApiPublishModal, setApiPublishModalActiveStep} from '@redux/reducers/ui';
 
 import StepTitle from './StepTitle';
 
@@ -54,14 +54,13 @@ const orderedSteps = [
   'cors',
   'websocket',
 ] as const;
-type StepType = typeof orderedSteps[number];
 
 const ApiPublishModal: React.FC = () => {
   const dispatch = useAppDispatch();
+  const activeStep = useAppSelector(state => state.ui.apiPublishModal.activeStep);
   const apiContent = useAppSelector(state => state.main.newApiContent);
   const apis = useAppSelector(state => state.main.apis);
 
-  const [activeStep, setActiveStep] = useState<StepType>('openApiSpec');
   const [errorMessage, setErrorMessage] = useState<string>();
   const [isApiMocked, setIsApiMocked] = useState<boolean>(false);
   const [isPublishDisabled, setIsPublishedDisabled] = useState<boolean>(true);
@@ -223,7 +222,7 @@ const ApiPublishModal: React.FC = () => {
 
       if (!deploy && activeStep !== 'websocket') {
         dispatch(setNewApiContent(newApiContent));
-        setActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]);
+        dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]));
       }
 
       if (deploy && newApiContent) {
@@ -243,6 +242,7 @@ const ApiPublishModal: React.FC = () => {
 
             dispatch(setApis([...apis, apiData]));
             dispatch(closeApiPublishModal());
+            dispatch(setApiPublishModalActiveStep('openApiSpec'));
             dispatch(setNewApiContent(null));
 
             dispatch(
@@ -261,7 +261,7 @@ const ApiPublishModal: React.FC = () => {
   };
 
   const onBackHandler = () => {
-    setActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) - 1]);
+    dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) - 1]));
     setErrorMessage('');
   };
 
@@ -324,80 +324,29 @@ const ApiPublishModal: React.FC = () => {
             <S.Step
               title={
                 <StepTitle
+                  step="openApiSpec"
                   title="OpenAPI Spec"
-                  documentationLink="https://swagger.io/specification/"
-                  isStepActive={activeStep === 'openApiSpec'}
+                  documentationLink="https://swagger.io/specification"
                 />
               }
             />
-            <S.Step title={<StepTitle title="API Info" />} />
+            <S.Step title={<StepTitle step="apiInfo" title="API Info" />} />
+            <S.Step title={<StepTitle step="validation" title="Validation" isStepApplicable={!isApiMocked} />} />
             <S.Step
               title={
                 <StepTitle
-                  title="Validation"
-                  documentationLink="https://kubeshop.github.io/kusk-gateway/extension/#validation"
-                  isStepActive={activeStep === 'validation'}
-                  isStepApplicable={!isApiMocked}
-                />
-              }
-            />
-            <S.Step
-              title={
-                <StepTitle
+                  step="upstreamOrRedirect"
                   title="Upstream | Redirect"
                   documentationLink={`https://kubeshop.github.io/kusk-gateway/extension/#${upstreamRedirectTabSelection}`}
-                  isStepActive={activeStep === 'upstreamOrRedirect'}
                   isStepApplicable={!isApiMocked}
                 />
               }
             />
-            <S.Step
-              title={
-                <StepTitle
-                  title="Hosts"
-                  documentationLink="https://kubeshop.github.io/kusk-gateway/extension/#hosts"
-                  isStepActive={activeStep === 'hosts'}
-                />
-              }
-            />
-            <S.Step
-              title={
-                <StepTitle
-                  title="QOS"
-                  documentationLink="https://kubeshop.github.io/kusk-gateway/extension/#qos"
-                  isStepActive={activeStep === 'qos'}
-                  isStepApplicable={!isApiMocked}
-                />
-              }
-            />
-            <S.Step
-              title={
-                <StepTitle
-                  title="Path"
-                  documentationLink="https://kubeshop.github.io/kusk-gateway/extension/#path"
-                  isStepActive={activeStep === 'path'}
-                />
-              }
-            />
-            <S.Step
-              title={
-                <StepTitle
-                  title="CORS"
-                  documentationLink="https://kubeshop.github.io/kusk-gateway/extension/#cors"
-                  isStepActive={activeStep === 'cors'}
-                />
-              }
-            />
-            <S.Step
-              title={
-                <StepTitle
-                  title="Websocket"
-                  documentationLink="https://kubeshop.github.io/kusk-gateway/extension/#websocket"
-                  isStepActive={activeStep === 'websocket'}
-                  isStepApplicable={!isApiMocked}
-                />
-              }
-            />
+            <S.Step title={<StepTitle step="hosts" title="Hosts" />} />
+            <S.Step title={<StepTitle step="qos" title="QOS" isStepApplicable={!isApiMocked} />} />
+            <S.Step title={<StepTitle step="path" title="Path" />} />
+            <S.Step title={<StepTitle step="cors" title="CORS" />} />
+            <S.Step title={<StepTitle step="websocket" title="Websocket" isStepApplicable={!isApiMocked} />} />
           </Steps>
         </S.StepsContainer>
 
