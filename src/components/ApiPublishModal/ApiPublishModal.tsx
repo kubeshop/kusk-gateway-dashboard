@@ -14,8 +14,6 @@ import {setAlert} from '@redux/reducers/alert';
 import {setApis, setNewApiContent} from '@redux/reducers/main';
 import {closeApiPublishModal} from '@redux/reducers/ui';
 
-import {ErrorLabel} from '@components/AntdCustom';
-
 import StepTitle from './StepTitle';
 
 import * as S from './styled';
@@ -318,6 +316,8 @@ const ApiPublishModal: React.FC = () => {
       width="900px"
       onCancel={onCancelHandler}
     >
+      {errorMessage && <S.Alert description={errorMessage} message="Error" showIcon type="error" />}
+
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStepIndex}>
@@ -449,8 +449,6 @@ const ApiPublishModal: React.FC = () => {
               {activeStep === 'websocket' && <Websocket form={form} />}
             </Suspense>
           </Form>
-
-          {errorMessage && <ErrorLabel>*{errorMessage}</ErrorLabel>}
         </S.FormContainer>
       </S.Container>
     </Modal>
