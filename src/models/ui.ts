@@ -1,8 +1,19 @@
 import {EnvoyFleetItem} from './api';
 import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from './dashboard';
 
+type StepType =
+  | 'openApiSpec'
+  | 'apiInfo'
+  | 'validation'
+  | 'upstreamOrRedirect'
+  | 'hosts'
+  | 'qos'
+  | 'path'
+  | 'cors'
+  | 'websocket';
 interface UiState {
   apiPublishModal: {
+    activeStep: StepType;
     isOpen: boolean;
   };
   apiInfoActiveTab: ApiInfoTabs;
@@ -26,4 +37,4 @@ interface DashboardPaneConfiguration {
   rightPaneWidth: number;
 }
 
-export type {DashboardPaneConfiguration, UiState};
+export type {DashboardPaneConfiguration, StepType, UiState};

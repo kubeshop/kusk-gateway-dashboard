@@ -1,7 +1,7 @@
 import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from '@models/dashboard';
-import {DashboardPaneConfiguration, UiState} from '@models/ui';
+import {DashboardPaneConfiguration, StepType, UiState} from '@models/ui';
 
 import initialState from '@redux/initialState';
 
@@ -21,6 +21,10 @@ export const uiSlice = createSlice({
 
     setApiInfoActiveTab: (state: Draft<UiState>, action: PayloadAction<ApiInfoTabs>) => {
       state.apiInfoActiveTab = action.payload;
+    },
+
+    setApiPublishModalActiveStep: (state: Draft<UiState>, action: PayloadAction<StepType>) => {
+      state.apiPublishModal.activeStep = action.payload;
     },
 
     setDashboardPaneConfiguration: (state: Draft<UiState>, action: PayloadAction<DashboardPaneConfiguration>) => {
@@ -71,6 +75,7 @@ export const {
   closeApiPublishModal,
   openApiPublishModal,
   setApiInfoActiveTab,
+  setApiPublishModalActiveStep,
   setEnvoyFleetInfoActiveTab,
   setKuskExtensionsActiveKeys,
   setDashboardPaneConfiguration,
