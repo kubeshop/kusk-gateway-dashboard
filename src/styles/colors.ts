@@ -23,6 +23,8 @@ enum Colors {
   blue500 = '#3B82F6',
   blue400 = '#60A5FA',
 
+  rose500 = '#F43F5E',
+
   blackPure = '#000000',
   whitePure = '#ffffff',
 }
