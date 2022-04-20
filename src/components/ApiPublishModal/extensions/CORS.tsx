@@ -68,7 +68,7 @@ const CORS: React.FC<IProps> = props => {
       <Form.Item
         label={
           <div>
-            Methods{' '}
+            Methods
             <StyledButton type="ghost" onClick={onCheckHandler}>
               {areCheckedAll ? 'Uncheck all' : 'Check all'}
             </StyledButton>
@@ -78,7 +78,9 @@ const CORS: React.FC<IProps> = props => {
       >
         <Checkbox.Group>
           {METHODS.map(method => (
-            <Checkbox value={method}>{method}</Checkbox>
+            <Checkbox key={method} value={method}>
+              {method}
+            </Checkbox>
           ))}
         </Checkbox.Group>
       </Form.Item>

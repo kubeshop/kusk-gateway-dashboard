@@ -296,10 +296,14 @@ const ApiPublishModal: React.FC = () => {
       bodyStyle={{height: '600px'}}
       footer={
         <>
-          {activeStep !== 'openApiSpec' ? <Button onClick={onBackHandler}>Back</Button> : null}
+          {activeStep !== 'openApiSpec' ? (
+            <Button type="text" onClick={onBackHandler}>
+              Back
+            </Button>
+          ) : null}
 
           {activeStep !== 'websocket' ? (
-            <Button type="primary" onClick={() => onSubmitHandler()}>
+            <Button type="default" onClick={() => onSubmitHandler()}>
               {renderedNextButtonText[activeStepIndex]}
             </Button>
           ) : null}

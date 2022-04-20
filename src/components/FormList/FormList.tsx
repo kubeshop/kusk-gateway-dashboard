@@ -34,7 +34,7 @@ const FormList: React.FC<IProps> = props => {
             ))}
 
             <Form.Item>
-              <Button icon={<PlusOutlined />} type="primary" onClick={() => add('', 0)}>
+              <Button icon={<PlusOutlined />} type="default" onClick={() => add('', 0)}>
                 {addButtonText}
               </Button>
             </Form.Item>
