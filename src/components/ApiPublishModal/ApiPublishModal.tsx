@@ -33,7 +33,7 @@ const {TabPane} = Tabs;
 
 const renderedNextButtonText: {[key: number]: string} = {
   0: 'Add API Info',
-  1: 'Add Upstream | Redirect',
+  1: 'Add Target',
   2: 'Add Validation',
   3: 'Add Hosts',
   4: 'Add QOS',
@@ -46,7 +46,7 @@ const renderedNextButtonText: {[key: number]: string} = {
 const orderedSteps = [
   'openApiSpec',
   'apiInfo',
-  'upstreamOrRedirect',
+  'target',
   'validation',
   'hosts',
   'qos',
@@ -117,7 +117,7 @@ const ApiPublishModal: React.FC = () => {
           newApiContent = {name, namespace: namespace || 'default', openapi: apiContent.openapi};
         }
 
-        if (activeStep === 'upstreamOrRedirect') {
+        if (activeStep === 'target') {
           const {redirect, upstream} = values;
 
           let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk']}};
@@ -266,7 +266,7 @@ const ApiPublishModal: React.FC = () => {
   };
 
   useEffect(() => {
-    if (activeStep !== 'upstreamOrRedirect' || !apiContent) {
+    if (activeStep !== 'target' || !apiContent) {
       return;
     }
 
@@ -334,8 +334,8 @@ const ApiPublishModal: React.FC = () => {
             <S.Step
               title={
                 <StepTitle
-                  step="upstreamOrRedirect"
-                  title="Upstream | Redirect"
+                  step="target"
+                  title="Target"
                   documentationLink={`https://kubeshop.github.io/kusk-gateway/extension/#${upstreamRedirectTabSelection}`}
                   isStepApplicable={!isApiMocked}
                 />
@@ -367,7 +367,7 @@ const ApiPublishModal: React.FC = () => {
               )}
               {activeStep === 'apiInfo' && <ApiInfo form={form} />}
               {activeStep === 'validation' && <Validation form={form} isApiMocked={isApiMocked} />}
-              {activeStep === 'upstreamOrRedirect' && (
+              {activeStep === 'target' && (
                 <Tabs activeKey={upstreamRedirectTabSelection} onChange={key => setUpstreamRedirectTabSelection(key)}>
                   <TabPane tab="Upstream" key="upstream">
                     {upstreamRedirectTabSelection === 'upstream' && (
