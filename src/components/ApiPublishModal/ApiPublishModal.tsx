@@ -33,8 +33,8 @@ const {TabPane} = Tabs;
 
 const renderedNextButtonText: {[key: number]: string} = {
   0: 'Add API Info',
-  1: 'Add Validation ',
-  2: 'Add Upstream | Redirect',
+  1: 'Add Upstream | Redirect',
+  2: 'Add Validation',
   3: 'Add Hosts',
   4: 'Add QOS',
   5: 'Add Path',
@@ -46,8 +46,8 @@ const renderedNextButtonText: {[key: number]: string} = {
 const orderedSteps = [
   'openApiSpec',
   'apiInfo',
-  'validation',
   'upstreamOrRedirect',
+  'validation',
   'hosts',
   'qos',
   'path',
@@ -117,13 +117,6 @@ const ApiPublishModal: React.FC = () => {
           newApiContent = {name, namespace: namespace || 'default', openapi: apiContent.openapi};
         }
 
-        if (activeStep === 'validation') {
-          const {validation} = values;
-
-          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation}};
-          newApiContent = {...apiContent, openapi: openApiSpec};
-        }
-
         if (activeStep === 'upstreamOrRedirect') {
           const {redirect, upstream} = values;
 
@@ -165,6 +158,13 @@ const ApiPublishModal: React.FC = () => {
             }
           }
 
+          newApiContent = {...apiContent, openapi: openApiSpec};
+        }
+
+        if (activeStep === 'validation') {
+          const {validation} = values;
+
+          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation}};
           newApiContent = {...apiContent, openapi: openApiSpec};
         }
 
@@ -284,9 +284,9 @@ const ApiPublishModal: React.FC = () => {
 
     const mocking = apiContent.openapi['x-kusk']?.mocking?.enabled;
 
-    if ((mocking || activeStepIndex > 2) && isPublishDisabled) {
+    if ((mocking || activeStepIndex > 1) && isPublishDisabled) {
       setIsPublishedDisabled(false);
-    } else if ((activeStepIndex <= 2 && !mocking && !isPublishDisabled) || !activeStepIndex) {
+    } else if ((activeStepIndex <= 1 && !mocking && !isPublishDisabled) || !activeStepIndex) {
       setIsPublishedDisabled(true);
     }
 
@@ -331,7 +331,6 @@ const ApiPublishModal: React.FC = () => {
               }
             />
             <S.Step title={<StepTitle step="apiInfo" title="API Info" />} />
-            <S.Step title={<StepTitle step="validation" title="Validation" isStepApplicable={!isApiMocked} />} />
             <S.Step
               title={
                 <StepTitle
@@ -342,6 +341,7 @@ const ApiPublishModal: React.FC = () => {
                 />
               }
             />
+            <S.Step title={<StepTitle step="validation" title="Validation" isStepApplicable={!isApiMocked} />} />
             <S.Step title={<StepTitle step="hosts" title="Hosts" />} />
             <S.Step title={<StepTitle step="qos" title="QOS" isStepApplicable={!isApiMocked} />} />
             <S.Step title={<StepTitle step="path" title="Path" />} />
