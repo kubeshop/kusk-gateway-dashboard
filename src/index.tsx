@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
 
-import 'antd/dist/antd.dark.min.css';
-
 import {RestfulProvider} from 'restful-react';
 
 import {store} from '@redux/store';
@@ -12,6 +10,7 @@ import {store} from '@redux/store';
 import {GlobalStyle} from '@styles/global';
 
 import App from './App';
+import './antd-theme/antd-customized.css';
 
 ReactDOM.render(
   <React.StrictMode>
