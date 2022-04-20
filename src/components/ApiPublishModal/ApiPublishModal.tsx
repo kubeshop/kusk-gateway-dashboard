@@ -61,6 +61,7 @@ const ApiPublishModal: React.FC = () => {
 
   const [errorMessage, setErrorMessage] = useState<string>();
   const [isApiMocked, setIsApiMocked] = useState<boolean>(false);
+  const [isPublishing, setIsPublishing] = useState<boolean>(false);
   const [isPublishDisabled, setIsPublishedDisabled] = useState<boolean>(true);
   const [redirectTabSelection, setRedirectTabSelection] = useState<string>('path_redirect');
   const [targetSelection, setTargetSelection] = useState<string>('upstream');
@@ -76,8 +77,12 @@ const ApiPublishModal: React.FC = () => {
     dispatch(closeApiPublishModal());
   };
 
-  const onSubmitHandler = (deploy?: boolean) => {
+  const onSubmitHandler = (publish?: boolean) => {
     form.validateFields().then(values => {
+      if (publish) {
+        setIsPublishing(true);
+      }
+
       let newApiContent: ApiContent | null = null;
 
       if (activeStep === 'openApiSpec') {
@@ -218,12 +223,12 @@ const ApiPublishModal: React.FC = () => {
         }
       }
 
-      if (!deploy && activeStep !== 'websocket') {
+      if (!publish && activeStep !== 'websocket') {
         dispatch(setNewApiContent(newApiContent));
         dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]));
       }
 
-      if (deploy && newApiContent) {
+      if (publish && newApiContent) {
         if (isApiMocked) {
           delete newApiContent.openapi['x-kusk'].validation;
         }
@@ -253,6 +258,7 @@ const ApiPublishModal: React.FC = () => {
           })
           .catch(err => {
             setErrorMessage(err.data);
+            setIsPublishing(false);
           });
       }
     });
@@ -308,8 +314,8 @@ const ApiPublishModal: React.FC = () => {
             </Button>
           ) : null}
 
-          <Button type="primary" disabled={isPublishDisabled} onClick={() => onSubmitHandler(true)}>
-            Publish
+          <Button type="primary" disabled={isPublishDisabled || isPublishing} onClick={() => onSubmitHandler(true)}>
+            {isPublishing ? 'Publishing API...' : 'Publish'}
           </Button>
         </>
       }
