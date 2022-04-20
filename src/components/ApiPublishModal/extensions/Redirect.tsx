@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 
 import {Form, FormInstance, Radio, Switch} from 'antd';
 
@@ -16,6 +16,20 @@ const Redirect: React.FC<IProps> = props => {
   const {form, selectedTab, setSelectedTab} = props;
 
   const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
+
+  const isApiMocked = useMemo(() => {
+    if (!openApiSpec) {
+      return false;
+    }
+
+    const mocking = openApiSpec['x-kusk']?.mocking?.enabled;
+
+    if (mocking) {
+      return true;
+    }
+
+    return false;
+  }, [openApiSpec]);
 
   useEffect(() => {
     const redirect = openApiSpec['x-kusk'].redirect;
@@ -39,11 +53,29 @@ const Redirect: React.FC<IProps> = props => {
         <S.Input />
       </Form.Item>
 
-      <Form.Item label="Host redirect" name={['redirect', 'host_redirect']}>
+      <Form.Item
+        label="Host redirect"
+        name={['redirect', 'host_redirect']}
+        rules={[
+          {
+            required: !isApiMocked,
+            message: 'Please enter name!',
+          },
+        ]}
+      >
         <S.Input />
       </Form.Item>
 
-      <Form.Item label="Port redirect" name={['redirect', 'port_redirect']}>
+      <Form.Item
+        label="Port redirect"
+        name={['redirect', 'port_redirect']}
+        rules={[
+          {
+            required: !isApiMocked,
+            message: 'Please enter name!',
+          },
+        ]}
+      >
         <S.Input type="number" />
       </Form.Item>
 

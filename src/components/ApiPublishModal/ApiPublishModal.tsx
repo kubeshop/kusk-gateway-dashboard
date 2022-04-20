@@ -377,7 +377,6 @@ const ApiPublishModal: React.FC = () => {
                   {targetSelection === 'upstream' ? (
                     <Upstream
                       form={form}
-                      isApiMocked={isApiMocked}
                       reference={upstreamReference}
                       setReference={reference => setUpstreamReference(reference)}
                     />
