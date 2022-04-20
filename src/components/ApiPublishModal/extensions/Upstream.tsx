@@ -24,7 +24,9 @@ const Upstream: React.FC<IProps> = props => {
   const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
   const services = useAppSelector(state => state.main.services);
 
-  const [selectedService, setSelectedService] = useState<ServiceItem>();
+  const formService = form.getFieldValue('service');
+
+  const [selectedService, setSelectedService] = useState<ServiceItem | undefined>(formService || undefined);
 
   const isApiMocked = useMemo(() => {
     if (!openApiSpec) {
@@ -45,12 +47,19 @@ const Upstream: React.FC<IProps> = props => {
       return [];
     }
 
-    return selectedService.ports?.map(port => port.port);
+    return selectedService.ports?.map(port => port.port) || [];
   }, [selectedService]);
 
   const onServiceSelectClearHandler = () => {
     setSelectedService(undefined);
-    form.resetFields();
+
+    const upstreamService = openApiSpec['x-kusk']?.upstream?.service;
+
+    if (upstreamService) {
+      form.setFieldsValue({service: upstreamService});
+    } else {
+      form.resetFields();
+    }
   };
 
   const onServiceSelectHandler = (service: ServiceItem) => {
@@ -78,12 +87,32 @@ const Upstream: React.FC<IProps> = props => {
       return;
     }
 
+    const specPort = openApiSpec['x-kusk']?.upstream?.service?.port;
+
     form.setFieldsValue({
-      upstream: {service: {name: selectedService.name, namespace: selectedService.namespace, port: undefined}},
+      upstream: {
+        service: {
+          name: selectedService.name,
+          namespace: selectedService.namespace,
+          port: selectedServicePorts.find(port => port === specPort) ? specPort : undefined,
+        },
+      },
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedService]);
+  }, [selectedService, formService]);
+
+  useEffect(() => {
+    if (!formService) {
+      return;
+    }
+
+    const service = services.items.find(s => `${s.namespace}-${s.name}` === formService);
+
+    if (service) {
+      setSelectedService(service);
+    }
+  }, [formService, services.items]);
 
   return (
     <>
