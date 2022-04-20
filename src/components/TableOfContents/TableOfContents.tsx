@@ -204,9 +204,10 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
 
             return tags.map((tag: string) => {
               let kuskExtensionRef: string = '';
+              const reconstructedTag = tag.replaceAll(' ', '_');
 
               if (operationValue['x-kusk']) {
-                kuskExtensionRef = `operations-${tag}-${operationId}`;
+                kuskExtensionRef = `operations-${reconstructedTag}-${operationId}`;
               }
 
               const operationTagNodeContent: TableOfContentsItem = {
@@ -221,7 +222,7 @@ const createTableOfContentsTreeData = (spec: any, layoutActions: any): DataNode[
                   />
                 ),
                 operationId,
-                operationElementRef: `operations-${tag}-${
+                operationElementRef: `operations-${reconstructedTag}-${
                   operationValue['operationId'] ? operationId.replaceAll('/', '\\/') : operationId
                 }`,
                 tag,
