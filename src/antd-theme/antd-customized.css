@@ -8247,7 +8247,7 @@ _:-ms-fullscreen .ant-picker-range-wrapper .ant-picker-year-panel .ant-picker-ce
 .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
   display: inline-block;
   margin-right: 4px;
-  color: #a61d24;
+  color: #f43f5e;
   font-size: 14px;
   font-family: SimSun, sans-serif;
   line-height: 1;
