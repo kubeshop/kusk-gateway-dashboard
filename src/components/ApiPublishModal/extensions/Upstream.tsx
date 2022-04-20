@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 
-import {Form, FormInstance, Select, Skeleton, Tabs, Tag} from 'antd';
+import {Form, FormInstance, Radio, Select, Skeleton, Tag} from 'antd';
 
 import {ServiceItem} from '@models/api';
 
@@ -10,23 +10,35 @@ import {ErrorLabel} from '@components/AntdCustom';
 
 import * as S from './styled';
 
-const {TabPane} = Tabs;
 const {Option} = Select;
 
 interface IProps {
   form: FormInstance<any>;
-  isApiMocked: boolean;
   reference: string;
   setReference: (reference: string) => void;
 }
 
 const Upstream: React.FC<IProps> = props => {
-  const {form, isApiMocked, reference, setReference} = props;
+  const {form, reference, setReference} = props;
 
   const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
   const services = useAppSelector(state => state.main.services);
 
   const [selectedService, setSelectedService] = useState<ServiceItem>();
+
+  const isApiMocked = useMemo(() => {
+    if (!openApiSpec) {
+      return false;
+    }
+
+    const mocking = openApiSpec['x-kusk']?.mocking?.enabled;
+
+    if (mocking) {
+      return true;
+    }
+
+    return false;
+  }, [openApiSpec]);
 
   const selectedServicePorts = useMemo(() => {
     if (!selectedService) {
@@ -75,8 +87,14 @@ const Upstream: React.FC<IProps> = props => {
 
   return (
     <>
-      <Tabs defaultActiveKey="service" activeKey={reference} onChange={key => setReference(key)}>
-        <TabPane tab="Service" key="service">
+      <S.Label>Upstream reference</S.Label>
+      <S.RadioGroup value={reference} onChange={e => setReference(e.target.value)}>
+        <Radio value="service">Service</Radio>
+        <Radio value="host">Host</Radio>
+      </S.RadioGroup>
+
+      {reference === 'service' ? (
+        <>
           {services.isLoading ? (
             <Skeleton.Button />
           ) : services.error ? (
@@ -107,7 +125,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'service', 'name']}
             rules={[
               {
-                required: isApiMocked ? false : requiredUpstreamReference(reference, 'service'),
+                required: !isApiMocked,
                 message: 'Please enter name!',
               },
             ]}
@@ -120,7 +138,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'service', 'namespace']}
             rules={[
               {
-                required: isApiMocked ? false : requiredUpstreamReference(reference, 'service'),
+                required: !isApiMocked,
                 message: 'Please enter namespace!',
               },
             ]}
@@ -133,7 +151,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'service', 'port']}
             rules={[
               {
-                required: isApiMocked ? false : requiredUpstreamReference(reference, 'service'),
+                required: !isApiMocked,
                 message: `Please ${selectedService ? 'choose' : 'enter'} a valid port!`,
               },
             ]}
@@ -150,36 +168,35 @@ const Upstream: React.FC<IProps> = props => {
               <S.Input type="number" />
             )}
           </Form.Item>
-        </TabPane>
-
-        <TabPane tab="Host" key="host">
+        </>
+      ) : (
+        <>
           <Form.Item
             label="Hostname"
             name={['upstream', 'host', 'hostname']}
             rules={[
               {
-                required: isApiMocked ? false : requiredUpstreamReference(reference, 'host'),
+                required: !isApiMocked,
                 message: 'Please enter hostname!',
               },
             ]}
           >
             <S.Input placeholder="e.g. example.com" />
           </Form.Item>
-
           <Form.Item
             label="Port"
             name={['upstream', 'host', 'port']}
             rules={[
               {
-                required: isApiMocked ? false : requiredUpstreamReference(reference, 'host'),
+                required: !isApiMocked,
                 message: 'Please enter port!',
               },
             ]}
           >
             <S.Input type="number" />
           </Form.Item>
-        </TabPane>
-      </Tabs>
+        </>
+      )}
 
       <S.ExtensionSubHeading>Rewrite</S.ExtensionSubHeading>
       <Form.Item label="Pattern" name={['upstream', 'rewrite', 'rewrite_regex', 'pattern']}>
@@ -192,7 +209,5 @@ const Upstream: React.FC<IProps> = props => {
     </>
   );
 };
-
-const requiredUpstreamReference = (selectedReference: string, reference: string) => selectedReference === reference;
 
 export default Upstream;

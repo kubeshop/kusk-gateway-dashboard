@@ -1,4 +1,4 @@
-import {Input as RawInput, Select as RawSelect} from 'antd';
+import {Radio, Input as RawInput, Select as RawSelect} from 'antd';
 
 import styled from 'styled-components';
 
@@ -11,6 +11,14 @@ export const ExtensionSubHeading = styled.h4`
 export const Input = styled(RawInput)`
   background-color: ${Colors.grey2};
   width: 100%;
+`;
+
+export const Label = styled.div`
+  margin-bottom: 8px;
+`;
+
+export const RadioGroup = styled(Radio.Group)`
+  margin-bottom: 15px;
 `;
 
 export const Select = styled(RawSelect)`

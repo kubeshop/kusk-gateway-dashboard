@@ -1,33 +1,60 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 
-import {Form, FormInstance, Switch} from 'antd';
+import {Button, Checkbox, Form, FormInstance, Switch} from 'antd';
+
+import styled from 'styled-components';
+
+import {SUPPORTED_METHODS} from '@constants/constants';
 
 import {useAppSelector} from '@redux/hooks';
 
 import {FormList} from '@components';
 
+import Colors from '@styles/colors';
+
 import * as S from './styled';
+
+const METHODS = SUPPORTED_METHODS.slice(0, -1).map(method => method.toUpperCase());
 
 interface IProps {
   form: FormInstance<any>;
 }
+
+const StyledButton = styled(Button)`
+  color: ${Colors.blue700};
+  border: none;
+
+  &:focus {
+    color: ${Colors.blue700};
+  }
+`;
 
 const CORS: React.FC<IProps> = props => {
   const {form} = props;
 
   const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
 
+  const [areCheckedAll, setAreCheckedAll] = useState(false);
+
+  const onCheckHandler = () => {
+    if (areCheckedAll) {
+      form.setFieldsValue({cors: {methods: []}});
+      setAreCheckedAll(false);
+    } else {
+      form.setFieldsValue({cors: {methods: METHODS}});
+      setAreCheckedAll(true);
+    }
+  };
+
   useEffect(() => {
-    const cors = openApiSpec['x-kusk'].cors;
+    const cors = openApiSpec['x-kusk']?.cors;
 
     if (!cors) {
       return;
     }
 
     form.setFieldsValue({cors});
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openApiSpec]);
+  }, [form, openApiSpec]);
 
   return (
     <>
@@ -38,12 +65,23 @@ const CORS: React.FC<IProps> = props => {
         requiredMessage="Enter origin or delete the field."
       />
 
-      <FormList
-        addButtonText="Add method"
-        label="Methods"
+      <Form.Item
+        label={
+          <div>
+            Methods{' '}
+            <StyledButton type="ghost" onClick={onCheckHandler}>
+              {areCheckedAll ? 'Uncheck all' : 'Check all'}
+            </StyledButton>
+          </div>
+        }
         name={['cors', 'methods']}
-        requiredMessage="Enter method or delete the field."
-      />
+      >
+        <Checkbox.Group>
+          {METHODS.map(method => (
+            <Checkbox value={method}>{method}</Checkbox>
+          ))}
+        </Checkbox.Group>
+      </Form.Item>
 
       <FormList
         addButtonText="Add header"

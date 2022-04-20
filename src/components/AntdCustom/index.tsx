@@ -20,7 +20,7 @@ export const ContentWrapper = styled.div<{$backgroundColor?: string}>`
 `;
 
 export const ErrorLabel = styled.span`
-  color: #a61d24;
+  color: ${Colors.rose500};
 `;
 
 export const InfoPaneCloseIcon = styled(RawCloseOutlined)`

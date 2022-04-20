@@ -31,6 +31,14 @@ export const FormContainer = styled.div`
   ${GlobalScrollbarStyle}
 `;
 
+export const Label = styled.div`
+  margin-bottom: 8px;
+`;
+
+export const RadioGroupContainer = styled.div`
+  margin-bottom: 15px;
+`;
+
 export const Step = styled(Steps.Step)`
   & .ant-steps-icon {
     height: 100%;
