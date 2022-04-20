@@ -1,12 +1,16 @@
 import {useEffect} from 'react';
 
-import {Form, FormInstance, Switch} from 'antd';
+import {Checkbox, Form, FormInstance, Switch} from 'antd';
+
+import {SUPPORTED_METHODS} from '@constants/constants';
 
 import {useAppSelector} from '@redux/hooks';
 
 import {FormList} from '@components';
 
 import * as S from './styled';
+
+const METHODS = SUPPORTED_METHODS.slice(0, -1).map(method => method.toUpperCase());
 
 interface IProps {
   form: FormInstance<any>;
@@ -18,7 +22,7 @@ const CORS: React.FC<IProps> = props => {
   const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
 
   useEffect(() => {
-    const cors = openApiSpec['x-kusk'].cors;
+    const cors = openApiSpec['x-kusk']?.cors;
 
     if (!cors) {
       return;
@@ -38,12 +42,13 @@ const CORS: React.FC<IProps> = props => {
         requiredMessage="Enter origin or delete the field."
       />
 
-      <FormList
-        addButtonText="Add method"
-        label="Methods"
-        name={['cors', 'methods']}
-        requiredMessage="Enter method or delete the field."
-      />
+      <Form.Item label="Methods" name={['cors', 'methods']}>
+        <Checkbox.Group>
+          {METHODS.map(method => (
+            <Checkbox value={method}>{method}</Checkbox>
+          ))}
+        </Checkbox.Group>
+      </Form.Item>
 
       <FormList
         addButtonText="Add header"
