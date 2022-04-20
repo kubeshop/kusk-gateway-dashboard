@@ -1,6 +1,6 @@
 import {Suspense, lazy, useEffect, useMemo, useState} from 'react';
 
-import {Button, Form, Modal, Skeleton, Steps, Tabs} from 'antd';
+import {Button, Form, Modal, Radio, Skeleton, Steps} from 'antd';
 
 import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
@@ -28,8 +28,6 @@ const Redirect = lazy(() => import('./extensions/Redirect'));
 const Upstream = lazy(() => import('./extensions/Upstream'));
 const Validation = lazy(() => import('./extensions/Validation'));
 const Websocket = lazy(() => import('./extensions/Websocket'));
-
-const {TabPane} = Tabs;
 
 const renderedNextButtonText: {[key: number]: string} = {
   0: 'Add API Info',
@@ -65,7 +63,7 @@ const ApiPublishModal: React.FC = () => {
   const [isApiMocked, setIsApiMocked] = useState<boolean>(false);
   const [isPublishDisabled, setIsPublishedDisabled] = useState<boolean>(true);
   const [redirectTabSelection, setRedirectTabSelection] = useState<string>('path_redirect');
-  const [upstreamRedirectTabSelection, setUpstreamRedirectTabSelection] = useState<string>('upstream');
+  const [targetSelection, setTargetSelection] = useState<string>('upstream');
   const [upstreamReference, setUpstreamReference] = useState<string>('service');
 
   const {mutate: deployAPI} = useDeployApi({});
@@ -122,7 +120,7 @@ const ApiPublishModal: React.FC = () => {
 
           let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk']}};
 
-          if (upstreamRedirectTabSelection === 'redirect') {
+          if (targetSelection === 'redirect') {
             if (redirect['port_redirect']) {
               redirect['port_redirect'] = parseInt(redirect['port_redirect'], 10);
             }
@@ -271,7 +269,7 @@ const ApiPublishModal: React.FC = () => {
     }
 
     if (!apiContent.openapi['x-kusk']?.upstream && apiContent.openapi['x-kusk']?.redirect) {
-      setUpstreamRedirectTabSelection('redirect');
+      setTargetSelection('redirect');
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -336,7 +334,7 @@ const ApiPublishModal: React.FC = () => {
                 <StepTitle
                   step="target"
                   title="Target"
-                  documentationLink={`https://kubeshop.github.io/kusk-gateway/extension/#${upstreamRedirectTabSelection}`}
+                  documentationLink={`https://kubeshop.github.io/kusk-gateway/extension/#${targetSelection}`}
                   isStepApplicable={!isApiMocked}
                 />
               }
@@ -368,28 +366,29 @@ const ApiPublishModal: React.FC = () => {
               {activeStep === 'apiInfo' && <ApiInfo form={form} />}
               {activeStep === 'validation' && <Validation form={form} isApiMocked={isApiMocked} />}
               {activeStep === 'target' && (
-                <Tabs activeKey={upstreamRedirectTabSelection} onChange={key => setUpstreamRedirectTabSelection(key)}>
-                  <TabPane tab="Upstream" key="upstream">
-                    {upstreamRedirectTabSelection === 'upstream' && (
-                      <Upstream
-                        form={form}
-                        isApiMocked={isApiMocked}
-                        reference={upstreamReference}
-                        setReference={reference => setUpstreamReference(reference)}
-                      />
-                    )}
-                  </TabPane>
+                <>
+                  <S.RadioGroupContainer>
+                    <Radio.Group value={targetSelection} onChange={e => setTargetSelection(e.target.value)}>
+                      <Radio value="upstream">Upstream</Radio>
+                      <Radio value="redirect">Redirect</Radio>
+                    </Radio.Group>
+                  </S.RadioGroupContainer>
 
-                  <TabPane tab="Redirect" key="redirect">
-                    {upstreamRedirectTabSelection === 'redirect' && (
-                      <Redirect
-                        form={form}
-                        selectedTab={redirectTabSelection}
-                        setSelectedTab={tabKey => setRedirectTabSelection(tabKey)}
-                      />
-                    )}
-                  </TabPane>
-                </Tabs>
+                  {targetSelection === 'upstream' ? (
+                    <Upstream
+                      form={form}
+                      isApiMocked={isApiMocked}
+                      reference={upstreamReference}
+                      setReference={reference => setUpstreamReference(reference)}
+                    />
+                  ) : (
+                    <Redirect
+                      form={form}
+                      selectedTab={redirectTabSelection}
+                      setSelectedTab={tabKey => setRedirectTabSelection(tabKey)}
+                    />
+                  )}
+                </>
               )}
               {activeStep === 'hosts' && <Hosts form={form} />}
               {activeStep === 'qos' && <QOS form={form} />}

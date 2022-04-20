@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 
-import {Form, FormInstance, Select, Skeleton, Tabs, Tag} from 'antd';
+import {Form, FormInstance, Radio, Select, Skeleton, Tag} from 'antd';
 
 import {ServiceItem} from '@models/api';
 
@@ -10,7 +10,6 @@ import {ErrorLabel} from '@components/AntdCustom';
 
 import * as S from './styled';
 
-const {TabPane} = Tabs;
 const {Option} = Select;
 
 interface IProps {
@@ -75,8 +74,13 @@ const Upstream: React.FC<IProps> = props => {
 
   return (
     <>
-      <Tabs defaultActiveKey="service" activeKey={reference} onChange={key => setReference(key)}>
-        <TabPane tab="Service" key="service">
+      <S.RadioGroup value={reference} onChange={e => setReference(e.target.value)}>
+        <Radio value="service">Service</Radio>
+        <Radio value="host">Host</Radio>
+      </S.RadioGroup>
+
+      {reference === 'service' ? (
+        <>
           {services.isLoading ? (
             <Skeleton.Button />
           ) : services.error ? (
@@ -150,9 +154,9 @@ const Upstream: React.FC<IProps> = props => {
               <S.Input type="number" />
             )}
           </Form.Item>
-        </TabPane>
-
-        <TabPane tab="Host" key="host">
+        </>
+      ) : (
+        <>
           <Form.Item
             label="Hostname"
             name={['upstream', 'host', 'hostname']}
@@ -165,7 +169,6 @@ const Upstream: React.FC<IProps> = props => {
           >
             <S.Input placeholder="e.g. example.com" />
           </Form.Item>
-
           <Form.Item
             label="Port"
             name={['upstream', 'host', 'port']}
@@ -178,8 +181,8 @@ const Upstream: React.FC<IProps> = props => {
           >
             <S.Input type="number" />
           </Form.Item>
-        </TabPane>
-      </Tabs>
+        </>
+      )}
 
       <S.ExtensionSubHeading>Rewrite</S.ExtensionSubHeading>
       <Form.Item label="Pattern" name={['upstream', 'rewrite', 'rewrite_regex', 'pattern']}>
