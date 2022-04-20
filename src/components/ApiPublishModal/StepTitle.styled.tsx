@@ -21,10 +21,6 @@ export const LearnMoreContainer = styled.a`
   display: flex;
   align-items: center;
   gap: 5px;
-
-  & a {
-    display: flex;
-  }
 `;
 
 export const StepTitleContainer = styled.div`
