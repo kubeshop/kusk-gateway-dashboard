@@ -13,6 +13,10 @@ export const Input = styled(RawInput)`
   width: 100%;
 `;
 
+export const Label = styled.div`
+  margin-bottom: 8px;
+`;
+
 export const RadioGroup = styled(Radio.Group)`
   margin-bottom: 15px;
 `;

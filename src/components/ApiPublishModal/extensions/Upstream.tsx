@@ -87,6 +87,7 @@ const Upstream: React.FC<IProps> = props => {
 
   return (
     <>
+      <S.Label>Upstream reference</S.Label>
       <S.RadioGroup value={reference} onChange={e => setReference(e.target.value)}>
         <Radio value="service">Service</Radio>
         <Radio value="host">Host</Radio>

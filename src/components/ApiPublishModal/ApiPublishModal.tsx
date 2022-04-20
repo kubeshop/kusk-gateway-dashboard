@@ -368,7 +368,12 @@ const ApiPublishModal: React.FC = () => {
               {activeStep === 'target' && (
                 <>
                   <S.RadioGroupContainer>
-                    <Radio.Group value={targetSelection} onChange={e => setTargetSelection(e.target.value)}>
+                    <S.Label>Target</S.Label>
+                    <Radio.Group
+                      name="target"
+                      value={targetSelection}
+                      onChange={e => setTargetSelection(e.target.value)}
+                    >
                       <Radio value="upstream">Upstream</Radio>
                       <Radio value="redirect">Redirect</Radio>
                     </Radio.Group>
