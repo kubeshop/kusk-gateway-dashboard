@@ -15,8 +15,6 @@ export const LearnMoreContainer = styled.a`
   margin-top: -7px;
   margin-bottom: 7px;
   font-size: 13px;
-  color: ${Colors.blue600};
-  opacity: 0.9;
 
   display: flex;
   align-items: center;
