@@ -7,7 +7,7 @@ import {useGetEnvoyFleets} from '@models/api';
 import {useAppDispatch} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 
-import {ContentWrapper, ErrorLabel, ListTableTitleContainer, ListTableTitleLabel} from '@components/AntdCustom';
+import {ContentWrapper, ErrorLabel, ListTableTitleLabel} from '@components/AntdCustom';
 
 import EnvoyFleetsListTable from './EnvoyFleetsListTable';
 
@@ -32,6 +32,18 @@ const EnvoyFleetsList: React.FC = () => {
     return [...Array.from(new Set(namespaces))];
   }, [data]);
 
+  const renderedNamespacesOptions = useMemo(() => {
+    if (!envoyFleetsNamespaces?.length) {
+      return null;
+    }
+
+    return envoyFleetsNamespaces.map(namespace => (
+      <Option key={namespace} value={namespace}>
+        {namespace}
+      </Option>
+    ));
+  }, [envoyFleetsNamespaces]);
+
   const onNamespaceSelectHandler = (namespace: string) => {
     setSelectedNamespace(namespace);
     dispatch(selectEnvoyFleet(null));
@@ -44,32 +56,26 @@ const EnvoyFleetsList: React.FC = () => {
 
   return (
     <ContentWrapper>
-      <ListTableTitleContainer>
-        <ListTableTitleLabel>Envoy Fleets</ListTableTitleLabel>
+      <ListTableTitleLabel>Envoy Fleets</ListTableTitleLabel>
 
-        <S.TitleFiltersContainer>
-          {loading ? (
-            <Skeleton.Button />
-          ) : error ? null : (
-            <S.Select
-              allowClear
-              placeholder="Select a namespace"
-              value={selectedNamespace}
-              showSearch
-              onClear={onNamespaceSelectionClearHandler}
-              onSelect={(value: any) => {
-                onNamespaceSelectHandler(value);
-              }}
-            >
-              {envoyFleetsNamespaces.map(namespace => (
-                <Option key={namespace} value={namespace}>
-                  {namespace}
-                </Option>
-              ))}
-            </S.Select>
-          )}
-        </S.TitleFiltersContainer>
-      </ListTableTitleContainer>
+      <S.TitleFiltersContainer>
+        {loading ? (
+          <Skeleton.Button />
+        ) : error ? null : (
+          <S.Select
+            allowClear
+            placeholder="Select a namespace"
+            value={selectedNamespace}
+            showSearch
+            onClear={onNamespaceSelectionClearHandler}
+            onSelect={(value: any) => {
+              onNamespaceSelectHandler(value);
+            }}
+          >
+            {renderedNamespacesOptions}
+          </S.Select>
+        )}
+      </S.TitleFiltersContainer>
 
       {loading ? (
         <Skeleton />

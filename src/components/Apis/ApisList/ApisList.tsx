@@ -1,17 +1,14 @@
 import {useEffect, useMemo, useState} from 'react';
 
-import {Select, Skeleton, Tag, Tooltip} from 'antd';
-
-import {TOOLTIP_DELAY} from '@constants/constants';
-import {EnvoyFleetInfoTooltip} from '@constants/tooltips';
+import {Button, Select, Skeleton, Tag} from 'antd';
 
 import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi, setApis} from '@redux/reducers/main';
-import {openApiPublishModal, toggleEnvoyFleetInfoModal} from '@redux/reducers/ui';
+import {openApiPublishModal} from '@redux/reducers/ui';
 
-import {ContentWrapper, ErrorLabel, ListTableTitleContainer, ListTableTitleLabel} from '@components/AntdCustom';
+import {ContentWrapper, ErrorLabel, ListTableTitleLabel} from '@components/AntdCustom';
 
 import {getEnvoyFleetKey} from '@utils/envoyFleet';
 
@@ -47,6 +44,31 @@ const ApisList: React.FC = () => {
     return [...Array.from(new Set(namespaces))];
   }, [data]);
 
+  const renderedFleetsOptions = useMemo(() => {
+    if (!envoyFleetsState?.data?.length) {
+      return null;
+    }
+
+    return envoyFleetsState.data.map(envoyFleetItem => (
+      <Option key={getEnvoyFleetKey(envoyFleetItem)} value={envoyFleetItem.name} envoyfleet={envoyFleetItem}>
+        <Tag>{envoyFleetItem.namespace}</Tag>
+        {envoyFleetItem.name}
+      </Option>
+    ));
+  }, [envoyFleetsState.data]);
+
+  const renderedNamespaceOptions = useMemo(() => {
+    if (!apisNamespaces?.length) {
+      return null;
+    }
+
+    return apisNamespaces.map(namespace => (
+      <Option key={namespace} value={namespace}>
+        {namespace}
+      </Option>
+    ));
+  }, [apisNamespaces]);
+
   const onEnvoyFleetSelectHandler = (envoyFleetItem: EnvoyFleetItem) => {
     setSelectedFleet(envoyFleetItem);
     dispatch(selectApi(null));
@@ -55,14 +77,6 @@ const ApisList: React.FC = () => {
   const onNamespaceSelectHandler = (namespace: string) => {
     setSelectedNamespace(namespace);
     dispatch(selectApi(null));
-  };
-
-  const onEnvoyFleetInfoIconClickHandler = () => {
-    if (!selectedFleet) {
-      return;
-    }
-
-    dispatch(toggleEnvoyFleetInfoModal({name: selectedFleet.name, namespace: selectedFleet.namespace}));
   };
 
   const onEnvoyFleetSelectionClearHandler = () => {
@@ -91,51 +105,34 @@ const ApisList: React.FC = () => {
 
   return (
     <ContentWrapper>
-      <ListTableTitleContainer>
-        <ListTableTitleLabel>APIs</ListTableTitleLabel>
+      <ListTableTitleLabel>APIs</ListTableTitleLabel>
 
-        <S.TitleFiltersContainer>
-          <S.EnvoyFleetFilterContainer>
-            {envoyFleetsState.loading ? (
-              <Skeleton.Button />
-            ) : envoyFleetsState.error ? (
-              <ErrorLabel>{envoyFleetsState.error.message}</ErrorLabel>
-            ) : (
-              envoyFleetsState.data && (
-                <S.Select
-                  allowClear
-                  placeholder="Select a fleet"
-                  showSearch
-                  onClear={onEnvoyFleetSelectionClearHandler}
-                  onSelect={(value: any, option: any) => {
-                    onEnvoyFleetSelectHandler(option.envoyfleet);
-                  }}
-                >
-                  {envoyFleetsState.data.map(envoyFleetItem => (
-                    <Option
-                      key={getEnvoyFleetKey(envoyFleetItem)}
-                      value={envoyFleetItem.name}
-                      envoyfleet={envoyFleetItem}
-                    >
-                      <Tag>{envoyFleetItem.namespace}</Tag>
-                      {envoyFleetItem.name}
-                    </Option>
-                  ))}
-                </S.Select>
-              )
-            )}
-
-            {selectedFleet && (
-              <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={EnvoyFleetInfoTooltip}>
-                <S.QuestionCircleOutlined onClick={onEnvoyFleetInfoIconClickHandler} />
-              </Tooltip>
-            )}
-          </S.EnvoyFleetFilterContainer>
+      <S.ActionsContainer>
+        <S.FiltersContainer>
+          {envoyFleetsState.loading ? (
+            <Skeleton.Button />
+          ) : envoyFleetsState.error ? (
+            <ErrorLabel>{envoyFleetsState.error.message}</ErrorLabel>
+          ) : (
+            envoyFleetsState.data && (
+              <Select
+                allowClear
+                placeholder="Select a fleet"
+                showSearch
+                onClear={onEnvoyFleetSelectionClearHandler}
+                onSelect={(value: any, option: any) => {
+                  onEnvoyFleetSelectHandler(option.envoyfleet);
+                }}
+              >
+                {renderedFleetsOptions}
+              </Select>
+            )
+          )}
 
           {loading ? (
             <Skeleton.Button />
           ) : error ? null : (
-            <S.Select
+            <Select
               allowClear
               placeholder="Select a namespace"
               value={selectedNamespace}
@@ -145,26 +142,22 @@ const ApisList: React.FC = () => {
                 onNamespaceSelectHandler(value);
               }}
             >
-              {apisNamespaces.map(namespace => (
-                <Option key={namespace} value={namespace}>
-                  {namespace}
-                </Option>
-              ))}
-            </S.Select>
+              {renderedNamespaceOptions}
+            </Select>
           )}
-        </S.TitleFiltersContainer>
-      </ListTableTitleContainer>
+        </S.FiltersContainer>
+
+        <Button type="primary" onClick={showApiPublishModalHandler}>
+          Publish new API
+        </Button>
+      </S.ActionsContainer>
 
       {loading ? (
         <Skeleton />
       ) : error ? (
         <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
-        apis && (
-          <>
-            <ApisListTable apis={apis} /> <S.Button onClick={showApiPublishModalHandler}>Publish new API</S.Button>
-          </>
-        )
+        apis && <ApisListTable apis={apis} />
       )}
     </ContentWrapper>
   );
