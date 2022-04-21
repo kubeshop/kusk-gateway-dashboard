@@ -50,18 +50,33 @@ const EnvoyFleetsListTable: React.FC<IProps> = props => {
       dataIndex: 'namespace',
       key: 'namespace',
       render: (value: string, record: any) => (
-        <ListTableColumnLabel
-          itemKey={record.key}
-          selectedKey={selectedEnvoyFleetKey}
-          value={value}
-          showSelectArrow
-          onSelectArrowClick={() => dispatch(selectEnvoyFleet(record.envoyFleetItem))}
-        />
+        <ListTableColumnLabel itemKey={record.key} selectedKey={selectedEnvoyFleetKey} value={value} showSelectArrow />
       ),
     },
   ];
 
-  return <S.Table columns={columns} dataSource={dataSource} pagination={false} tableLayout="fixed" />;
+  return (
+    <S.Table
+      columns={columns}
+      dataSource={dataSource}
+      pagination={false}
+      tableLayout="fixed"
+      rowClassName={(record: {[key: string]: any}) => {
+        const {key} = record;
+
+        return key === selectedEnvoyFleetKey ? 'custom-antd-table-selected-row' : '';
+      }}
+      onRow={(record: {[key: string]: any}) => ({
+        onClick: () => {
+          const {envoyFleetItem, key} = record;
+
+          if (!selectedEnvoyFleetKey || key !== selectedEnvoyFleetKey) {
+            dispatch(selectEnvoyFleet(envoyFleetItem));
+          }
+        },
+      })}
+    />
+  );
 };
 
 export default EnvoyFleetsListTable;

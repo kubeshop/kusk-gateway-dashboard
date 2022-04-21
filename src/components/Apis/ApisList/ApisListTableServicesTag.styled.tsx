@@ -20,7 +20,6 @@ export const FalseTag = styled(RawTag)`
 
 export const RightOutlined = styled(RawRightOutlined)<{$disabled: boolean}>`
   ${({$disabled}) => `
-    cursor: ${$disabled ? 'not-allowed' : 'pointer'} !important;
     color: ${$disabled ? Colors.grey5 : Colors.whitePure};
   `}
   font-size: 20px;
