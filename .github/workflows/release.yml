@@ -73,17 +73,17 @@ jobs:
         run: |
           # sets appVersion in the Chart.yaml
           echo New appVersion: ${{ github.ref_name }}
-          sed  -i -e "s/^appVersion: .*$/appVersion: \"${{ github.ref_name }}\"/" charts/kusk-gateway-api/charts/dashboard/Chart.yaml
+          sed  -i -e "s/^appVersion: .*$/appVersion: \"${{ github.ref_name }}\"/" charts/kusk-gateway-dashboard/Chart.yaml
           # Bumps charts patch version
-          CURRENT_VERSION=$(sed  -n  -e  "s/^version: \(.*\)$/\1/p"  charts/kusk-gateway-api/charts/dashboard/Chart.yaml)
+          CURRENT_VERSION=$(sed  -n  -e  "s/^version: \(.*\)$/\1/p"  charts/kusk-gateway-dashboard/Chart.yaml)
           echo Current chart version ${CURRENT_VERSION}
           NEW_VERSION=$(echo $CURRENT_VERSION |awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
           echo New version ${NEW_VERSION}
-          sed -i -e "s/^version: .*/version: ${NEW_VERSION}/g" charts/kusk-gateway-api/charts/dashboard/Chart.yaml
+          sed -i -e "s/^version: .*/version: ${NEW_VERSION}/g" charts/kusk-gateway-dashboard/Chart.yaml
 
       - name: Lint the chart
         run: |
-          helm lint charts/kusk-gateway-api/charts/dashboard
+          helm lint charts/kusk-gateway-dashboard
 
       - name: Push updated chart
         run: |
