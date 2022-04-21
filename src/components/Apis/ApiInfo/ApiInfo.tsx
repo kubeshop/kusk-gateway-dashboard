@@ -12,9 +12,9 @@ import {ContentWrapper, InfoPaneCloseIcon, InfoPaneContainer} from '@components/
 import Colors from '@styles/colors';
 
 const TABS_ITEMS = [
-  {key: 'raw-api-spec', label: 'Raw API Spec'},
-  {key: 'post-processed-api-spec', label: 'Post-Processed API Spec'},
+  {key: 'api-definition', label: 'API Definition'},
   {key: 'kusk-extensions', label: 'Kusk Extensions'},
+  {key: 'public-api-definition', label: 'Public API Definition'},
 ];
 
 const KuskExtensions = lazy(() => import('@components/KuskExtensions/KuskExtensions'));
@@ -27,7 +27,7 @@ const ApiInfo: React.FC = () => {
 
   const onCloseHandler = () => {
     dispatch(selectApi(null));
-    dispatch(setApiInfoActiveTab('raw-api-spec'));
+    dispatch(setApiInfoActiveTab('api-definition'));
   };
 
   return (
@@ -36,9 +36,9 @@ const ApiInfo: React.FC = () => {
         <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setApiInfoActiveTab} />
 
         <Suspense fallback={<Skeleton />}>
-          {activeTab === 'raw-api-spec' && <RawApiSpec />}
-          {activeTab === 'post-processed-api-spec' && <PostProcessedApiSpec />}
+          {activeTab === 'api-definition' && <RawApiSpec />}
           {activeTab === 'kusk-extensions' && <KuskExtensions />}
+          {activeTab === 'public-api-definition' && <PostProcessedApiSpec />}
         </Suspense>
 
         <InfoPaneCloseIcon onClick={onCloseHandler} />

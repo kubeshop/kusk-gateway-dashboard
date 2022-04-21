@@ -46,11 +46,11 @@ const TableOfContents: React.FC<IProps> = props => {
   );
 
   const resizeTableOfContentsHandler = useCallback(() => {
-    if (apiInfoActiveTab === 'raw-api-spec') {
+    if (apiInfoActiveTab === 'api-definition') {
       dispatch(setRawApiSpecTableOfContentsHeight(height));
     }
 
-    if (apiInfoActiveTab === 'post-processed-api-spec') {
+    if (apiInfoActiveTab === 'public-api-definition') {
       dispatch(setPostProcessedTabledOfContentsHeight(height));
     }
   }, [apiInfoActiveTab, dispatch, height]);
@@ -58,7 +58,7 @@ const TableOfContents: React.FC<IProps> = props => {
   const tableOfContentsResizableHeight = useMemo(
     () =>
       height ||
-      (apiInfoActiveTab === 'raw-api-spec'
+      (apiInfoActiveTab === 'api-definition'
         ? tableOfContentsHeight.rawApiSpec
         : tableOfContentsHeight.postProcessedApiSpec),
     [apiInfoActiveTab, height, tableOfContentsHeight.postProcessedApiSpec, tableOfContentsHeight.rawApiSpec]
