@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 
-import {Select, Skeleton, Tag} from 'antd';
+import {Button, Select, Skeleton, Tag} from 'antd';
 
 import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets} from '@models/api';
 
@@ -82,15 +82,15 @@ const ApisList: React.FC = () => {
     <ContentWrapper>
       <ListTableTitleLabel>APIs</ListTableTitleLabel>
 
-      <S.TitleFiltersContainer>
-        <S.EnvoyFleetFilterContainer>
+      <S.ActionsContainer>
+        <S.FiltersContainer>
           {envoyFleetsState.loading ? (
             <Skeleton.Button />
           ) : envoyFleetsState.error ? (
             <ErrorLabel>{envoyFleetsState.error.message}</ErrorLabel>
           ) : (
             envoyFleetsState.data && (
-              <S.Select
+              <Select
                 allowClear
                 placeholder="Select a fleet"
                 showSearch
@@ -109,43 +109,43 @@ const ApisList: React.FC = () => {
                     {envoyFleetItem.name}
                   </Option>
                 ))}
-              </S.Select>
+              </Select>
             )
           )}
-        </S.EnvoyFleetFilterContainer>
 
-        {loading ? (
-          <Skeleton.Button />
-        ) : error ? null : (
-          <S.Select
-            allowClear
-            placeholder="Select a namespace"
-            value={selectedNamespace}
-            showSearch
-            onClear={onNamespaceSelectionClearHandler}
-            onSelect={(value: any) => {
-              onNamespaceSelectHandler(value);
-            }}
-          >
-            {apisNamespaces.map(namespace => (
-              <Option key={namespace} value={namespace}>
-                {namespace}
-              </Option>
-            ))}
-          </S.Select>
-        )}
-      </S.TitleFiltersContainer>
+          {loading ? (
+            <Skeleton.Button />
+          ) : error ? null : (
+            <Select
+              allowClear
+              placeholder="Select a namespace"
+              value={selectedNamespace}
+              showSearch
+              onClear={onNamespaceSelectionClearHandler}
+              onSelect={(value: any) => {
+                onNamespaceSelectHandler(value);
+              }}
+            >
+              {apisNamespaces.map(namespace => (
+                <Option key={namespace} value={namespace}>
+                  {namespace}
+                </Option>
+              ))}
+            </Select>
+          )}
+        </S.FiltersContainer>
+
+        <Button type="primary" onClick={showApiPublishModalHandler}>
+          Publish new API
+        </Button>
+      </S.ActionsContainer>
 
       {loading ? (
         <Skeleton />
       ) : error ? (
         <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
-        apis && (
-          <>
-            <ApisListTable apis={apis} /> <S.Button onClick={showApiPublishModalHandler}>Publish new API</S.Button>
-          </>
-        )
+        apis && <ApisListTable apis={apis} />
       )}
     </ContentWrapper>
   );
