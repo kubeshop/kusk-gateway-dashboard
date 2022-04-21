@@ -40,4 +40,9 @@ body #root {
 .ant-form-hide-required-mark .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::after {
   display: none;
 }
+
+.ant-select-selection-item {
+    display: flex;
+    align-items: center;
+}
 `;
