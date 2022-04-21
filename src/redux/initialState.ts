@@ -23,7 +23,7 @@ const initialUiState: UiState = {
     activeStep: 'openApiSpec',
     isOpen: false,
   },
-  apiInfoActiveTab: 'raw-api-spec',
+  apiInfoActiveTab: 'api-definition',
   dashboardPaneConfiguration: {
     leftPaneWidth: 0.5,
     rightPaneWidth: 0.5,
