@@ -31,6 +31,18 @@ const StaticRoutesList: React.FC = () => {
     return [...Array.from(new Set(namespaces))];
   }, [data]);
 
+  const renderedNamespacesOptions = useMemo(() => {
+    if (!staticRoutesNamespaces?.length) {
+      return null;
+    }
+
+    return staticRoutesNamespaces.map(namespace => (
+      <Option key={namespace} value={namespace}>
+        {namespace}
+      </Option>
+    ));
+  }, [staticRoutesNamespaces]);
+
   const onNamespaceSelectHandler = (namespace: string) => {
     setSelectedNamespace(namespace);
     dispatch(selectStaticRoute(null));
@@ -59,11 +71,7 @@ const StaticRoutesList: React.FC = () => {
               onNamespaceSelectHandler(value);
             }}
           >
-            {staticRoutesNamespaces.map(namespace => (
-              <Option key={namespace} value={namespace}>
-                {namespace}
-              </Option>
-            ))}
+            {renderedNamespacesOptions}
           </S.Select>
         )}
       </S.TitleFiltersContainer>

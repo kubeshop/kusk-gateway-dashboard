@@ -32,6 +32,18 @@ const EnvoyFleetsList: React.FC = () => {
     return [...Array.from(new Set(namespaces))];
   }, [data]);
 
+  const renderedNamespacesOptions = useMemo(() => {
+    if (!envoyFleetsNamespaces?.length) {
+      return null;
+    }
+
+    return envoyFleetsNamespaces.map(namespace => (
+      <Option key={namespace} value={namespace}>
+        {namespace}
+      </Option>
+    ));
+  }, [envoyFleetsNamespaces]);
+
   const onNamespaceSelectHandler = (namespace: string) => {
     setSelectedNamespace(namespace);
     dispatch(selectEnvoyFleet(null));
@@ -60,11 +72,7 @@ const EnvoyFleetsList: React.FC = () => {
               onNamespaceSelectHandler(value);
             }}
           >
-            {envoyFleetsNamespaces.map(namespace => (
-              <Option key={namespace} value={namespace}>
-                {namespace}
-              </Option>
-            ))}
+            {renderedNamespacesOptions}
           </S.Select>
         )}
       </S.TitleFiltersContainer>

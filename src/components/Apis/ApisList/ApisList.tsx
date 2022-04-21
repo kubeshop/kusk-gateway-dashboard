@@ -44,6 +44,31 @@ const ApisList: React.FC = () => {
     return [...Array.from(new Set(namespaces))];
   }, [data]);
 
+  const renderedFleetsOptions = useMemo(() => {
+    if (!envoyFleetsState?.data?.length) {
+      return null;
+    }
+
+    return envoyFleetsState.data.map(envoyFleetItem => (
+      <Option key={getEnvoyFleetKey(envoyFleetItem)} value={envoyFleetItem.name} envoyfleet={envoyFleetItem}>
+        <Tag>{envoyFleetItem.namespace}</Tag>
+        {envoyFleetItem.name}
+      </Option>
+    ));
+  }, [envoyFleetsState.data]);
+
+  const renderedNamespaceOptions = useMemo(() => {
+    if (!apisNamespaces?.length) {
+      return null;
+    }
+
+    return apisNamespaces.map(namespace => (
+      <Option key={namespace} value={namespace}>
+        {namespace}
+      </Option>
+    ));
+  }, [apisNamespaces]);
+
   const onEnvoyFleetSelectHandler = (envoyFleetItem: EnvoyFleetItem) => {
     setSelectedFleet(envoyFleetItem);
     dispatch(selectApi(null));
@@ -99,16 +124,7 @@ const ApisList: React.FC = () => {
                   onEnvoyFleetSelectHandler(option.envoyfleet);
                 }}
               >
-                {envoyFleetsState.data.map(envoyFleetItem => (
-                  <Option
-                    key={getEnvoyFleetKey(envoyFleetItem)}
-                    value={envoyFleetItem.name}
-                    envoyfleet={envoyFleetItem}
-                  >
-                    <Tag>{envoyFleetItem.namespace}</Tag>
-                    {envoyFleetItem.name}
-                  </Option>
-                ))}
+                {renderedFleetsOptions}
               </Select>
             )
           )}
@@ -126,11 +142,7 @@ const ApisList: React.FC = () => {
                 onNamespaceSelectHandler(value);
               }}
             >
-              {apisNamespaces.map(namespace => (
-                <Option key={namespace} value={namespace}>
-                  {namespace}
-                </Option>
-              ))}
+              {renderedNamespaceOptions}
             </Select>
           )}
         </S.FiltersContainer>
