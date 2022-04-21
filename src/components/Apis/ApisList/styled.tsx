@@ -18,8 +18,6 @@ export const FiltersContainer = styled.div`
   gap: 20px;
 `;
 
-
 export const QuestionCircleOutlined = styled(RawQuestionsCircleOutlined)`
   cursor: pointer;
 `;
-

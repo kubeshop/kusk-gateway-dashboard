@@ -39,16 +39,10 @@ export const InfoPaneContainer = styled.div`
   grid-row-gap: 30px;
 `;
 
-export const ListTableTitleContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  margin-bottom: 30px;
-`;
-
 export const ListTableTitleLabel = styled.h2`
   color: ${Colors.grey9};
   font-size: 20px;
   font-family: 'Roboto', sans-serif;
   white-space: nowrap;
+  margin-bottom: 20px;
 `;

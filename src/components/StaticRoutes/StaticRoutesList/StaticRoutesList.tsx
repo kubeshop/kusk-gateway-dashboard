@@ -7,7 +7,7 @@ import {useGetStaticRoutes} from '@models/api';
 import {useAppDispatch} from '@redux/hooks';
 import {selectStaticRoute} from '@redux/reducers/main';
 
-import {ContentWrapper, ErrorLabel, ListTableTitleContainer, ListTableTitleLabel} from '@components/AntdCustom';
+import {ContentWrapper, ErrorLabel, ListTableTitleLabel} from '@components/AntdCustom';
 
 import StaticRoutesListTable from './StaticRoutesListTable';
 
@@ -43,32 +43,30 @@ const StaticRoutesList: React.FC = () => {
 
   return (
     <ContentWrapper>
-      <ListTableTitleContainer>
-        <ListTableTitleLabel>Static Routes</ListTableTitleLabel>
+      <ListTableTitleLabel>Static Routes</ListTableTitleLabel>
 
-        <S.TitleFiltersContainer>
-          {loading ? (
-            <Skeleton.Button />
-          ) : error ? null : (
-            <S.Select
-              allowClear
-              placeholder="Select a namespace"
-              value={selectedNamespace}
-              showSearch
-              onClear={onNamespaceSelectionClearHandler}
-              onSelect={(value: any) => {
-                onNamespaceSelectHandler(value);
-              }}
-            >
-              {staticRoutesNamespaces.map(namespace => (
-                <Option key={namespace} value={namespace}>
-                  {namespace}
-                </Option>
-              ))}
-            </S.Select>
-          )}
-        </S.TitleFiltersContainer>
-      </ListTableTitleContainer>
+      <S.TitleFiltersContainer>
+        {loading ? (
+          <Skeleton.Button />
+        ) : error ? null : (
+          <S.Select
+            allowClear
+            placeholder="Select a namespace"
+            value={selectedNamespace}
+            showSearch
+            onClear={onNamespaceSelectionClearHandler}
+            onSelect={(value: any) => {
+              onNamespaceSelectHandler(value);
+            }}
+          >
+            {staticRoutesNamespaces.map(namespace => (
+              <Option key={namespace} value={namespace}>
+                {namespace}
+              </Option>
+            ))}
+          </S.Select>
+        )}
+      </S.TitleFiltersContainer>
 
       {loading ? (
         <Skeleton />
