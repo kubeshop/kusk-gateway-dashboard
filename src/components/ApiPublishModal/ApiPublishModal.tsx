@@ -417,6 +417,12 @@ const ApiPublishModal: React.FC = () => {
   );
 };
 
-const formatApiName = (name: string) => (name ? name.replace(/\s/g, '-').toLowerCase() : '');
+const formatApiName = (name: string) =>
+  name
+    ? name
+        .trim()
+        .replace(/[\W_]+/g, '-')
+        .toLowerCase()
+    : '';
 
 export default ApiPublishModal;
