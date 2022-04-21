@@ -2,7 +2,8 @@ import {useMemo} from 'react';
 
 import {ApiItem} from '@models/api';
 
-import {useAppSelector} from '@redux/hooks';
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {selectApi} from '@redux/reducers/main';
 
 import {ListTableColumnLabel} from '@components';
 
@@ -18,8 +19,8 @@ interface IProps {
 const ApisListTable: React.FC<IProps> = props => {
   const {apis} = props;
 
+  const dispatch = useAppDispatch();
   const selectedApi = useAppSelector(state => state.main.selectedApi);
-  const selectedApiKey = useMemo(() => getApiKey(selectedApi), [selectedApi]);
 
   const dataSource = useMemo(() => {
     if (!apis.length) {
@@ -33,6 +34,7 @@ const ApisListTable: React.FC<IProps> = props => {
       apiItem: api,
     }));
   }, [apis]);
+  const selectedApiKey = useMemo(() => getApiKey(selectedApi), [selectedApi]);
 
   const columns = [
     {
@@ -62,7 +64,28 @@ const ApisListTable: React.FC<IProps> = props => {
     },
   ];
 
-  return <S.Table columns={columns} dataSource={dataSource} pagination={false} tableLayout="fixed" />;
+  return (
+    <S.Table
+      columns={columns}
+      dataSource={dataSource}
+      pagination={false}
+      tableLayout="fixed"
+      rowClassName={(record: {[key: string]: any}) => {
+        const {key} = record;
+
+        return key === selectedApiKey ? 'custom-antd-table-selected-row' : '';
+      }}
+      onRow={(record: {[key: string]: any}) => ({
+        onClick: () => {
+          const {apiItem, key} = record;
+
+          if (!selectedApiKey || key !== selectedApiKey) {
+            dispatch(selectApi(apiItem));
+          }
+        },
+      })}
+    />
+  );
 };
 
 export default ApisListTable;

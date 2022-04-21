@@ -45,4 +45,8 @@ body #root {
     display: flex;
     align-items: center;
 }
+
+.custom-antd-table-selected-row {
+  background: rgba(255, 255, 255, .1);
+}
 `;

@@ -56,7 +56,6 @@ const StaticRoutesListTable: React.FC<IProps> = props => {
             selectedKey={selectedStaticRouteKey}
             value={value}
             showSelectArrow
-            onSelectArrowClick={() => dispatch(selectStaticRoute(record.staticRouteItem))}
           />
         ),
       },
@@ -66,7 +65,28 @@ const StaticRoutesListTable: React.FC<IProps> = props => {
     [selectedStaticRouteKey]
   );
 
-  return <S.Table columns={columns} dataSource={dataSource} pagination={false} tableLayout="fixed" />;
+  return (
+    <S.Table
+      columns={columns}
+      dataSource={dataSource}
+      pagination={false}
+      tableLayout="fixed"
+      rowClassName={(record: {[key: string]: any}) => {
+        const {key} = record;
+
+        return key === selectedStaticRouteKey ? 'custom-antd-table-selected-row' : '';
+      }}
+      onRow={(record: {[key: string]: any}) => ({
+        onClick: () => {
+          const {staticRouteItem, key} = record;
+
+          if (!selectedStaticRouteKey || key !== selectedStaticRouteKey) {
+            dispatch(selectStaticRoute(staticRouteItem));
+          }
+        },
+      })}
+    />
+  );
 };
 
 export default StaticRoutesListTable;

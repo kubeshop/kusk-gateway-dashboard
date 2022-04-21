@@ -4,8 +4,7 @@ import {Skeleton} from 'antd';
 
 import {ApiItem} from '@models/api';
 
-import {useAppDispatch, useAppSelector} from '@redux/hooks';
-import {selectApi} from '@redux/reducers/main';
+import {useAppSelector} from '@redux/hooks';
 
 import * as S from './ApisListTableServicesTag.styled';
 
@@ -18,7 +17,6 @@ interface IProps {
 const ApisListTableServicesTag: React.FC<IProps> = props => {
   const {api, apiKey, selectedApiKey} = props;
 
-  const dispatch = useAppDispatch();
   const services = useAppSelector(state => state.main.services);
 
   const service = useMemo(
@@ -36,14 +34,7 @@ const ApisListTableServicesTag: React.FC<IProps> = props => {
         service?.status === 'available' && <S.TrueTag>Available</S.TrueTag>
       )}
 
-      <S.RightOutlined
-        $disabled={apiKey === selectedApiKey}
-        onClick={() => {
-          if (!selectedApiKey || apiKey !== selectedApiKey) {
-            dispatch(selectApi(api));
-          }
-        }}
-      />
+      <S.RightOutlined $disabled={apiKey === selectedApiKey} />
     </S.Container>
   );
 };
