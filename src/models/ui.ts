@@ -1,4 +1,3 @@
-import {EnvoyFleetItem} from './api';
 import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from './dashboard';
 
 type StepType = 'openApiSpec' | 'apiInfo' | 'target' | 'validation' | 'hosts' | 'qos' | 'path' | 'cors' | 'websocket';
@@ -10,9 +9,6 @@ interface UiState {
   apiInfoActiveTab: ApiInfoTabs;
   dashboardPaneConfiguration: DashboardPaneConfiguration;
   envoyFleetInfoActiveTab: EnvoyFleetInfoTabs;
-  envoyFleetModal: {
-    envoyFleet: EnvoyFleetItem | null;
-  };
   kuskExtensionsActiveKeys: {
     [key: string]: string[];
   };

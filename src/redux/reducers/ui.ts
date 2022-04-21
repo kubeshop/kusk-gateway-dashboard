@@ -52,13 +52,6 @@ export const uiSlice = createSlice({
     setStaticRouteInfoActiveTab: (state: Draft<UiState>, action: PayloadAction<StaticRouteInfoTabs>) => {
       state.staticRouteInfoActiveTab = action.payload;
     },
-
-    toggleEnvoyFleetInfoModal: (
-      state: Draft<UiState>,
-      action: PayloadAction<{name: string; namespace: string} | null>
-    ) => {
-      state.envoyFleetModal.envoyFleet = action.payload;
-    },
   },
   extraReducers: builder => {
     builder.addCase(selectApi.type, state => {
@@ -82,6 +75,5 @@ export const {
   setPostProcessedTabledOfContentsHeight,
   setRawApiSpecTableOfContentsHeight,
   setStaticRouteInfoActiveTab,
-  toggleEnvoyFleetInfoModal,
 } = uiSlice.actions;
 export default uiSlice.reducer;
