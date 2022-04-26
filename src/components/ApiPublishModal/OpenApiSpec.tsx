@@ -122,30 +122,38 @@ const checkMockingExamples = (spec: {[key: string]: any}) => {
   Object.entries(paths).forEach((pathEntry: [string, any]) => {
     const [path, pathValue] = pathEntry;
 
-    Object.entries(pathValue)
-      .filter(entry => SUPPORTED_METHODS.includes(entry[0]))
-      .forEach((operationEntry: [string, any]) => {
-        const [operation, operationValue] = operationEntry;
-        let missingExamplesCount = 0;
+    const pathMocking = pathValue['x-kusk']?.mocking.enabled;
 
-        Object.entries(operationValue.responses).forEach((responseEntry: [string, any]) => {
-          const [responseCode, responseValue] = responseEntry;
+    if (pathMocking !== false) {
+      Object.entries(pathValue)
+        .filter(entry => SUPPORTED_METHODS.includes(entry[0]))
+        .forEach((operationEntry: [string, any]) => {
+          const [operation, operationValue] = operationEntry;
 
-          if (parseInt(responseCode, 10) < 300) {
-            let check = {hasExample: false};
+          const operationMocking = operationValue['x-kusk']?.mocking.enabled;
+          let missingExamplesCount = 0;
 
-            findResponseExample(responseCode, responseValue, check);
+          if (operationMocking !== false) {
+            Object.entries(operationValue.responses).forEach((responseEntry: [string, any]) => {
+              const [responseCode, responseValue] = responseEntry;
 
-            if (!check.hasExample) {
-              missingExamplesCount += 1;
-            }
+              if (parseInt(responseCode, 10) < 300) {
+                let check = {hasExample: false};
+
+                findResponseExample(responseCode, responseValue, check);
+
+                if (!check.hasExample) {
+                  missingExamplesCount += 1;
+                }
+              }
+            });
+          }
+
+          if (missingExamplesCount) {
+            warnings.push(`${path} -> ${operation} is missing mocking examples!`);
           }
         });
-
-        if (missingExamplesCount) {
-          warnings.push(`${path} -> ${operation} is missing mocking examples!`);
-        }
-      });
+    }
   });
 
   return warnings;
