@@ -18,6 +18,7 @@ enum Colors {
   magenta0 = '#291321',
 
   yellow400 = '#FACC15',
+  yellow500 = '#EAB308',
 
   blue700 = '#1D4ED8',
   blue600 = '#2563EB',
