@@ -104,12 +104,12 @@ const OpenApiSpec: React.FC<IProps> = props => {
 };
 
 const findResponseExample = (key: string, children: any, check: {hasExample: boolean}) => {
-  if ((key === 'example' && children) || (key === 'examples' && children.length)) {
+  if ((key === 'example' && children) || (key === 'examples' && children && Object.entries(children).length)) {
     check.hasExample = true;
     return;
   }
 
-  if (typeof children === 'object') {
+  if (children && typeof children === 'object') {
     Object.entries(children).forEach(([k, c]) => findResponseExample(k, c, check));
   }
 };
