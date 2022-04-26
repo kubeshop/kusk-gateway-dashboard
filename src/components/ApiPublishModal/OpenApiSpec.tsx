@@ -122,7 +122,7 @@ const checkMockingExamples = (spec: {[key: string]: any}) => {
   Object.entries(paths).forEach((pathEntry: [string, any]) => {
     const [path, pathValue] = pathEntry;
 
-    const pathMocking = pathValue['x-kusk']?.mocking.enabled;
+    const pathMocking = pathValue['x-kusk']?.mocking?.enabled;
 
     if (pathMocking !== false) {
       Object.entries(pathValue)
@@ -130,7 +130,7 @@ const checkMockingExamples = (spec: {[key: string]: any}) => {
         .forEach((operationEntry: [string, any]) => {
           const [operation, operationValue] = operationEntry;
 
-          const operationMocking = operationValue['x-kusk']?.mocking.enabled;
+          const operationMocking = operationValue['x-kusk']?.mocking?.enabled;
           let missingExamplesCount = 0;
 
           if (operationMocking !== false) {
