@@ -17,8 +17,14 @@ interface IProps {
 }
 
 const Step: React.FC<IProps> = props => {
-  const {isApiMocked, orderedSteps, step, title} = props;
-  const {documentationLink = `https://kubeshop.github.io/kusk-gateway/extension/#${step}`} = props;
+  const {
+    isApiMocked,
+    orderedSteps,
+    step,
+    title,
+    documentationLink = `https://kubeshop.github.io/kusk-gateway/extension/#${step}`,
+    ...rest
+  } = props;
 
   const dispatch = useAppDispatch();
   const activeStep = useAppSelector(state => state.ui.apiPublishModal.activeStep);
@@ -47,7 +53,7 @@ const Step: React.FC<IProps> = props => {
 
   return (
     <S.Step
-      {...props}
+      {...rest}
       $completed={isStepCompleted}
       status={stepStatus}
       title={
