@@ -371,7 +371,7 @@ const ApiPublishModal: React.FC = () => {
           >
             <Suspense fallback={<Skeleton />}>
               {activeStep === 'openApiSpec' && (
-                <OpenApiSpec form={form} setIsApiMocked={value => setIsApiMocked(value)} />
+                <OpenApiSpec form={form} isApiMocked={isApiMocked} setIsApiMocked={value => setIsApiMocked(value)} />
               )}
               {activeStep === 'apiInfo' && <ApiInfo form={form} />}
               {activeStep === 'validation' && <Validation form={form} isApiMocked={isApiMocked} />}
