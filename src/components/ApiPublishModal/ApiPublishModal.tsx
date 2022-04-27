@@ -350,6 +350,15 @@ const ApiPublishModal: React.FC = () => {
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStepIndex}>
             <S.Step
+              $completed={
+                activeStep !== 'openApiSpec' &&
+                orderedSteps.indexOf('openApiSpec') <= orderedSteps.indexOf(lastCompletedStep)
+              }
+              onClick={() => {
+                if (activeStep !== 'openApiSpec') {
+                  dispatch(setApiPublishModalActiveStep('openApiSpec'));
+                }
+              }}
               status={setStepStatus('openApiSpec')}
               title={
                 <StepTitle
@@ -359,8 +368,25 @@ const ApiPublishModal: React.FC = () => {
                 />
               }
             />
-            <S.Step status={setStepStatus('apiInfo')} title={<StepTitle step="apiInfo" title="API Info" />} />
             <S.Step
+              $completed={
+                activeStep !== 'apiInfo' && orderedSteps.indexOf('apiInfo') <= orderedSteps.indexOf(lastCompletedStep)
+              }
+              status={setStepStatus('apiInfo')}
+              title={<StepTitle step="apiInfo" title="API Info" />}
+              onClick={() => {
+                if (
+                  activeStep !== 'apiInfo' &&
+                  orderedSteps.indexOf('apiInfo') <= orderedSteps.indexOf(lastCompletedStep)
+                ) {
+                  dispatch(setApiPublishModalActiveStep('apiInfo'));
+                }
+              }}
+            />
+            <S.Step
+              $completed={
+                activeStep !== 'target' && orderedSteps.indexOf('target') <= orderedSteps.indexOf(lastCompletedStep)
+              }
               status={setStepStatus('target')}
               title={
                 <StepTitle
@@ -370,21 +396,97 @@ const ApiPublishModal: React.FC = () => {
                   isStepApplicable={!isApiMocked}
                 />
               }
+              onClick={() => {
+                if (
+                  activeStep !== 'target' &&
+                  orderedSteps.indexOf('target') <= orderedSteps.indexOf(lastCompletedStep)
+                ) {
+                  dispatch(setApiPublishModalActiveStep('target'));
+                }
+              }}
             />
             <S.Step
+              $completed={
+                activeStep !== 'validation' &&
+                orderedSteps.indexOf('validation') <= orderedSteps.indexOf(lastCompletedStep)
+              }
               status={setStepStatus('validation')}
               title={<StepTitle step="validation" title="Validation" isStepApplicable={!isApiMocked} />}
+              onClick={() => {
+                if (
+                  activeStep !== 'validation' &&
+                  orderedSteps.indexOf('validation') <= orderedSteps.indexOf(lastCompletedStep)
+                ) {
+                  dispatch(setApiPublishModalActiveStep('validation'));
+                }
+              }}
             />
-            <S.Step status={setStepStatus('hosts')} title={<StepTitle step="hosts" title="Hosts" />} />
             <S.Step
+              $completed={
+                activeStep !== 'hosts' && orderedSteps.indexOf('hosts') <= orderedSteps.indexOf(lastCompletedStep)
+              }
+              status={setStepStatus('hosts')}
+              title={<StepTitle step="hosts" title="Hosts" />}
+              onClick={() => {
+                if (
+                  activeStep !== 'hosts' &&
+                  orderedSteps.indexOf('hosts') <= orderedSteps.indexOf(lastCompletedStep)
+                ) {
+                  dispatch(setApiPublishModalActiveStep('hosts'));
+                }
+              }}
+            />
+            <S.Step
+              $completed={
+                activeStep !== 'qos' && orderedSteps.indexOf('qos') <= orderedSteps.indexOf(lastCompletedStep)
+              }
               status={setStepStatus('qos')}
               title={<StepTitle step="qos" title="QOS" isStepApplicable={!isApiMocked} />}
+              onClick={() => {
+                if (activeStep !== 'qos' && orderedSteps.indexOf('qos') <= orderedSteps.indexOf(lastCompletedStep)) {
+                  dispatch(setApiPublishModalActiveStep('qos'));
+                }
+              }}
             />
-            <S.Step status={setStepStatus('path')} title={<StepTitle step="path" title="Path" />} />
-            <S.Step status={setStepStatus('cors')} title={<StepTitle step="cors" title="CORS" />} />
             <S.Step
+              $completed={
+                activeStep !== 'path' && orderedSteps.indexOf('path') <= orderedSteps.indexOf(lastCompletedStep)
+              }
+              status={setStepStatus('path')}
+              title={<StepTitle step="path" title="Path" />}
+              onClick={() => {
+                if (activeStep !== 'path' && orderedSteps.indexOf('path') <= orderedSteps.indexOf(lastCompletedStep)) {
+                  dispatch(setApiPublishModalActiveStep('path'));
+                }
+              }}
+            />
+            <S.Step
+              $completed={
+                activeStep !== 'cors' && orderedSteps.indexOf('cors') < orderedSteps.indexOf(lastCompletedStep)
+              }
+              status={setStepStatus('cors')}
+              title={<StepTitle step="cors" title="CORS" />}
+              onClick={() => {
+                if (activeStep !== 'cors' && orderedSteps.indexOf('cors') <= orderedSteps.indexOf(lastCompletedStep)) {
+                  dispatch(setApiPublishModalActiveStep('cors'));
+                }
+              }}
+            />
+            <S.Step
+              $completed={
+                activeStep !== 'websocket' &&
+                orderedSteps.indexOf('websocket') < orderedSteps.indexOf(lastCompletedStep)
+              }
               status={setStepStatus('websocket')}
               title={<StepTitle step="websocket" title="Websocket" isStepApplicable={!isApiMocked} />}
+              onClick={() => {
+                if (
+                  activeStep !== 'websocket' &&
+                  orderedSteps.indexOf('websocket') <= orderedSteps.indexOf(lastCompletedStep)
+                ) {
+                  dispatch(setApiPublishModalActiveStep('websocket'));
+                }
+              }}
             />
           </Steps>
         </S.StepsContainer>

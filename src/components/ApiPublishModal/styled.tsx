@@ -39,7 +39,25 @@ export const RadioGroupContainer = styled.div`
   margin-bottom: 15px;
 `;
 
-export const Step = styled(Steps.Step)`
+export const Step = styled(Steps.Step)<{$completed: boolean}>`
+  ${({$completed}) => {
+    if ($completed) {
+      return `
+        & .ant-steps-item-container:hover {
+          cursor: pointer;
+
+          & .ant-steps-item-title {
+            font-weight: bold;
+          }
+        }
+      `;
+    }
+  }}
+
+  & .ant-steps-item-container {
+    width: max-content;
+  }
+
   & .ant-steps-icon {
     height: 100%;
     display: flex;
