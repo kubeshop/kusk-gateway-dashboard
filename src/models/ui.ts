@@ -5,6 +5,7 @@ interface UiState {
   apiPublishModal: {
     activeStep: StepType;
     isOpen: boolean;
+    lastCompletedStep: StepType;
   };
   apiInfoActiveTab: ApiInfoTabs;
   dashboardPaneConfiguration: DashboardPaneConfiguration;

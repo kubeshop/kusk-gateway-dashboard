@@ -12,7 +12,11 @@ import {ApiContent} from '@models/main';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 import {setApis, setNewApiContent} from '@redux/reducers/main';
-import {closeApiPublishModal, setApiPublishModalActiveStep} from '@redux/reducers/ui';
+import {
+  closeApiPublishModal,
+  setApiPublishModalActiveStep,
+  setApiPublishModalLastCompletedStep,
+} from '@redux/reducers/ui';
 
 import StepTitle from './StepTitle';
 
@@ -58,6 +62,9 @@ const ApiPublishModal: React.FC = () => {
   const activeStep = useAppSelector(state => state.ui.apiPublishModal.activeStep);
   const apiContent = useAppSelector(state => state.main.newApiContent);
   const apis = useAppSelector(state => state.main.apis);
+  const lastCompletedStep = useAppSelector(state => state.ui.apiPublishModal.lastCompletedStep);
+
+  console.log(lastCompletedStep);
 
   const [errorMessage, setErrorMessage] = useState<string>();
   const [isApiMocked, setIsApiMocked] = useState<boolean>(false);
@@ -226,6 +233,7 @@ const ApiPublishModal: React.FC = () => {
       if (!publish && activeStep !== 'websocket') {
         dispatch(setNewApiContent(newApiContent));
         dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]));
+        dispatch(setApiPublishModalLastCompletedStep(activeStep));
       }
 
       if (publish && newApiContent) {

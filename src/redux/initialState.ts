@@ -22,6 +22,7 @@ const initialUiState: UiState = {
   apiPublishModal: {
     activeStep: 'openApiSpec',
     isOpen: false,
+    lastCompletedStep: 'openApiSpec',
   },
   apiInfoActiveTab: 'api-definition',
   dashboardPaneConfiguration: {
