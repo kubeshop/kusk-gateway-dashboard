@@ -1,4 +1,4 @@
-import {Suspense, lazy, useCallback, useEffect, useMemo, useState} from 'react';
+import {Suspense, lazy, useEffect, useMemo, useState} from 'react';
 
 import {Button, Form, Modal, Radio, Skeleton, Steps} from 'antd';
 
@@ -19,7 +19,7 @@ import {
   setApiPublishModalLastCompletedStep,
 } from '@redux/reducers/ui';
 
-import StepTitle from './StepTitle';
+import Step from './Step';
 
 import * as S from './styled';
 
@@ -34,6 +34,12 @@ const Upstream = lazy(() => import('./extensions/Upstream'));
 const Validation = lazy(() => import('./extensions/Validation'));
 const Websocket = lazy(() => import('./extensions/Websocket'));
 
+interface StepItem {
+  step: StepType;
+  title: string;
+  documentationLink?: string;
+}
+
 const renderedNextButtonText: {[key: number]: string} = {
   0: 'Add API Info',
   1: 'Add Target',
@@ -46,7 +52,7 @@ const renderedNextButtonText: {[key: number]: string} = {
   8: 'Publish',
 };
 
-const orderedSteps = [
+const orderedSteps: StepType[] = [
   'openApiSpec',
   'apiInfo',
   'target',
@@ -56,7 +62,7 @@ const orderedSteps = [
   'path',
   'cors',
   'websocket',
-] as const;
+];
 
 const ApiPublishModal: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -79,14 +85,38 @@ const ApiPublishModal: React.FC = () => {
 
   const activeStepIndex = useMemo(() => orderedSteps.indexOf(activeStep), [activeStep]);
 
-  const setStepStatus = useCallback(
-    (step: StepType) =>
-      activeStep === step
-        ? 'process'
-        : orderedSteps.indexOf(lastCompletedStep) < orderedSteps.indexOf(step)
-        ? 'wait'
-        : 'finish',
-    [activeStep, lastCompletedStep]
+  const steps: StepItem[] = useMemo(
+    () => [
+      {documentationLink: 'https://swagger.io/specification', step: 'openApiSpec', title: 'OpenAPI Spec'},
+      {step: 'apiInfo', title: 'API Info'},
+      {
+        documentationLink: `https://kubeshop.github.io/kusk-gateway/extension/#${targetSelection}`,
+        step: 'target',
+        title: 'Target',
+      },
+      {step: 'validation', title: 'Validation'},
+      {step: 'hosts', title: 'Hosts'},
+      {step: 'qos', title: 'QOS'},
+      {step: 'path', title: 'Path'},
+      {step: 'cors', title: 'CORS'},
+      {step: 'websocket', title: 'Websocket'},
+    ],
+    [targetSelection]
+  );
+
+  const renderedSteps = useMemo(
+    () =>
+      steps.map(step => (
+        <Step
+          key={step.step}
+          documentationLink={step.documentationLink}
+          isApiMocked={isApiMocked}
+          orderedSteps={orderedSteps}
+          step={step.step}
+          title={step.title}
+        />
+      )),
+    [isApiMocked, steps]
   );
 
   const onCancelHandler = () => {
@@ -243,6 +273,16 @@ const ApiPublishModal: React.FC = () => {
         dispatch(setNewApiContent(newApiContent));
         dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]));
 
+        if (activeStep === 'openApiSpec') {
+          const {mocking} = values;
+
+          const updatedMocking = mocking.enabled !== apiContent?.openapi['x-kusk']?.mocking?.enabled;
+
+          if (updatedMocking) {
+            dispatch(setApiPublishModalLastCompletedStep(activeStep));
+          }
+        }
+
         if (orderedSteps.indexOf(lastCompletedStep) < orderedSteps.indexOf(activeStep)) {
           dispatch(setApiPublishModalLastCompletedStep(activeStep));
         }
@@ -349,145 +389,7 @@ const ApiPublishModal: React.FC = () => {
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStepIndex}>
-            <S.Step
-              $completed={
-                activeStep !== 'openApiSpec' &&
-                orderedSteps.indexOf('openApiSpec') <= orderedSteps.indexOf(lastCompletedStep)
-              }
-              onClick={() => {
-                if (activeStep !== 'openApiSpec') {
-                  dispatch(setApiPublishModalActiveStep('openApiSpec'));
-                }
-              }}
-              status={setStepStatus('openApiSpec')}
-              title={
-                <StepTitle
-                  step="openApiSpec"
-                  title="OpenAPI Spec"
-                  documentationLink="https://swagger.io/specification"
-                />
-              }
-            />
-            <S.Step
-              $completed={
-                activeStep !== 'apiInfo' && orderedSteps.indexOf('apiInfo') <= orderedSteps.indexOf(lastCompletedStep)
-              }
-              status={setStepStatus('apiInfo')}
-              title={<StepTitle step="apiInfo" title="API Info" />}
-              onClick={() => {
-                if (
-                  activeStep !== 'apiInfo' &&
-                  orderedSteps.indexOf('apiInfo') <= orderedSteps.indexOf(lastCompletedStep)
-                ) {
-                  dispatch(setApiPublishModalActiveStep('apiInfo'));
-                }
-              }}
-            />
-            <S.Step
-              $completed={
-                activeStep !== 'target' && orderedSteps.indexOf('target') <= orderedSteps.indexOf(lastCompletedStep)
-              }
-              status={setStepStatus('target')}
-              title={
-                <StepTitle
-                  step="target"
-                  title="Target"
-                  documentationLink={`https://kubeshop.github.io/kusk-gateway/extension/#${targetSelection}`}
-                  isStepApplicable={!isApiMocked}
-                />
-              }
-              onClick={() => {
-                if (
-                  activeStep !== 'target' &&
-                  orderedSteps.indexOf('target') <= orderedSteps.indexOf(lastCompletedStep)
-                ) {
-                  dispatch(setApiPublishModalActiveStep('target'));
-                }
-              }}
-            />
-            <S.Step
-              $completed={
-                activeStep !== 'validation' &&
-                orderedSteps.indexOf('validation') <= orderedSteps.indexOf(lastCompletedStep)
-              }
-              status={setStepStatus('validation')}
-              title={<StepTitle step="validation" title="Validation" isStepApplicable={!isApiMocked} />}
-              onClick={() => {
-                if (
-                  activeStep !== 'validation' &&
-                  orderedSteps.indexOf('validation') <= orderedSteps.indexOf(lastCompletedStep)
-                ) {
-                  dispatch(setApiPublishModalActiveStep('validation'));
-                }
-              }}
-            />
-            <S.Step
-              $completed={
-                activeStep !== 'hosts' && orderedSteps.indexOf('hosts') <= orderedSteps.indexOf(lastCompletedStep)
-              }
-              status={setStepStatus('hosts')}
-              title={<StepTitle step="hosts" title="Hosts" />}
-              onClick={() => {
-                if (
-                  activeStep !== 'hosts' &&
-                  orderedSteps.indexOf('hosts') <= orderedSteps.indexOf(lastCompletedStep)
-                ) {
-                  dispatch(setApiPublishModalActiveStep('hosts'));
-                }
-              }}
-            />
-            <S.Step
-              $completed={
-                activeStep !== 'qos' && orderedSteps.indexOf('qos') <= orderedSteps.indexOf(lastCompletedStep)
-              }
-              status={setStepStatus('qos')}
-              title={<StepTitle step="qos" title="QOS" isStepApplicable={!isApiMocked} />}
-              onClick={() => {
-                if (activeStep !== 'qos' && orderedSteps.indexOf('qos') <= orderedSteps.indexOf(lastCompletedStep)) {
-                  dispatch(setApiPublishModalActiveStep('qos'));
-                }
-              }}
-            />
-            <S.Step
-              $completed={
-                activeStep !== 'path' && orderedSteps.indexOf('path') <= orderedSteps.indexOf(lastCompletedStep)
-              }
-              status={setStepStatus('path')}
-              title={<StepTitle step="path" title="Path" />}
-              onClick={() => {
-                if (activeStep !== 'path' && orderedSteps.indexOf('path') <= orderedSteps.indexOf(lastCompletedStep)) {
-                  dispatch(setApiPublishModalActiveStep('path'));
-                }
-              }}
-            />
-            <S.Step
-              $completed={
-                activeStep !== 'cors' && orderedSteps.indexOf('cors') < orderedSteps.indexOf(lastCompletedStep)
-              }
-              status={setStepStatus('cors')}
-              title={<StepTitle step="cors" title="CORS" />}
-              onClick={() => {
-                if (activeStep !== 'cors' && orderedSteps.indexOf('cors') <= orderedSteps.indexOf(lastCompletedStep)) {
-                  dispatch(setApiPublishModalActiveStep('cors'));
-                }
-              }}
-            />
-            <S.Step
-              $completed={
-                activeStep !== 'websocket' &&
-                orderedSteps.indexOf('websocket') < orderedSteps.indexOf(lastCompletedStep)
-              }
-              status={setStepStatus('websocket')}
-              title={<StepTitle step="websocket" title="Websocket" isStepApplicable={!isApiMocked} />}
-              onClick={() => {
-                if (
-                  activeStep !== 'websocket' &&
-                  orderedSteps.indexOf('websocket') <= orderedSteps.indexOf(lastCompletedStep)
-                ) {
-                  dispatch(setApiPublishModalActiveStep('websocket'));
-                }
-              }}
-            />
+            {renderedSteps}
           </Steps>
         </S.StepsContainer>
 
