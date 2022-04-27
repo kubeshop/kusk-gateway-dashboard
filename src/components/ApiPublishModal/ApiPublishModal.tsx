@@ -1,4 +1,4 @@
-import {Suspense, lazy, useEffect, useMemo, useState} from 'react';
+import {Suspense, lazy, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Button, Form, Modal, Radio, Skeleton, Steps} from 'antd';
 
@@ -8,6 +8,7 @@ import YAML from 'yaml';
 import {AlertEnum} from '@models/alert';
 import {ApiItem, useDeployApi} from '@models/api';
 import {ApiContent} from '@models/main';
+import {StepType} from '@models/ui';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
@@ -64,8 +65,6 @@ const ApiPublishModal: React.FC = () => {
   const apis = useAppSelector(state => state.main.apis);
   const lastCompletedStep = useAppSelector(state => state.ui.apiPublishModal.lastCompletedStep);
 
-  console.log(lastCompletedStep);
-
   const [errorMessage, setErrorMessage] = useState<string>();
   const [isApiMocked, setIsApiMocked] = useState<boolean>(false);
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
@@ -79,6 +78,16 @@ const ApiPublishModal: React.FC = () => {
   const [form] = Form.useForm();
 
   const activeStepIndex = useMemo(() => orderedSteps.indexOf(activeStep), [activeStep]);
+
+  const setStepStatus = useCallback(
+    (step: StepType) =>
+      activeStep === step
+        ? 'process'
+        : orderedSteps.indexOf(lastCompletedStep) < orderedSteps.indexOf(step)
+        ? 'wait'
+        : 'finish',
+    [activeStep, lastCompletedStep]
+  );
 
   const onCancelHandler = () => {
     dispatch(closeApiPublishModal());
@@ -233,7 +242,10 @@ const ApiPublishModal: React.FC = () => {
       if (!publish && activeStep !== 'websocket') {
         dispatch(setNewApiContent(newApiContent));
         dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]));
-        dispatch(setApiPublishModalLastCompletedStep(activeStep));
+
+        if (orderedSteps.indexOf(lastCompletedStep) < orderedSteps.indexOf(activeStep)) {
+          dispatch(setApiPublishModalLastCompletedStep(activeStep));
+        }
       }
 
       if (publish && newApiContent) {
@@ -338,6 +350,7 @@ const ApiPublishModal: React.FC = () => {
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStepIndex}>
             <S.Step
+              status={setStepStatus('openApiSpec')}
               title={
                 <StepTitle
                   step="openApiSpec"
@@ -346,8 +359,9 @@ const ApiPublishModal: React.FC = () => {
                 />
               }
             />
-            <S.Step title={<StepTitle step="apiInfo" title="API Info" />} />
+            <S.Step status={setStepStatus('apiInfo')} title={<StepTitle step="apiInfo" title="API Info" />} />
             <S.Step
+              status={setStepStatus('target')}
               title={
                 <StepTitle
                   step="target"
@@ -357,12 +371,21 @@ const ApiPublishModal: React.FC = () => {
                 />
               }
             />
-            <S.Step title={<StepTitle step="validation" title="Validation" isStepApplicable={!isApiMocked} />} />
-            <S.Step title={<StepTitle step="hosts" title="Hosts" />} />
-            <S.Step title={<StepTitle step="qos" title="QOS" isStepApplicable={!isApiMocked} />} />
-            <S.Step title={<StepTitle step="path" title="Path" />} />
-            <S.Step title={<StepTitle step="cors" title="CORS" />} />
-            <S.Step title={<StepTitle step="websocket" title="Websocket" isStepApplicable={!isApiMocked} />} />
+            <S.Step
+              status={setStepStatus('validation')}
+              title={<StepTitle step="validation" title="Validation" isStepApplicable={!isApiMocked} />}
+            />
+            <S.Step status={setStepStatus('hosts')} title={<StepTitle step="hosts" title="Hosts" />} />
+            <S.Step
+              status={setStepStatus('qos')}
+              title={<StepTitle step="qos" title="QOS" isStepApplicable={!isApiMocked} />}
+            />
+            <S.Step status={setStepStatus('path')} title={<StepTitle step="path" title="Path" />} />
+            <S.Step status={setStepStatus('cors')} title={<StepTitle step="cors" title="CORS" />} />
+            <S.Step
+              status={setStepStatus('websocket')}
+              title={<StepTitle step="websocket" title="Websocket" isStepApplicable={!isApiMocked} />}
+            />
           </Steps>
         </S.StepsContainer>
 
