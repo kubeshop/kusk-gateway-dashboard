@@ -19,10 +19,13 @@ const ApisListTableServicesTag: React.FC<IProps> = props => {
 
   const services = useAppSelector(state => state.main.services);
 
-  const service = useMemo(
-    () => services.items.find(s => s.name === api.service.name && s.namespace === api.service.namespace),
-    [api.service.name, api.service.namespace, services.items]
-  );
+  const service = useMemo(() => {
+    if (!Array.isArray(services.items)) {
+      return undefined;
+    }
+
+    return services.items.find(s => s.name === api.service.name && s.namespace === api.service.namespace);
+  }, [api.service.name, api.service.namespace, services.items]);
 
   return (
     <S.Container>
