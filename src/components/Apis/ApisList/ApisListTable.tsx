@@ -23,7 +23,7 @@ const ApisListTable: React.FC<IProps> = props => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
   const dataSource = useMemo(() => {
-    if (!apis.length) {
+    if (!apis.length || typeof apis !== 'object') {
       return [];
     }
 

@@ -7,6 +7,7 @@ const initialAlertState: AlertState = {
 };
 
 const initialMainState: MainState = {
+  apiEndpoint: '/api/',
   apis: [],
   newApiContent: null,
   selectedApi: null,

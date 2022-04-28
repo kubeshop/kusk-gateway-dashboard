@@ -22,7 +22,7 @@ const EnvoyFleetsListTable: React.FC<IProps> = props => {
   const selectedEnvoyFleet = useAppSelector(state => state.main.selectedEnvoyFleet);
 
   const dataSource = useMemo(() => {
-    if (!envoyFleets?.length) {
+    if (!envoyFleets?.length || typeof envoyFleets !== 'object') {
       return [];
     }
 

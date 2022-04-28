@@ -23,7 +23,7 @@ const EnvoyFleetsList: React.FC = () => {
   const {data, error, loading} = useGetEnvoyFleets({queryParams: {namespace: selectedNamespace}});
 
   const envoyFleetsNamespaces = useMemo((): string[] => {
-    if (!data) {
+    if (!data || typeof data !== 'object') {
       return [];
     }
 
