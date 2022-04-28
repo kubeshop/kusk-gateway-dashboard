@@ -6,7 +6,7 @@ import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 import {setApiEndpoint} from '@redux/reducers/main';
 
-import {ContentWrapper} from '@components/AntdCustom';
+import {ContentWrapper, PageTitle} from '@components/AntdCustom';
 
 import * as S from './styled';
 
@@ -23,6 +23,8 @@ const Settings: React.FC = () => {
 
   return (
     <ContentWrapper>
+      <PageTitle>Settings</PageTitle>
+
       <S.Form form={form} initialValues={{apiEndpoint}} layout="vertical" onFinish={onFinishHandler}>
         <Form.Item label="API Endpoint" name="apiEndpoint" rules={[{required: true}]}>
           <Input placeholder="Enter API endpoint" type="text" />
