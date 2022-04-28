@@ -27,6 +27,10 @@ export const uiSlice = createSlice({
       state.apiPublishModal.activeStep = action.payload;
     },
 
+    setApiPublishModalLastCompletedStep: (state: Draft<UiState>, action: PayloadAction<StepType>) => {
+      state.apiPublishModal.lastCompletedStep = action.payload;
+    },
+
     setDashboardPaneConfiguration: (state: Draft<UiState>, action: PayloadAction<DashboardPaneConfiguration>) => {
       state.dashboardPaneConfiguration = action.payload;
     },
@@ -69,6 +73,7 @@ export const {
   openApiPublishModal,
   setApiInfoActiveTab,
   setApiPublishModalActiveStep,
+  setApiPublishModalLastCompletedStep,
   setEnvoyFleetInfoActiveTab,
   setKuskExtensionsActiveKeys,
   setDashboardPaneConfiguration,

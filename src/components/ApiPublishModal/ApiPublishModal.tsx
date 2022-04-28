@@ -8,13 +8,18 @@ import YAML from 'yaml';
 import {AlertEnum} from '@models/alert';
 import {ApiItem, useDeployApi} from '@models/api';
 import {ApiContent} from '@models/main';
+import {StepType} from '@models/ui';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 import {setApis, setNewApiContent} from '@redux/reducers/main';
-import {closeApiPublishModal, setApiPublishModalActiveStep} from '@redux/reducers/ui';
+import {
+  closeApiPublishModal,
+  setApiPublishModalActiveStep,
+  setApiPublishModalLastCompletedStep,
+} from '@redux/reducers/ui';
 
-import StepTitle from './StepTitle';
+import Step from './Step';
 
 import * as S from './styled';
 
@@ -29,6 +34,12 @@ const Upstream = lazy(() => import('./extensions/Upstream'));
 const Validation = lazy(() => import('./extensions/Validation'));
 const Websocket = lazy(() => import('./extensions/Websocket'));
 
+interface StepItem {
+  step: StepType;
+  title: string;
+  documentationLink?: string;
+}
+
 const renderedNextButtonText: {[key: number]: string} = {
   0: 'Add API Info',
   1: 'Add Target',
@@ -41,7 +52,7 @@ const renderedNextButtonText: {[key: number]: string} = {
   8: 'Publish',
 };
 
-const orderedSteps = [
+const orderedSteps: StepType[] = [
   'openApiSpec',
   'apiInfo',
   'target',
@@ -51,13 +62,14 @@ const orderedSteps = [
   'path',
   'cors',
   'websocket',
-] as const;
+];
 
 const ApiPublishModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const activeStep = useAppSelector(state => state.ui.apiPublishModal.activeStep);
   const apiContent = useAppSelector(state => state.main.newApiContent);
   const apis = useAppSelector(state => state.main.apis);
+  const lastCompletedStep = useAppSelector(state => state.ui.apiPublishModal.lastCompletedStep);
 
   const [errorMessage, setErrorMessage] = useState<string>();
   const [isApiMocked, setIsApiMocked] = useState<boolean>(false);
@@ -72,6 +84,40 @@ const ApiPublishModal: React.FC = () => {
   const [form] = Form.useForm();
 
   const activeStepIndex = useMemo(() => orderedSteps.indexOf(activeStep), [activeStep]);
+
+  const steps: StepItem[] = useMemo(
+    () => [
+      {documentationLink: 'https://swagger.io/specification', step: 'openApiSpec', title: 'OpenAPI Spec'},
+      {step: 'apiInfo', title: 'API Info'},
+      {
+        documentationLink: `https://kubeshop.github.io/kusk-gateway/extension/#${targetSelection}`,
+        step: 'target',
+        title: 'Target',
+      },
+      {step: 'validation', title: 'Validation'},
+      {step: 'hosts', title: 'Hosts'},
+      {step: 'qos', title: 'QOS'},
+      {step: 'path', title: 'Path'},
+      {step: 'cors', title: 'CORS'},
+      {step: 'websocket', title: 'Websocket'},
+    ],
+    [targetSelection]
+  );
+
+  const renderedSteps = useMemo(
+    () =>
+      steps.map(step => (
+        <Step
+          key={step.step}
+          documentationLink={step.documentationLink}
+          isApiMocked={isApiMocked}
+          orderedSteps={orderedSteps}
+          step={step.step}
+          title={step.title}
+        />
+      )),
+    [isApiMocked, steps]
+  );
 
   const onCancelHandler = () => {
     dispatch(closeApiPublishModal());
@@ -226,6 +272,20 @@ const ApiPublishModal: React.FC = () => {
       if (!publish && activeStep !== 'websocket') {
         dispatch(setNewApiContent(newApiContent));
         dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]));
+
+        if (activeStep === 'openApiSpec') {
+          const {mocking} = values;
+
+          const updatedMocking = mocking.enabled !== apiContent?.openapi['x-kusk']?.mocking?.enabled;
+
+          if (updatedMocking) {
+            dispatch(setApiPublishModalLastCompletedStep(activeStep));
+          }
+        }
+
+        if (orderedSteps.indexOf(lastCompletedStep) < orderedSteps.indexOf(activeStep)) {
+          dispatch(setApiPublishModalLastCompletedStep(activeStep));
+        }
       }
 
       if (publish && newApiContent) {
@@ -329,32 +389,7 @@ const ApiPublishModal: React.FC = () => {
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStepIndex}>
-            <S.Step
-              title={
-                <StepTitle
-                  step="openApiSpec"
-                  title="OpenAPI Spec"
-                  documentationLink="https://swagger.io/specification"
-                />
-              }
-            />
-            <S.Step title={<StepTitle step="apiInfo" title="API Info" />} />
-            <S.Step
-              title={
-                <StepTitle
-                  step="target"
-                  title="Target"
-                  documentationLink={`https://kubeshop.github.io/kusk-gateway/extension/#${targetSelection}`}
-                  isStepApplicable={!isApiMocked}
-                />
-              }
-            />
-            <S.Step title={<StepTitle step="validation" title="Validation" isStepApplicable={!isApiMocked} />} />
-            <S.Step title={<StepTitle step="hosts" title="Hosts" />} />
-            <S.Step title={<StepTitle step="qos" title="QOS" isStepApplicable={!isApiMocked} />} />
-            <S.Step title={<StepTitle step="path" title="Path" />} />
-            <S.Step title={<StepTitle step="cors" title="CORS" />} />
-            <S.Step title={<StepTitle step="websocket" title="Websocket" isStepApplicable={!isApiMocked} />} />
+            {renderedSteps}
           </Steps>
         </S.StepsContainer>
 
