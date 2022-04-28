@@ -148,7 +148,11 @@ const ApisList: React.FC = () => {
           )}
         </S.FiltersContainer>
 
-        <Button disabled={typeof data !== 'object'} type="primary" onClick={showApiPublishModalHandler}>
+        <Button
+          disabled={loading || Boolean(error) || typeof data !== 'object'}
+          type="primary"
+          onClick={showApiPublishModalHandler}
+        >
           Publish new API
         </Button>
       </S.ActionsContainer>
