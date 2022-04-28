@@ -22,7 +22,7 @@ const StaticRoutesList: React.FC = () => {
   const {data, error, loading} = useGetStaticRoutes({queryParams: {namespace: selectedNamespace}});
 
   const staticRoutesNamespaces = useMemo((): string[] => {
-    if (!data || typeof data !== 'object') {
+    if (!data || !Array.isArray(data)) {
       return [];
     }
 
