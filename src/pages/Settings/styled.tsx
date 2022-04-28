@@ -1,7 +1,7 @@
+import {Form as RawForm} from 'antd';
+
 import styled from 'styled-components';
 
-export const SettingsContainer = styled.div`
-  height: 100%;
-  width: 100%;
-  padding: 10px;
+export const Form = styled(RawForm)`
+  max-width: 500px;
 `;

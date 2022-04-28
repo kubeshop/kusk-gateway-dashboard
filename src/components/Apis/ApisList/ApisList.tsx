@@ -32,10 +32,11 @@ const ApisList: React.FC = () => {
       namespace: selectedNamespace,
     },
   });
+
   const envoyFleetsState = useGetEnvoyFleets({});
 
   const apisNamespaces = useMemo((): string[] => {
-    if (!data) {
+    if (!data || !Array.isArray(data)) {
       return [];
     }
 
@@ -45,7 +46,7 @@ const ApisList: React.FC = () => {
   }, [data]);
 
   const renderedFleetsOptions = useMemo(() => {
-    if (!envoyFleetsState?.data?.length) {
+    if (!envoyFleetsState?.data?.length || !Array.isArray(envoyFleetsState.data)) {
       return null;
     }
 
@@ -147,7 +148,11 @@ const ApisList: React.FC = () => {
           )}
         </S.FiltersContainer>
 
-        <Button type="primary" onClick={showApiPublishModalHandler}>
+        <Button
+          disabled={loading || Boolean(error) || !Array.isArray(data)}
+          type="primary"
+          onClick={showApiPublishModalHandler}
+        >
           Publish new API
         </Button>
       </S.ActionsContainer>

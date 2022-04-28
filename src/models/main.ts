@@ -1,6 +1,8 @@
 import {ApiItem, EnvoyFleetItem, ServiceItem, StaticRouteItem} from './api';
 
 interface MainState {
+  /** API server endpoint */
+  apiEndpoint: string;
   /** list of apis */
   apis: ApiItem[];
   /** content of the new publishing API */
