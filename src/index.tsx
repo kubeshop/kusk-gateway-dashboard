@@ -31,7 +31,7 @@ const RestfulProviderApp: React.FC = () => {
   }, []);
 
   return (
-    <RestfulProvider base={apiEndpoint || '/api/'}>
+    <RestfulProvider base={apiEndpoint}>
       <App />
     </RestfulProvider>
   );
