@@ -8,7 +8,7 @@ import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi, setApis} from '@redux/reducers/main';
 import {openApiPublishModal} from '@redux/reducers/ui';
 
-import {ContentWrapper, ErrorLabel, ListTableTitleLabel} from '@components/AntdCustom';
+import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
 
 import {getEnvoyFleetKey} from '@utils/envoyFleet';
 
@@ -106,7 +106,7 @@ const ApisList: React.FC = () => {
 
   return (
     <ContentWrapper>
-      <ListTableTitleLabel>APIs</ListTableTitleLabel>
+      <PageTitle>APIs</PageTitle>
 
       <S.ActionsContainer>
         <S.FiltersContainer>
