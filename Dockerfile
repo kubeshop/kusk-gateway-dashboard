@@ -6,8 +6,6 @@ COPY package.json ./
 COPY package-lock.json ./
 RUN npm ci
 COPY . ./
-ARG REACT_APP_API_ENDPOINT=http://localhost:8080/api
-RUN echo "REACT_APP_API_ENDPOINT=$REACT_APP_API_ENDPOINT" >> .env
 RUN npm run build
 
 # production environment
