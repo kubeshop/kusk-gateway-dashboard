@@ -1,3 +1,3 @@
-# Kusk-gateway Dashboard
+# Kusk Gateway Dashboard
 
-An overview of the APIs deployed to the cluster through kusk-gateway
+An overview of the APIs deployed to the cluster through Kusk Gateway.
