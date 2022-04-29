@@ -1,4 +1,4 @@
-import {Alert as RawAlert} from 'antd';
+import {Alert as RawAlert, Modal as RawModal} from 'antd';
 
 import styled from 'styled-components';
 
@@ -33,6 +33,15 @@ export const FormContainer = styled.div`
 
 export const Label = styled.div`
   margin-bottom: 8px;
+`;
+
+export const Modal = styled(RawModal)`
+  & .ant-modal-body {
+    height: 600px;
+    overflow-y: auto;
+
+    ${GlobalScrollbarStyle}
+  }
 `;
 
 export const RadioGroupContainer = styled.div`

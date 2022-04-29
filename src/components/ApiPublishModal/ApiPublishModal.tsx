@@ -1,6 +1,6 @@
 import {Suspense, lazy, useEffect, useMemo, useState} from 'react';
 
-import {Button, Form, Modal, Radio, Skeleton, Steps} from 'antd';
+import {Button, Form, Radio, Skeleton, Steps} from 'antd';
 
 import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
@@ -358,8 +358,7 @@ const ApiPublishModal: React.FC = () => {
   }, [apiContent, activeStepIndex]);
 
   return (
-    <Modal
-      bodyStyle={{height: '600px'}}
+    <S.Modal
       footer={
         <>
           {activeStep !== 'openApiSpec' ? (
@@ -448,7 +447,7 @@ const ApiPublishModal: React.FC = () => {
           </Form>
         </S.FormContainer>
       </S.Container>
-    </Modal>
+    </S.Modal>
   );
 };
 
