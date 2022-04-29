@@ -90,7 +90,7 @@ const ApiPublishModal: React.FC = () => {
       {documentationLink: 'https://swagger.io/specification', step: 'openApiSpec', title: 'OpenAPI Spec'},
       {step: 'apiInfo', title: 'API Info'},
       {
-        documentationLink: `https://kubeshop.github.io/kusk-gateway/extension/#${targetSelection}`,
+        documentationLink: `https://kubeshop.github.io/kusk-gateway/reference/extension/#${targetSelection}`,
         step: 'target',
         title: 'Target',
       },

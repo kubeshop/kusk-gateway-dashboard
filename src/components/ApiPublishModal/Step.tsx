@@ -22,7 +22,7 @@ const Step: React.FC<IProps> = props => {
     orderedSteps,
     step,
     title,
-    documentationLink = `https://kubeshop.github.io/kusk-gateway/extension/#${step}`,
+    documentationLink = `https://kubeshop.github.io/kusk-gateway/reference/extension/#${step}`,
     ...rest
   } = props;
 
