@@ -1,5 +1,6 @@
 import {Skeleton} from 'antd';
 
+import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
 import {useGetStaticRouteCRD} from '@models/api';
@@ -22,7 +23,7 @@ const CRD: React.FC = () => {
   ) : error ? (
     <ErrorLabel>{error.message}</ErrorLabel>
   ) : (
-    data && <InfoPaneCRD yaml={YAML.stringify(data)} />
+    data && <InfoPaneCRD yaml={YAML.stringify(cleanDeep(data))} />
   );
 };
 
