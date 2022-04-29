@@ -21,4 +21,9 @@ export const Textarea = styled(Input.TextArea)`
 export const WarningsContainer = styled.div`
   color: ${Colors.yellow500};
   margin-bottom: 15px;
+
+  & a {
+    color: ${Colors.yellow500};
+    text-decoration: underline;
+  }
 `;

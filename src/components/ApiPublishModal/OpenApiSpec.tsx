@@ -34,6 +34,13 @@ const OpenApiSpec: React.FC<IProps> = props => {
           <div key={warning}>
             <S.ExclamationCircleOutlined />
             {warning}
+            <a
+              href="https://kubeshop.github.io/kusk-gateway/reference/extension/#mocking"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              mocking examples!
+            </a>
           </div>
         ))}
       </S.WarningsContainer>
@@ -156,7 +163,7 @@ const checkMockingExamples = (spec: {[key: string]: any}) => {
           }
 
           if (missingExamplesCount) {
-            warnings.push(`${path} -> ${operation} is missing mocking examples!`);
+            warnings.push(`${path} -> ${operation} is missing `);
           }
         });
     }
