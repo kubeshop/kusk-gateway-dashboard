@@ -15,7 +15,7 @@ npm install
 npm run start
 ```
 
-You should be able to access it on [http://localhost:3000](http://localhost:3000).
+It should be able to be accessed on [http://localhost:3000](http://localhost:3000).
 
 ### API server endpoint
 
