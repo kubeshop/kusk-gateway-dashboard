@@ -29,7 +29,7 @@ const Path: React.FC<IProps> = props => {
 
   return (
     <Form.Item label="Prefix" name={['path', 'prefix']}>
-      <S.Input />
+      <S.Input placeholder="Prefix for the route" />
     </Form.Item>
   );
 };

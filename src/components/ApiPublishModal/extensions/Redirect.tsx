@@ -50,7 +50,7 @@ const Redirect: React.FC<IProps> = props => {
   return (
     <>
       <Form.Item label="Scheme redirect" name={['redirect', 'scheme_redirect']}>
-        <S.Input />
+        <S.Input placeholder="http / https" />
       </Form.Item>
 
       <Form.Item
@@ -63,7 +63,7 @@ const Redirect: React.FC<IProps> = props => {
           },
         ]}
       >
-        <S.Input />
+        <S.Input placeholder="Host to which requests should be redirected" />
       </Form.Item>
 
       <Form.Item
@@ -76,11 +76,11 @@ const Redirect: React.FC<IProps> = props => {
           },
         ]}
       >
-        <S.Input type="number" />
+        <S.Input placeholder="Port to which requests should be redirected" type="number" />
       </Form.Item>
 
       <Form.Item label="Response code" name={['redirect', 'response_code']}>
-        <S.Input type="number" />
+        <S.Input placeholder="Redirect response code" type="number" />
       </Form.Item>
 
       <S.RadioGroup value={selectedTab} onChange={e => setSelectedTab(e.target.value)}>
@@ -90,15 +90,15 @@ const Redirect: React.FC<IProps> = props => {
 
       {selectedTab === 'path_redirect' ? (
         <Form.Item name={['redirect', 'path_redirect']}>
-          <S.Input placeholder="Enter path redirect" />
+          <S.Input placeholder="Path to which requests should be redirected" />
         </Form.Item>
       ) : (
         <>
           <Form.Item label="Pattern" name={['redirect', 'rewrite_regex', 'pattern']}>
-            <S.Input />
+            <S.Input placeholder="Regex pattern that should be rewritten" />
           </Form.Item>
           <Form.Item label="Substitution" name={['redirect', 'rewrite_regex', 'substitution']}>
-            <S.Input />
+            <S.Input placeholder="Substitution for specified regex pattern" />
           </Form.Item>
         </>
       )}
