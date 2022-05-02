@@ -159,7 +159,7 @@ const Upstream: React.FC<IProps> = props => {
               },
             ]}
           >
-            <S.Input disabled={Boolean(selectedService)} />
+            <S.Input disabled={Boolean(selectedService)} placeholder="Name of the target Service in your cluster" />
           </Form.Item>
 
           <Form.Item
@@ -172,7 +172,10 @@ const Upstream: React.FC<IProps> = props => {
               },
             ]}
           >
-            <S.Input disabled={Boolean(selectedService)} />
+            <S.Input
+              disabled={Boolean(selectedService)}
+              placeholder="Namespace of the target Service in your cluster"
+            />
           </Form.Item>
 
           <Form.Item
@@ -186,7 +189,7 @@ const Upstream: React.FC<IProps> = props => {
             ]}
           >
             {selectedService ? (
-              <S.Select placeholder="Select port">
+              <S.Select placeholder="Target port to which requests should be routed">
                 {selectedServicePorts.map(port => (
                   <Option key={port} value={port}>
                     {port}
@@ -194,7 +197,7 @@ const Upstream: React.FC<IProps> = props => {
                 ))}
               </S.Select>
             ) : (
-              <S.Input type="number" />
+              <S.Input type="number" placeholder="Target port to which requests should be routed" />
             )}
           </Form.Item>
         </>
@@ -222,18 +225,18 @@ const Upstream: React.FC<IProps> = props => {
               },
             ]}
           >
-            <S.Input type="number" />
+            <S.Input placeholder="Target port to which requests should be routed" type="number" />
           </Form.Item>
         </>
       )}
 
       <S.ExtensionSubHeading>Rewrite</S.ExtensionSubHeading>
       <Form.Item label="Pattern" name={['upstream', 'rewrite', 'rewrite_regex', 'pattern']}>
-        <S.Input />
+        <S.Input placeholder="Regex pattern that should be rewritten" />
       </Form.Item>
 
       <Form.Item label="Substitution" name={['upstream', 'rewrite', 'rewrite_regex', 'substitution']}>
-        <S.Input />
+        <S.Input placeholder="Substitution for specified regex pattern" />
       </Form.Item>
     </>
   );

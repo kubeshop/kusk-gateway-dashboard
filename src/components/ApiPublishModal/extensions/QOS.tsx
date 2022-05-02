@@ -30,15 +30,15 @@ const QOS: React.FC<IProps> = props => {
   return (
     <>
       <Form.Item label="Idle timeout" name={['qos', 'idle_timeout']}>
-        <S.Input type="number" />
+        <S.Input placeholder="Timeout for idle connections" type="number" />
       </Form.Item>
 
       <Form.Item label="Retries" name={['qos', 'retries']}>
-        <S.Input type="number" />
+        <S.Input placeholder="Number of retries" type="number" />
       </Form.Item>
 
       <Form.Item label="Request timeout" name={['qos', 'request_timeout']}>
-        <S.Input type="number" />
+        <S.Input placeholder="Total request timeout" type="number" />
       </Form.Item>
     </>
   );

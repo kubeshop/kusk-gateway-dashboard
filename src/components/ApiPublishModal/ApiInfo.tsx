@@ -52,12 +52,12 @@ const ApiInfo: React.FC<IProps> = props => {
           },
         ]}
       >
-        <S.Input placeholder="Enter API name" type="text" />
+        <S.Input placeholder="API name" type="text" />
       </Form.Item>
 
       <Form.Item label="Namespace" name="namespace">
         <S.Input
-          placeholder="Enter API namespace"
+          placeholder="API namespace"
           type="text"
           onChange={() => {
             if (form.getFieldValue('name')) {

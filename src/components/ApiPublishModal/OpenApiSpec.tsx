@@ -88,7 +88,7 @@ const OpenApiSpec: React.FC<IProps> = props => {
       >
         <S.Textarea
           rows={15}
-          placeholder="Enter OpenAPI Spec in YAML/JSON format"
+          placeholder="OpenAPI Spec in YAML/JSON format"
           onChange={e => {
             const spec = e.target.value;
 
