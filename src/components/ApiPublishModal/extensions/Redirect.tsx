@@ -6,6 +6,8 @@ import {useAppSelector} from '@redux/hooks';
 
 import * as S from './styled';
 
+const {Option} = S.Select;
+
 interface IProps {
   form: FormInstance<any>;
   selectedTab: string;
@@ -50,7 +52,10 @@ const Redirect: React.FC<IProps> = props => {
   return (
     <>
       <Form.Item label="Scheme redirect" name={['redirect', 'scheme_redirect']}>
-        <S.Input placeholder="http / https" />
+        <S.Select allowClear placeholder="Select redirect scheme">
+          <Option value="http">http</Option>
+          <Option value="https">https</Option>
+        </S.Select>
       </Form.Item>
 
       <Form.Item
@@ -80,7 +85,13 @@ const Redirect: React.FC<IProps> = props => {
       </Form.Item>
 
       <Form.Item label="Response code" name={['redirect', 'response_code']}>
-        <S.Input placeholder="Redirect response code" type="number" />
+        <S.Select allowClear placeholder="Select redirect response code">
+          <Option value="301">301</Option>
+          <Option value="302">302</Option>
+          <Option value="303">303</Option>
+          <Option value="307">307</Option>
+          <Option value="308">308</Option>
+        </S.Select>
       </Form.Item>
 
       <S.RadioGroup value={selectedTab} onChange={e => setSelectedTab(e.target.value)}>

@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 
-import {Form, FormInstance, Radio, Select, Skeleton, Tag} from 'antd';
+import {Form, FormInstance, Radio, Skeleton, Tag} from 'antd';
 
 import {ServiceItem} from '@models/api';
 
@@ -10,7 +10,7 @@ import {ErrorLabel} from '@components/AntdCustom';
 
 import * as S from './styled';
 
-const {Option} = Select;
+const {Option} = S.Select;
 
 interface IProps {
   form: FormInstance<any>;
