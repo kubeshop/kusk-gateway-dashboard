@@ -22,7 +22,7 @@ Then access it on [http://localhost:3000](http://localhost:3000).
 The default endpoint is **_/api/_** which most likely is not applicable when running the dashboard locally. It can be
 easily changed by going to **Settings** page and entering a new absolute URL.
 
----
+## Documentation
 
-Read more about the dashboard on Kusk Gateway
-[documentation](https://kubeshop.github.io/kusk-gateway/dashboard/overview/).
+Read more about the dashboard at
+[https://kubeshop.github.io/kusk-gateway/dashboard/overview/](https://kubeshop.github.io/kusk-gateway/dashboard/overview/).
