@@ -17,10 +17,12 @@ npm run start
 
 It should be able to be accessed on [http://localhost:3000](http://localhost:3000).
 
-### API server endpoint
+#### API server endpoint
 
 The default endpoint is `/api` which most likely is not applicable when running the dashboard locally. It can be easily
 changed by going to **Settings** page and entering a new absolute URL.
+
+---
 
 Read more about the dashboard on Kusk Gateway
 [documentation](https://kubeshop.github.io/kusk-gateway/dashboard/overview/).
