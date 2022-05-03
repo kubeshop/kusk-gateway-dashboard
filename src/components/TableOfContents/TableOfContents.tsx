@@ -3,6 +3,7 @@ import {useDispatch} from 'react-redux';
 import {ResizableBox} from 'react-resizable';
 import useMeasure from 'react-use/lib/useMeasure';
 
+import {Button} from 'antd';
 import {DataNode} from 'antd/lib/tree';
 
 import {DownOutlined} from '@ant-design/icons';
@@ -35,6 +36,7 @@ const TableOfContents: React.FC<IProps> = props => {
 
   const [containerRef, {height}] = useMeasure<HTMLDivElement>();
 
+  const [status, setStatus] = useState<'collapsed' | 'expanded'>('expanded');
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [tableContentStatus, setTableContentStatus] = useState<'collapsed' | 'expanded'>('expanded');
 
@@ -64,6 +66,24 @@ const TableOfContents: React.FC<IProps> = props => {
     [apiInfoActiveTab, height, tableOfContentsHeight.postProcessedApiSpec, tableOfContentsHeight.rawApiSpec]
   );
 
+  const onCollapseChangeHandler = (activeKeys: string | string[]) => {
+    if (activeKeys.length) {
+      setStatus('expanded');
+    } else {
+      setStatus('collapsed');
+    }
+  };
+
+  const onCollapseExpandButtonClickHandler = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.stopPropagation();
+
+    if (tableContentStatus === 'collapsed') {
+      setTableContentStatus('expanded');
+    } else {
+      setTableContentStatus('collapsed');
+    }
+  };
+
   useEffect(() => {
     if (!treeData) {
       return;
@@ -86,57 +106,53 @@ const TableOfContents: React.FC<IProps> = props => {
   }
 
   return (
-    <S.TableOfContentsContainer>
-      <S.TableOfContentsTitle>
-        Table of contents
-        <S.ExpandCollapseButton
-          type="ghost"
-          onClick={() => {
-            if (tableContentStatus === 'collapsed') {
-              setTableContentStatus('expanded');
-            } else {
-              setTableContentStatus('collapsed');
-            }
-          }}
-        >
-          {tableContentStatus === 'collapsed' ? 'Expand all' : 'Collapse all'}
-        </S.ExpandCollapseButton>
-      </S.TableOfContentsTitle>
+    <S.Collapse defaultActiveKey="1" onChange={onCollapseChangeHandler}>
+      <S.Panel
+        extra={
+          status === 'expanded' ? (
+            <Button type="default" onClick={onCollapseExpandButtonClickHandler}>
+              {tableContentStatus === 'collapsed' ? 'Expand operations' : 'Collapse operations'}
+            </Button>
+          ) : null
+        }
+        header="Table of contents"
+        key="1"
+      >
+        <S.ContentContainer ref={containerRef}>
+          <ResizableBox
+            // Infinity as a placeholder because value 100% is not allowed
+            // by ResizableBox on the width property ( number required )
+            width={Infinity}
+            height={tableOfContentsResizableHeight}
+            minConstraints={[Infinity, 300]}
+            maxConstraints={[Infinity, 850]}
+            axis="y"
+            resizeHandles={['s']}
+            handle={resizableHandler}
+            onResizeStop={resizeTableOfContentsHandler}
+          >
+            <S.Tree
+              expandedKeys={expandedKeys}
+              showLine={{showLeafIcon: false}}
+              showIcon={false}
+              switcherIcon={<DownOutlined />}
+              treeData={treeData}
+              onExpand={expandedKeysValue => {
+                if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
+                  setTimeout(() => setTableContentStatus('collapsed'), 200);
+                }
 
-      <S.ContentContainer ref={containerRef}>
-        <ResizableBox
-          // Infinity as a placeholder because value 100% is not allowed
-          // by ResizableBox on the width property ( number required )
-          width={Infinity}
-          height={tableOfContentsResizableHeight}
-          minConstraints={[Infinity, 300]}
-          maxConstraints={[Infinity, 850]}
-          axis="y"
-          resizeHandles={['s']}
-          handle={resizableHandler}
-          onResizeStop={resizeTableOfContentsHandler}
-        >
-          <S.Tree
-            expandedKeys={expandedKeys}
-            showLine={{showLeafIcon: false}}
-            showIcon={false}
-            switcherIcon={<DownOutlined />}
-            treeData={treeData}
-            onExpand={expandedKeysValue => {
-              if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
-                setTimeout(() => setTableContentStatus('collapsed'), 200);
-              }
+                if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
+                  setTimeout(() => setTableContentStatus('expanded'), 200);
+                }
 
-              if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
-                setTimeout(() => setTableContentStatus('expanded'), 200);
-              }
-
-              setExpandedKeys(expandedKeysValue);
-            }}
-          />
-        </ResizableBox>
-      </S.ContentContainer>
-    </S.TableOfContentsContainer>
+                setExpandedKeys(expandedKeysValue);
+              }}
+            />
+          </ResizableBox>
+        </S.ContentContainer>
+      </S.Panel>
+    </S.Collapse>
   );
 };
 
