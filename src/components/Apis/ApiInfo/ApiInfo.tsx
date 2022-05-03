@@ -18,7 +18,7 @@ const TABS_ITEMS = [
 ];
 
 const KuskExtensions = lazy(() => import('@components/KuskExtensions/KuskExtensions'));
-const PostProcessedApiSpec = lazy(() => import('@components/PostProcessedApiSpec/PostProcessedApiSpec'));
+const PublicApiDefinition = lazy(() => import('@components/PublicApiDefinition/PublicApiDefinition'));
 const RawApiSpec = lazy(() => import('@components/RawApiSpec/RawApiSpec'));
 
 const ApiInfo: React.FC = () => {
@@ -38,7 +38,7 @@ const ApiInfo: React.FC = () => {
         <Suspense fallback={<Skeleton />}>
           {activeTab === 'api-definition' && <RawApiSpec />}
           {activeTab === 'kusk-extensions' && <KuskExtensions />}
-          {activeTab === 'public-api-definition' && <PostProcessedApiSpec />}
+          {activeTab === 'public-api-definition' && <PublicApiDefinition />}
         </Suspense>
 
         <InfoPaneCloseIcon onClick={onCloseHandler} />

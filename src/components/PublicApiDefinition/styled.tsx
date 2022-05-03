@@ -2,6 +2,6 @@ import styled from 'styled-components';
 
 import {SwaggerUIStyle} from '@swaggerUI/style';
 
-export const PostProcessedApiSpecContainer = styled.div`
+export const PublicApiDefinitionContainer = styled.div`
   ${SwaggerUIStyle}
 `;

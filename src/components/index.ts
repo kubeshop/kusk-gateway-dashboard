@@ -8,7 +8,7 @@ export {InfoTabs} from './InfoTabs';
 export {KuskExtensions} from './KuskExtensions';
 export {ListTableColumnLabel} from './ListTableColumnLabel';
 export {NotificationBox} from './NotificationBox';
-export {PostProcessedApiSpec} from './PostProcessedApiSpec';
+export {PublicApiDefinition} from './PublicApiDefinition';
 export {RawApiSpec} from './RawApiSpec';
 export {Sidebar} from './Sidebar';
 export {StaticRoutesList, StaticRouteInfo} from './StaticRoutes';

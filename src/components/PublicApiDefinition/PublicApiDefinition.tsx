@@ -15,14 +15,14 @@ import * as S from './styled';
 
 const KUSK_EXTENSION_PROPERTY = 'x-kusk';
 
-const PostProcessedApiSpec: React.FC = () => {
+const PublicApiDefinition: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
   // TODO: use api definition endpoint
   const {data, error, loading} = useGetApiCRD({name: selectedApi?.name || '', namespace: selectedApi?.namespace || ''});
 
   return (
-    <S.PostProcessedApiSpecContainer>
+    <S.PublicApiDefinitionContainer>
       {loading ? (
         <Skeleton />
       ) : error ? (
@@ -35,7 +35,7 @@ const PostProcessedApiSpec: React.FC = () => {
           />
         )
       )}
-    </S.PostProcessedApiSpecContainer>
+    </S.PublicApiDefinitionContainer>
   );
 };
 
@@ -81,4 +81,4 @@ const parseSpec = (spec: any) => {
   return spec;
 };
 
-export default PostProcessedApiSpec;
+export default PublicApiDefinition;
