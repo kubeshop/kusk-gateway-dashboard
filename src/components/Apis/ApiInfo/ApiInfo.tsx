@@ -17,9 +17,9 @@ const TABS_ITEMS = [
   {key: 'public-api-definition', label: 'Public API Definition'},
 ];
 
+const ApiDefinition = lazy(() => import('@components/ApiDefinition/ApiDefinition'));
 const KuskExtensions = lazy(() => import('@components/KuskExtensions/KuskExtensions'));
-const PostProcessedApiSpec = lazy(() => import('@components/PostProcessedApiSpec/PostProcessedApiSpec'));
-const RawApiSpec = lazy(() => import('@components/RawApiSpec/RawApiSpec'));
+const PublicApiDefinition = lazy(() => import('@components/PublicApiDefinition/PublicApiDefinition'));
 
 const ApiInfo: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -36,9 +36,9 @@ const ApiInfo: React.FC = () => {
         <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setApiInfoActiveTab} />
 
         <Suspense fallback={<Skeleton />}>
-          {activeTab === 'api-definition' && <RawApiSpec />}
+          {activeTab === 'api-definition' && <ApiDefinition />}
           {activeTab === 'kusk-extensions' && <KuskExtensions />}
-          {activeTab === 'public-api-definition' && <PostProcessedApiSpec />}
+          {activeTab === 'public-api-definition' && <PublicApiDefinition />}
         </Suspense>
 
         <InfoPaneCloseIcon onClick={onCloseHandler} />
