@@ -15,13 +15,13 @@ import {CollapseOperationsPlugin, TableOfContentsPlugin} from '@swaggerUI/plugin
 
 import * as S from './styled';
 
-const RawApiSpec: React.FC = () => {
+const ApiDefinition: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
   const {data, error, loading} = useGetApiCRD({name: selectedApi?.name || '', namespace: selectedApi?.namespace || ''});
 
   return (
-    <S.RawApiSpecContainer>
+    <S.ApiDefinitionContainer>
       {loading ? (
         <Skeleton />
       ) : error ? (
@@ -35,8 +35,8 @@ const RawApiSpec: React.FC = () => {
           />
         )
       )}
-    </S.RawApiSpecContainer>
+    </S.ApiDefinitionContainer>
   );
 };
 
-export default RawApiSpec;
+export default ApiDefinition;

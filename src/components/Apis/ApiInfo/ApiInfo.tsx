@@ -17,9 +17,9 @@ const TABS_ITEMS = [
   {key: 'public-api-definition', label: 'Public API Definition'},
 ];
 
+const ApiDefinition = lazy(() => import('@components/ApiDefinition/ApiDefinition'));
 const KuskExtensions = lazy(() => import('@components/KuskExtensions/KuskExtensions'));
 const PublicApiDefinition = lazy(() => import('@components/PublicApiDefinition/PublicApiDefinition'));
-const RawApiSpec = lazy(() => import('@components/RawApiSpec/RawApiSpec'));
 
 const ApiInfo: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -36,7 +36,7 @@ const ApiInfo: React.FC = () => {
         <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setApiInfoActiveTab} />
 
         <Suspense fallback={<Skeleton />}>
-          {activeTab === 'api-definition' && <RawApiSpec />}
+          {activeTab === 'api-definition' && <ApiDefinition />}
           {activeTab === 'kusk-extensions' && <KuskExtensions />}
           {activeTab === 'public-api-definition' && <PublicApiDefinition />}
         </Suspense>
