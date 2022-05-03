@@ -99,7 +99,7 @@ const TableOfContents: React.FC<IProps> = props => {
               }
             }}
           >
-            {tableContentStatus === 'collapsed' ? 'Expand all' : 'Collapse all'}
+            {tableContentStatus === 'collapsed' ? 'Expand operations' : 'Collapse operations'}
           </S.ExpandCollapseButton>
         </S.ExpandCollapseButtonContainer>
 
