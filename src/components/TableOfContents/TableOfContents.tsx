@@ -66,6 +66,24 @@ const TableOfContents: React.FC<IProps> = props => {
     [apiInfoActiveTab, height, tableOfContentsHeight.postProcessedApiSpec, tableOfContentsHeight.rawApiSpec]
   );
 
+  const onCollapseChangeHandler = (activeKeys: string | string[]) => {
+    if (activeKeys.length) {
+      setStatus('expanded');
+    } else {
+      setStatus('collapsed');
+    }
+  };
+
+  const onCollapseExpandButtonClickHandler = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.stopPropagation();
+
+    if (tableContentStatus === 'collapsed') {
+      setTableContentStatus('expanded');
+    } else {
+      setTableContentStatus('collapsed');
+    }
+  };
+
   useEffect(() => {
     if (!treeData) {
       return;
@@ -88,31 +106,11 @@ const TableOfContents: React.FC<IProps> = props => {
   }
 
   return (
-    <S.Collapse
-      defaultActiveKey="1"
-      onChange={activeKeys => {
-        if (activeKeys.length) {
-          setStatus('expanded');
-        } else {
-          setStatus('collapsed');
-        }
-      }}
-    >
+    <S.Collapse defaultActiveKey="1" onChange={onCollapseChangeHandler}>
       <S.Panel
         extra={
           status === 'expanded' ? (
-            <Button
-              type="default"
-              onClick={e => {
-                e.stopPropagation();
-
-                if (tableContentStatus === 'collapsed') {
-                  setTableContentStatus('expanded');
-                } else {
-                  setTableContentStatus('collapsed');
-                }
-              }}
-            >
+            <Button type="default" onClick={onCollapseExpandButtonClickHandler}>
               {tableContentStatus === 'collapsed' ? 'Expand operations' : 'Collapse operations'}
             </Button>
           ) : null
