@@ -86,57 +86,58 @@ const TableOfContents: React.FC<IProps> = props => {
   }
 
   return (
-    <S.TableOfContentsContainer>
-      <S.TableOfContentsTitle>
-        Table of contents
-        <S.ExpandCollapseButton
-          type="ghost"
-          onClick={() => {
-            if (tableContentStatus === 'collapsed') {
-              setTableContentStatus('expanded');
-            } else {
-              setTableContentStatus('collapsed');
-            }
-          }}
-        >
-          {tableContentStatus === 'collapsed' ? 'Expand all' : 'Collapse all'}
-        </S.ExpandCollapseButton>
-      </S.TableOfContentsTitle>
-
-      <S.ContentContainer ref={containerRef}>
-        <ResizableBox
-          // Infinity as a placeholder because value 100% is not allowed
-          // by ResizableBox on the width property ( number required )
-          width={Infinity}
-          height={tableOfContentsResizableHeight}
-          minConstraints={[Infinity, 300]}
-          maxConstraints={[Infinity, 850]}
-          axis="y"
-          resizeHandles={['s']}
-          handle={resizableHandler}
-          onResizeStop={resizeTableOfContentsHandler}
-        >
-          <S.Tree
-            expandedKeys={expandedKeys}
-            showLine={{showLeafIcon: false}}
-            showIcon={false}
-            switcherIcon={<DownOutlined />}
-            treeData={treeData}
-            onExpand={expandedKeysValue => {
-              if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
-                setTimeout(() => setTableContentStatus('collapsed'), 200);
+    <S.Collapse defaultActiveKey="1" expandIconPosition="right">
+      <S.Panel header="Table of contents" key="1">
+        <S.ExpandCollapseButtonContainer>
+          <S.ExpandCollapseButton
+            type="ghost"
+            onClick={() => {
+              if (tableContentStatus === 'collapsed') {
+                setTableContentStatus('expanded');
+              } else {
+                setTableContentStatus('collapsed');
               }
-
-              if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
-                setTimeout(() => setTableContentStatus('expanded'), 200);
-              }
-
-              setExpandedKeys(expandedKeysValue);
             }}
-          />
-        </ResizableBox>
-      </S.ContentContainer>
-    </S.TableOfContentsContainer>
+          >
+            {tableContentStatus === 'collapsed' ? 'Expand all' : 'Collapse all'}
+          </S.ExpandCollapseButton>
+        </S.ExpandCollapseButtonContainer>
+
+        <S.ContentContainer ref={containerRef}>
+          <ResizableBox
+            // Infinity as a placeholder because value 100% is not allowed
+            // by ResizableBox on the width property ( number required )
+            width={Infinity}
+            height={tableOfContentsResizableHeight}
+            minConstraints={[Infinity, 300]}
+            maxConstraints={[Infinity, 850]}
+            axis="y"
+            resizeHandles={['s']}
+            handle={resizableHandler}
+            onResizeStop={resizeTableOfContentsHandler}
+          >
+            <S.Tree
+              expandedKeys={expandedKeys}
+              showLine={{showLeafIcon: false}}
+              showIcon={false}
+              switcherIcon={<DownOutlined />}
+              treeData={treeData}
+              onExpand={expandedKeysValue => {
+                if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
+                  setTimeout(() => setTableContentStatus('collapsed'), 200);
+                }
+
+                if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
+                  setTimeout(() => setTableContentStatus('expanded'), 200);
+                }
+
+                setExpandedKeys(expandedKeysValue);
+              }}
+            />
+          </ResizableBox>
+        </S.ContentContainer>
+      </S.Panel>
+    </S.Collapse>
   );
 };
 

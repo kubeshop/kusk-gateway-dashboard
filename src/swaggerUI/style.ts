@@ -23,6 +23,7 @@ export const SwaggerUIStyle = `
       display: grid;
       grid-template-columns: max-content 1fr max-content;
       grid-column-gap: 10px;
+      padding-left: 0px;
 
       & small {
         padding: 0;

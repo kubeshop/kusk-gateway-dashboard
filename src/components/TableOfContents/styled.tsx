@@ -1,4 +1,4 @@
-import {Button as RawButton, Tree as RawTree} from 'antd';
+import {Button as RawButton, Collapse as RawCollapse, Tree as RawTree} from 'antd';
 
 import styled from 'styled-components';
 
@@ -6,15 +6,20 @@ import {GlobalScrollbarStyle} from '@utils/scrollbar';
 
 import Colors from '@styles/colors';
 
+export const Collapse = styled(RawCollapse)`
+  margin-bottom: 30px;
+
+  & .ant-collapse-content-box {
+    padding-bottom: 0px !important;
+  }
+`;
+
 export const ContentContainer = styled.div`
   position: relative;
   margin-top: 10px;
   color: ${Colors.grey9};
-  border: 1px solid ${Colors.grey5};
-  background: ${Colors.grey2};
 
   & .react-resizable {
-    padding: 5px 15px;
     overflow-y: auto;
 
     ${GlobalScrollbarStyle}
@@ -65,15 +70,22 @@ export const ExpandCollapseButton = styled(RawButton)`
   }
 `;
 
-export const TableOfContentsContainer = styled.div`
-  margin-bottom: 30px;
+export const ExpandCollapseButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
-export const TableOfContentsTitle = styled.div`
-  font-size: 18px;
-  color: ${Colors.whitePure};
-  display: flex;
-  justify-content: space-between;
+export const Panel = styled(RawCollapse.Panel)`
+  & .ant-collapse-header {
+    padding: 5px !important;
+    font-size: 20px;
+    color: ${Colors.whitePure} !important;
+  }
+
+  & .ant-collapse-arrow {
+    font-size: 18px !important;
+    right: 8px !important;
+  }
 `;
 
 export const Tree = styled(RawTree)`
