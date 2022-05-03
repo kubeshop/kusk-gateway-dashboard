@@ -1,4 +1,4 @@
-import {Button as RawButton, Collapse as RawCollapse, Tree as RawTree} from 'antd';
+import {Collapse as RawCollapse, Tree as RawTree} from 'antd';
 
 import styled from 'styled-components';
 
@@ -55,21 +55,6 @@ export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $r
   }
 `;
 
-export const ExpandCollapseButton = styled(RawButton)`
-  color: ${Colors.whitePure};
-  border-color: ${Colors.whitePure};
-
-  & span {
-    font-size: 14px;
-  }
-
-  &:active,
-  &:focus {
-    color: ${Colors.whitePure};
-    border-color: ${Colors.whitePure};
-  }
-`;
-
 export const ExpandCollapseButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -77,14 +62,14 @@ export const ExpandCollapseButtonContainer = styled.div`
 
 export const Panel = styled(RawCollapse.Panel)`
   & .ant-collapse-header {
-    padding: 5px !important;
-    font-size: 20px;
+    padding: 10px !important;
+    font-weight: bold;
     color: ${Colors.whitePure} !important;
+    align-items: center !important;
   }
 
   & .ant-collapse-arrow {
-    font-size: 18px !important;
-    right: 8px !important;
+    margin-right: 8px !important;
   }
 `;
 

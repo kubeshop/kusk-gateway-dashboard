@@ -3,6 +3,7 @@ import {useDispatch} from 'react-redux';
 import {ResizableBox} from 'react-resizable';
 import useMeasure from 'react-use/lib/useMeasure';
 
+import {Button} from 'antd';
 import {DataNode} from 'antd/lib/tree';
 
 import {DownOutlined} from '@ant-design/icons';
@@ -35,6 +36,7 @@ const TableOfContents: React.FC<IProps> = props => {
 
   const [containerRef, {height}] = useMeasure<HTMLDivElement>();
 
+  const [status, setStatus] = useState<'collapsed' | 'expanded'>('expanded');
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [tableContentStatus, setTableContentStatus] = useState<'collapsed' | 'expanded'>('expanded');
 
@@ -86,23 +88,38 @@ const TableOfContents: React.FC<IProps> = props => {
   }
 
   return (
-    <S.Collapse defaultActiveKey="1" expandIconPosition="right">
-      <S.Panel header="Table of contents" key="1">
-        <S.ExpandCollapseButtonContainer>
-          <S.ExpandCollapseButton
-            type="ghost"
-            onClick={() => {
-              if (tableContentStatus === 'collapsed') {
-                setTableContentStatus('expanded');
-              } else {
-                setTableContentStatus('collapsed');
-              }
-            }}
-          >
-            {tableContentStatus === 'collapsed' ? 'Expand operations' : 'Collapse operations'}
-          </S.ExpandCollapseButton>
-        </S.ExpandCollapseButtonContainer>
+    <S.Collapse
+      defaultActiveKey="1"
+      onChange={activeKeys => {
+        if (activeKeys.length) {
+          setStatus('expanded');
+        } else {
+          setStatus('collapsed');
+        }
+      }}
+    >
+      <S.Panel
+        extra={
+          status === 'expanded' ? (
+            <Button
+              type="default"
+              onClick={e => {
+                e.stopPropagation();
 
+                if (tableContentStatus === 'collapsed') {
+                  setTableContentStatus('expanded');
+                } else {
+                  setTableContentStatus('collapsed');
+                }
+              }}
+            >
+              {tableContentStatus === 'collapsed' ? 'Expand operations' : 'Collapse operations'}
+            </Button>
+          ) : null
+        }
+        header="Table of contents"
+        key="1"
+      >
         <S.ContentContainer ref={containerRef}>
           <ResizableBox
             // Infinity as a placeholder because value 100% is not allowed

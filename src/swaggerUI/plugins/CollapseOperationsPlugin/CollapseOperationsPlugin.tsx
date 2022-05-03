@@ -29,7 +29,9 @@ const CollapseOperationsPlugin = () => ({
         <S.CollapseExpandOperationsPluginContainer>
           <Original {...props} />
 
-          <S.CollapseOperationsButton onClick={closeAllOperationsHandler}>Collapse all</S.CollapseOperationsButton>
+          <S.CollapseOperationsButton type="default" onClick={closeAllOperationsHandler}>
+            Collapse all
+          </S.CollapseOperationsButton>
         </S.CollapseExpandOperationsPluginContainer>
       );
     },
