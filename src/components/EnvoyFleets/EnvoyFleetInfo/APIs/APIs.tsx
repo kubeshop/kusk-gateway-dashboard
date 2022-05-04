@@ -32,27 +32,29 @@ const APIs: React.FC = () => {
     }));
   }, [envoyFleetApis]);
 
+  const onRowClickHandler = (record: any) => {
+    const {key} = record;
+    const foundAPI = apis.find(api => getApiKey(api) === key);
+
+    if (foundAPI) {
+      navigate('/');
+      dispatch(selectApi(foundAPI));
+    }
+  };
+
   if (!envoyFleetApis?.length) {
     return null;
   }
 
   return (
     <S.Table
-      onRow={(record: {[key: string]: any}) => ({
-        onClick: () => {
-          const {key} = record;
-          const foundAPI = apis.find(api => getApiKey(api) === key);
-
-          if (foundAPI) {
-            navigate('/');
-            dispatch(selectApi(foundAPI));
-          }
-        },
-      })}
       columns={columns}
       dataSource={dataSource}
       pagination={false}
       size="small"
+      onRow={(record: {[key: string]: any}) => ({
+        onClick: () => onRowClickHandler(record),
+      })}
     />
   );
 };

@@ -1,6 +1,10 @@
 import {useMemo} from 'react';
+import {useNavigate} from 'react-router-dom';
 
-import {useAppSelector} from '@redux/hooks';
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {selectStaticRoute} from '@redux/reducers/main';
+
+import {getStaticRouteKey} from '@utils/staticRoute';
 
 import * as S from './styled';
 
@@ -10,25 +14,49 @@ const columns = [
 ];
 
 const StaticRoutes: React.FC = () => {
-  const staticRoutes = useAppSelector(state => state.main.selectedEnvoyFleet?.staticRoutes);
+  const dispatch = useAppDispatch();
+  const envoyFleetStaticRoutes = useAppSelector(state => state.main.selectedEnvoyFleet?.staticRoutes);
+  const staticRoutes = useAppSelector(state => state.main.staticRoutes);
+
+  const navigate = useNavigate();
 
   const dataSource = useMemo(() => {
-    if (!staticRoutes?.length) {
+    if (!envoyFleetStaticRoutes?.length) {
       return [];
     }
 
-    return staticRoutes.map(staticRoute => ({
-      key: `${staticRoute.namespace}-${staticRoute.name}`,
-      name: staticRoute.name,
-      namespace: staticRoute.namespace,
+    return envoyFleetStaticRoutes.map(envoyFleetStaticRoute => ({
+      key: `${envoyFleetStaticRoute.namespace}-${envoyFleetStaticRoute.name}`,
+      name: envoyFleetStaticRoute.name,
+      namespace: envoyFleetStaticRoute.namespace,
     }));
-  }, [staticRoutes]);
+  }, [envoyFleetStaticRoutes]);
+
+  const onRowClickHandler = (record: any) => {
+    const {key} = record;
+    const foundStaticRoute = staticRoutes.find(staticRoute => getStaticRouteKey(staticRoute) === key);
+
+    if (foundStaticRoute) {
+      navigate('/static-routes');
+      dispatch(selectStaticRoute(foundStaticRoute));
+    }
+  };
 
   if (!staticRoutes?.length) {
     return null;
   }
 
-  return <S.Table columns={columns} dataSource={dataSource} pagination={false} size="small" />;
+  return (
+    <S.Table
+      columns={columns}
+      dataSource={dataSource}
+      pagination={false}
+      size="small"
+      onRow={(record: {[key: string]: any}) => ({
+        onClick: () => onRowClickHandler(record),
+      })}
+    />
+  );
 };
 
 export default StaticRoutes;
