@@ -25,11 +25,7 @@ const StaticRoutes: React.FC = () => {
       return [];
     }
 
-    return envoyFleetStaticRoutes.map(envoyFleetStaticRoute => ({
-      key: `${envoyFleetStaticRoute.namespace}-${envoyFleetStaticRoute.name}`,
-      name: envoyFleetStaticRoute.name,
-      namespace: envoyFleetStaticRoute.namespace,
-    }));
+    return envoyFleetStaticRoutes.map(({name, namespace}) => ({key: `${namespace}-${name}`, name, namespace}));
   }, [envoyFleetStaticRoutes]);
 
   const onRowClickHandler = (record: any) => {
