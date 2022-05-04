@@ -15,6 +15,8 @@ interface MainState {
   selectedStaticRoute: StaticRouteItem | null;
   /** list of services */
   services: ServicesData;
+  /** list of static routes */
+  staticRoutes: StaticRouteItem[];
 }
 
 interface ApiContent {

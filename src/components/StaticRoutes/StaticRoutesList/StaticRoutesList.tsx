@@ -1,11 +1,11 @@
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
 import {Skeleton} from 'antd';
 
 import {useGetStaticRoutes} from '@models/api';
 
-import {useAppDispatch} from '@redux/hooks';
-import {selectStaticRoute} from '@redux/reducers/main';
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {selectStaticRoute, setStaticRoutes} from '@redux/reducers/main';
 
 import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
 
@@ -17,6 +17,8 @@ const {Option} = S.Select;
 
 const StaticRoutesList: React.FC = () => {
   const dispatch = useAppDispatch();
+  const staticRoutes = useAppSelector(state => state.main.staticRoutes);
+
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
 
   const {data, error, loading} = useGetStaticRoutes({queryParams: {namespace: selectedNamespace}});
@@ -53,6 +55,16 @@ const StaticRoutesList: React.FC = () => {
     dispatch(selectStaticRoute(null));
   };
 
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    dispatch(setStaticRoutes(data));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
   return (
     <ContentWrapper>
       <PageTitle>Static Routes</PageTitle>
@@ -76,12 +88,12 @@ const StaticRoutesList: React.FC = () => {
         )}
       </S.TitleFiltersContainer>
 
-      {loading ? (
+      {loading && !staticRoutes ? (
         <Skeleton />
       ) : error ? (
         <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
-        data && <StaticRoutesListTable staticRoutes={data} />
+        staticRoutes && <StaticRoutesListTable staticRoutes={staticRoutes} />
       )}
     </ContentWrapper>
   );

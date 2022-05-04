@@ -17,6 +17,7 @@ const initialMainState: MainState = {
     isLoading: true,
     items: [],
   },
+  staticRoutes: [],
 };
 
 const initialUiState: UiState = {
