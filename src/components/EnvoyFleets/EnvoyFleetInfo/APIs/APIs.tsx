@@ -1,6 +1,8 @@
 import {useMemo} from 'react';
+import {useNavigate} from 'react-router-dom';
 
-import {useAppSelector} from '@redux/hooks';
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {selectApi} from '@redux/reducers/main';
 
 import {getApiKey} from '@utils/api';
 
@@ -12,25 +14,47 @@ const columns = [
 ];
 
 const APIs: React.FC = () => {
-  const apis = useAppSelector(state => state.main.selectedEnvoyFleet?.apis);
+  const dispatch = useAppDispatch();
+  const apis = useAppSelector(state => state.main.apis);
+  const envoyFleetApis = useAppSelector(state => state.main.selectedEnvoyFleet?.apis);
+
+  const navigate = useNavigate();
 
   const dataSource = useMemo(() => {
-    if (!apis?.length) {
+    if (!envoyFleetApis?.length) {
       return [];
     }
 
-    return apis.map(api => ({
-      key: getApiKey(api),
-      name: api.name,
-      namespace: api.namespace,
+    return envoyFleetApis.map(envoyFleetApi => ({
+      key: getApiKey(envoyFleetApi),
+      name: envoyFleetApi.name,
+      namespace: envoyFleetApi.namespace,
     }));
-  }, [apis]);
+  }, [envoyFleetApis]);
 
-  if (!apis?.length) {
+  if (!envoyFleetApis?.length) {
     return null;
   }
 
-  return <S.Table columns={columns} dataSource={dataSource} pagination={false} size="small" />;
+  return (
+    <S.Table
+      onRow={(record: {[key: string]: any}) => ({
+        onClick: () => {
+          const {key} = record;
+          const foundAPI = apis.find(api => getApiKey(api) === key);
+
+          if (foundAPI) {
+            navigate('/');
+            dispatch(selectApi(foundAPI));
+          }
+        },
+      })}
+      columns={columns}
+      dataSource={dataSource}
+      pagination={false}
+      size="small"
+    />
+  );
 };
 
 export default APIs;

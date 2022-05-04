@@ -157,7 +157,7 @@ const ApisList: React.FC = () => {
         </Button>
       </S.ActionsContainer>
 
-      {loading ? (
+      {loading && !apis ? (
         <Skeleton />
       ) : error ? (
         <ErrorLabel>{error.message}</ErrorLabel>
