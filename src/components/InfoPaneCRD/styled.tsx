@@ -1,4 +1,4 @@
-import {PrismLight as SyntaxHighlighter} from 'react-syntax-highlighter';
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
 
 import styled from 'styled-components';
 
