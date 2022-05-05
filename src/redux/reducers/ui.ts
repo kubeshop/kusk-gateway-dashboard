@@ -19,6 +19,10 @@ export const uiSlice = createSlice({
       state.apiPublishModal.isOpen = true;
     },
 
+    setApiDefinitionTableOfContentsHeight: (state: Draft<UiState>, action: PayloadAction<number>) => {
+      state.tableOfContentsHeight.apiDefinition = action.payload;
+    },
+
     setApiInfoActiveTab: (state: Draft<UiState>, action: PayloadAction<ApiInfoTabs>) => {
       state.apiInfoActiveTab = action.payload;
     },
@@ -45,12 +49,8 @@ export const uiSlice = createSlice({
       state.kuskExtensionsActiveKeys[level] = keys;
     },
 
-    setPostProcessedTabledOfContentsHeight: (state: Draft<UiState>, action: PayloadAction<number>) => {
-      state.tableOfContentsHeight.postProcessedApiSpec = action.payload;
-    },
-
-    setRawApiSpecTableOfContentsHeight: (state: Draft<UiState>, action: PayloadAction<number>) => {
-      state.tableOfContentsHeight.rawApiSpec = action.payload;
+    setPublicApiDefinitionTableOfContentsHeight: (state: Draft<UiState>, action: PayloadAction<number>) => {
+      state.tableOfContentsHeight.publicApiDefinition = action.payload;
     },
 
     setStaticRouteInfoActiveTab: (state: Draft<UiState>, action: PayloadAction<StaticRouteInfoTabs>) => {
@@ -71,14 +71,14 @@ export const uiSlice = createSlice({
 export const {
   closeApiPublishModal,
   openApiPublishModal,
+  setApiDefinitionTableOfContentsHeight,
   setApiInfoActiveTab,
   setApiPublishModalActiveStep,
   setApiPublishModalLastCompletedStep,
   setEnvoyFleetInfoActiveTab,
   setKuskExtensionsActiveKeys,
   setDashboardPaneConfiguration,
-  setPostProcessedTabledOfContentsHeight,
-  setRawApiSpecTableOfContentsHeight,
+  setPublicApiDefinitionTableOfContentsHeight,
   setStaticRouteInfoActiveTab,
 } = uiSlice.actions;
 export default uiSlice.reducer;
