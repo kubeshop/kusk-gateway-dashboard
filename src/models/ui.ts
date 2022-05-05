@@ -15,8 +15,8 @@ interface UiState {
   };
   staticRouteInfoActiveTab: StaticRouteInfoTabs;
   tableOfContentsHeight: {
-    postProcessedApiSpec: number;
-    rawApiSpec: number;
+    apiDefinition: number;
+    publicApiDefinition: number;
   };
 }
 

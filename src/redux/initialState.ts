@@ -39,8 +39,8 @@ const initialUiState: UiState = {
   },
   staticRouteInfoActiveTab: 'crd',
   tableOfContentsHeight: {
-    postProcessedApiSpec: 500,
-    rawApiSpec: 500,
+    apiDefinition: 500,
+    publicApiDefinition: 500,
   },
 };
 

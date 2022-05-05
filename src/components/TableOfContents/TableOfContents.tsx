@@ -13,7 +13,7 @@ import {SUPPORTED_METHODS} from '@constants/constants';
 import {TableOfContentsItem} from '@models/swaggerUI';
 
 import {useAppSelector} from '@redux/hooks';
-import {setPostProcessedTabledOfContentsHeight, setRawApiSpecTableOfContentsHeight} from '@redux/reducers/ui';
+import {setApiDefinitionTableOfContentsHeight, setPublicApiDefinitionTableOfContentsHeight} from '@redux/reducers/ui';
 
 import {getOperationId} from '@swaggerUI/utils/operations';
 import {getPathId} from '@swaggerUI/utils/path';
@@ -49,11 +49,11 @@ const TableOfContents: React.FC<IProps> = props => {
 
   const resizeTableOfContentsHandler = useCallback(() => {
     if (apiInfoActiveTab === 'api-definition') {
-      dispatch(setRawApiSpecTableOfContentsHeight(height));
+      dispatch(setApiDefinitionTableOfContentsHeight(height));
     }
 
     if (apiInfoActiveTab === 'public-api-definition') {
-      dispatch(setPostProcessedTabledOfContentsHeight(height));
+      dispatch(setPublicApiDefinitionTableOfContentsHeight(height));
     }
   }, [apiInfoActiveTab, dispatch, height]);
 
@@ -61,9 +61,9 @@ const TableOfContents: React.FC<IProps> = props => {
     () =>
       height ||
       (apiInfoActiveTab === 'api-definition'
-        ? tableOfContentsHeight.rawApiSpec
-        : tableOfContentsHeight.postProcessedApiSpec),
-    [apiInfoActiveTab, height, tableOfContentsHeight.postProcessedApiSpec, tableOfContentsHeight.rawApiSpec]
+        ? tableOfContentsHeight.apiDefinition
+        : tableOfContentsHeight.publicApiDefinition),
+    [apiInfoActiveTab, height, tableOfContentsHeight.apiDefinition, tableOfContentsHeight.publicApiDefinition]
   );
 
   const onCollapseChangeHandler = (activeKeys: string | string[]) => {
