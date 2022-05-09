@@ -11,7 +11,10 @@ import {ContentWrapper, InfoPaneCloseIcon, InfoPaneContainer} from '@components/
 
 import Colors from '@styles/colors';
 
+const CRD = lazy(() => import('./CRD/CRD'));
+
 const TABS_ITEMS = [
+  {key: 'crd', label: 'CRD'},
   {key: 'api-definition', label: 'API Definition'},
   {key: 'kusk-extensions', label: 'Kusk Extensions'},
   {key: 'public-api-definition', label: 'Public API Definition'},
@@ -36,6 +39,7 @@ const ApiInfo: React.FC = () => {
         <InfoTabs activeTabKey={activeTab} tabs={TABS_ITEMS} setActiveTab={setApiInfoActiveTab} />
 
         <Suspense fallback={<Skeleton />}>
+          {activeTab === 'crd' && <CRD />}
           {activeTab === 'api-definition' && <ApiDefinition />}
           {activeTab === 'kusk-extensions' && <KuskExtensions />}
           {activeTab === 'public-api-definition' && <PublicApiDefinition />}

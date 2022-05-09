@@ -6,6 +6,6 @@ export interface KuskExtensionsItem {
   tag?: string;
 }
 
-export type ApiInfoTabs = 'api-definition' | 'public-api-definition' | 'kusk-extensions';
+export type ApiInfoTabs = 'crd' | 'api-definition' | 'public-api-definition' | 'kusk-extensions';
 export type EnvoyFleetInfoTabs = 'crd' | 'apis' | 'static-routes';
 export type StaticRouteInfoTabs = 'crd';
