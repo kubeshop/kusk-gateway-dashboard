@@ -26,7 +26,7 @@ const initialUiState: UiState = {
     isOpen: false,
     lastCompletedStep: 'openApiSpec',
   },
-  apiInfoActiveTab: 'api-definition',
+  apiInfoActiveTab: 'crd',
   dashboardPaneConfiguration: {
     leftPaneWidth: 0.5,
     rightPaneWidth: 0.5,
