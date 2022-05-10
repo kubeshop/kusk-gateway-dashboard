@@ -1,5 +1,7 @@
 import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
 
+import {KUSK_SETTINGS_TARGET_API} from '@constants/constants';
+
 import {ApiItem, EnvoyFleetItem, StaticRouteItem} from '@models/api';
 import {ApiContent, MainState, ServicesData} from '@models/main';
 
@@ -22,9 +24,9 @@ export const mainSlice = createSlice({
       state.apiEndpoint = action.payload;
 
       if (action.payload) {
-        localStorage.setItem('apiEndpoint', action.payload);
+        localStorage.setItem(KUSK_SETTINGS_TARGET_API, action.payload);
       } else {
-        localStorage.removeItem('apiEndpoint');
+        localStorage.removeItem(KUSK_SETTINGS_TARGET_API);
       }
     },
     setApis: (state: Draft<MainState>, action: PayloadAction<ApiItem[]>) => {
