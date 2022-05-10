@@ -5,6 +5,8 @@ import {BrowserRouter} from 'react-router-dom';
 
 import {RestfulProvider} from 'restful-react';
 
+import {KUSK_SETTINGS_TARGET_API} from '@constants/constants';
+
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setApiEndpoint} from '@redux/reducers/main';
 import {store} from '@redux/store';
@@ -19,7 +21,7 @@ const RestfulProviderApp: React.FC = () => {
   const apiEndpoint = useAppSelector(state => state.main.apiEndpoint);
 
   useEffect(() => {
-    const localStorageApiEndpoint = localStorage.getItem('apiEndpoint');
+    const localStorageApiEndpoint = localStorage.getItem(KUSK_SETTINGS_TARGET_API);
 
     if (!localStorageApiEndpoint) {
       return;
