@@ -19,6 +19,7 @@ import {
   setApiPublishModalLastCompletedStep,
 } from '@redux/reducers/ui';
 
+import FleetInfo from './FleetInfo';
 import Step from './Step';
 
 import * as S from './styled';
@@ -42,19 +43,21 @@ interface StepItem {
 
 const renderedNextButtonText: {[key: number]: string} = {
   0: 'Add API Info',
-  1: 'Add Target',
-  2: 'Add Validation',
-  3: 'Add Hosts',
-  4: 'Add QOS',
-  5: 'Add Path',
-  6: 'Add CORS',
-  7: 'Add Websocket',
-  8: 'Publish',
+  1: 'Add Fleet Info',
+  2: 'Add Target',
+  3: 'Add Validation',
+  4: 'Add Hosts',
+  5: 'Add QOS',
+  6: 'Add Path',
+  7: 'Add CORS',
+  8: 'Add Websocket',
+  9: 'Publish',
 };
 
 const orderedSteps: StepType[] = [
   'openApiSpec',
   'apiInfo',
+  'fleetInfo',
   'target',
   'validation',
   'hosts',
@@ -89,6 +92,7 @@ const ApiPublishModal: React.FC = () => {
     () => [
       {documentationLink: 'https://swagger.io/specification', step: 'openApiSpec', title: 'OpenAPI Spec'},
       {step: 'apiInfo', title: 'API Info'},
+      {step: 'fleetInfo', title: 'Fleet Info'},
       {
         documentationLink: `https://kubeshop.github.io/kusk-gateway/reference/extension/#${targetSelection}`,
         step: 'target',
@@ -129,7 +133,7 @@ const ApiPublishModal: React.FC = () => {
         setIsPublishing(true);
       }
 
-      let newApiContent: ApiContent | null = null;
+      let newApiContent: Partial<ApiContent> | null = null;
 
       if (activeStep === 'openApiSpec') {
         const {openapi, mocking} = values;
@@ -164,6 +168,16 @@ const ApiPublishModal: React.FC = () => {
           const {name, namespace} = values;
 
           newApiContent = {name, namespace: namespace || 'default', openapi: apiContent.openapi};
+        }
+
+        if (activeStep === 'fleetInfo') {
+          const {targetEnvoyFleet} = values;
+
+          newApiContent = {
+            ...apiContent,
+            envoyFleetNamespace: targetEnvoyFleet.split(',')[0],
+            envoyFleetName: targetEnvoyFleet.split(',')[1],
+          };
         }
 
         if (activeStep === 'target') {
@@ -270,7 +284,7 @@ const ApiPublishModal: React.FC = () => {
       }
 
       if (!publish && activeStep !== 'websocket') {
-        dispatch(setNewApiContent(newApiContent));
+        dispatch(setNewApiContent(newApiContent as ApiContent));
         dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]));
 
         if (activeStep === 'openApiSpec') {
@@ -289,13 +303,15 @@ const ApiPublishModal: React.FC = () => {
       }
 
       if (publish && newApiContent) {
-        if (isApiMocked) {
+        if (isApiMocked && newApiContent?.openapi && newApiContent.openapi['x-kusk']) {
           delete newApiContent.openapi['x-kusk'].validation;
         }
 
         const body = {
           name: newApiContent.name,
           namespace: newApiContent.namespace,
+          envoyFleetName: newApiContent.envoyFleetName,
+          envoyFleetNamespace: newApiContent.envoyFleetNamespace,
           openapi: YAML.stringify(cleanDeep(newApiContent.openapi)),
         };
 
@@ -408,6 +424,8 @@ const ApiPublishModal: React.FC = () => {
                 <OpenApiSpec form={form} isApiMocked={isApiMocked} setIsApiMocked={value => setIsApiMocked(value)} />
               )}
               {activeStep === 'apiInfo' && <ApiInfo form={form} />}
+              {activeStep === 'fleetInfo' && <FleetInfo form={form} />}
+
               {activeStep === 'validation' && <Validation form={form} isApiMocked={isApiMocked} />}
               {activeStep === 'target' && (
                 <>
