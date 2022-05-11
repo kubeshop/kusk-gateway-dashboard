@@ -56,6 +56,13 @@ export const uiSlice = createSlice({
     setStaticRouteInfoActiveTab: (state: Draft<UiState>, action: PayloadAction<StaticRouteInfoTabs>) => {
       state.staticRouteInfoActiveTab = action.payload;
     },
+    closeStaticRouteModal: (state: Draft<UiState>) => {
+      state.staticRouteModal.isOpen = false;
+    },
+
+    openStaticRouteModal: (state: Draft<UiState>) => {
+      state.staticRouteModal.isOpen = true;
+    },
   },
   extraReducers: builder => {
     builder.addCase(selectApi.type, state => {
@@ -80,5 +87,7 @@ export const {
   setDashboardPaneConfiguration,
   setPublicApiDefinitionTableOfContentsHeight,
   setStaticRouteInfoActiveTab,
+  openStaticRouteModal,
+  closeStaticRouteModal,
 } = uiSlice.actions;
 export default uiSlice.reducer;

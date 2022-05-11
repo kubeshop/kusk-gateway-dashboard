@@ -14,6 +14,9 @@ interface UiState {
     [key: string]: string[];
   };
   staticRouteInfoActiveTab: StaticRouteInfoTabs;
+  staticRouteModal: {
+    isOpen: boolean;
+  };
   tableOfContentsHeight: {
     apiDefinition: number;
     publicApiDefinition: number;

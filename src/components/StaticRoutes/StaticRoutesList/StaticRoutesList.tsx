@@ -1,12 +1,14 @@
-import {useEffect, useMemo, useState} from 'react';
+import {Suspense, useEffect, useMemo, useState} from 'react';
 
-import {Skeleton} from 'antd';
+import {Button, Skeleton} from 'antd';
 
 import {useGetStaticRoutes} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectStaticRoute, setStaticRoutes} from '@redux/reducers/main';
+import {openStaticRouteModal} from '@redux/reducers/ui';
 
+import {AddStaticRouteModal} from '@components/AddStaticRouteModal';
 import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
 
 import StaticRoutesListTable from './StaticRoutesListTable';
@@ -18,6 +20,7 @@ const {Option} = S.Select;
 const StaticRoutesList: React.FC = () => {
   const dispatch = useAppDispatch();
   const staticRoutes = useAppSelector(state => state.main.staticRoutes);
+  const isStaticRouteVisible = useAppSelector(state => state.ui.staticRouteModal.isOpen);
 
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
 
@@ -55,6 +58,10 @@ const StaticRoutesList: React.FC = () => {
     dispatch(selectStaticRoute(null));
   };
 
+  const handleCreateStaticRouteClick = () => {
+    dispatch(openStaticRouteModal());
+  };
+
   useEffect(() => {
     if (!data) {
       return;
@@ -86,6 +93,13 @@ const StaticRoutesList: React.FC = () => {
             {renderedNamespacesOptions}
           </S.Select>
         )}
+        <Button
+          disabled={loading || Boolean(error) || !Array.isArray(data)}
+          type="primary"
+          onClick={handleCreateStaticRouteClick}
+        >
+          Create new static route
+        </Button>
       </S.TitleFiltersContainer>
 
       {loading && !staticRoutes ? (
@@ -95,6 +109,7 @@ const StaticRoutesList: React.FC = () => {
       ) : (
         staticRoutes && <StaticRoutesListTable staticRoutes={staticRoutes} />
       )}
+      <Suspense fallback={null}>{isStaticRouteVisible && <AddStaticRouteModal />}</Suspense>
     </ContentWrapper>
   );
 };
