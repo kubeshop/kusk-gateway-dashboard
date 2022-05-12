@@ -161,7 +161,6 @@ const ApiPublishModal: React.FC = () => {
         }
 
         newApiContent = {
-          ...apiContent,
           name,
           namespace,
           openapi: parsedOpenApi,
@@ -175,7 +174,6 @@ const ApiPublishModal: React.FC = () => {
           const {name, namespace} = values;
 
           newApiContent = {
-            ...newApiContent,
             name,
             namespace: namespace || 'default',
             openapi: apiContent.openapi,
