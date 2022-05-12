@@ -1,10 +1,12 @@
 import {useEffect} from 'react';
 
-import {Form, FormInstance} from 'antd';
+import {Form, FormInstance, Select} from 'antd';
 
 import {ApiItem} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
+
+import {getUniqueNamespaces} from '@utils/api';
 
 import * as S from './ApiInfo.styled';
 
@@ -55,16 +57,23 @@ const ApiInfo: React.FC<IProps> = props => {
         <S.Input placeholder="API name" type="text" />
       </Form.Item>
 
-      <Form.Item label="Namespace" name="namespace">
-        <S.Input
-          placeholder="API namespace"
-          type="text"
-          onChange={() => {
-            if (form.getFieldValue('name')) {
-              form.validateFields(['name']);
-            }
-          }}
-        />
+      <Form.Item
+        label="Namespace"
+        name="namespace"
+        rules={[
+          {
+            required: true,
+            message: 'Please select namespace!',
+          },
+        ]}
+      >
+        <Select>
+          {getUniqueNamespaces(apis).map(el => (
+            <Select.Option key={el} value={el}>
+              {el}
+            </Select.Option>
+          ))}
+        </Select>
       </Form.Item>
     </>
   );

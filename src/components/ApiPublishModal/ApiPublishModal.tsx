@@ -19,6 +19,7 @@ import {
   setApiPublishModalLastCompletedStep,
 } from '@redux/reducers/ui';
 
+import FleetInfo from './FleetInfo';
 import Step from './Step';
 
 import * as S from './styled';
@@ -42,19 +43,21 @@ interface StepItem {
 
 const renderedNextButtonText: {[key: number]: string} = {
   0: 'Add API Info',
-  1: 'Add Target',
-  2: 'Add Validation',
-  3: 'Add Hosts',
-  4: 'Add QOS',
-  5: 'Add Path',
-  6: 'Add CORS',
-  7: 'Add Websocket',
-  8: 'Publish',
+  1: 'Add Fleet Info',
+  2: 'Add Target',
+  3: 'Add Validation',
+  4: 'Add Hosts',
+  5: 'Add QOS',
+  6: 'Add Path',
+  7: 'Add CORS',
+  8: 'Add Websocket',
+  9: 'Publish',
 };
 
 const orderedSteps: StepType[] = [
   'openApiSpec',
   'apiInfo',
+  'fleetInfo',
   'target',
   'validation',
   'hosts',
@@ -89,6 +92,11 @@ const ApiPublishModal: React.FC = () => {
     () => [
       {documentationLink: 'https://swagger.io/specification', step: 'openApiSpec', title: 'OpenAPI Spec'},
       {step: 'apiInfo', title: 'API Info'},
+      {
+        step: 'fleetInfo',
+        title: 'Fleet Info',
+        documentationLink: `https://kubeshop.github.io/kusk-gateway/customresources/envoyfleet/`,
+      },
       {
         documentationLink: `https://kubeshop.github.io/kusk-gateway/reference/extension/#${targetSelection}`,
         step: 'target',
@@ -141,10 +149,6 @@ const ApiPublishModal: React.FC = () => {
         let namespace = apiContent?.namespace || '';
 
         if (mocking?.enabled) {
-          if (!apiContent) {
-            namespace = 'kusk';
-          }
-
           if (!name.startsWith('mock-')) {
             name = `mock-${name}`;
           }
@@ -156,14 +160,37 @@ const ApiPublishModal: React.FC = () => {
           }
         }
 
-        newApiContent = {name, namespace, openapi: parsedOpenApi};
+        newApiContent = {
+          name,
+          namespace,
+          openapi: parsedOpenApi,
+          envoyFleetNamespace: apiContent?.envoyFleetNamespace || '',
+          envoyFleetName: apiContent?.envoyFleetNamespace || '',
+        };
       }
 
       if (apiContent) {
         if (activeStep === 'apiInfo') {
           const {name, namespace} = values;
 
-          newApiContent = {name, namespace: namespace || 'default', openapi: apiContent.openapi};
+          newApiContent = {
+            name,
+            namespace: namespace || 'default',
+            openapi: apiContent.openapi,
+
+            envoyFleetNamespace: apiContent?.envoyFleetNamespace || '',
+            envoyFleetName: apiContent?.envoyFleetNamespace || '',
+          };
+        }
+
+        if (activeStep === 'fleetInfo') {
+          const {targetEnvoyFleet} = values;
+
+          newApiContent = {
+            ...apiContent,
+            envoyFleetNamespace: targetEnvoyFleet.split(',')[0],
+            envoyFleetName: targetEnvoyFleet.split(',')[1],
+          };
         }
 
         if (activeStep === 'target') {
@@ -289,13 +316,15 @@ const ApiPublishModal: React.FC = () => {
       }
 
       if (publish && newApiContent) {
-        if (isApiMocked) {
+        if (isApiMocked && newApiContent?.openapi && newApiContent.openapi['x-kusk']) {
           delete newApiContent.openapi['x-kusk'].validation;
         }
 
         const body = {
           name: newApiContent.name,
           namespace: newApiContent.namespace,
+          envoyFleetName: newApiContent.envoyFleetName,
+          envoyFleetNamespace: newApiContent.envoyFleetNamespace,
           openapi: YAML.stringify(cleanDeep(newApiContent.openapi)),
         };
 
@@ -348,7 +377,7 @@ const ApiPublishModal: React.FC = () => {
 
     const mocking = apiContent.openapi['x-kusk']?.mocking?.enabled;
 
-    if ((mocking || activeStepIndex > 1) && isPublishDisabled) {
+    if (activeStepIndex > 2 && isPublishDisabled) {
       setIsPublishedDisabled(false);
     } else if ((activeStepIndex <= 1 && !mocking && !isPublishDisabled) || !activeStepIndex) {
       setIsPublishedDisabled(true);
@@ -408,6 +437,8 @@ const ApiPublishModal: React.FC = () => {
                 <OpenApiSpec form={form} isApiMocked={isApiMocked} setIsApiMocked={value => setIsApiMocked(value)} />
               )}
               {activeStep === 'apiInfo' && <ApiInfo form={form} />}
+              {activeStep === 'fleetInfo' && <FleetInfo form={form} />}
+
               {activeStep === 'validation' && <Validation form={form} isApiMocked={isApiMocked} />}
               {activeStep === 'target' && (
                 <>

@@ -92,6 +92,8 @@ export const useGetApis = (props: UseGetApisProps) =>
 export interface DeployApiRequestBody {
   name?: string;
   namespace?: string;
+  envoyFleetName?: string;
+  envoyFleetNamespace?: string;
   openapi?: string;
 }
 
@@ -409,6 +411,29 @@ export type UseGetStaticRoutesProps = Omit<
  */
 export const useGetStaticRoutes = (props: UseGetStaticRoutesProps) =>
   useGet<StaticRouteItem[], unknown, GetStaticRoutesQueryParams, void>(`/staticroutes`, props);
+
+export type CreateStaticRouteProps = Omit<
+  MutateProps<StaticRouteItem, string, void, StaticRouteItem, void>,
+  'path' | 'verb'
+>;
+
+/**
+ * create new static route
+ */
+export const CreateStaticRoute = (props: CreateStaticRouteProps) => (
+  <Mutate<StaticRouteItem, string, void, StaticRouteItem, void> verb="POST" path="/staticroutes" {...props} />
+);
+
+export type UseCreateStaticRouteProps = Omit<
+  UseMutateProps<StaticRouteItem, string, void, StaticRouteItem, void>,
+  'path' | 'verb'
+>;
+
+/**
+ * create new static route
+ */
+export const useCreateStaticRoute = (props: UseCreateStaticRouteProps) =>
+  useMutate<StaticRouteItem, string, void, StaticRouteItem, void>('POST', `/staticroutes`, props);
 
 export interface GetStaticRoutePathParams {
   /**
