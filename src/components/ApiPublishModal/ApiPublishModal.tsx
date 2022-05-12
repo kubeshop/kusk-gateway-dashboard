@@ -92,7 +92,11 @@ const ApiPublishModal: React.FC = () => {
     () => [
       {documentationLink: 'https://swagger.io/specification', step: 'openApiSpec', title: 'OpenAPI Spec'},
       {step: 'apiInfo', title: 'API Info'},
-      {step: 'fleetInfo', title: 'Fleet Info'},
+      {
+        step: 'fleetInfo',
+        title: 'Fleet Info',
+        documentationLink: `https://kubeshop.github.io/kusk-gateway/customresources/envoyfleet/`,
+      },
       {
         documentationLink: `https://kubeshop.github.io/kusk-gateway/reference/extension/#${targetSelection}`,
         step: 'target',
@@ -133,7 +137,7 @@ const ApiPublishModal: React.FC = () => {
         setIsPublishing(true);
       }
 
-      let newApiContent: Partial<ApiContent> | null = null;
+      let newApiContent: ApiContent | null = null;
 
       if (activeStep === 'openApiSpec') {
         const {openapi, mocking} = values;
@@ -145,10 +149,6 @@ const ApiPublishModal: React.FC = () => {
         let namespace = apiContent?.namespace || '';
 
         if (mocking?.enabled) {
-          if (!apiContent) {
-            namespace = 'kusk';
-          }
-
           if (!name.startsWith('mock-')) {
             name = `mock-${name}`;
           }
@@ -160,14 +160,29 @@ const ApiPublishModal: React.FC = () => {
           }
         }
 
-        newApiContent = {name, namespace, openapi: parsedOpenApi};
+        newApiContent = {
+          ...apiContent,
+          name,
+          namespace,
+          openapi: parsedOpenApi,
+          envoyFleetNamespace: apiContent?.envoyFleetNamespace || '',
+          envoyFleetName: apiContent?.envoyFleetNamespace || '',
+        };
       }
 
       if (apiContent) {
         if (activeStep === 'apiInfo') {
           const {name, namespace} = values;
 
-          newApiContent = {name, namespace: namespace || 'default', openapi: apiContent.openapi};
+          newApiContent = {
+            ...newApiContent,
+            name,
+            namespace: namespace || 'default',
+            openapi: apiContent.openapi,
+
+            envoyFleetNamespace: apiContent?.envoyFleetNamespace || '',
+            envoyFleetName: apiContent?.envoyFleetNamespace || '',
+          };
         }
 
         if (activeStep === 'fleetInfo') {
@@ -284,7 +299,7 @@ const ApiPublishModal: React.FC = () => {
       }
 
       if (!publish && activeStep !== 'websocket') {
-        dispatch(setNewApiContent(newApiContent as ApiContent));
+        dispatch(setNewApiContent(newApiContent));
         dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]));
 
         if (activeStep === 'openApiSpec') {
@@ -364,7 +379,7 @@ const ApiPublishModal: React.FC = () => {
 
     const mocking = apiContent.openapi['x-kusk']?.mocking?.enabled;
 
-    if ((mocking || activeStepIndex > 1) && isPublishDisabled) {
+    if (activeStepIndex > 2 && isPublishDisabled) {
       setIsPublishedDisabled(false);
     } else if ((activeStepIndex <= 1 && !mocking && !isPublishDisabled) || !activeStepIndex) {
       setIsPublishedDisabled(true);

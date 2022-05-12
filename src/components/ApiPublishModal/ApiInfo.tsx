@@ -6,6 +6,8 @@ import {ApiItem} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
+import {getUniqueNamespaces} from '@utils/api';
+
 import * as S from './ApiInfo.styled';
 
 interface IProps {
@@ -66,9 +68,9 @@ const ApiInfo: React.FC<IProps> = props => {
         ]}
       >
         <Select>
-          {apis.map(el => (
-            <Select.Option key={el.namespace} value={el.namespace}>
-              {el.namespace}
+          {getUniqueNamespaces(apis).map(el => (
+            <Select.Option key={el} value={el}>
+              {el}
             </Select.Option>
           ))}
         </Select>
