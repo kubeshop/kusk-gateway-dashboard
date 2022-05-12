@@ -2,11 +2,9 @@ import {useEffect} from 'react';
 
 import {Form, FormInstance, Select} from 'antd';
 
-import {ApiItem} from '@models/api';
+import {ApiItem, useGetNamespaces} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
-
-import {getUniqueNamespaces} from '@utils/api';
 
 import * as S from './ApiInfo.styled';
 
@@ -19,6 +17,7 @@ const ApiInfo: React.FC<IProps> = props => {
 
   const apiContent = useAppSelector(state => state.main.newApiContent);
   const apis = useAppSelector(state => state.main.apis);
+  const {data: namespaces} = useGetNamespaces({});
 
   useEffect(() => {
     if (!apiContent) {
@@ -68,9 +67,9 @@ const ApiInfo: React.FC<IProps> = props => {
         ]}
       >
         <Select>
-          {getUniqueNamespaces(apis).map(el => (
-            <Select.Option key={el} value={el}>
-              {el}
+          {namespaces?.map(el => (
+            <Select.Option key={el.name} value={el.name}>
+              {el.name}
             </Select.Option>
           ))}
         </Select>
