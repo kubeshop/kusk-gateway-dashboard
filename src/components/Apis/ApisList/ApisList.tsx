@@ -2,7 +2,7 @@ import {useEffect, useMemo, useState} from 'react';
 
 import {Button, Select, Skeleton, Tag} from 'antd';
 
-import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets} from '@models/api';
+import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets, useGetNamespaces} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi, setApis} from '@redux/reducers/main';
@@ -24,7 +24,7 @@ const ApisList: React.FC = () => {
 
   const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
-
+  const {data: namespaces} = useGetNamespaces({});
   const {data, error, loading} = useGetApis({
     queryParams: {
       fleetname: selectedFleet?.name,
@@ -35,40 +35,28 @@ const ApisList: React.FC = () => {
 
   const envoyFleetsState = useGetEnvoyFleets({});
 
-  const apisNamespaces = useMemo((): string[] => {
-    if (!data || !Array.isArray(data)) {
-      return [];
-    }
-
-    const namespaces = data.map(apiItem => apiItem.namespace);
-
-    return [...Array.from(new Set(namespaces))];
-  }, [data]);
-
   const renderedFleetsOptions = useMemo(() => {
     if (!envoyFleetsState?.data?.length || !Array.isArray(envoyFleetsState.data)) {
       return null;
     }
 
-    return envoyFleetsState.data.map(envoyFleetItem => (
-      <Option key={getEnvoyFleetKey(envoyFleetItem)} value={envoyFleetItem.name} envoyfleet={envoyFleetItem}>
-        <Tag>{envoyFleetItem.namespace}</Tag>
-        {envoyFleetItem.name}
-      </Option>
-    ));
-  }, [envoyFleetsState.data]);
+    return envoyFleetsState.data
+      .filter(el => el.namespace.includes(selectedNamespace || ''))
+      .map(envoyFleetItem => (
+        <Option key={getEnvoyFleetKey(envoyFleetItem)} value={envoyFleetItem.name} envoyfleet={envoyFleetItem}>
+          <Tag>{envoyFleetItem.namespace}</Tag>
+          {envoyFleetItem.name}
+        </Option>
+      ));
+  }, [envoyFleetsState.data, selectedNamespace]);
 
   const renderedNamespaceOptions = useMemo(() => {
-    if (!apisNamespaces?.length) {
-      return null;
-    }
-
-    return apisNamespaces.map(namespace => (
-      <Option key={namespace} value={namespace}>
-        {namespace}
+    return namespaces?.map(namespace => (
+      <Option key={namespace.name} value={namespace.name}>
+        {namespace.name}
       </Option>
     ));
-  }, [apisNamespaces]);
+  }, [namespaces]);
 
   const onEnvoyFleetSelectHandler = (envoyFleetItem: EnvoyFleetItem) => {
     setSelectedFleet(envoyFleetItem);

@@ -2,7 +2,7 @@ import {useEffect, useMemo, useState} from 'react';
 
 import {Skeleton} from 'antd';
 
-import {useGetStaticRoutes} from '@models/api';
+import {useGetNamespaces, useGetStaticRoutes} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectStaticRoute, setStaticRoutes} from '@redux/reducers/main';
@@ -18,32 +18,18 @@ const {Option} = S.Select;
 const StaticRoutesList: React.FC = () => {
   const dispatch = useAppDispatch();
   const staticRoutes = useAppSelector(state => state.main.staticRoutes);
-
+  const {data: namespaces} = useGetNamespaces({});
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
 
   const {data, error, loading} = useGetStaticRoutes({queryParams: {namespace: selectedNamespace}});
 
-  const staticRoutesNamespaces = useMemo((): string[] => {
-    if (!data || !Array.isArray(data)) {
-      return [];
-    }
-
-    const namespaces = data.map(staticRouteItem => staticRouteItem.namespace);
-
-    return [...Array.from(new Set(namespaces))];
-  }, [data]);
-
   const renderedNamespacesOptions = useMemo(() => {
-    if (!staticRoutesNamespaces?.length) {
-      return null;
-    }
-
-    return staticRoutesNamespaces.map(namespace => (
-      <Option key={namespace} value={namespace}>
-        {namespace}
+    return namespaces?.map(namespace => (
+      <Option key={namespace.name} value={namespace.name}>
+        {namespace.name}
       </Option>
     ));
-  }, [staticRoutesNamespaces]);
+  }, [namespaces]);
 
   const onNamespaceSelectHandler = (namespace: string) => {
     setSelectedNamespace(namespace);
@@ -93,7 +79,11 @@ const StaticRoutesList: React.FC = () => {
       ) : error ? (
         <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
-        staticRoutes && <StaticRoutesListTable staticRoutes={staticRoutes} />
+        staticRoutes && (
+          <StaticRoutesListTable
+            staticRoutes={staticRoutes.filter(el => el.namespace.includes(selectedNamespace || ''))}
+          />
+        )
       )}
     </ContentWrapper>
   );
