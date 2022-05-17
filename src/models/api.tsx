@@ -28,6 +28,8 @@ export interface EnvoyFleetItem {
 export interface StaticRouteItem {
   name: string;
   namespace: string;
+  envoyFleetName?: string;
+  envoyFleetNamespace?: string;
 }
 
 export interface ApiItemFleet {
@@ -51,6 +53,10 @@ export interface StaticRouteItemFleet {
 export interface ApiItemService {
   name: string;
   namespace: string;
+}
+
+export interface NamespaceItem {
+  name?: string;
 }
 
 export interface GetApisQueryParams {
@@ -92,6 +98,8 @@ export const useGetApis = (props: UseGetApisProps) =>
 export interface DeployApiRequestBody {
   name?: string;
   namespace?: string;
+  envoyFleetName?: string;
+  envoyFleetNamespace?: string;
   openapi?: string;
 }
 
@@ -509,3 +517,24 @@ export const useGetStaticRouteCRD = ({namespace, name, ...props}: UseGetStaticRo
     (paramsInPath: GetStaticRouteCRDPathParams) => `/staticroutes/${paramsInPath.namespace}/${paramsInPath.name}/crd`,
     {pathParams: {namespace, name}, ...props}
   );
+
+export type GetNamespacesProps = Omit<GetProps<NamespaceItem[], unknown, void, void>, 'path'>;
+
+/**
+ * Get a list of namespaces
+ *
+ * Returns a list of namespaces
+ */
+export const GetNamespaces = (props: GetNamespacesProps) => (
+  <Get<NamespaceItem[], unknown, void, void> path="/namespaces" {...props} />
+);
+
+export type UseGetNamespacesProps = Omit<UseGetProps<NamespaceItem[], unknown, void, void>, 'path'>;
+
+/**
+ * Get a list of namespaces
+ *
+ * Returns a list of namespaces
+ */
+export const useGetNamespaces = (props: UseGetNamespacesProps) =>
+  useGet<NamespaceItem[], unknown, void, void>(`/namespaces`, props);

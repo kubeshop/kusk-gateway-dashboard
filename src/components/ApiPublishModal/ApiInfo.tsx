@@ -1,8 +1,8 @@
 import {useEffect} from 'react';
 
-import {Form, FormInstance} from 'antd';
+import {Form, FormInstance, Select} from 'antd';
 
-import {ApiItem} from '@models/api';
+import {ApiItem, useGetNamespaces} from '@models/api';
 
 import {useAppSelector} from '@redux/hooks';
 
@@ -17,6 +17,7 @@ const ApiInfo: React.FC<IProps> = props => {
 
   const apiContent = useAppSelector(state => state.main.newApiContent);
   const apis = useAppSelector(state => state.main.apis);
+  const {data: namespaces} = useGetNamespaces({});
 
   useEffect(() => {
     if (!apiContent) {
@@ -55,16 +56,23 @@ const ApiInfo: React.FC<IProps> = props => {
         <S.Input placeholder="API name" type="text" />
       </Form.Item>
 
-      <Form.Item label="Namespace" name="namespace">
-        <S.Input
-          placeholder="API namespace"
-          type="text"
-          onChange={() => {
-            if (form.getFieldValue('name')) {
-              form.validateFields(['name']);
-            }
-          }}
-        />
+      <Form.Item
+        label="Namespace"
+        name="namespace"
+        rules={[
+          {
+            required: true,
+            message: 'Please select namespace!',
+          },
+        ]}
+      >
+        <Select>
+          {namespaces?.map(el => (
+            <Select.Option key={el.name} value={el.name}>
+              {el.name}
+            </Select.Option>
+          ))}
+        </Select>
       </Form.Item>
     </>
   );

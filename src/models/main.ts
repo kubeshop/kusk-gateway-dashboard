@@ -22,6 +22,8 @@ interface MainState {
 interface ApiContent {
   name: string;
   namespace: string;
+  envoyFleetName: string;
+  envoyFleetNamespace: string;
   openapi: {[key: string]: any};
 }
 interface ServicesData {

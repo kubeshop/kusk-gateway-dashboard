@@ -1,6 +1,16 @@
 import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from './dashboard';
 
-type StepType = 'openApiSpec' | 'apiInfo' | 'target' | 'validation' | 'hosts' | 'qos' | 'path' | 'cors' | 'websocket';
+type StepType =
+  | 'openApiSpec'
+  | 'apiInfo'
+  | 'fleetInfo'
+  | 'target'
+  | 'validation'
+  | 'hosts'
+  | 'qos'
+  | 'path'
+  | 'cors'
+  | 'websocket';
 interface UiState {
   apiPublishModal: {
     activeStep: StepType;

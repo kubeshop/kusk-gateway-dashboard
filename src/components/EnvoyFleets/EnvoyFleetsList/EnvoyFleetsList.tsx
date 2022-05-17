@@ -2,7 +2,7 @@ import {useMemo, useState} from 'react';
 
 import {Skeleton} from 'antd';
 
-import {useGetEnvoyFleets} from '@models/api';
+import {useGetEnvoyFleets, useGetNamespaces} from '@models/api';
 
 import {useAppDispatch} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
@@ -19,30 +19,16 @@ const EnvoyFleetsList: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
-
+  const {data: namespaces} = useGetNamespaces({});
   const {data, error, loading} = useGetEnvoyFleets({queryParams: {namespace: selectedNamespace}});
 
-  const envoyFleetsNamespaces = useMemo((): string[] => {
-    if (!data || !Array.isArray(data)) {
-      return [];
-    }
-
-    const namespaces = data.map(envoyFleetItem => envoyFleetItem.namespace);
-
-    return [...Array.from(new Set(namespaces))];
-  }, [data]);
-
   const renderedNamespacesOptions = useMemo(() => {
-    if (!envoyFleetsNamespaces?.length) {
-      return null;
-    }
-
-    return envoyFleetsNamespaces.map(namespace => (
-      <Option key={namespace} value={namespace}>
-        {namespace}
+    return namespaces?.map(namespace => (
+      <Option key={namespace.name} value={namespace.name}>
+        {namespace.name}
       </Option>
     ));
-  }, [envoyFleetsNamespaces]);
+  }, [namespaces]);
 
   const onNamespaceSelectHandler = (namespace: string) => {
     setSelectedNamespace(namespace);
@@ -82,7 +68,7 @@ const EnvoyFleetsList: React.FC = () => {
       ) : error ? (
         <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
-        data && <EnvoyFleetsListTable envoyFleets={data} />
+        data && <EnvoyFleetsListTable envoyFleets={data.filter(el => el.namespace.includes(selectedNamespace || ''))} />
       )}
     </ContentWrapper>
   );
