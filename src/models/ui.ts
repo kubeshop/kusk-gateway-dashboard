@@ -1,16 +1,9 @@
 import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from './dashboard';
 
-type StepType =
-  | 'openApiSpec'
-  | 'apiInfo'
-  | 'fleetInfo'
-  | 'target'
-  | 'validation'
-  | 'hosts'
-  | 'qos'
-  | 'path'
-  | 'cors'
-  | 'websocket';
+type StepType = 'openApiSpec' | 'apiInfo' | 'fleetInfo'| 'target' | 'validation' | 'hosts' | 'qos' | 'path' | 'cors' | 'websocket';
+
+type StaticRouteStepType = 'routeInfo'| 'fleetInfo'| 'hosts'| 'paths';
+
 interface UiState {
   apiPublishModal: {
     activeStep: StepType;
@@ -26,6 +19,8 @@ interface UiState {
   staticRouteInfoActiveTab: StaticRouteInfoTabs;
   staticRouteModal: {
     isOpen: boolean;
+    activeStep: StaticRouteStepType;
+    lastCompletedStep: StaticRouteStepType;
   };
   tableOfContentsHeight: {
     apiDefinition: number;
@@ -38,4 +33,4 @@ interface DashboardPaneConfiguration {
   rightPaneWidth: number;
 }
 
-export type {DashboardPaneConfiguration, StepType, UiState};
+export type {DashboardPaneConfiguration, StepType, UiState, StaticRouteStepType};
