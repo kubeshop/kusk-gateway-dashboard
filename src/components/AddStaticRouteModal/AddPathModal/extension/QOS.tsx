@@ -1,31 +1,10 @@
-import {useEffect} from 'react';
-
 import {Form} from 'antd';
-
-import {useAppSelector} from '@redux/hooks';
 
 import * as S from './styled';
 
-interface IProps {
-}
+interface IProps {}
 
 const QOS: React.FC<IProps> = props => {
-  const form = Form.useFormInstance();
-
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
-
-  useEffect(() => {
-    const qos = openApiSpec['x-kusk']?.qos;
-
-    if (!qos) {
-      return;
-    }
-
-    form.setFieldsValue({qos});
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openApiSpec]);
-
   return (
     <>
       <Form.Item label="Idle timeout" name={['qos', 'idle_timeout']}>

@@ -1,20 +1,17 @@
-import {Form, FormInstance, Select, Tag} from 'antd';
+import {Form, Select, Tag} from 'antd';
 
 import {useGetEnvoyFleets} from '@models/api';
 
-interface IProps {
-  form: FormInstance<any>;
-}
+interface IProps {}
 
 const FleetInfo: React.FC<IProps> = props => {
-  const {form} = props;
-
+  const form = Form.useFormInstance();
   const {data: fleetData} = useGetEnvoyFleets({});
 
   return (
     <Form.Item
       label="Target Envoy Fleet"
-      name="targetEnvoyFleet"
+      name={['fleetInfo', 'targetEnvoyFleet']}
       initialValue={form.getFieldValue('targetEnvoyFleet')}
       rules={[
         {

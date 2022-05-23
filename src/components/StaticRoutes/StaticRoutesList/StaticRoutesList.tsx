@@ -1,15 +1,15 @@
 import {Suspense, useEffect, useMemo, useState} from 'react';
 
 import {Button, Skeleton} from 'antd';
-import { openStaticRouteModal } from '@redux/reducers/ui';
 
 import {useGetNamespaces, useGetStaticRoutes} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectStaticRoute, setStaticRoutes} from '@redux/reducers/main';
+import {openStaticRouteModal} from '@redux/reducers/ui';
 
+import {AddStaticRouteModal} from '@components/AddStaticRouteModal';
 import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
-import { AddStaticRouteModal } from '@components/AddStaticRouteModal';
 
 import StaticRoutesListTable from './StaticRoutesListTable';
 
@@ -80,7 +80,9 @@ const StaticRoutesList: React.FC = () => {
             {renderedNamespacesOptions}
           </S.Select>
         )}
-        <Button onClick={handlePublishStaticRoute}>Publish New Static Route</Button>
+        <Button type="primary" onClick={handlePublishStaticRoute}>
+          Publish New Static Route
+        </Button>
       </S.TitleFiltersContainer>
 
       {loading && !staticRoutes ? (
@@ -94,8 +96,7 @@ const StaticRoutesList: React.FC = () => {
           />
         )
       )}
-            <Suspense fallback={null}>{isStaticRouteModalVisible && <AddStaticRouteModal />}</Suspense>
-
+      <Suspense fallback={null}>{isStaticRouteModalVisible && <AddStaticRouteModal />}</Suspense>
     </ContentWrapper>
   );
 };

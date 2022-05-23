@@ -1,27 +1,27 @@
-import {Dispatch, useMemo} from 'react';
+import {useMemo} from 'react';
 
 import * as S from './Step.styled';
 import StepTitle from './StepTitle';
 
-interface IProps {
-  orderedSteps: string[];
-  step: string;
+interface IProps<T> {
+  orderedSteps: T[];
+  step: T;
   title: string;
-  activeStep: string;
-  lastCompletedStep: string;
   documentationLink?: string;
-  setActiveStep: Dispatch<any>;
+  activeStep: T;
+  lastCompletedStep: T;
+  setActiveStep: (step: T) => void;
 }
 
-const Step: React.FC<IProps> = props => {
+const Step = <T extends string>(props: IProps<T>): JSX.Element => {
   const {
     orderedSteps,
     step,
+    title,
     activeStep,
     lastCompletedStep,
-    title,
-    documentationLink = `https://kubeshop.github.io/kusk-gateway/reference/extension/#${step}`,
     setActiveStep,
+    documentationLink = `https://kubeshop.github.io/kusk-gateway/reference/extension/#${step}`,
     ...rest
   } = props;
 
@@ -51,9 +51,7 @@ const Step: React.FC<IProps> = props => {
       {...rest}
       $completed={isStepCompleted}
       status={stepStatus}
-      title={
-        <StepTitle documentationLink={documentationLink} step={step} title={title}  />
-      }
+      title={<StepTitle documentationLink={documentationLink} title={title} />}
       onClick={onClickHandler}
     />
   );

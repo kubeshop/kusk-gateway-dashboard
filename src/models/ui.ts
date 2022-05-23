@@ -4,6 +4,8 @@ type StepType = 'openApiSpec' | 'apiInfo' | 'fleetInfo'| 'target' | 'validation'
 
 type StaticRouteStepType = 'routeInfo'| 'fleetInfo'| 'hosts'| 'paths';
 
+type PathModalStepType = 'path' | 'target' | 'qos' | 'cors' | 'websocket';
+
 interface UiState {
   apiPublishModal: {
     activeStep: StepType;
@@ -33,4 +35,4 @@ interface DashboardPaneConfiguration {
   rightPaneWidth: number;
 }
 
-export type {DashboardPaneConfiguration, StepType, UiState, StaticRouteStepType};
+export type {DashboardPaneConfiguration, StepType, UiState, StaticRouteStepType, PathModalStepType};

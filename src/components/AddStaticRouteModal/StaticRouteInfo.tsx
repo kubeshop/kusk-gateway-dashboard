@@ -7,7 +7,7 @@ const StaticRouteInfo = (): JSX.Element => {
   return (
     <>
       <Form.Item
-        name="name"
+        name={['routeInfo', 'name']}
         label="Name"
         rules={[
           {
@@ -18,7 +18,11 @@ const StaticRouteInfo = (): JSX.Element => {
       >
         <Input />
       </Form.Item>
-      <Form.Item name="namespace" label="Namespace" rules={[{required: true, message: 'Select target namespace'}]}>
+      <Form.Item
+        name={['routeInfo', 'namespace']}
+        label="Namespace"
+        rules={[{required: true, message: 'Select target namespace'}]}
+      >
         <Select>
           {namespaces?.map(namespace => (
             <Select.Option key={namespace.name} value={namespace.name}>

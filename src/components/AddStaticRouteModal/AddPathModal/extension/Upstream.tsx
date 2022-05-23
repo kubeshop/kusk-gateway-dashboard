@@ -88,7 +88,7 @@ const Upstream: React.FC<IProps> = props => {
           ) : services.error ? (
             <ErrorLabel>{services.error}</ErrorLabel>
           ) : (
-            <Form.Item label="Cluster service" name="service">
+            <Form.Item label="Cluster service" name={['upstream', 'service']}>
               <S.Select
                 allowClear
                 placeholder="Select cluster service"

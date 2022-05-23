@@ -1,12 +1,10 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 
 import {Button, Checkbox, Form, Switch} from 'antd';
 
 import styled from 'styled-components';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
-
-import {useAppSelector} from '@redux/hooks';
 
 import {FormList} from '@components';
 
@@ -16,8 +14,7 @@ import * as S from './styled';
 
 const METHODS = SUPPORTED_METHODS.slice(0, -1).map(method => method.toUpperCase());
 
-interface IProps {
-}
+interface IProps {}
 
 const StyledButton = styled(Button)`
   color: ${Colors.blue700};
@@ -31,8 +28,6 @@ const StyledButton = styled(Button)`
 const CORS: React.FC<IProps> = props => {
   const form = Form.useFormInstance();
 
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
-
   const [areCheckedAll, setAreCheckedAll] = useState(false);
 
   const onCheckHandler = () => {
@@ -44,16 +39,6 @@ const CORS: React.FC<IProps> = props => {
       setAreCheckedAll(true);
     }
   };
-
-  useEffect(() => {
-    const cors = openApiSpec['x-kusk']?.cors;
-
-    if (!cors) {
-      return;
-    }
-
-    form.setFieldsValue({cors});
-  }, [form, openApiSpec]);
 
   return (
     <>

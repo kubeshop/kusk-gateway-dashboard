@@ -50,8 +50,8 @@ export const RadioGroupContainer = styled.div`
 
 export const StepsContainer = styled.div`
   padding-right: 5px;
-  max-height: 500px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  height: fit-content;
+  position: sticky;
+  top: 0;
   ${GlobalScrollbarStyle};
 `;

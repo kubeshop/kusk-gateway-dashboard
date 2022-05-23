@@ -2,9 +2,12 @@ import {useMemo, useState} from 'react';
 
 import {Button, Form, Radio, Steps} from 'antd';
 
-import {FormStepLayout} from '@components/FormStepLayout';
+import {StaticRouteForm} from '@models/main';
+import { PathModalStepType } from '@models/ui';
 
-import Step from './Step';
+import {FormStepLayout} from '@components/FormStepLayout';
+import { FormStep } from '@components/FormStep';
+
 import CORS from './extension/CORS';
 import Path from './extension/Path';
 import QOS from './extension/QOS';
@@ -18,11 +21,11 @@ interface IProps {
   setAddPathModal: (open: boolean) => void;
 }
 
-type PathModalSteps = 'path' | 'target' | 'qos' | 'cors' | 'websocket';
+const orderedSteps: Array<PathModalStepType> = ['path', 'target', 'qos', 'cors', 'websocket'];
 
-const orderedSteps: Array<PathModalSteps> = ['path', 'target', 'qos', 'cors', 'websocket'];
+const requiredSteps: Array<PathModalStepType> = ['path', 'target'];
 
-const steps = [
+const steps: Array<{step: PathModalStepType; title: string; documentationLink: string}> = [
   {step: 'path', title: 'Path Info', documentationLink: ''},
   {
     step: 'target',
@@ -56,39 +59,39 @@ const renderedNextButtonText: {[key: number]: string} = {
 };
 
 const AddPathModal = ({setAddPathModal}: IProps): JSX.Element => {
-  const [form] = Form.useForm();
-  const [activeStep, setActiveStep] = useState<PathModalSteps>('path');
-  const [lastVisitedStep, setLastVisitedStep] = useState<PathModalSteps>('path');
+  const [form] = Form.useForm<StaticRouteForm['paths']>();
+  const [activeStep, setActiveStep] = useState<PathModalStepType>('path');
+  const [lastVisitedStep, setLastVisitedStep] = useState<PathModalStepType>('path');
   const [targetSelection, setTargetSelection] = useState<'upstream' | 'redirect'>('upstream');
   const [upstreamReference, setUpstreamReference] = useState<string>('service');
   const [redirectTabSelection, setRedirectTabSelection] = useState<string>('path_redirect');
   const activeStepIndex = useMemo(() => orderedSteps.indexOf(activeStep), [activeStep]);
+  const disableAddPathButton = useMemo(() => requiredSteps.includes(activeStep), [activeStep]);
 
-  const onSubmitHandler = () => {};
+  const onSubmitHandler = () => {
+    form.submit();
+    setAddPathModal(false);
+  };
 
   const onBackHandler = () => {
     setAddPathModal(false);
   };
 
   const handleNextStep = async () => {
-    try {
-      await form.validateFields();
-      setActiveStep(orderedSteps[activeStepIndex + 1]);
-      setLastVisitedStep(orderedSteps[activeStepIndex + 1]);
-    } catch (formError: any) {
-      // check required step error
-      const stepPath = activeStep === 'target' ? targetSelection : activeStep;
-      if (!formError.errorFields.find((el: any) => el.name[0] === stepPath)) {
-        setActiveStep(orderedSteps[activeStepIndex + 1]);
-        setLastVisitedStep(orderedSteps[activeStepIndex + 1]);
-      }
-    }
+    const stepPath = activeStep === 'target' ? targetSelection : activeStep;
+    const stepFields = form
+      .getFieldsError()
+      .map(el => el.name)
+      .filter(el => el[0] === stepPath);
+    await form.validateFields(stepFields);
+    setActiveStep(orderedSteps[activeStepIndex + 1]);
+    setLastVisitedStep(orderedSteps[activeStepIndex + 1]);
   };
 
   return (
     <S.Modal
       visible
-      title="Add New Path"
+      title="Publish Static Route - Add New Path"
       width="900px"
       onCancel={onBackHandler}
       footer={
@@ -103,7 +106,7 @@ const AddPathModal = ({setAddPathModal}: IProps): JSX.Element => {
             </Button>
           ) : null}
 
-          <Button type="primary" onClick={onSubmitHandler}>
+          <Button type="primary" disabled={disableAddPathButton} onClick={onSubmitHandler}>
             Add Path
           </Button>
         </>
@@ -111,15 +114,15 @@ const AddPathModal = ({setAddPathModal}: IProps): JSX.Element => {
     >
       <S.Container>
         <S.StepsContainer>
-          <Steps direction="vertical">
+          <Steps direction="vertical" current={activeStepIndex}>
             {steps.map(step => (
-              <Step
-                key={step.step}
+              <FormStep
+                key={`${step.step.toString()}`} 
+                step={step.step}
                 documentationLink={step.documentationLink}
                 orderedSteps={orderedSteps}
                 activeStep={activeStep}
                 lastCompletedStep={lastVisitedStep}
-                step={step.step}
                 title={step.title}
                 setActiveStep={setActiveStep}
               />
@@ -127,7 +130,7 @@ const AddPathModal = ({setAddPathModal}: IProps): JSX.Element => {
           </Steps>
         </S.StepsContainer>
         <S.FormContainer>
-          <Form layout="vertical" form={form}>
+          <Form layout="vertical" form={form} name="addPathForm">
             <FormStepLayout visible={activeStep === 'path'}>
               <Path />
             </FormStepLayout>

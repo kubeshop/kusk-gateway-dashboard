@@ -1,5 +1,3 @@
-import {useEffect} from 'react';
-
 import {Form, Radio, Switch} from 'antd';
 
 import * as S from './styled';
@@ -13,23 +11,6 @@ interface IProps {
 
 const Redirect: React.FC<IProps> = props => {
   const {selectedTab, setSelectedTab} = props;
-  const form = Form.useFormInstance();
-
-  useEffect(() => {
-    const redirect = undefined;
-
-    if (!redirect) {
-      return;
-    }
-
-    form.setFieldsValue({redirect});
-
-    if (!redirect['path_redirect'] && redirect['rewrite_regex']) {
-      setSelectedTab('rewrite_regex');
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>
