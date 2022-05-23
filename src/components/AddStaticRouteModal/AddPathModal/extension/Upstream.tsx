@@ -37,6 +37,15 @@ const Upstream: React.FC<IProps> = props => {
 
   const onServiceSelectClearHandler = () => {
     setSelectedService(undefined);
+    form.setFieldsValue({
+      upstream: {
+        service: {
+          name: undefined,
+          namespace: undefined,
+          port: undefined,
+        },
+      },
+    });
   };
 
   const onServiceSelectHandler = (service: ServiceItem) => {
@@ -88,7 +97,7 @@ const Upstream: React.FC<IProps> = props => {
           ) : services.error ? (
             <ErrorLabel>{services.error}</ErrorLabel>
           ) : (
-            <Form.Item label="Cluster service" name={['upstream', 'service']}>
+            <Form.Item label="Cluster service" name={['upstream', 'service', 'selector']}>
               <S.Select
                 allowClear
                 placeholder="Select cluster service"

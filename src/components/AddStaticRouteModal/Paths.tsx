@@ -26,7 +26,7 @@ const Paths: React.FC<IProps> = ({setAddPathModal}) => {
           Add Path
         </Button>
       </Form.Item>
-      <Form.Item shouldUpdate={(prevValues, curValues) => prevValues.paths.paths !== curValues.paths.paths}>
+      <Form.Item shouldUpdate={(prevValues, curValues) => prevValues?.paths?.paths !== curValues?.paths?.paths}>
         {({getFieldValue}) => {
           const paths = getFieldValue(['paths', 'paths']) || [];
           return paths.length ? (
