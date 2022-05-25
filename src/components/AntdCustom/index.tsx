@@ -1,4 +1,10 @@
-import {CloseOutlined as RawCloseOutlined} from '@ant-design/icons';
+import {Menu as RawMenu} from 'antd';
+
+import {
+  CloseOutlined as RawCloseOutlined,
+  DeleteOutlined as RawDeleteOutlined,
+  SettingOutlined as RawSettingOutlined,
+} from '@ant-design/icons';
 
 import styled from 'styled-components';
 
@@ -24,12 +30,39 @@ export const ErrorLabel = styled.span`
 `;
 
 export const InfoPaneCloseIcon = styled(RawCloseOutlined)`
-  position: absolute;
-  right: 20px;
-  top: 20px;
   color: ${Colors.grey0};
   font-size: 18px;
   cursor: pointer;
+  :hover {
+    color: ${Colors.whitePure};
+  }
+`;
+
+export const InfoPanelSettingsIcon = styled(RawSettingOutlined)`
+  color: ${Colors.grey0};
+  font-size: 24px;
+  cursor: pointer;
+  :hover {
+    color: ${Colors.whitePure};
+  }
+`;
+
+export const InfoPanelDeleteIcon = styled(RawDeleteOutlined)`
+  font-size: 18px;
+`;
+
+export const InfoActionMenu = styled(RawMenu)`
+  &.ant-menu-dark {
+    background: unset;
+  }
+`;
+
+export const InfoPanelActions = styled.div`
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  display: flex;
+  align-items: center;
 `;
 
 export const InfoPaneContainer = styled.div`
