@@ -149,6 +149,33 @@ export const useGetApi = ({namespace, name, ...props}: UseGetApiProps) =>
     {pathParams: {namespace, name}, ...props}
   );
 
+export interface DeleteApiPathParams {
+  namespace: string;
+}
+
+export type DeleteApiProps = Omit<MutateProps<void, void, void, string, DeleteApiPathParams>, 'path' | 'verb'> &
+  DeleteApiPathParams;
+
+/**
+ * Delete an API instance by namespace and name
+ */
+export const DeleteApi = ({namespace, ...props}: DeleteApiProps) => (
+  <Mutate<void, void, void, string, DeleteApiPathParams> verb="DELETE" path={`/apis/${namespace}`} {...props} />
+);
+
+export type UseDeleteApiProps = Omit<UseMutateProps<void, void, void, string, DeleteApiPathParams>, 'path' | 'verb'> &
+  DeleteApiPathParams;
+
+/**
+ * Delete an API instance by namespace and name
+ */
+export const useDeleteApi = ({namespace, ...props}: UseDeleteApiProps) =>
+  useMutate<void, void, void, string, DeleteApiPathParams>(
+    'DELETE',
+    (paramsInPath: DeleteApiPathParams) => `/apis/${paramsInPath.namespace}`,
+    {pathParams: {namespace}, ...props}
+  );
+
 export interface GetApiCRDResponse {
   [key: string]: any;
 }
@@ -347,6 +374,36 @@ export const useGetEnvoyFleet = ({namespace, name, ...props}: UseGetEnvoyFleetPr
     {pathParams: {namespace, name}, ...props}
   );
 
+export interface DeleteFleetPathParams {
+  namespace: string;
+}
+
+export type DeleteFleetProps = Omit<MutateProps<void, void, void, string, DeleteFleetPathParams>, 'path' | 'verb'> &
+  DeleteFleetPathParams;
+
+/**
+ * Delete a Fleet instance by namespace and name
+ */
+export const DeleteFleet = ({namespace, ...props}: DeleteFleetProps) => (
+  <Mutate<void, void, void, string, DeleteFleetPathParams> verb="DELETE" path={`/fleets/${namespace}`} {...props} />
+);
+
+export type UseDeleteFleetProps = Omit<
+  UseMutateProps<void, void, void, string, DeleteFleetPathParams>,
+  'path' | 'verb'
+> &
+  DeleteFleetPathParams;
+
+/**
+ * Delete a Fleet instance by namespace and name
+ */
+export const useDeleteFleet = ({namespace, ...props}: UseDeleteFleetProps) =>
+  useMutate<void, void, void, string, DeleteFleetPathParams>(
+    'DELETE',
+    (paramsInPath: DeleteFleetPathParams) => `/fleets/${paramsInPath.namespace}`,
+    {pathParams: {namespace}, ...props}
+  );
+
 export interface GetEnvoyFleetCRDResponse {
   [key: string]: any;
 }
@@ -418,8 +475,16 @@ export type UseGetStaticRoutesProps = Omit<
 export const useGetStaticRoutes = (props: UseGetStaticRoutesProps) =>
   useGet<StaticRouteItem[], unknown, GetStaticRoutesQueryParams, void>(`/staticroutes`, props);
 
+export interface CreateStaticRouteRequestBody {
+  name?: string;
+  namespace?: string;
+  envoyFleetName?: string;
+  envoyFleetNamespace?: string;
+  openapi?: string;
+}
+
 export type CreateStaticRouteProps = Omit<
-  MutateProps<StaticRouteItem, string, void, StaticRouteItem, void>,
+  MutateProps<StaticRouteItem, string, void, CreateStaticRouteRequestBody, void>,
   'path' | 'verb'
 >;
 
@@ -427,11 +492,15 @@ export type CreateStaticRouteProps = Omit<
  * create new static route
  */
 export const CreateStaticRoute = (props: CreateStaticRouteProps) => (
-  <Mutate<StaticRouteItem, string, void, StaticRouteItem, void> verb="POST" path="/staticroutes" {...props} />
+  <Mutate<StaticRouteItem, string, void, CreateStaticRouteRequestBody, void>
+    verb="POST"
+    path="/staticroutes"
+    {...props}
+  />
 );
 
 export type UseCreateStaticRouteProps = Omit<
-  UseMutateProps<StaticRouteItem, string, void, StaticRouteItem, void>,
+  UseMutateProps<StaticRouteItem, string, void, CreateStaticRouteRequestBody, void>,
   'path' | 'verb'
 >;
 
@@ -439,7 +508,7 @@ export type UseCreateStaticRouteProps = Omit<
  * create new static route
  */
 export const useCreateStaticRoute = (props: UseCreateStaticRouteProps) =>
-  useMutate<StaticRouteItem, string, void, StaticRouteItem, void>('POST', `/staticroutes`, props);
+  useMutate<StaticRouteItem, string, void, CreateStaticRouteRequestBody, void>('POST', `/staticroutes`, props);
 
 export interface GetStaticRoutePathParams {
   /**
@@ -476,6 +545,43 @@ export const useGetStaticRoute = ({namespace, name, ...props}: UseGetStaticRoute
   useGet<StaticRouteItem, void, void, GetStaticRoutePathParams>(
     (paramsInPath: GetStaticRoutePathParams) => `/staticroutes/${paramsInPath.namespace}/${paramsInPath.name}`,
     {pathParams: {namespace, name}, ...props}
+  );
+
+export interface DeleteStaticRoutePathParams {
+  namespace: string;
+}
+
+export type DeleteStaticRouteProps = Omit<
+  MutateProps<void, void, void, string, DeleteStaticRoutePathParams>,
+  'path' | 'verb'
+> &
+  DeleteStaticRoutePathParams;
+
+/**
+ * Delete a StaticRoute by namespace and name
+ */
+export const DeleteStaticRoute = ({namespace, ...props}: DeleteStaticRouteProps) => (
+  <Mutate<void, void, void, string, DeleteStaticRoutePathParams>
+    verb="DELETE"
+    path={`/staticroutes/${namespace}`}
+    {...props}
+  />
+);
+
+export type UseDeleteStaticRouteProps = Omit<
+  UseMutateProps<void, void, void, string, DeleteStaticRoutePathParams>,
+  'path' | 'verb'
+> &
+  DeleteStaticRoutePathParams;
+
+/**
+ * Delete a StaticRoute by namespace and name
+ */
+export const useDeleteStaticRoute = ({namespace, ...props}: UseDeleteStaticRouteProps) =>
+  useMutate<void, void, void, string, DeleteStaticRoutePathParams>(
+    'DELETE',
+    (paramsInPath: DeleteStaticRoutePathParams) => `/staticroutes/${paramsInPath.namespace}`,
+    {pathParams: {namespace}, ...props}
   );
 
 export interface GetStaticRouteCRDResponse {

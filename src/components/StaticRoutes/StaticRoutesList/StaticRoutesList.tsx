@@ -18,10 +18,16 @@ const {Option} = S.Select;
 const StaticRoutesList: React.FC = () => {
   const dispatch = useAppDispatch();
   const staticRoutes = useAppSelector(state => state.main.staticRoutes);
+  const selectedStaticRoute = useAppSelector(state => state.main.selectedStaticRoute);
   const {data: namespaces} = useGetNamespaces({});
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
 
-  const {data, error, loading} = useGetStaticRoutes({queryParams: {namespace: selectedNamespace}});
+  const {
+    data,
+    error,
+    loading,
+    refetch: refetchStaticRoutes,
+  } = useGetStaticRoutes({queryParams: {namespace: selectedNamespace}});
 
   const renderedNamespacesOptions = useMemo(() => {
     return namespaces?.map(namespace => (
@@ -40,6 +46,13 @@ const StaticRoutesList: React.FC = () => {
     setSelectedNamespace(undefined);
     dispatch(selectStaticRoute(null));
   };
+
+  useEffect(() => {
+    if (!loading) {
+      refetchStaticRoutes();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedStaticRoute]);
 
   useEffect(() => {
     if (!data) {
