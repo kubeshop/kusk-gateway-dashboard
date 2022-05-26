@@ -56,9 +56,9 @@ const EnvoyFleetInfo: React.FC = () => {
 
   const onMenuItemClick = async (event: MenuInfo) => {
     if (event.key === 'deleteResource') {
-      if (selectedFleet?.namespace) {
+      if (selectedFleet?.name) {
         try {
-          await deleteFleet(selectedFleet.namespace);
+          await deleteFleet(selectedFleet.name);
           dispatch(
             setAlert({
               title: 'Envoy fleet deleted successfully',

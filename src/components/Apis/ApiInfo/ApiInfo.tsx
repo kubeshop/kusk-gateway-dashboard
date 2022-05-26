@@ -59,9 +59,9 @@ const ApiInfo: React.FC = () => {
 
   const onMenuItemClick = async (event: MenuInfo) => {
     if (event.key === 'deleteResource') {
-      if (selectedAPI?.namespace) {
+      if (selectedAPI?.name) {
         try {
-          await deleteAPI(selectedAPI.namespace);
+          await deleteAPI(selectedAPI.name);
           dispatch(
             setAlert({
               title: 'API deleted successfully',
@@ -75,7 +75,7 @@ const ApiInfo: React.FC = () => {
         } catch (e) {
           dispatch(
             setAlert({
-              title: 'API deleted failed',
+              title: 'Deleting API was failed',
               description: `Something went wrong!`,
               type: AlertEnum.Error,
             })

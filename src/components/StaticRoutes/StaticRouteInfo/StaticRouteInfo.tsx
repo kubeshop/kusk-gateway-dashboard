@@ -51,9 +51,9 @@ const StaticRouteInfo: React.FC = () => {
 
   const onMenuItemClick = async (event: MenuInfo) => {
     if (event.key === 'deleteResource') {
-      if (selectedStaticRoute?.namespace) {
+      if (selectedStaticRoute?.name) {
         try {
-          await deleteStaticRoute(selectedStaticRoute.namespace);
+          await deleteStaticRoute(selectedStaticRoute.name);
           dispatch(
             setAlert({
               title: 'Static Route deleted successfully',
