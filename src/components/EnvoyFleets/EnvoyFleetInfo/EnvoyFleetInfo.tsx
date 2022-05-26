@@ -2,12 +2,26 @@ import {Suspense, lazy} from 'react';
 
 import {Skeleton} from 'antd';
 
+import {MenuInfo} from 'rc-menu/lib/interface';
+
+import {AlertEnum} from '@models/alert';
+import {useDeleteFleet} from '@models/api';
+
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {setAlert} from '@redux/reducers/alert';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 import {setEnvoyFleetInfoActiveTab} from '@redux/reducers/ui';
 
 import {InfoTabs} from '@components';
-import {ContentWrapper, InfoPaneCloseIcon, InfoPaneContainer} from '@components/AntdCustom';
+import {
+  ContentWrapper,
+  InfoActionMenu,
+  InfoPaneCloseIcon,
+  InfoPaneContainer,
+  InfoPanelActions,
+  InfoPanelDeleteIcon,
+  InfoPanelSettingsIcon,
+} from '@components/AntdCustom';
 
 import Colors from '@styles/colors';
 
@@ -21,13 +35,50 @@ const TABS_ITEMS = [
   {key: 'static-routes', label: 'Static Routes'},
 ];
 
+const menuItems = [
+  {
+    label: '',
+    icon: <InfoPanelSettingsIcon />,
+    key: 'submenu',
+    children: [{label: 'Delete', key: 'deleteResource', icon: <InfoPanelDeleteIcon />}],
+  },
+];
+
 const EnvoyFleetInfo: React.FC = () => {
   const dispatch = useAppDispatch();
   const activeTab = useAppSelector(state => state.ui.envoyFleetInfoActiveTab);
-
+  const selectedFleet = useAppSelector(state => state.main.selectedEnvoyFleet);
+  const {mutate: deleteFleet} = useDeleteFleet({namespace: selectedFleet?.namespace || ''});
   const onCloseHandler = () => {
     dispatch(selectEnvoyFleet(null));
     dispatch(setEnvoyFleetInfoActiveTab('crd'));
+  };
+
+  const onMenuItemClick = async (event: MenuInfo) => {
+    if (event.key === 'deleteResource') {
+      if (selectedFleet?.name) {
+        try {
+          await deleteFleet(selectedFleet.name);
+          dispatch(
+            setAlert({
+              title: 'Envoy fleet deleted successfully',
+              description: `${selectedFleet.name} was deleted successfully in ${selectedFleet.namespace} namespace!`,
+              type: AlertEnum.Success,
+            })
+          );
+          dispatch(selectEnvoyFleet(null));
+          dispatch(setEnvoyFleetInfoActiveTab('crd'));
+        } catch (e) {
+          dispatch(
+            setAlert({
+              title: 'Deleting Envoy fleet was failed',
+              description: `Something went wrong!`,
+              type: AlertEnum.Error,
+            })
+          );
+        }
+      }
+    }
   };
 
   return (
@@ -40,8 +91,16 @@ const EnvoyFleetInfo: React.FC = () => {
           {activeTab === 'apis' && <APIs />}
           {activeTab === 'static-routes' && <StaticRoutes />}
         </Suspense>
-
-        <InfoPaneCloseIcon onClick={onCloseHandler} />
+        <InfoPanelActions>
+          <InfoActionMenu
+            selectable={false}
+            mode="horizontal"
+            theme="dark"
+            items={menuItems}
+            onClick={onMenuItemClick}
+          />
+          <InfoPaneCloseIcon onClick={onCloseHandler} />
+        </InfoPanelActions>
       </InfoPaneContainer>
     </ContentWrapper>
   );

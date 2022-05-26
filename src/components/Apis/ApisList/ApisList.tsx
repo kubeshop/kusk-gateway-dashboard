@@ -21,11 +21,17 @@ const {Option} = Select;
 const ApisList: React.FC = () => {
   const dispatch = useAppDispatch();
   const apis = useAppSelector(state => state.main.apis);
+  const selectedApi = useAppSelector(state => state.main.selectedApi);
 
   const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
   const {data: namespaces} = useGetNamespaces({});
-  const {data, error, loading} = useGetApis({
+  const {
+    data,
+    error,
+    loading,
+    refetch: refetchAPi,
+  } = useGetApis({
     queryParams: {
       fleetname: selectedFleet?.name,
       fleetnamespace: selectedFleet?.namespace,
@@ -81,6 +87,14 @@ const ApisList: React.FC = () => {
   const showApiPublishModalHandler = () => {
     dispatch(openApiPublishModal());
   };
+
+  useEffect(() => {
+    if (!loading) {
+      refetchAPi();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedApi]);
 
   useEffect(() => {
     if (!data) {

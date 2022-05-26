@@ -1,10 +1,10 @@
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
 import {Skeleton} from 'antd';
 
 import {useGetEnvoyFleets, useGetNamespaces} from '@models/api';
 
-import {useAppDispatch} from '@redux/hooks';
+import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 
 import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
@@ -17,10 +17,15 @@ const {Option} = S.Select;
 
 const EnvoyFleetsList: React.FC = () => {
   const dispatch = useAppDispatch();
-
+  const selectedEnvoyFleet = useAppSelector(state => state.main.selectedEnvoyFleet);
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
   const {data: namespaces} = useGetNamespaces({});
-  const {data, error, loading} = useGetEnvoyFleets({queryParams: {namespace: selectedNamespace}});
+  const {
+    data,
+    error,
+    loading,
+    refetch: refetchEnvoyFleet,
+  } = useGetEnvoyFleets({queryParams: {namespace: selectedNamespace}});
 
   const renderedNamespacesOptions = useMemo(() => {
     return namespaces?.map(namespace => (
@@ -39,6 +44,14 @@ const EnvoyFleetsList: React.FC = () => {
     setSelectedNamespace(undefined);
     dispatch(selectEnvoyFleet(null));
   };
+
+  useEffect(() => {
+    if (!loading) {
+      refetchEnvoyFleet();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedEnvoyFleet]);
 
   return (
     <ContentWrapper>
