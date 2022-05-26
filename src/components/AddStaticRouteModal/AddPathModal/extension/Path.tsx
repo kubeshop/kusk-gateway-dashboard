@@ -1,13 +1,14 @@
-import { SUPPORTED_METHODS } from '@constants/constants';
-import { Checkbox, Form} from 'antd';
-import { useState } from 'react';
+import {useState} from 'react';
+
+import {Checkbox, Form} from 'antd';
+
+import {SUPPORTED_METHODS} from '@constants/constants';
 
 import * as S from './styled';
 
-interface IProps {
-}
+interface IProps {}
 
-const METHODS = SUPPORTED_METHODS.slice(0, -1).map(method => method.toUpperCase());
+const METHODS = SUPPORTED_METHODS.slice(0, -1);
 
 const Path: React.FC<IProps> = props => {
   const form = Form.useFormInstance();
@@ -25,10 +26,10 @@ const Path: React.FC<IProps> = props => {
 
   return (
     <>
-    <Form.Item label="Path" name={['path','name']} rules={[{required: true, message: 'type the path prefix'}]}>
-      <S.Input placeholder="Path for the route" />
-    </Form.Item>
-    <Form.Item
+      <Form.Item label="Path" name={['path', 'name']} rules={[{required: true, message: 'type the path prefix'}]}>
+        <S.Input placeholder="Path for the route" />
+      </Form.Item>
+      <Form.Item
         label={
           <div>
             Methods
@@ -43,7 +44,7 @@ const Path: React.FC<IProps> = props => {
         <Checkbox.Group>
           {METHODS.map(method => (
             <Checkbox key={method} value={method}>
-              {method}
+              {method.toUpperCase()}
             </Checkbox>
           ))}
         </Checkbox.Group>

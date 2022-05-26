@@ -13,8 +13,8 @@ import {StaticRouteStepType} from '@models/ui';
 import {setAlert} from '@redux/reducers/alert';
 import {closeStaticRouteModal} from '@redux/reducers/ui';
 
+import {FormStep} from '@components/FormStep';
 import {FormStepLayout} from '@components/FormStepLayout';
-import { FormStep } from '@components/FormStep';
 
 import AddPathModal from './AddPathModal/AddPathModal';
 import FleetInfo from './FleetInfo';
@@ -83,16 +83,16 @@ const AddStaticRouteModal = () => {
             name: fleetInfo.targetEnvoyFleet.split(',')[1],
             namespace: fleetInfo.targetEnvoyFleet.split(',')[0],
           },
-          hosts: hosts.hosts,
+          hosts: hosts.hosts || [],
           paths: paths.paths.map(path => {
             const methods = path.path.methods.reduce<Partial<PathMatch>>((acc, method) => {
               acc[method] = {
-                redirect: path.redirect,
+                redirect: path.redirect || undefined,
                 route: {
-                  cors: path.cors,
-                  qos: path.qos,
-                  upstream: path.upstream,
-                  websocket: path.websocket.websocket,
+                  cors: Object.values(path.cors).some(e => e) ? path.cors : undefined,
+                  qos: Object.values(path.qos).some(e => e) ? path.qos : undefined,
+                  upstream: path.upstream || undefined,
+                  websocket: path.websocket.websocket || undefined,
                 },
               };
               return acc;
@@ -111,7 +111,7 @@ const AddStaticRouteModal = () => {
         namespace: routeInfo.namespace,
         envoyFleetNamespace: fleetInfo.targetEnvoyFleet.split(',')[0],
         envoyFleetName: fleetInfo.targetEnvoyFleet.split(',')[1],
-        openapi: YAML.stringify(newStaticRouteDefinition),
+        openapi: YAML.stringify(JSON.parse(JSON.stringify(newStaticRouteDefinition))),
       });
       dispatch(
         setAlert({
