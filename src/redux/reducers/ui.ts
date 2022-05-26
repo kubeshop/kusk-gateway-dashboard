@@ -43,6 +43,14 @@ export const uiSlice = createSlice({
       state.envoyFleetInfoActiveTab = action.payload;
     },
 
+    closeEnvoyFleetModalModal: (state: Draft<UiState>) => {
+      state.envoyFleetModal.isOpen = false;
+    },
+
+    openEnvoyFleetModalModal: (state: Draft<UiState>) => {
+      state.envoyFleetModal.isOpen = true;
+    },
+
     setKuskExtensionsActiveKeys: (state: Draft<UiState>, action: PayloadAction<{keys: string[]; level: string}>) => {
       const {keys, level} = action.payload;
 
@@ -76,6 +84,8 @@ export const {
   setApiPublishModalActiveStep,
   setApiPublishModalLastCompletedStep,
   setEnvoyFleetInfoActiveTab,
+  openEnvoyFleetModalModal,
+  closeEnvoyFleetModalModal,
   setKuskExtensionsActiveKeys,
   setDashboardPaneConfiguration,
   setPublicApiDefinitionTableOfContentsHeight,

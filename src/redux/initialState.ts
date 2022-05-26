@@ -32,6 +32,9 @@ const initialUiState: UiState = {
     rightPaneWidth: 0.5,
   },
   envoyFleetInfoActiveTab: 'crd',
+  envoyFleetModal: {
+    isOpen: false,
+  },
   kuskExtensionsActiveKeys: {
     top: [],
     path: [],

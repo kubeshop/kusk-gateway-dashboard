@@ -10,5 +10,6 @@ export const Select = styled(RawSelect)`
 export const TitleFiltersContainer = styled.div`
   width: 100%;
   display: flex;
+  justify-content: space-between;
   margin-bottom: 30px;
 `;
