@@ -16,6 +16,8 @@ import {closeStaticRouteModal} from '@redux/reducers/ui';
 import {FormStep} from '@components/FormStep';
 import {FormStepLayout} from '@components/FormStepLayout';
 
+import {cleanEmptyFields} from '@utils/staticRoute';
+
 import AddPathModal from './AddPathModal/AddPathModal';
 import FleetInfo from './FleetInfo';
 import Hosts from './Hosts';
@@ -84,7 +86,7 @@ const AddStaticRouteModal = () => {
             namespace: fleetInfo.targetEnvoyFleet.split(',')[0],
           },
           hosts: hosts.hosts || [],
-          paths: paths.paths.map(path => {
+          paths: paths.paths.reduce<Record<string, PathMatch>>((accPaths, path) => {
             const methods = path.path.methods.reduce<Partial<PathMatch>>((acc, method) => {
               acc[method] = {
                 redirect: path.redirect || undefined,
@@ -97,29 +99,29 @@ const AddStaticRouteModal = () => {
               };
               return acc;
             }, {});
-            return {
-              [path.path.name]: {
-                ...methods,
-              },
+
+            accPaths[path.path.name] = {
+              ...methods,
             };
-          }),
+            return accPaths;
+          }, {}),
         },
       };
-
       await createStaticRoute({
         name: routeInfo.name,
         namespace: routeInfo.namespace,
         envoyFleetNamespace: fleetInfo.targetEnvoyFleet.split(',')[0],
         envoyFleetName: fleetInfo.targetEnvoyFleet.split(',')[1],
-        openapi: YAML.stringify(JSON.parse(JSON.stringify(newStaticRouteDefinition))),
+        openapi: YAML.stringify(cleanEmptyFields(JSON.parse(JSON.stringify(newStaticRouteDefinition)))),
       });
       dispatch(
         setAlert({
           title: 'Static route deployed successfully',
-          description: `${''} was deployed successfully in ${''} namespace!`,
+          description: `${routeInfo.name} was deployed successfully in ${routeInfo.namespace} namespace!`,
           type: AlertEnum.Success,
         })
       );
+      dispatch(closeStaticRouteModal());
     } catch (e) {
       dispatch(
         setAlert({
