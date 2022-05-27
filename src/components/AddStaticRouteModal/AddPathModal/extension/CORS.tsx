@@ -25,7 +25,7 @@ const StyledButton = styled(Button)`
   }
 `;
 
-const CORS: React.FC<IProps> = props => {
+const CORS: React.FC<IProps> = () => {
   const form = Form.useFormInstance();
 
   const [areCheckedAll, setAreCheckedAll] = useState(false);

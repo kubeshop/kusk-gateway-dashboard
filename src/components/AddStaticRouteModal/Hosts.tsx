@@ -2,7 +2,7 @@ import {FormList} from '@components';
 
 interface IProps {}
 
-const Hosts: React.FC<IProps> = props => {
+const Hosts: React.FC<IProps> = () => {
   return (
     <FormList
       addButtonText="Add host"

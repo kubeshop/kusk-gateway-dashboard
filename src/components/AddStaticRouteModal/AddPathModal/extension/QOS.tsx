@@ -4,7 +4,7 @@ import * as S from './styled';
 
 interface IProps {}
 
-const QOS: React.FC<IProps> = props => {
+const QOS: React.FC<IProps> = () => {
   return (
     <>
       <Form.Item label="Idle timeout" name={['qos', 'idle_timeout']}>

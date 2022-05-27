@@ -70,7 +70,7 @@ export const uiSlice = createSlice({
     setStaticRouteModalActiveStep: (state: Draft<UiState>, action: PayloadAction<StaticRouteStepType>) => {
       state.staticRouteModal.activeStep = action.payload;
     },
-    setStaticRouteModalLastCompleteStep: (state: Draft<UiState>, action: PayloadAction<StaticRouteStepType>) => {
+    setStaticRouteModalLastCompleteStep: (state: Draft<UiState>) => {
       state.staticRouteModal.lastCompletedStep = state.staticRouteModal.activeStep;
     },
   },

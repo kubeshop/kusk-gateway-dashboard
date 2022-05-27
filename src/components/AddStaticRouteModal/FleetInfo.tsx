@@ -4,7 +4,7 @@ import {useGetEnvoyFleets} from '@models/api';
 
 interface IProps {}
 
-const FleetInfo: React.FC<IProps> = props => {
+const FleetInfo: React.FC<IProps> = () => {
   const form = Form.useFormInstance();
   const {data: fleetData} = useGetEnvoyFleets({});
 

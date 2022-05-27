@@ -10,7 +10,7 @@ interface IProps {}
 
 const METHODS = SUPPORTED_METHODS.slice(0, -1);
 
-const Path: React.FC<IProps> = props => {
+const Path: React.FC<IProps> = () => {
   const form = Form.useFormInstance();
   const [areCheckedAll, setAreCheckedAll] = useState(false);
 
