@@ -1,6 +1,6 @@
 import React, {Suspense, lazy} from 'react';
 
-import {Skeleton} from 'antd';
+import {Modal, Skeleton} from 'antd';
 
 import {MenuInfo} from 'rc-menu/lib/interface';
 
@@ -59,29 +59,34 @@ const ApiInfo: React.FC = () => {
 
   const onMenuItemClick = async (event: MenuInfo) => {
     if (event.key === 'deleteResource') {
-      if (selectedAPI?.name) {
-        try {
-          await deleteAPI(selectedAPI.name);
-          dispatch(
-            setAlert({
-              title: 'API deleted successfully',
-              description: `${selectedAPI.name} was deleted successfully in ${selectedAPI.namespace} namespace!`,
-              type: AlertEnum.Success,
-            })
-          );
+      Modal.confirm({
+        title: `Do you want to delete ${selectedAPI?.name} api?`,
+        onOk: async () => {
+          if (selectedAPI?.name) {
+            try {
+              await deleteAPI(selectedAPI.name);
+              dispatch(
+                setAlert({
+                  title: 'API deleted successfully',
+                  description: `${selectedAPI.name} was deleted successfully in ${selectedAPI.namespace} namespace!`,
+                  type: AlertEnum.Success,
+                })
+              );
 
-          dispatch(selectApi(null));
-          dispatch(setApiInfoActiveTab('crd'));
-        } catch (e) {
-          dispatch(
-            setAlert({
-              title: 'Deleting API was failed',
-              description: `Something went wrong!`,
-              type: AlertEnum.Error,
-            })
-          );
-        }
-      }
+              dispatch(selectApi(null));
+              dispatch(setApiInfoActiveTab('crd'));
+            } catch (e) {
+              dispatch(
+                setAlert({
+                  title: 'Deleting API was failed',
+                  description: `Something went wrong!`,
+                  type: AlertEnum.Error,
+                })
+              );
+            }
+          }
+        },
+      });
     }
   };
 

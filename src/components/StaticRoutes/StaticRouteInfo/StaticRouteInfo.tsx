@@ -1,6 +1,6 @@
 import {Suspense, lazy} from 'react';
 
-import {Skeleton} from 'antd';
+import {Modal, Skeleton} from 'antd';
 
 import {MenuInfo} from 'rc-menu/lib/interface';
 
@@ -52,26 +52,31 @@ const StaticRouteInfo: React.FC = () => {
   const onMenuItemClick = async (event: MenuInfo) => {
     if (event.key === 'deleteResource') {
       if (selectedStaticRoute?.name) {
-        try {
-          await deleteStaticRoute(selectedStaticRoute.name);
-          dispatch(
-            setAlert({
-              title: 'Static Route deleted successfully',
-              description: `${selectedStaticRoute.name} was deleted successfully in ${selectedStaticRoute.namespace} namespace!`,
-              type: AlertEnum.Success,
-            })
-          );
-          dispatch(selectStaticRoute(null));
-          dispatch(setStaticRouteInfoActiveTab('crd'));
-        } catch (e) {
-          dispatch(
-            setAlert({
-              title: 'Deleting Static Route was failed',
-              description: `Something went wrong!`,
-              type: AlertEnum.Error,
-            })
-          );
-        }
+        Modal.confirm({
+          title: `Do you want to delete ${selectedStaticRoute.name} static route?`,
+          onOk: async () => {
+            try {
+              await deleteStaticRoute(selectedStaticRoute.name);
+              dispatch(
+                setAlert({
+                  title: 'Static Route deleted successfully',
+                  description: `${selectedStaticRoute.name} was deleted successfully in ${selectedStaticRoute.namespace} namespace!`,
+                  type: AlertEnum.Success,
+                })
+              );
+              dispatch(selectStaticRoute(null));
+              dispatch(setStaticRouteInfoActiveTab('crd'));
+            } catch (e) {
+              dispatch(
+                setAlert({
+                  title: 'Deleting Static Route was failed',
+                  description: `Something went wrong!`,
+                  type: AlertEnum.Error,
+                })
+              );
+            }
+          },
+        });
       }
     }
   };

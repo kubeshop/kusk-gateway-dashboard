@@ -1,6 +1,6 @@
 import {Suspense, lazy} from 'react';
 
-import {Skeleton} from 'antd';
+import {Modal, Skeleton} from 'antd';
 
 import {MenuInfo} from 'rc-menu/lib/interface';
 
@@ -57,26 +57,31 @@ const EnvoyFleetInfo: React.FC = () => {
   const onMenuItemClick = async (event: MenuInfo) => {
     if (event.key === 'deleteResource') {
       if (selectedFleet?.name) {
-        try {
-          await deleteFleet(selectedFleet.name);
-          dispatch(
-            setAlert({
-              title: 'Envoy fleet deleted successfully',
-              description: `${selectedFleet.name} was deleted successfully in ${selectedFleet.namespace} namespace!`,
-              type: AlertEnum.Success,
-            })
-          );
-          dispatch(selectEnvoyFleet(null));
-          dispatch(setEnvoyFleetInfoActiveTab('crd'));
-        } catch (e) {
-          dispatch(
-            setAlert({
-              title: 'Deleting Envoy fleet was failed',
-              description: `Something went wrong!`,
-              type: AlertEnum.Error,
-            })
-          );
-        }
+        Modal.confirm({
+          title: `Do you want to delete ${selectedFleet.name} envoy fleet?`,
+          onOk: async () => {
+            try {
+              await deleteFleet(selectedFleet.name);
+              dispatch(
+                setAlert({
+                  title: 'Envoy fleet deleted successfully',
+                  description: `${selectedFleet.name} was deleted successfully in ${selectedFleet.namespace} namespace!`,
+                  type: AlertEnum.Success,
+                })
+              );
+              dispatch(selectEnvoyFleet(null));
+              dispatch(setEnvoyFleetInfoActiveTab('crd'));
+            } catch (e) {
+              dispatch(
+                setAlert({
+                  title: 'Deleting Envoy fleet was failed',
+                  description: `Something went wrong!`,
+                  type: AlertEnum.Error,
+                })
+              );
+            }
+          },
+        });
       }
     }
   };
