@@ -38,6 +38,11 @@ const initialUiState: UiState = {
     operation: [],
   },
   staticRouteInfoActiveTab: 'crd',
+  staticRouteModal: {
+    isOpen: false,
+    activeStep: 'routeInfo',
+    lastCompletedStep: 'routeInfo'
+  },
   tableOfContentsHeight: {
     apiDefinition: 500,
     publicApiDefinition: 500,

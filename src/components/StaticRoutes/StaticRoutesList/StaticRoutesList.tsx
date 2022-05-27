@@ -1,12 +1,14 @@
-import {useEffect, useMemo, useState} from 'react';
+import {Suspense, useEffect, useMemo, useState} from 'react';
 
-import {Skeleton} from 'antd';
+import {Button, Skeleton} from 'antd';
 
 import {useGetNamespaces, useGetStaticRoutes} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectStaticRoute, setStaticRoutes} from '@redux/reducers/main';
+import {openStaticRouteModal} from '@redux/reducers/ui';
 
+import {AddStaticRouteModal} from '@components/AddStaticRouteModal';
 import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
 
 import StaticRoutesListTable from './StaticRoutesListTable';
@@ -18,7 +20,10 @@ const {Option} = S.Select;
 const StaticRoutesList: React.FC = () => {
   const dispatch = useAppDispatch();
   const staticRoutes = useAppSelector(state => state.main.staticRoutes);
+
+  const isStaticRouteModalVisible = useAppSelector(state => state.ui.staticRouteModal.isOpen);
   const selectedStaticRoute = useAppSelector(state => state.main.selectedStaticRoute);
+
   const {data: namespaces} = useGetNamespaces({});
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
 
@@ -64,6 +69,10 @@ const StaticRoutesList: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
+  const handlePublishStaticRoute = () => {
+    dispatch(openStaticRouteModal());
+  };
+
   return (
     <ContentWrapper>
       <PageTitle>Static Routes</PageTitle>
@@ -85,6 +94,9 @@ const StaticRoutesList: React.FC = () => {
             {renderedNamespacesOptions}
           </S.Select>
         )}
+        <Button type="primary" onClick={handlePublishStaticRoute}>
+          Publish New Static Route
+        </Button>
       </S.TitleFiltersContainer>
 
       {loading && !staticRoutes ? (
@@ -98,6 +110,7 @@ const StaticRoutesList: React.FC = () => {
           />
         )
       )}
+      <Suspense fallback={null}>{isStaticRouteModalVisible && <AddStaticRouteModal />}</Suspense>
     </ContentWrapper>
   );
 };

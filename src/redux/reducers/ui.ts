@@ -1,7 +1,7 @@
 import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from '@models/dashboard';
-import {DashboardPaneConfiguration, StepType, UiState} from '@models/ui';
+import {DashboardPaneConfiguration, StaticRouteStepType, StepType, UiState} from '@models/ui';
 
 import initialState from '@redux/initialState';
 
@@ -56,6 +56,23 @@ export const uiSlice = createSlice({
     setStaticRouteInfoActiveTab: (state: Draft<UiState>, action: PayloadAction<StaticRouteInfoTabs>) => {
       state.staticRouteInfoActiveTab = action.payload;
     },
+    closeStaticRouteModal: (state: Draft<UiState>) => {
+      state.staticRouteModal.isOpen = false;
+    },
+
+    openStaticRouteModal: (state: Draft<UiState>) => {
+      state.staticRouteModal.isOpen = true;
+    },
+    nextStaticRouteModalActiveStep: (state: Draft<UiState>, action: PayloadAction<StaticRouteStepType>) => {
+      state.staticRouteModal.lastCompletedStep = state.staticRouteModal.activeStep;
+      state.staticRouteModal.activeStep = action.payload;
+    },
+    setStaticRouteModalActiveStep: (state: Draft<UiState>, action: PayloadAction<StaticRouteStepType>) => {
+      state.staticRouteModal.activeStep = action.payload;
+    },
+    setStaticRouteModalLastCompleteStep: (state: Draft<UiState>) => {
+      state.staticRouteModal.lastCompletedStep = state.staticRouteModal.activeStep;
+    },
   },
   extraReducers: builder => {
     builder.addCase(selectApi.type, state => {
@@ -80,5 +97,10 @@ export const {
   setDashboardPaneConfiguration,
   setPublicApiDefinitionTableOfContentsHeight,
   setStaticRouteInfoActiveTab,
+  openStaticRouteModal,
+  closeStaticRouteModal,
+  setStaticRouteModalActiveStep,
+  setStaticRouteModalLastCompleteStep,
+  nextStaticRouteModalActiveStep,
 } = uiSlice.actions;
 export default uiSlice.reducer;

@@ -14,6 +14,7 @@ export interface ServiceItem {
   name: string;
   status: 'available' | 'unavailable';
   namespace: string;
+  serviceType: 'ClusterIP' | 'LoadBalancer';
   ports: ServicePortItem[];
 }
 
@@ -336,6 +337,26 @@ export type UseGetEnvoyFleetsProps = Omit<
  */
 export const useGetEnvoyFleets = (props: UseGetEnvoyFleetsProps) =>
   useGet<EnvoyFleetItem[], unknown, GetEnvoyFleetsQueryParams, void>(`/fleets`, props);
+
+export type CreateFleetProps = Omit<MutateProps<EnvoyFleetItem, string, void, ServiceItem, void>, 'path' | 'verb'>;
+
+/**
+ * create new fleet
+ */
+export const CreateFleet = (props: CreateFleetProps) => (
+  <Mutate<EnvoyFleetItem, string, void, ServiceItem, void> verb="POST" path="/fleets" {...props} />
+);
+
+export type UseCreateFleetProps = Omit<
+  UseMutateProps<EnvoyFleetItem, string, void, ServiceItem, void>,
+  'path' | 'verb'
+>;
+
+/**
+ * create new fleet
+ */
+export const useCreateFleet = (props: UseCreateFleetProps) =>
+  useMutate<EnvoyFleetItem, string, void, ServiceItem, void>('POST', `/fleets`, props);
 
 export interface GetEnvoyFleetPathParams {
   /**
