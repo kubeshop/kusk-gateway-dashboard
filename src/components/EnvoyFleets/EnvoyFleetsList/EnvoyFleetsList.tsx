@@ -19,6 +19,8 @@ const {Option} = S.Select;
 const EnvoyFleetsList: React.FC = () => {
   const dispatch = useAppDispatch();
   const selectedEnvoyFleet = useAppSelector(state => state.main.selectedEnvoyFleet);
+  const isEnvoyFleetPublishModalVisible = useAppSelector(state => state.ui.envoyFleetModal.isOpen);
+
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
 
   const {data: namespaces} = useGetNamespaces({});
@@ -52,12 +54,12 @@ const EnvoyFleetsList: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && !isEnvoyFleetPublishModalVisible) {
       refetchEnvoyFleet();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedEnvoyFleet]);
+  }, [selectedEnvoyFleet, isEnvoyFleetPublishModalVisible]);
 
   return (
     <ContentWrapper>

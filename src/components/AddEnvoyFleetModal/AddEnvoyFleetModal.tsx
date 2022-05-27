@@ -59,6 +59,7 @@ const AddEnvoyFleetModal = () => {
 
     try {
       await createFleet({...fleetInfo, ports: portsList, status: 'available'});
+      dispatch(closeEnvoyFleetModalModal());
       dispatch(
         setAlert({
           title: 'The Envoy fleet deployed successfully',
