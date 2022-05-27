@@ -53,11 +53,11 @@ const StaticRoutesList: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && !isStaticRouteModalVisible) {
       refetchStaticRoutes();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStaticRoute]);
+  }, [selectedStaticRoute, isStaticRouteModalVisible]);
 
   useEffect(() => {
     if (!data) {

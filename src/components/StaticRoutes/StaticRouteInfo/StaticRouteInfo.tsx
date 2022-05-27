@@ -54,6 +54,7 @@ const StaticRouteInfo: React.FC = () => {
       if (selectedStaticRoute?.name) {
         Modal.confirm({
           title: `Do you want to delete ${selectedStaticRoute.name} static route?`,
+          icon: <InfoPanelDeleteIcon />,
           onOk: async () => {
             try {
               await deleteStaticRoute(selectedStaticRoute.name);
