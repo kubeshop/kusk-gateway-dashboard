@@ -15,6 +15,9 @@ interface UiState {
   apiInfoActiveTab: ApiInfoTabs;
   dashboardPaneConfiguration: DashboardPaneConfiguration;
   envoyFleetInfoActiveTab: EnvoyFleetInfoTabs;
+  envoyFleetModal: {
+    isOpen: boolean;
+  };
   kuskExtensionsActiveKeys: {
     [key: string]: string[];
   };

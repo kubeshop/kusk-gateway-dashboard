@@ -1,11 +1,12 @@
 import {useEffect, useMemo, useState} from 'react';
 
-import {Skeleton} from 'antd';
+import {Button, Skeleton} from 'antd';
 
 import {useGetEnvoyFleets, useGetNamespaces} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
+import {openEnvoyFleetModalModal} from '@redux/reducers/ui';
 
 import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
 
@@ -19,6 +20,7 @@ const EnvoyFleetsList: React.FC = () => {
   const dispatch = useAppDispatch();
   const selectedEnvoyFleet = useAppSelector(state => state.main.selectedEnvoyFleet);
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
+
   const {data: namespaces} = useGetNamespaces({});
   const {
     data,
@@ -43,6 +45,10 @@ const EnvoyFleetsList: React.FC = () => {
   const onNamespaceSelectionClearHandler = () => {
     setSelectedNamespace(undefined);
     dispatch(selectEnvoyFleet(null));
+  };
+
+  const onPublishEnvoyFleetHandle = () => {
+    dispatch(openEnvoyFleetModalModal());
   };
 
   useEffect(() => {
@@ -74,6 +80,9 @@ const EnvoyFleetsList: React.FC = () => {
             {renderedNamespacesOptions}
           </S.Select>
         )}
+        <Button type="primary" onClick={onPublishEnvoyFleetHandle}>
+          Publish New Envoy Fleet
+        </Button>
       </S.TitleFiltersContainer>
 
       {loading ? (
