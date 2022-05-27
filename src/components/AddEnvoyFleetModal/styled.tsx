@@ -1,6 +1,6 @@
 import {Alert as RawAlert, Modal as RawModal} from 'antd';
 
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
 import {GlobalScrollbarStyle} from '@utils/scrollbar';
 
@@ -34,9 +34,10 @@ export const Label = styled.div`
 `;
 
 export const Modal = styled(RawModal)`
+  top: min(10%, 100px);
   & .ant-modal-body {
+    height: 70vh;
     overflow-y: auto;
-
     ${GlobalScrollbarStyle}
   }
 `;
@@ -51,4 +52,17 @@ export const StepsContainer = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   ${GlobalScrollbarStyle};
+`;
+
+export const FormStepContainer = styled.div<{$visible: boolean}>`
+  ${({$visible}) => {
+    if ($visible) {
+      return css`
+        display: block;
+      `;
+    }
+    return css`
+      display: none;
+    `;
+  }}
 `;
