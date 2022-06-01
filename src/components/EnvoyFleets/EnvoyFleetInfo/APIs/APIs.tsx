@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
+import {useGetApisQuery} from '@redux/services/enhancedApi';
 
 import {getApiKey} from '@utils/api';
 
@@ -15,7 +16,7 @@ const columns = [
 
 const APIs: React.FC = () => {
   const dispatch = useAppDispatch();
-  const apis = useAppSelector(state => state.main.apis);
+  const {data: apis = []} = useGetApisQuery({});
   const envoyFleetApis = useAppSelector(state => state.main.selectedEnvoyFleet?.apis);
 
   const navigate = useNavigate();

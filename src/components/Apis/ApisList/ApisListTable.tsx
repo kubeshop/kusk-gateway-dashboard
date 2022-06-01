@@ -1,9 +1,8 @@
 import {useMemo} from 'react';
 
-import {ApiItem} from '@models/api';
-
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
+import {ApiItem} from '@redux/services/kuskApi';
 
 import {ListTableColumnLabel} from '@components';
 

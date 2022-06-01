@@ -1,12 +1,12 @@
 import {Form, Select, Tag} from 'antd';
 
-import {useGetEnvoyFleets} from '@models/api';
+import {useGetEnvoyFleetsQuery} from '@redux/services/enhancedApi';
 
 interface IProps {}
 
 const FleetInfo: React.FC<IProps> = () => {
   const form = Form.useFormInstance();
-  const {data: fleetData} = useGetEnvoyFleets({});
+  const {data: fleetData} = useGetEnvoyFleetsQuery({namespace: ''});
 
   return (
     <Form.Item

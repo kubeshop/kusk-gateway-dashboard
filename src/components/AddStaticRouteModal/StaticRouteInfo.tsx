@@ -1,9 +1,9 @@
 import {Form, Input, Select} from 'antd';
 
-import {useGetNamespaces} from '@models/api';
+import {useGetNamespacesQuery} from '@redux/services/enhancedApi';
 
 const StaticRouteInfo = (): JSX.Element => {
-  const {data: namespaces} = useGetNamespaces({});
+  const {data: namespaces} = useGetNamespacesQuery();
   return (
     <>
       <Form.Item
