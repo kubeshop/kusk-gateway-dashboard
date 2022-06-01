@@ -2,9 +2,9 @@ import {useEffect} from 'react';
 
 import {Form, FormInstance, Select} from 'antd';
 
-import {ApiItem, useGetNamespaces} from '@models/api';
-
 import {useAppSelector} from '@redux/hooks';
+import {useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
+import {ApiItem} from '@redux/services/kuskApi';
 
 import * as S from './ApiInfo.styled';
 
@@ -16,8 +16,8 @@ const ApiInfo: React.FC<IProps> = props => {
   const {form} = props;
 
   const apiContent = useAppSelector(state => state.main.newApiContent);
-  const apis = useAppSelector(state => state.main.apis);
-  const {data: namespaces} = useGetNamespaces({});
+  const {data: apis} = useGetApisQuery({});
+  const {data: namespaces} = useGetNamespacesQuery();
 
   useEffect(() => {
     if (!apiContent) {
@@ -43,7 +43,7 @@ const ApiInfo: React.FC<IProps> = props => {
               validator(_, value) {
                 const namespace = form.getFieldValue('namespace') || 'default';
 
-                if (checkDuplicateAPI(apis, `${namespace}-${value}`)) {
+                if (checkDuplicateAPI(apis || [], `${namespace}-${value}`)) {
                   return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
                 }
 

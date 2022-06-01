@@ -6,18 +6,19 @@ import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
 import {AlertEnum} from '@models/alert';
-import {ApiItem, useDeployApi} from '@models/api';
 import {ApiContent} from '@models/main';
 import {StepType} from '@models/ui';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
-import {setApis, setNewApiContent} from '@redux/reducers/main';
+import {setNewApiContent} from '@redux/reducers/main';
 import {
   closeApiPublishModal,
   setApiPublishModalActiveStep,
   setApiPublishModalLastCompletedStep,
 } from '@redux/reducers/ui';
+import {useDeployApiMutation} from '@redux/services/enhancedApi';
+import {ApiItem} from '@redux/services/kuskApi';
 
 import FleetInfo from './FleetInfo';
 import Step from './Step';
@@ -71,7 +72,6 @@ const ApiPublishModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const activeStep = useAppSelector(state => state.ui.apiPublishModal.activeStep);
   const apiContent = useAppSelector(state => state.main.newApiContent);
-  const apis = useAppSelector(state => state.main.apis);
   const lastCompletedStep = useAppSelector(state => state.ui.apiPublishModal.lastCompletedStep);
 
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -82,7 +82,7 @@ const ApiPublishModal: React.FC = () => {
   const [targetSelection, setTargetSelection] = useState<string>('upstream');
   const [upstreamReference, setUpstreamReference] = useState<string>('service');
 
-  const {mutate: deployAPI} = useDeployApi({});
+  const [deployAPI] = useDeployApiMutation();
 
   const [form] = Form.useForm();
 
@@ -328,11 +328,10 @@ const ApiPublishModal: React.FC = () => {
           openapi: YAML.stringify(cleanDeep(newApiContent.openapi)),
         };
 
-        deployAPI(body)
+        deployAPI({body})
           .then((response: any) => {
             const apiData: ApiItem = response;
 
-            dispatch(setApis([...apis, apiData]));
             dispatch(closeApiPublishModal());
             dispatch(setApiPublishModalActiveStep('openApiSpec'));
             dispatch(setNewApiContent(null));

@@ -6,10 +6,10 @@ import {Button, Form, Input, Radio, Select, Space, Steps} from 'antd';
 import {CheckCircleOutlined, InfoCircleOutlined, MinusCircleOutlined} from '@ant-design/icons';
 
 import {AlertEnum} from '@models/alert';
-import {ServicePortItem, useCreateFleet, useGetNamespaces} from '@models/api';
 
 import {setAlert} from '@redux/reducers/alert';
 import {closeEnvoyFleetModalModal} from '@redux/reducers/ui';
+import {useCreateFleetMutation, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 
 import * as S from './styled';
 
@@ -29,8 +29,8 @@ interface FleetForm {
 const AddEnvoyFleetModal = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm<FleetForm>();
-  const {data: namespaces} = useGetNamespaces({});
-  const {mutate: createFleet, loading: isLoadingNewFleet} = useCreateFleet({});
+  const {data: namespaces} = useGetNamespacesQuery();
+  const [createFleet, {isLoading: isLoadingNewFleet}] = useCreateFleetMutation();
   const [activeStep, setActiveStep] = useState<FormSteps>('fleetInfo');
 
   const onBackHandler = () => {
@@ -49,7 +49,7 @@ const AddEnvoyFleetModal = () => {
   const onSubmitHandler = async () => {
     const {fleetInfo, portsInfo} = await form.validateFields();
     form.submit();
-    const portsList: ServicePortItem[] = portsInfo.ports.map(p => ({
+    const portsList = portsInfo.ports.map(p => ({
       port: Number(p),
       name: 'fleet',
       nodePort: 1,
@@ -58,7 +58,7 @@ const AddEnvoyFleetModal = () => {
     }));
 
     try {
-      await createFleet({...fleetInfo, ports: portsList, status: 'available'});
+      await createFleet({serviceItem: {...fleetInfo, ports: portsList, status: 'available'}});
       dispatch(closeEnvoyFleetModalModal());
       dispatch(
         setAlert({

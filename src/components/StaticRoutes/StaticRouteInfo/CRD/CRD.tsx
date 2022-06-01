@@ -3,9 +3,8 @@ import {Skeleton} from 'antd';
 import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
-import {useGetStaticRouteCRD} from '@models/api';
-
 import {useAppSelector} from '@redux/hooks';
+import {useGetStaticRouteCrdQuery} from '@redux/services/enhancedApi';
 
 import {InfoPaneCRD} from '@components';
 import {ErrorLabel} from '@components/AntdCustom';
@@ -13,17 +12,17 @@ import {ErrorLabel} from '@components/AntdCustom';
 const CRD: React.FC = () => {
   const selectedStaticRoute = useAppSelector(state => state.main.selectedStaticRoute);
 
-  const {data, error, loading} = useGetStaticRouteCRD({
+  const {data, error, isLoading} = useGetStaticRouteCrdQuery({
     name: selectedStaticRoute?.name || '',
     namespace: selectedStaticRoute?.namespace || '',
   });
 
-  return loading ? (
+  return isLoading ? (
     <Skeleton />
   ) : error ? (
-    <ErrorLabel>{error.message}</ErrorLabel>
+    <ErrorLabel>{error}</ErrorLabel>
   ) : (
-    data && <InfoPaneCRD yaml={YAML.stringify(cleanDeep(data))} />
+    <InfoPaneCRD yaml={YAML.stringify(cleanDeep(data))} />
   );
 };
 
