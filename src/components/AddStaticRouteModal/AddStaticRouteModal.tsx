@@ -67,13 +67,16 @@ const AddStaticRouteModal = () => {
 
   const activeStepIndex = useMemo(() => orderedSteps.indexOf(activeStep), [activeStep]);
   const disablePublishButton = useMemo(
-    () => isPublishingStaticRoute || requiredSteps.includes(activeStep),
+    () =>
+      isPublishingStaticRoute ||
+      (requiredSteps.includes(activeStep) && requiredSteps.indexOf(activeStep) < requiredSteps.length - 1),
     [isPublishingStaticRoute, activeStep]
   );
+
   const onSubmitHandler = async () => {
+    const {routeInfo, fleetInfo, paths, hosts} = await form.validateFields();
     try {
       form.submit();
-      const {routeInfo, fleetInfo, paths, hosts} = await form.validateFields();
       const newStaticRouteDefinition: StaticRoute = {
         apiVersion: 'gateway.kusk.io/v1alpha1',
         kind: 'StaticRoute',

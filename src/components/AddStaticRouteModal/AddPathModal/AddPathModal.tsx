@@ -3,10 +3,10 @@ import {useMemo, useState} from 'react';
 import {Button, Form, Radio, Steps} from 'antd';
 
 import {StaticRouteForm} from '@models/main';
-import { PathModalStepType } from '@models/ui';
+import {PathModalStepType} from '@models/ui';
 
+import {FormStep} from '@components/FormStep';
 import {FormStepLayout} from '@components/FormStepLayout';
-import { FormStep } from '@components/FormStep';
 
 import CORS from './extension/CORS';
 import Path from './extension/Path';
@@ -66,9 +66,13 @@ const AddPathModal = ({setAddPathModal}: IProps): JSX.Element => {
   const [upstreamReference, setUpstreamReference] = useState<string>('service');
   const [redirectTabSelection, setRedirectTabSelection] = useState<string>('path_redirect');
   const activeStepIndex = useMemo(() => orderedSteps.indexOf(activeStep), [activeStep]);
-  const disableAddPathButton = useMemo(() => requiredSteps.includes(activeStep), [activeStep]);
+  const disableAddPathButton = useMemo(
+    () => requiredSteps.includes(activeStep) && requiredSteps.indexOf(activeStep) < requiredSteps.length - 1,
+    [activeStep]
+  );
 
-  const onSubmitHandler = () => {
+  const onSubmitHandler = async () => {
+    await form.validateFields();
     form.submit();
     setAddPathModal(false);
   };
@@ -117,7 +121,7 @@ const AddPathModal = ({setAddPathModal}: IProps): JSX.Element => {
           <Steps direction="vertical" current={activeStepIndex}>
             {steps.map(step => (
               <FormStep
-                key={`${step.step.toString()}`} 
+                key={`${step.step.toString()}`}
                 step={step.step}
                 documentationLink={step.documentationLink}
                 orderedSteps={orderedSteps}
