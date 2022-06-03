@@ -118,7 +118,7 @@ const AddStaticRouteModal = () => {
           envoyFleetName: fleetInfo.targetEnvoyFleet.split(',')[1],
           openapi: YAML.stringify(cleanEmptyFields(JSON.parse(JSON.stringify(newStaticRouteDefinition)))),
         },
-      });
+      }).unwrap();
       dispatch(
         setAlert({
           title: 'Static route deployed successfully',

@@ -58,7 +58,7 @@ const AddEnvoyFleetModal = () => {
     }));
 
     try {
-      await createFleet({serviceItem: {...fleetInfo, ports: portsList, status: 'available'}});
+      await createFleet({serviceItem: {...fleetInfo, ports: portsList, status: 'available'}}).unwrap();
       dispatch(closeEnvoyFleetModalModal());
       dispatch(
         setAlert({

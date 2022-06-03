@@ -60,7 +60,7 @@ const StaticRouteInfo: React.FC = () => {
               await deleteStaticRoute({
                 namespace: selectedStaticRoute?.namespace || '',
                 name: selectedStaticRoute.name,
-              });
+              }).unwrap();
               dispatch(
                 setAlert({
                   title: 'Static Route deleted successfully',
