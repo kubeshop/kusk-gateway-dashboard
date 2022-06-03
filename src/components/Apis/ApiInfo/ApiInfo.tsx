@@ -64,7 +64,7 @@ const ApiInfo: React.FC = () => {
         onOk: async () => {
           if (selectedAPI?.name) {
             try {
-              await deleteAPI({namespace: selectedAPI?.namespace, name: selectedAPI.name});
+              await deleteAPI({namespace: selectedAPI?.namespace, name: selectedAPI.name}).unwrap();
               dispatch(
                 setAlert({
                   title: 'API deleted successfully',

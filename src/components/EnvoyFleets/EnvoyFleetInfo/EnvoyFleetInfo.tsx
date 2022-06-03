@@ -61,7 +61,7 @@ const EnvoyFleetInfo: React.FC = () => {
           title: `Do you want to delete ${selectedFleet.name} envoy fleet?`,
           onOk: async () => {
             try {
-              await deleteFleet({namespace: selectedFleet?.namespace || '', name: selectedFleet.name});
+              await deleteFleet({namespace: selectedFleet?.namespace || '', name: selectedFleet.name}).unwrap();
               dispatch(
                 setAlert({
                   title: 'Envoy fleet deleted successfully',
