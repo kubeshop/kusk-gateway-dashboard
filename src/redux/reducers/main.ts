@@ -2,10 +2,10 @@ import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 import {KUSK_SETTINGS_TARGET_API} from '@constants/constants';
 
-import {ApiItem, EnvoyFleetItem, StaticRouteItem} from '@models/api';
-import {ApiContent, MainState, ServicesData} from '@models/main';
+import {ApiContent, MainState} from '@models/main';
 
 import initialState from '@redux/initialState';
+import {ApiItem, EnvoyFleetItem, StaticRouteItem} from '@redux/services/kuskApi';
 
 export const mainSlice = createSlice({
   name: 'main',
@@ -29,29 +29,11 @@ export const mainSlice = createSlice({
         localStorage.removeItem(KUSK_SETTINGS_TARGET_API);
       }
     },
-    setApis: (state: Draft<MainState>, action: PayloadAction<ApiItem[]>) => {
-      state.apis = action.payload;
-    },
     setNewApiContent: (state: Draft<MainState>, action: PayloadAction<ApiContent | null>) => {
       state.newApiContent = action.payload;
-    },
-    setServices: (state: Draft<MainState>, action: PayloadAction<ServicesData>) => {
-      state.services = action.payload;
-    },
-    setStaticRoutes: (state: Draft<MainState>, action: PayloadAction<StaticRouteItem[]>) => {
-      state.staticRoutes = action.payload;
     },
   },
 });
 
-export const {
-  selectApi,
-  selectEnvoyFleet,
-  selectStaticRoute,
-  setApiEndpoint,
-  setApis,
-  setNewApiContent,
-  setServices,
-  setStaticRoutes,
-} = mainSlice.actions;
+export const {selectApi, selectEnvoyFleet, selectStaticRoute, setApiEndpoint, setNewApiContent} = mainSlice.actions;
 export default mainSlice.reducer;

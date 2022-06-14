@@ -1,10 +1,23 @@
+import React from 'react';
+
 import {Button, Collapse, Form, Tag, Typography} from 'antd';
+
+import {InfoPanelDeleteIcon} from '@components/AntdCustom';
 
 interface IProps {
   setAddPathModal: (open: boolean) => void;
 }
 
 const Paths: React.FC<IProps> = ({setAddPathModal}) => {
+  const form = Form.useFormInstance();
+
+  const handleDeletePath = (event: React.MouseEvent<HTMLSpanElement>, path: any) => {
+    event.stopPropagation();
+    const {paths} = form.getFieldValue('paths');
+    const updatedPaths = paths.filter((p: any) => p.path.name !== path.path.name);
+    form.setFieldsValue({paths: {paths: updatedPaths}});
+  };
+
   return (
     <>
       <Form.Item
@@ -31,8 +44,12 @@ const Paths: React.FC<IProps> = ({setAddPathModal}) => {
           const paths = getFieldValue(['paths', 'paths']) || [];
           return paths.length ? (
             <Collapse defaultActiveKey={['0']}>
-              {paths.map((path: any, index: number) => (
-                <Collapse.Panel header={path.path.name} key={index.toString()}>
+              {paths.map((path: any) => (
+                <Collapse.Panel
+                  header={path.path.name}
+                  key={path.name}
+                  extra={<InfoPanelDeleteIcon onClick={event => handleDeletePath(event, path)} />}
+                >
                   {path.path.methods.map((method: string) => (
                     <div style={{margin: ' 8px 0'}} key={method}>
                       <Typography.Text>

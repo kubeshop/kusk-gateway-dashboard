@@ -5,12 +5,12 @@ import {Modal, Skeleton} from 'antd';
 import {MenuInfo} from 'rc-menu/lib/interface';
 
 import {AlertEnum} from '@models/alert';
-import {useDeleteApi} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 import {selectApi} from '@redux/reducers/main';
 import {setApiInfoActiveTab} from '@redux/reducers/ui';
+import {useDeleteApiMutation} from '@redux/services/enhancedApi';
 
 import {InfoTabs} from '@components';
 import {
@@ -51,7 +51,7 @@ const ApiInfo: React.FC = () => {
   const dispatch = useAppDispatch();
   const activeTab = useAppSelector(state => state.ui.apiInfoActiveTab);
   const selectedAPI = useAppSelector(state => state.main.selectedApi);
-  const {mutate: deleteAPI} = useDeleteApi({namespace: selectedAPI?.namespace || ''});
+  const [deleteAPI] = useDeleteApiMutation();
   const onCloseHandler = () => {
     dispatch(selectApi(null));
     dispatch(setApiInfoActiveTab('crd'));
@@ -64,7 +64,7 @@ const ApiInfo: React.FC = () => {
         onOk: async () => {
           if (selectedAPI?.name) {
             try {
-              await deleteAPI(selectedAPI.name);
+              await deleteAPI({namespace: selectedAPI?.namespace, name: selectedAPI.name}).unwrap();
               dispatch(
                 setAlert({
                   title: 'API deleted successfully',

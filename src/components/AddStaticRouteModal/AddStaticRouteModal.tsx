@@ -6,12 +6,12 @@ import {Button, Form, Steps} from 'antd';
 import YAML from 'yaml';
 
 import {AlertEnum} from '@models/alert';
-import {useCreateStaticRoute} from '@models/api';
 import {PathMatch, StaticRoute, StaticRouteForm} from '@models/main';
 import {StaticRouteStepType} from '@models/ui';
 
 import {setAlert} from '@redux/reducers/alert';
 import {closeStaticRouteModal} from '@redux/reducers/ui';
+import {useCreateStaticRouteMutation} from '@redux/services/enhancedApi';
 
 import {FormStep} from '@components/FormStep';
 import {FormStepLayout} from '@components/FormStepLayout';
@@ -63,17 +63,20 @@ const AddStaticRouteModal = () => {
   const [openPathModal, setOpenPathModal] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<StaticRouteStepType>('routeInfo');
   const [lastVisitedStep, setLastVisitedStep] = useState<StaticRouteStepType>('routeInfo');
-  const {mutate: createStaticRoute, loading: isPublishingStaticRoute} = useCreateStaticRoute({});
+  const [createStaticRoute, {isLoading: isPublishingStaticRoute}] = useCreateStaticRouteMutation();
 
   const activeStepIndex = useMemo(() => orderedSteps.indexOf(activeStep), [activeStep]);
   const disablePublishButton = useMemo(
-    () => isPublishingStaticRoute || requiredSteps.includes(activeStep),
+    () =>
+      isPublishingStaticRoute ||
+      (requiredSteps.includes(activeStep) && requiredSteps.indexOf(activeStep) < requiredSteps.length - 1),
     [isPublishingStaticRoute, activeStep]
   );
+
   const onSubmitHandler = async () => {
+    const {routeInfo, fleetInfo, paths, hosts} = await form.validateFields();
     try {
       form.submit();
-      const {routeInfo, fleetInfo, paths, hosts} = await form.validateFields();
       const newStaticRouteDefinition: StaticRoute = {
         apiVersion: 'gateway.kusk.io/v1alpha1',
         kind: 'StaticRoute',
@@ -108,12 +111,14 @@ const AddStaticRouteModal = () => {
         },
       };
       await createStaticRoute({
-        name: routeInfo.name,
-        namespace: routeInfo.namespace,
-        envoyFleetNamespace: fleetInfo.targetEnvoyFleet.split(',')[0],
-        envoyFleetName: fleetInfo.targetEnvoyFleet.split(',')[1],
-        openapi: YAML.stringify(cleanEmptyFields(JSON.parse(JSON.stringify(newStaticRouteDefinition)))),
-      });
+        body: {
+          name: routeInfo.name,
+          namespace: routeInfo.namespace,
+          envoyFleetNamespace: fleetInfo.targetEnvoyFleet.split(',')[0],
+          envoyFleetName: fleetInfo.targetEnvoyFleet.split(',')[1],
+          openapi: YAML.stringify(cleanEmptyFields(JSON.parse(JSON.stringify(newStaticRouteDefinition)))),
+        },
+      }).unwrap();
       dispatch(
         setAlert({
           title: 'Static route deployed successfully',
