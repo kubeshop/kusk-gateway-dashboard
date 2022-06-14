@@ -1,12 +1,12 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useMemo, useState} from 'react';
 
 import {Button, Select, Skeleton, Tag} from 'antd';
 
-import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets, useGetNamespaces} from '@models/api';
-
-import {useAppDispatch, useAppSelector} from '@redux/hooks';
-import {selectApi, setApis} from '@redux/reducers/main';
+import {useAppDispatch} from '@redux/hooks';
+import {selectApi} from '@redux/reducers/main';
 import {openApiPublishModal} from '@redux/reducers/ui';
+import {useGetApisQuery, useGetEnvoyFleetsQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
+import {EnvoyFleetItem} from '@redux/services/kuskApi';
 
 import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
 
@@ -20,26 +20,18 @@ const {Option} = Select;
 
 const ApisList: React.FC = () => {
   const dispatch = useAppDispatch();
-  const apis = useAppSelector(state => state.main.apis);
-  const selectedApi = useAppSelector(state => state.main.selectedApi);
+  const {data: apis = []} = useGetApisQuery({});
 
   const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
-  const {data: namespaces} = useGetNamespaces({});
-  const {
-    data,
-    error,
-    loading,
-    refetch: refetchAPi,
-  } = useGetApis({
-    queryParams: {
-      fleetname: selectedFleet?.name,
-      fleetnamespace: selectedFleet?.namespace,
-      namespace: selectedNamespace,
-    },
+  const {data: namespaces} = useGetNamespacesQuery();
+  const {data, error, isLoading} = useGetApisQuery({
+    fleetname: selectedFleet?.name,
+    fleetnamespace: selectedFleet?.namespace,
+    namespace: selectedNamespace,
   });
 
-  const envoyFleetsState = useGetEnvoyFleets({});
+  const envoyFleetsState = useGetEnvoyFleetsQuery({});
 
   const renderedFleetsOptions = useMemo(() => {
     if (!envoyFleetsState?.data?.length || !Array.isArray(envoyFleetsState.data)) {
@@ -88,34 +80,16 @@ const ApisList: React.FC = () => {
     dispatch(openApiPublishModal());
   };
 
-  useEffect(() => {
-    if (!loading) {
-      refetchAPi();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedApi]);
-
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-
-    dispatch(setApis(data));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
-
   return (
     <ContentWrapper>
       <PageTitle>APIs</PageTitle>
 
       <S.ActionsContainer>
         <S.FiltersContainer>
-          {envoyFleetsState.loading ? (
+          {envoyFleetsState.isLoading ? (
             <Skeleton.Button />
           ) : envoyFleetsState.error ? (
-            <ErrorLabel>{envoyFleetsState.error.message}</ErrorLabel>
+            <ErrorLabel>{envoyFleetsState.error}</ErrorLabel>
           ) : (
             envoyFleetsState.data && (
               <Select
@@ -132,7 +106,7 @@ const ApisList: React.FC = () => {
             )
           )}
 
-          {loading ? (
+          {isLoading ? (
             <Skeleton.Button />
           ) : error ? null : (
             <Select
@@ -151,7 +125,7 @@ const ApisList: React.FC = () => {
         </S.FiltersContainer>
 
         <Button
-          disabled={loading || Boolean(error) || !Array.isArray(data)}
+          disabled={isLoading || Boolean(error) || !Array.isArray(data)}
           type="primary"
           onClick={showApiPublishModalHandler}
         >
@@ -159,10 +133,10 @@ const ApisList: React.FC = () => {
         </Button>
       </S.ActionsContainer>
 
-      {loading && !apis ? (
+      {isLoading && !apis ? (
         <Skeleton />
       ) : error ? (
-        <ErrorLabel>{error.message}</ErrorLabel>
+        <ErrorLabel>{error}</ErrorLabel>
       ) : (
         apis && <ApisListTable apis={apis} />
       )}

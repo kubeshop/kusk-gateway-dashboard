@@ -4,11 +4,11 @@ import YAML from 'yaml';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
 
-import {useGetApiCRD} from '@models/api';
 import {KuskExtensionsItem} from '@models/dashboard';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setKuskExtensionsActiveKeys} from '@redux/reducers/ui';
+import {useGetApiCrdQuery} from '@redux/services/enhancedApi';
 
 import {ErrorLabel} from '@components/AntdCustom';
 
@@ -27,17 +27,20 @@ const KuskExtensions: React.FC = () => {
   const kuskExtensionsActiveKeys = useAppSelector(state => state.ui.kuskExtensionsActiveKeys);
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const {data, loading, error} = useGetApiCRD({name: selectedApi?.name || '', namespace: selectedApi?.namespace || ''});
+  const {data, isLoading, error} = useGetApiCrdQuery({
+    name: selectedApi?.name || '',
+    namespace: selectedApi?.namespace || '',
+  });
 
   return (
     <S.KuskExtensionsContainer>
-      {loading ? (
+      {isLoading ? (
         <Skeleton />
       ) : error ? (
-        <ErrorLabel>{error.message}</ErrorLabel>
+        <ErrorLabel>{error}</ErrorLabel>
       ) : (
         data &&
-        Object.entries(createKuskExtensions(YAML.parse(data.spec.spec))).map(kuskExtensionEntry => {
+        Object.entries(createKuskExtensions(YAML.parse((data as any).spec.spec))).map(kuskExtensionEntry => {
           const [level, entry] = kuskExtensionEntry;
 
           const title = level.charAt(0).toUpperCase() + level.substring(1);

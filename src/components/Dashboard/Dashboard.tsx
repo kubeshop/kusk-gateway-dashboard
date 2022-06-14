@@ -4,10 +4,9 @@ import {useMeasure} from 'react-use';
 
 import {DASHBOARD_PANE_MIN_WIDTH} from '@constants/constants';
 
-import {ApiItem, EnvoyFleetItem, StaticRouteItem} from '@models/api';
-
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setDashboardPaneConfiguration} from '@redux/reducers/ui';
+import {ApiItem, EnvoyFleetItem, StaticRouteItem} from '@redux/services/kuskApi';
 
 import * as S from './styled';
 

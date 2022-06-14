@@ -2,9 +2,8 @@ import {useEffect, useMemo, useState} from 'react';
 
 import {Form, Radio, Skeleton, Tag} from 'antd';
 
-import {ServiceItem} from '@models/api';
-
-import {useAppSelector} from '@redux/hooks';
+import {useGetServicesQuery} from '@redux/services/enhancedApi';
+import {ServiceItem} from '@redux/services/kuskApi';
 
 import {ErrorLabel} from '@components/AntdCustom';
 
@@ -21,10 +20,8 @@ const Upstream: React.FC<IProps> = props => {
   const {reference, setReference} = props;
   const form = Form.useFormInstance();
 
-  const services = useAppSelector(state => state.main.services);
-
   const formService = form.getFieldValue('service');
-
+  const {data: services, ...servicesInfo} = useGetServicesQuery({});
   const [selectedService, setSelectedService] = useState<ServiceItem | undefined>(formService || undefined);
 
   const selectedServicePorts = useMemo(() => {
@@ -75,12 +72,12 @@ const Upstream: React.FC<IProps> = props => {
       return;
     }
 
-    const service = services.items.find(s => `${s.namespace}-${s.name}` === formService);
+    const service = services?.find(s => `${s.namespace}-${s.name}` === formService);
 
     if (service) {
       setSelectedService(service);
     }
-  }, [formService, services.items]);
+  }, [formService, services]);
 
   return (
     <>
@@ -92,10 +89,10 @@ const Upstream: React.FC<IProps> = props => {
 
       {reference === 'service' ? (
         <>
-          {services.isLoading ? (
+          {servicesInfo.isLoading ? (
             <Skeleton.Button />
-          ) : services.error ? (
-            <ErrorLabel>{services.error}</ErrorLabel>
+          ) : servicesInfo.error ? (
+            <ErrorLabel>{servicesInfo.error}</ErrorLabel>
           ) : (
             <Form.Item label="Cluster service" name={['upstream', 'service', 'selector']}>
               <S.Select
@@ -107,7 +104,7 @@ const Upstream: React.FC<IProps> = props => {
                   onServiceSelectHandler(option.service);
                 }}
               >
-                {services.items.map(serviceItem => (
+                {services?.map(serviceItem => (
                   <Option key={`${serviceItem.namespace}-${serviceItem.name}`} service={serviceItem}>
                     <Tag>{serviceItem.namespace}</Tag>
                     {serviceItem.name}

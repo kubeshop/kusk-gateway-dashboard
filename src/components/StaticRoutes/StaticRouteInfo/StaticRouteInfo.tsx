@@ -5,12 +5,12 @@ import {Modal, Skeleton} from 'antd';
 import {MenuInfo} from 'rc-menu/lib/interface';
 
 import {AlertEnum} from '@models/alert';
-import {useDeleteStaticRoute} from '@models/api';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 import {selectStaticRoute} from '@redux/reducers/main';
 import {setStaticRouteInfoActiveTab} from '@redux/reducers/ui';
+import {useDeleteApiMutation} from '@redux/services/enhancedApi';
 
 import {InfoTabs} from '@components';
 import {
@@ -42,7 +42,7 @@ const StaticRouteInfo: React.FC = () => {
   const dispatch = useAppDispatch();
   const activeTab = useAppSelector(state => state.ui.staticRouteInfoActiveTab);
   const selectedStaticRoute = useAppSelector(state => state.main.selectedStaticRoute);
-  const {mutate: deleteStaticRoute} = useDeleteStaticRoute({namespace: selectedStaticRoute?.namespace || ''});
+  const [deleteStaticRoute] = useDeleteApiMutation();
 
   const onCloseHandler = () => {
     dispatch(selectStaticRoute(null));
@@ -57,7 +57,10 @@ const StaticRouteInfo: React.FC = () => {
           icon: <InfoPanelDeleteIcon />,
           onOk: async () => {
             try {
-              await deleteStaticRoute(selectedStaticRoute.name);
+              await deleteStaticRoute({
+                namespace: selectedStaticRoute?.namespace || '',
+                name: selectedStaticRoute.name,
+              }).unwrap();
               dispatch(
                 setAlert({
                   title: 'Static Route deleted successfully',

@@ -5,9 +5,8 @@ import {Skeleton} from 'antd';
 import SwaggerUI from 'swagger-ui-react';
 import YAML from 'yaml';
 
-import {useGetApiCRD} from '@models/api';
-
 import {useAppSelector} from '@redux/hooks';
+import {useGetApiCrdQuery} from '@redux/services/enhancedApi';
 
 import {ErrorLabel} from '@components/AntdCustom';
 
@@ -18,18 +17,21 @@ import * as S from './styled';
 const ApiDefinition: React.FC = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const {data, error, loading} = useGetApiCRD({name: selectedApi?.name || '', namespace: selectedApi?.namespace || ''});
+  const {data, error, isLoading} = useGetApiCrdQuery({
+    name: selectedApi?.name || '',
+    namespace: selectedApi?.namespace || '',
+  });
 
   return (
     <S.ApiDefinitionContainer>
-      {loading ? (
+      {isLoading ? (
         <Skeleton />
       ) : error ? (
-        <ErrorLabel>{error.message}</ErrorLabel>
+        <ErrorLabel>{error}</ErrorLabel>
       ) : (
         data && (
           <SwaggerUI
-            spec={YAML.parse(data.spec.spec)}
+            spec={YAML.parse((data as any).spec.spec)}
             plugins={[TableOfContentsPlugin, CollapseOperationsPlugin]}
             supportedSubmitMethods={[]}
           />

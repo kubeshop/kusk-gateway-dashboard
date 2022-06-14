@@ -3,9 +3,8 @@ import {Skeleton} from 'antd';
 import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
-import {useGetEnvoyFleetCRD} from '@models/api';
-
 import {useAppSelector} from '@redux/hooks';
+import {useGetEnvoyFleetCrdQuery} from '@redux/services/enhancedApi';
 
 import {InfoPaneCRD} from '@components';
 import {ErrorLabel} from '@components/AntdCustom';
@@ -13,17 +12,17 @@ import {ErrorLabel} from '@components/AntdCustom';
 const CRD: React.FC = () => {
   const selectedEnvoyFleet = useAppSelector(state => state.main.selectedEnvoyFleet);
 
-  const {data, error, loading} = useGetEnvoyFleetCRD({
+  const {data, error, isLoading} = useGetEnvoyFleetCrdQuery({
     name: selectedEnvoyFleet?.name || '',
     namespace: selectedEnvoyFleet?.namespace || '',
   });
 
-  return loading ? (
+  return isLoading ? (
     <Skeleton />
   ) : error ? (
-    <ErrorLabel>{error.message}</ErrorLabel>
+    <ErrorLabel>{error}</ErrorLabel>
   ) : (
-    data && <InfoPaneCRD yaml={YAML.stringify(cleanDeep(data))} />
+    <InfoPaneCRD yaml={YAML.stringify(cleanDeep(data))} />
   );
 };
 

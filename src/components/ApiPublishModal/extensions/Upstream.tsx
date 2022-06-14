@@ -2,9 +2,9 @@ import {useEffect, useMemo, useState} from 'react';
 
 import {Form, FormInstance, Radio, Skeleton, Tag} from 'antd';
 
-import {ServiceItem} from '@models/api';
-
 import {useAppSelector} from '@redux/hooks';
+import {useGetServicesQuery} from '@redux/services/enhancedApi';
+import {ServiceItem} from '@redux/services/kuskApi';
 
 import {ErrorLabel} from '@components/AntdCustom';
 
@@ -22,7 +22,7 @@ const Upstream: React.FC<IProps> = props => {
   const {form, reference, setReference} = props;
 
   const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
-  const services = useAppSelector(state => state.main.services);
+  const {data: services = [], ...servicesInfo} = useGetServicesQuery({});
 
   const formService = form.getFieldValue('service');
 
@@ -107,12 +107,12 @@ const Upstream: React.FC<IProps> = props => {
       return;
     }
 
-    const service = services.items.find(s => `${s.namespace}-${s.name}` === formService);
+    const service = services.find(s => `${s.namespace}-${s.name}` === formService);
 
     if (service) {
       setSelectedService(service);
     }
-  }, [formService, services.items]);
+  }, [formService, services]);
 
   return (
     <>
@@ -124,10 +124,10 @@ const Upstream: React.FC<IProps> = props => {
 
       {reference === 'service' ? (
         <>
-          {services.isLoading ? (
+          {servicesInfo.isLoading ? (
             <Skeleton.Button />
-          ) : services.error ? (
-            <ErrorLabel>{services.error}</ErrorLabel>
+          ) : servicesInfo.error ? (
+            <ErrorLabel>{servicesInfo.error}</ErrorLabel>
           ) : (
             <Form.Item label="Cluster service" name="service">
               <S.Select
@@ -139,7 +139,7 @@ const Upstream: React.FC<IProps> = props => {
                   onServiceSelectHandler(option.service);
                 }}
               >
-                {services.items.map(serviceItem => (
+                {services.map(serviceItem => (
                   <Option key={`${serviceItem.namespace}-${serviceItem.name}`} service={serviceItem}>
                     <Tag>{serviceItem.namespace}</Tag>
                     {serviceItem.name}
