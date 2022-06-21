@@ -1,6 +1,9 @@
 import {useMemo, useState} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Button, Select, Skeleton, Tag} from 'antd';
+
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {useAppDispatch} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
@@ -20,6 +23,10 @@ const {Option} = Select;
 
 const ApisList: React.FC = () => {
   const dispatch = useAppDispatch();
+  const {trackEvent} = useTracking(
+    {eventName: Events.API_LIST_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const {data: apis = []} = useGetApisQuery({});
 
   const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
@@ -59,6 +66,7 @@ const ApisList: React.FC = () => {
   const onEnvoyFleetSelectHandler = (envoyFleetItem: EnvoyFleetItem) => {
     setSelectedFleet(envoyFleetItem);
     dispatch(selectApi(null));
+    trackEvent({eventName: Events.DROPDOWN_SELECTED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onNamespaceSelectHandler = (namespace: string) => {

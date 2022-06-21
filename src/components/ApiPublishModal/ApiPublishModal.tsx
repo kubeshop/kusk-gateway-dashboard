@@ -1,4 +1,5 @@
 import {Suspense, lazy, useEffect, useMemo, useState} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Button, Form, Radio, Skeleton, Steps} from 'antd';
 
@@ -6,6 +7,7 @@ import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
 import {AlertEnum} from '@models/alert';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 import {ApiContent} from '@models/main';
 import {StepType} from '@models/ui';
 
@@ -69,6 +71,10 @@ const orderedSteps: StepType[] = [
 ];
 
 const ApiPublishModal: React.FC = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.PUBLISH_API_MODAL_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useAppDispatch();
   const activeStep = useAppSelector(state => state.ui.apiPublishModal.activeStep);
   const apiContent = useAppSelector(state => state.main.newApiContent);
@@ -350,11 +356,13 @@ const ApiPublishModal: React.FC = () => {
           });
       }
     });
+    trackEvent({eventName: Events.PUBLISH_API_SUBMITTED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onBackHandler = () => {
     dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) - 1]));
     setErrorMessage('');
+    trackEvent({eventName: Events.PUBLISH_API_MODAL_DISMISSED, type: ANALYTIC_TYPE.ACTION});
   };
 
   useEffect(() => {

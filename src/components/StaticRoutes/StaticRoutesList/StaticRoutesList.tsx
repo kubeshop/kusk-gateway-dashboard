@@ -1,6 +1,9 @@
 import {Suspense, useMemo, useState} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Button, Skeleton} from 'antd';
+
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectStaticRoute} from '@redux/reducers/main';
@@ -17,6 +20,10 @@ import * as S from './styled';
 const {Option} = S.Select;
 
 const StaticRoutesList: React.FC = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.STATIC_ROUTES_LIST_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useAppDispatch();
 
   const isStaticRouteModalVisible = useAppSelector(state => state.ui.staticRouteModal.isOpen);
@@ -36,15 +43,18 @@ const StaticRoutesList: React.FC = () => {
   const onNamespaceSelectHandler = (namespace: string) => {
     setSelectedNamespace(namespace);
     dispatch(selectStaticRoute(null));
+    trackEvent({eventName: Events.DROPDOWN_SELECTED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onNamespaceSelectionClearHandler = () => {
     setSelectedNamespace(undefined);
     dispatch(selectStaticRoute(null));
+    trackEvent({eventName: Events.DROPDOWN_SELECTED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const handlePublishStaticRoute = () => {
     dispatch(openStaticRouteModal());
+    trackEvent({eventName: Events.PUBLISH_STATIC_ROUTES_MODAL_OPENED, type: ANALYTIC_TYPE.ACTION});
   };
 
   return (

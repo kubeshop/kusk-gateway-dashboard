@@ -1,10 +1,12 @@
 import React, {Suspense, lazy} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Modal, Skeleton} from 'antd';
 
 import {MenuInfo} from 'rc-menu/lib/interface';
 
 import {AlertEnum} from '@models/alert';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
@@ -48,6 +50,10 @@ const KuskExtensions = lazy(() => import('@components/KuskExtensions/KuskExtensi
 const PublicApiDefinition = lazy(() => import('@components/PublicApiDefinition/PublicApiDefinition'));
 
 const ApiInfo: React.FC = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.API_INFO_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useAppDispatch();
   const activeTab = useAppSelector(state => state.ui.apiInfoActiveTab);
   const selectedAPI = useAppSelector(state => state.main.selectedApi);
@@ -55,6 +61,7 @@ const ApiInfo: React.FC = () => {
   const onCloseHandler = () => {
     dispatch(selectApi(null));
     dispatch(setApiInfoActiveTab('crd'));
+    trackEvent({eventName: Events.API_INFO_CLOSED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onMenuItemClick = async (event: MenuInfo) => {
@@ -88,6 +95,7 @@ const ApiInfo: React.FC = () => {
         },
       });
     }
+    trackEvent({eventName: Events.API_MENU_CLICKED, type: ANALYTIC_TYPE.ACTION});
   };
 
   return (
