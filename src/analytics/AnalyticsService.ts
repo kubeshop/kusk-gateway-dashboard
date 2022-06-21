@@ -28,10 +28,10 @@ export const trackEvent = (data: AnalyticEvent) => {
   const {type, page, eventName, ...rest} = data;
   switch (type) {
     case ANALYTIC_TYPE.PAGE:
-      analytics?.page(page, rest);
+      analytics?.page(page, rest, {context: {ip: '0.0.0.0'}});
       break;
     case ANALYTIC_TYPE.ACTION:
-      analytics?.track(eventName, rest);
+      analytics?.track(eventName, rest, {context: {ip: '0.0.0.0'}});
       break;
     default:
       break;
