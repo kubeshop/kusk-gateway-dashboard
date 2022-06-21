@@ -75,15 +75,15 @@ const EnvoyFleetsList: React.FC = () => {
             {renderedNamespacesOptions}
           </S.Select>
         )}
-        <Button type="primary" onClick={onPublishEnvoyFleetHandle}>
+        <Button type="primary" disabled={Boolean(error)} onClick={onPublishEnvoyFleetHandle}>
           Publish New Envoy Fleet
         </Button>
       </S.TitleFiltersContainer>
 
       {isLoading ? (
         <Skeleton />
-      ) : error ? (
-        <ErrorLabel>{error}</ErrorLabel>
+      ) : error && 'error' in error ? (
+        <ErrorLabel>{error.error}</ErrorLabel>
       ) : (
         data && <EnvoyFleetsListTable envoyFleets={data.filter(el => el.namespace.includes(selectedNamespace || ''))} />
       )}

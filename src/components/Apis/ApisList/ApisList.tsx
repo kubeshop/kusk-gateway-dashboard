@@ -27,25 +27,24 @@ const ApisList: React.FC = () => {
     {eventName: Events.API_LIST_LOADED, type: ANALYTIC_TYPE.ACTION},
     {dispatchOnMount: true}
   );
-  const {data: apis = []} = useGetApisQuery({});
 
   const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
   const {data: namespaces} = useGetNamespacesQuery();
-  const {data, error, isLoading} = useGetApisQuery({
+  const {data, error, isError, isLoading} = useGetApisQuery({
     fleetname: selectedFleet?.name,
     fleetnamespace: selectedFleet?.namespace,
     namespace: selectedNamespace,
   });
 
-  const envoyFleetsState = useGetEnvoyFleetsQuery({});
+  const {data: fleets, isLoading: isLoadingFleets} = useGetEnvoyFleetsQuery({});
 
   const renderedFleetsOptions = useMemo(() => {
-    if (!envoyFleetsState?.data?.length || !Array.isArray(envoyFleetsState.data)) {
+    if (!fleets?.length || !Array.isArray(fleets)) {
       return null;
     }
 
-    return envoyFleetsState.data
+    return fleets
       .filter(el => el.namespace.includes(selectedNamespace || ''))
       .map(envoyFleetItem => (
         <Option key={getEnvoyFleetKey(envoyFleetItem)} value={envoyFleetItem.name} envoyfleet={envoyFleetItem}>
@@ -53,7 +52,7 @@ const ApisList: React.FC = () => {
           {envoyFleetItem.name}
         </Option>
       ));
-  }, [envoyFleetsState.data, selectedNamespace]);
+  }, [fleets, selectedNamespace]);
 
   const renderedNamespaceOptions = useMemo(() => {
     return namespaces?.map(namespace => (
@@ -94,12 +93,10 @@ const ApisList: React.FC = () => {
 
       <S.ActionsContainer>
         <S.FiltersContainer>
-          {envoyFleetsState.isLoading ? (
+          {isLoadingFleets ? (
             <Skeleton.Button />
-          ) : envoyFleetsState.error ? (
-            <ErrorLabel>{envoyFleetsState.error}</ErrorLabel>
           ) : (
-            envoyFleetsState.data && (
+            fleets && (
               <Select
                 allowClear
                 placeholder="Select a fleet"
@@ -116,7 +113,7 @@ const ApisList: React.FC = () => {
 
           {isLoading ? (
             <Skeleton.Button />
-          ) : error ? null : (
+          ) : !namespaces ? null : (
             <Select
               allowClear
               placeholder="Select a namespace"
@@ -141,12 +138,12 @@ const ApisList: React.FC = () => {
         </Button>
       </S.ActionsContainer>
 
-      {isLoading && !apis ? (
+      {isLoading ? (
         <Skeleton />
-      ) : error ? (
-        <ErrorLabel>{error}</ErrorLabel>
+      ) : isError && 'error' in error ? (
+        <ErrorLabel>{error.error}</ErrorLabel>
       ) : (
-        apis && <ApisListTable apis={apis} />
+        data && <ApisListTable apis={data} />
       )}
     </ContentWrapper>
   );
