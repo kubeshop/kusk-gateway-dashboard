@@ -78,15 +78,15 @@ const StaticRoutesList: React.FC = () => {
             {renderedNamespacesOptions}
           </S.Select>
         )}
-        <Button type="primary" onClick={handlePublishStaticRoute}>
+        <Button type="primary" disabled={Boolean(error)} onClick={handlePublishStaticRoute}>
           Publish New Static Route
         </Button>
       </S.TitleFiltersContainer>
 
       {loading && !staticRoutes ? (
         <Skeleton />
-      ) : error ? (
-        <ErrorLabel>{error}</ErrorLabel>
+      ) : error && 'error' in error ? (
+        <ErrorLabel>{error.error}</ErrorLabel>
       ) : (
         staticRoutes && (
           <StaticRoutesListTable
