@@ -1,6 +1,9 @@
 import {useState} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Input, Modal} from 'antd';
+
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import * as S from './styled';
 
@@ -10,6 +13,10 @@ interface IProps {
 }
 
 const AddServerModal: React.FC<IProps> = props => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.ADD_SERVER_MODAL_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const {servers, addServerHandler} = props;
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -19,6 +26,7 @@ const AddServerModal: React.FC<IProps> = props => {
   const onCancelHandler = () => {
     setServerURL('');
     setShowModal(false);
+    trackEvent({eventName: Events.ADD_SERVER_MODAL_DISMISSED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +51,7 @@ const AddServerModal: React.FC<IProps> = props => {
     addServerHandler(serverURL);
     setServerURL('');
     setShowModal(false);
+    trackEvent({eventName: Events.SERVER_CHANGED, type: ANALYTIC_TYPE.ACTION});
   };
 
   return (
