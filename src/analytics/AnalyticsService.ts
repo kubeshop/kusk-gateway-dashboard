@@ -8,7 +8,7 @@ import {AnalyticsBrowser} from '@segment/analytics-next';
 let analytics: AnalyticsBrowser | null = null;
 
 (function initSegmentService(): AnalyticsBrowser | null {
-  if (process.env.REACT_APP_ANALYTICS_DISABLED?.toLowerCase() === 'true') {
+  if (process.env.REACT_APP_ANALYTICS_DISABLED?.toLowerCase() === 'true' || !process.env.REACT_APP_SEGMENT_API_KEY) {
     return null;
   }
 
