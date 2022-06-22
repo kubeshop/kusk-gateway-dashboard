@@ -24,6 +24,7 @@ import {ApiItem} from '@redux/services/kuskApi';
 
 import FleetInfo from './FleetInfo';
 import Step from './Step';
+import Cache from './extensions/Cache';
 
 import * as S from './styled';
 
@@ -54,7 +55,8 @@ const renderedNextButtonText: {[key: number]: string} = {
   6: 'Add Path',
   7: 'Add CORS',
   8: 'Add Websocket',
-  9: 'Publish',
+  9: 'Add Cache',
+  10: 'Publish',
 };
 
 const orderedSteps: StepType[] = [
@@ -68,6 +70,7 @@ const orderedSteps: StepType[] = [
   'path',
   'cors',
   'websocket',
+  'cache',
 ];
 
 const ApiPublishModal: React.FC = () => {
@@ -114,6 +117,7 @@ const ApiPublishModal: React.FC = () => {
       {step: 'path', title: 'Path'},
       {step: 'cors', title: 'CORS'},
       {step: 'websocket', title: 'Websocket'},
+      {step: 'cache', title: 'Cache'},
     ],
     [targetSelection]
   );
@@ -300,9 +304,15 @@ const ApiPublishModal: React.FC = () => {
           let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], websocket}};
           newApiContent = {...apiContent, openapi: openApiSpec};
         }
+        if (activeStep === 'cache') {
+          const {cache} = values;
+
+          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], cache}};
+          newApiContent = {...apiContent, openapi: openApiSpec};
+        }
       }
 
-      if (!publish && activeStep !== 'websocket') {
+      if (!publish && activeStep !== 'cache') {
         dispatch(setNewApiContent(newApiContent));
         dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]));
 
@@ -403,7 +413,7 @@ const ApiPublishModal: React.FC = () => {
             </Button>
           ) : null}
 
-          {activeStep !== 'websocket' ? (
+          {activeStep !== 'cache' ? (
             <Button type="default" onClick={() => onSubmitHandler()}>
               {renderedNextButtonText[activeStepIndex]}
             </Button>
@@ -430,6 +440,7 @@ const ApiPublishModal: React.FC = () => {
 
         <S.FormContainer>
           <Form
+            preserve
             form={form}
             initialValues={{openapi: ''}}
             layout="vertical"
@@ -481,6 +492,7 @@ const ApiPublishModal: React.FC = () => {
               {activeStep === 'path' && <Path form={form} />}
               {activeStep === 'cors' && <CORS form={form} />}
               {activeStep === 'websocket' && <Websocket form={form} />}
+              {activeStep === 'cache' && <Cache />}
             </Suspense>
           </Form>
         </S.FormContainer>
