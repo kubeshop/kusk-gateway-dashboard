@@ -25,8 +25,9 @@ export const Container = styled.div`
 `;
 
 export const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   padding-right: 10px;
-  height: 550px;
   overflow-y: auto;
   ${GlobalScrollbarStyle}
 `;
@@ -36,10 +37,11 @@ export const Label = styled.div`
 `;
 
 export const Modal = styled(RawModal)`
-  & .ant-modal-body {
-    height: 600px;
-    overflow-y: auto;
+  top: min(5%, 10px);
 
+  & .ant-modal-body {
+    height: 80vh;
+    overflow-y: auto;
     ${GlobalScrollbarStyle}
   }
 `;
@@ -50,8 +52,7 @@ export const RadioGroupContainer = styled.div`
 
 export const StepsContainer = styled.div`
   padding-right: 5px;
-  max-height: 500px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  ${GlobalScrollbarStyle};
+  height: fit-content;
+  position: sticky;
+  top: 0;
 `;
