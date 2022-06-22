@@ -7,10 +7,15 @@ import {AnalyticsBrowser} from '@segment/analytics-next';
 
 let analytics: AnalyticsBrowser | null = null;
 
-(function initSegmentService(): AnalyticsBrowser {
+(function initSegmentService(): AnalyticsBrowser | null {
+  if (process.env.REACT_APP_ANALYTICS_DISABLED?.toLowerCase() === 'true') {
+    return null;
+  }
+
   if (analytics) {
     return analytics;
   }
+
   analytics = AnalyticsBrowser.load({
     writeKey: process.env.REACT_APP_SEGMENT_API_KEY!,
   });
