@@ -2,16 +2,13 @@ import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from './dashboard'
 
 type StepType =
   | 'openApiSpec'
-  | 'apiInfo'
+  | 'apiSettings'
   | 'fleetInfo'
   | 'target'
-  | 'validation'
   | 'hosts'
   | 'qos'
-  | 'path'
   | 'cors'
-  | 'websocket'
-  | 'cache'
+  | 'caching'
   | 'rateLimiting'
   | 'authentication';
 

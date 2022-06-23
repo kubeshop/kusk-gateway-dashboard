@@ -1,17 +1,13 @@
 import {useEffect} from 'react';
 
-import {FormInstance} from 'antd';
+import {Form} from 'antd';
 
 import {useAppSelector} from '@redux/hooks';
 
 import {FormList} from '@components';
 
-interface IProps {
-  form: FormInstance<any>;
-}
-
-const Hosts: React.FC<IProps> = props => {
-  const {form} = props;
+const Hosts = (): JSX.Element => {
+  const form = Form.useFormInstance();
 
   const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
 

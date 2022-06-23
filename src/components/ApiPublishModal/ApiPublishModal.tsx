@@ -27,16 +27,13 @@ import Step from './Step';
 
 import * as S from './styled';
 
-const ApiInfo = lazy(() => import('./ApiInfo'));
 const CORS = lazy(() => import('./extensions/CORS'));
-const Hosts = lazy(() => import('./extensions/Hosts'));
+const ApiSettings = lazy(() => import('./ApiSettings'));
 const OpenApiSpec = lazy(() => import('./OpenApiSpec'));
-const Path = lazy(() => import('./extensions/Path'));
+const Hosts = lazy(() => import('./extensions/Hosts'));
 const QOS = lazy(() => import('./extensions/QOS'));
 const Redirect = lazy(() => import('./extensions/Redirect'));
 const Upstream = lazy(() => import('./extensions/Upstream'));
-const Validation = lazy(() => import('./extensions/Validation'));
-const Websocket = lazy(() => import('./extensions/Websocket'));
 const Cache = lazy(() => import('./extensions/Cache'));
 const RateLimiting = lazy(() => import('./extensions/RateLimiting'));
 const BasicAuthentication = lazy(() => import('./extensions/BasicAuthentication'));
@@ -48,33 +45,27 @@ interface StepItem {
 }
 
 const renderedNextButtonText: {[key: number]: string} = {
-  0: 'Add API Info',
+  0: 'Add API Settings',
   1: 'Add Fleet Info',
   2: 'Add Target',
-  3: 'Add Validation',
-  4: 'Add Hosts',
-  5: 'Add QOS',
-  6: 'Add Path',
-  7: 'Add CORS',
-  8: 'Add Websocket',
-  9: 'Add Cache',
-  10: 'Add Rate Limiting',
-  11: 'Authentication',
-  12: 'Publish',
+  3: 'HostS',
+  4: 'Add QOS',
+  5: 'Add CORS',
+  6: 'Add Cache',
+  7: 'Add Rate Limiting',
+  8: 'Authentication',
+  9: 'Publish',
 };
 
 const orderedSteps: StepType[] = [
   'openApiSpec',
-  'apiInfo',
+  'apiSettings',
   'fleetInfo',
   'target',
-  'validation',
   'hosts',
   'qos',
-  'path',
   'cors',
-  'websocket',
-  'cache',
+  'caching',
   'rateLimiting',
   'authentication',
 ];
@@ -106,7 +97,7 @@ const ApiPublishModal: React.FC = () => {
   const steps: StepItem[] = useMemo(
     () => [
       {documentationLink: 'https://swagger.io/specification', step: 'openApiSpec', title: 'OpenAPI Spec'},
-      {step: 'apiInfo', title: 'API Info'},
+      {step: 'apiSettings', title: 'API Settings'},
       {
         step: 'fleetInfo',
         title: 'Fleet Info',
@@ -117,14 +108,15 @@ const ApiPublishModal: React.FC = () => {
         step: 'target',
         title: 'Target',
       },
-      {step: 'validation', title: 'Validation'},
       {step: 'hosts', title: 'Hosts'},
       {step: 'qos', title: 'QOS'},
-      {step: 'path', title: 'Path'},
       {step: 'cors', title: 'CORS'},
-      {step: 'websocket', title: 'Websocket'},
-      {step: 'cache', title: 'Cache'},
-      {step: 'rateLimiting', title: 'Rate Limiting'},
+      {step: 'caching', title: 'Caching'},
+      {
+        step: 'rateLimiting',
+        title: 'Rate Limiting',
+        documentationLink: 'https://kubeshop.github.io/kusk-gateway/reference/extension/#rate-limiting',
+      },
       {step: 'authentication', title: 'Authentication'},
     ],
     [targetSelection]
@@ -189,16 +181,19 @@ const ApiPublishModal: React.FC = () => {
 
       if (apiContent) {
         newApiContent = apiContent;
-        if (activeStep === 'apiInfo') {
-          const {name, namespace} = values;
+        if (activeStep === 'apiSettings') {
+          const {name, namespace, validation, path, websocket} = values;
 
+          let openApiSpec = {
+            ...apiContent.openapi,
+            'x-kusk': {...apiContent.openapi['x-kusk'], validation, path, websocket},
+          };
           newApiContent = {
             name,
             namespace: namespace || 'default',
-            openapi: apiContent.openapi,
-
             envoyFleetNamespace: apiContent?.envoyFleetNamespace || '',
             envoyFleetName: apiContent?.envoyFleetNamespace || '',
+            openapi: openApiSpec,
           };
         }
 
@@ -256,17 +251,13 @@ const ApiPublishModal: React.FC = () => {
           newApiContent = {...apiContent, openapi: openApiSpec};
         }
 
-        if (activeStep === 'validation') {
-          const {validation} = values;
-
-          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation}};
-          newApiContent = {...apiContent, openapi: openApiSpec};
-        }
-
         if (activeStep === 'hosts') {
           const {hosts} = values;
 
-          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], hosts}};
+          let openApiSpec = {
+            ...apiContent.openapi,
+            'x-kusk': {...apiContent.openapi['x-kusk'], hosts},
+          };
           newApiContent = {...apiContent, openapi: openApiSpec};
         }
 
@@ -289,13 +280,6 @@ const ApiPublishModal: React.FC = () => {
           newApiContent = {...apiContent, openapi: openApiSpec};
         }
 
-        if (activeStep === 'path') {
-          const {path} = values;
-
-          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
-          newApiContent = {...apiContent, openapi: openApiSpec};
-        }
-
         if (activeStep === 'cors') {
           const {cors} = values;
 
@@ -307,14 +291,7 @@ const ApiPublishModal: React.FC = () => {
           newApiContent = {...apiContent, openapi: openApiSpec};
         }
 
-        if (activeStep === 'websocket') {
-          const {websocket} = values;
-
-          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], websocket}};
-          newApiContent = {...apiContent, openapi: openApiSpec};
-        }
-
-        if (activeStep === 'cache') {
+        if (activeStep === 'caching') {
           const {cache} = values;
           if (cache.enabled) {
             let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], cache}};
@@ -492,10 +469,9 @@ const ApiPublishModal: React.FC = () => {
               {activeStep === 'openApiSpec' && (
                 <OpenApiSpec form={form} isApiMocked={isApiMocked} setIsApiMocked={value => setIsApiMocked(value)} />
               )}
-              {activeStep === 'apiInfo' && <ApiInfo form={form} />}
+              {activeStep === 'apiSettings' && <ApiSettings />}
               {activeStep === 'fleetInfo' && <FleetInfo form={form} />}
 
-              {activeStep === 'validation' && <Validation form={form} isApiMocked={isApiMocked} />}
               {activeStep === 'target' && (
                 <>
                   <S.RadioGroupContainer>
@@ -525,12 +501,11 @@ const ApiPublishModal: React.FC = () => {
                   )}
                 </>
               )}
-              {activeStep === 'hosts' && <Hosts form={form} />}
+
+              {activeStep === 'hosts' && <Hosts />}
               {activeStep === 'qos' && <QOS form={form} />}
-              {activeStep === 'path' && <Path form={form} />}
               {activeStep === 'cors' && <CORS form={form} />}
-              {activeStep === 'websocket' && <Websocket form={form} />}
-              {activeStep === 'cache' && <Cache />}
+              {activeStep === 'caching' && <Cache />}
               {activeStep === 'rateLimiting' && <RateLimiting />}
               {activeStep === 'authentication' && <BasicAuthentication />}
             </Suspense>

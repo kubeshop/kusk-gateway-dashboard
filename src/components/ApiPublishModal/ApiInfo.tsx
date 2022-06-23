@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 
-import {Form, FormInstance, Select} from 'antd';
+import {Form, Select} from 'antd';
 
 import {useAppSelector} from '@redux/hooks';
 import {useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
@@ -8,12 +8,8 @@ import {ApiItem} from '@redux/services/kuskApi';
 
 import * as S from './ApiInfo.styled';
 
-interface IProps {
-  form: FormInstance<any>;
-}
-
-const ApiInfo: React.FC<IProps> = props => {
-  const {form} = props;
+const ApiInfo = (): JSX.Element => {
+  const form = Form.useFormInstance();
 
   const apiContent = useAppSelector(state => state.main.newApiContent);
   const {data: apis} = useGetApisQuery({});
