@@ -24,7 +24,6 @@ import {ApiItem} from '@redux/services/kuskApi';
 
 import FleetInfo from './FleetInfo';
 import Step from './Step';
-import Cache from './extensions/Cache';
 
 import * as S from './styled';
 
@@ -38,6 +37,8 @@ const Redirect = lazy(() => import('./extensions/Redirect'));
 const Upstream = lazy(() => import('./extensions/Upstream'));
 const Validation = lazy(() => import('./extensions/Validation'));
 const Websocket = lazy(() => import('./extensions/Websocket'));
+const Cache = lazy(() => import('./extensions/Cache'));
+const RateLimiting = lazy(() => import('./extensions/RateLimiting'));
 
 interface StepItem {
   step: StepType;
@@ -56,7 +57,8 @@ const renderedNextButtonText: {[key: number]: string} = {
   7: 'Add CORS',
   8: 'Add Websocket',
   9: 'Add Cache',
-  10: 'Publish',
+  10: 'Add Rate Limiting',
+  11: 'Publish',
 };
 
 const orderedSteps: StepType[] = [
@@ -71,6 +73,7 @@ const orderedSteps: StepType[] = [
   'cors',
   'websocket',
   'cache',
+  'rateLimiting',
 ];
 
 const ApiPublishModal: React.FC = () => {
@@ -118,6 +121,7 @@ const ApiPublishModal: React.FC = () => {
       {step: 'cors', title: 'CORS'},
       {step: 'websocket', title: 'Websocket'},
       {step: 'cache', title: 'Cache'},
+      {step: 'rateLimiting', title: 'Rate Limiting'},
     ],
     [targetSelection]
   );
@@ -180,6 +184,7 @@ const ApiPublishModal: React.FC = () => {
       }
 
       if (apiContent) {
+        newApiContent = apiContent;
         if (activeStep === 'apiInfo') {
           const {name, namespace} = values;
 
@@ -304,15 +309,30 @@ const ApiPublishModal: React.FC = () => {
           let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], websocket}};
           newApiContent = {...apiContent, openapi: openApiSpec};
         }
+
         if (activeStep === 'cache') {
           const {cache} = values;
+          if (cache.enabled) {
+            let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], cache}};
+            newApiContent = {...apiContent, openapi: openApiSpec};
+          }
+        }
 
-          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], cache}};
-          newApiContent = {...apiContent, openapi: openApiSpec};
+        if (activeStep === 'rateLimiting') {
+          const {
+            rateLimit: {enabled, ...rateLimitConfig},
+          } = values;
+          if (enabled) {
+            let openApiSpec = {
+              ...apiContent.openapi,
+              'x-kusk': {...apiContent.openapi['x-kusk'], rate_limit: rateLimitConfig},
+            };
+            newApiContent = {...apiContent, openapi: openApiSpec};
+          }
         }
       }
 
-      if (!publish && activeStep !== 'cache') {
+      if (!publish && activeStep !== 'rateLimiting') {
         dispatch(setNewApiContent(newApiContent));
         dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]));
 
@@ -343,8 +363,8 @@ const ApiPublishModal: React.FC = () => {
           envoyFleetNamespace: newApiContent.envoyFleetNamespace,
           openapi: YAML.stringify(cleanDeep(newApiContent.openapi)),
         };
-
         deployAPI({body})
+          .unwrap()
           .then((response: any) => {
             const apiData: ApiItem = response;
 
@@ -413,7 +433,7 @@ const ApiPublishModal: React.FC = () => {
             </Button>
           ) : null}
 
-          {activeStep !== 'cache' ? (
+          {activeStep !== 'rateLimiting' ? (
             <Button type="default" onClick={() => onSubmitHandler()}>
               {renderedNextButtonText[activeStepIndex]}
             </Button>
@@ -493,6 +513,7 @@ const ApiPublishModal: React.FC = () => {
               {activeStep === 'cors' && <CORS form={form} />}
               {activeStep === 'websocket' && <Websocket form={form} />}
               {activeStep === 'cache' && <Cache />}
+              {activeStep === 'rateLimiting' && <RateLimiting />}
             </Suspense>
           </Form>
         </S.FormContainer>

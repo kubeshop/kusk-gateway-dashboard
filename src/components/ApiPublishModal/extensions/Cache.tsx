@@ -1,13 +1,13 @@
-import {Form, Input, Switch} from 'antd';
+import {Form, InputNumber, Switch} from 'antd';
 
 const Cache = () => {
   return (
     <>
-      <Form.Item label="Enabled" name={['cache', 'enabled']} valuePropName="checked">
+      <Form.Item label="Enabled" name={['cache', 'enabled']} valuePropName="checked" initialValue={false}>
         <Switch />
       </Form.Item>
       <Form.Item label="Max Age" name={['cache', 'max_age']} initialValue={60}>
-        <Input type="number" min={0} max={31536000} />
+        <InputNumber type="number" min={0} max={31536000} />
       </Form.Item>
     </>
   );
