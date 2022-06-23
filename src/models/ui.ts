@@ -11,7 +11,8 @@ type StepType =
   | 'path'
   | 'cors'
   | 'websocket'
-  | 'cache';
+  | 'cache'
+  | 'rateLimiting';
 
 type StaticRouteStepType = 'routeInfo' | 'fleetInfo' | 'hosts' | 'paths';
 
