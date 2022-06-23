@@ -350,7 +350,6 @@ const ApiPublishModal: React.FC = () => {
           dispatch(setApiPublishModalLastCompletedStep(activeStep));
         }
       }
-      console.log('@@publish', publish, newApiContent);
 
       if (publish && newApiContent) {
         if (isApiMocked && newApiContent?.openapi && newApiContent.openapi['x-kusk']) {
@@ -364,11 +363,9 @@ const ApiPublishModal: React.FC = () => {
           envoyFleetNamespace: newApiContent.envoyFleetNamespace,
           openapi: YAML.stringify(cleanDeep(newApiContent.openapi)),
         };
-        console.log('@@publishing', true);
         deployAPI({body})
           .unwrap()
           .then((response: any) => {
-            console.log('@@response', response);
             const apiData: ApiItem = response;
 
             dispatch(closeApiPublishModal());
