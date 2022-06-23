@@ -39,6 +39,7 @@ const Validation = lazy(() => import('./extensions/Validation'));
 const Websocket = lazy(() => import('./extensions/Websocket'));
 const Cache = lazy(() => import('./extensions/Cache'));
 const RateLimiting = lazy(() => import('./extensions/RateLimiting'));
+const BasicAuthentication = lazy(() => import('./extensions/BasicAuthentication'));
 
 interface StepItem {
   step: StepType;
@@ -58,7 +59,8 @@ const renderedNextButtonText: {[key: number]: string} = {
   8: 'Add Websocket',
   9: 'Add Cache',
   10: 'Add Rate Limiting',
-  11: 'Publish',
+  11: 'Authentication',
+  12: 'Publish',
 };
 
 const orderedSteps: StepType[] = [
@@ -74,6 +76,7 @@ const orderedSteps: StepType[] = [
   'websocket',
   'cache',
   'rateLimiting',
+  'authentication',
 ];
 
 const ApiPublishModal: React.FC = () => {
@@ -122,6 +125,7 @@ const ApiPublishModal: React.FC = () => {
       {step: 'websocket', title: 'Websocket'},
       {step: 'cache', title: 'Cache'},
       {step: 'rateLimiting', title: 'Rate Limiting'},
+      {step: 'authentication', title: 'Authentication'},
     ],
     [targetSelection]
   );
@@ -330,9 +334,22 @@ const ApiPublishModal: React.FC = () => {
             newApiContent = {...apiContent, openapi: openApiSpec};
           }
         }
+
+        if (activeStep === 'authentication') {
+          const {
+            auth: {enabled, ...auth},
+          } = values;
+          if (enabled) {
+            let openApiSpec = {
+              ...apiContent.openapi,
+              'x-kusk': {...apiContent.openapi['x-kusk'], auth},
+            };
+            newApiContent = {...apiContent, openapi: openApiSpec};
+          }
+        }
       }
 
-      if (!publish && activeStep !== 'rateLimiting') {
+      if (!publish && activeStep !== 'authentication') {
         dispatch(setNewApiContent(newApiContent));
         dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]));
 
@@ -370,6 +387,7 @@ const ApiPublishModal: React.FC = () => {
 
             dispatch(closeApiPublishModal());
             dispatch(setApiPublishModalActiveStep('openApiSpec'));
+            dispatch(setApiPublishModalLastCompletedStep('openApiSpec'));
             dispatch(setNewApiContent(null));
 
             dispatch(
@@ -433,7 +451,7 @@ const ApiPublishModal: React.FC = () => {
             </Button>
           ) : null}
 
-          {activeStep !== 'rateLimiting' ? (
+          {activeStep !== 'authentication' ? (
             <Button type="default" onClick={() => onSubmitHandler()}>
               {renderedNextButtonText[activeStepIndex]}
             </Button>
@@ -514,6 +532,7 @@ const ApiPublishModal: React.FC = () => {
               {activeStep === 'websocket' && <Websocket form={form} />}
               {activeStep === 'cache' && <Cache />}
               {activeStep === 'rateLimiting' && <RateLimiting />}
+              {activeStep === 'authentication' && <BasicAuthentication />}
             </Suspense>
           </Form>
         </S.FormContainer>
