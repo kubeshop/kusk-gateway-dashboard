@@ -12,7 +12,8 @@ type StepType =
   | 'cors'
   | 'websocket'
   | 'cache'
-  | 'rateLimiting';
+  | 'rateLimiting'
+  | 'authentication';
 
 type StaticRouteStepType = 'routeInfo' | 'fleetInfo' | 'hosts' | 'paths';
 
