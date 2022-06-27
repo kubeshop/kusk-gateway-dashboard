@@ -15,6 +15,8 @@ import {TableOfContentsItem} from '@models/swaggerUI';
 import {useAppSelector} from '@redux/hooks';
 import {setApiDefinitionTableOfContentsHeight, setPublicApiDefinitionTableOfContentsHeight} from '@redux/reducers/ui';
 
+import {ApiRawYaml} from '@components/ApiRawYaml';
+
 import {getOperationId} from '@swaggerUI/utils/operations';
 import {getPathId} from '@swaggerUI/utils/path';
 
@@ -35,6 +37,7 @@ const TableOfContents: React.FC<IProps> = props => {
   const tableOfContentsHeight = useAppSelector(state => state.ui.tableOfContentsHeight);
 
   const [containerRef, {height}] = useMeasure<HTMLDivElement>();
+  const [showYaml, setShowYaml] = useState<boolean>(false);
 
   const [status, setStatus] = useState<'collapsed' | 'expanded'>('expanded');
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
@@ -76,12 +79,19 @@ const TableOfContents: React.FC<IProps> = props => {
 
   const onCollapseExpandButtonClickHandler = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.stopPropagation();
-
+    e.currentTarget.blur();
+    setShowYaml(false);
     if (tableContentStatus === 'collapsed') {
       setTableContentStatus('expanded');
     } else {
       setTableContentStatus('collapsed');
     }
+  };
+
+  const onShowYamlHandler = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.stopPropagation();
+    e.currentTarget.blur();
+    setShowYaml(!showYaml);
   };
 
   useEffect(() => {
@@ -110,8 +120,8 @@ const TableOfContents: React.FC<IProps> = props => {
       <S.Panel
         extra={
           status === 'expanded' ? (
-            <Button type="default" onClick={onCollapseExpandButtonClickHandler}>
-              {tableContentStatus === 'collapsed' ? 'Expand operations' : 'Collapse operations'}
+            <Button style={{marginRight: 8}} onClick={onShowYamlHandler}>
+              {showYaml ? 'Show Tree' : 'Show YAML'}
             </Button>
           ) : null
         }
@@ -131,24 +141,33 @@ const TableOfContents: React.FC<IProps> = props => {
             handle={resizableHandler}
             onResizeStop={resizeTableOfContentsHandler}
           >
-            <S.Tree
-              expandedKeys={expandedKeys}
-              showLine={{showLeafIcon: false}}
-              showIcon={false}
-              switcherIcon={<DownOutlined />}
-              treeData={treeData}
-              onExpand={expandedKeysValue => {
-                if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
-                  setTimeout(() => setTableContentStatus('collapsed'), 200);
-                }
+            {showYaml ? (
+              <ApiRawYaml />
+            ) : (
+              <S.TreeContainer>
+                <S.Tree
+                  expandedKeys={expandedKeys}
+                  showLine={{showLeafIcon: false}}
+                  showIcon={false}
+                  switcherIcon={<DownOutlined />}
+                  treeData={treeData}
+                  onExpand={expandedKeysValue => {
+                    if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
+                      setTimeout(() => setTableContentStatus('collapsed'), 200);
+                    }
 
-                if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
-                  setTimeout(() => setTableContentStatus('expanded'), 200);
-                }
+                    if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
+                      setTimeout(() => setTableContentStatus('expanded'), 200);
+                    }
 
-                setExpandedKeys(expandedKeysValue);
-              }}
-            />
+                    setExpandedKeys(expandedKeysValue);
+                  }}
+                />
+                <S.CollapseTreeButton type="default" onClick={onCollapseExpandButtonClickHandler}>
+                  {tableContentStatus === 'collapsed' ? 'Expand operations' : 'Collapse operations'}
+                </S.CollapseTreeButton>
+              </S.TreeContainer>
+            )}
           </ResizableBox>
         </S.ContentContainer>
       </S.Panel>

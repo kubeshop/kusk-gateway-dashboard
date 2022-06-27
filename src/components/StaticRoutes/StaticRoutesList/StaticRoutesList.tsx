@@ -1,12 +1,14 @@
-import {Suspense, useEffect, useMemo, useState} from 'react';
+import {Suspense, useMemo, useState} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Button, Skeleton} from 'antd';
 
-import {useGetNamespaces, useGetStaticRoutes} from '@models/api';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
-import {selectStaticRoute, setStaticRoutes} from '@redux/reducers/main';
+import {selectStaticRoute} from '@redux/reducers/main';
 import {openStaticRouteModal} from '@redux/reducers/ui';
+import {useGetNamespacesQuery, useGetStaticRoutesQuery} from '@redux/services/enhancedApi';
 
 import {AddStaticRouteModal} from '@components/AddStaticRouteModal';
 import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
@@ -18,22 +20,18 @@ import * as S from './styled';
 const {Option} = S.Select;
 
 const StaticRoutesList: React.FC = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.STATIC_ROUTES_LIST_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useAppDispatch();
-  const staticRoutes = useAppSelector(state => state.main.staticRoutes);
 
   const isStaticRouteModalVisible = useAppSelector(state => state.ui.staticRouteModal.isOpen);
-  const selectedStaticRoute = useAppSelector(state => state.main.selectedStaticRoute);
 
-  const {data: namespaces} = useGetNamespaces({});
+  const {data: namespaces} = useGetNamespacesQuery();
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
 
-  const {
-    data,
-    error,
-    loading,
-    refetch: refetchStaticRoutes,
-  } = useGetStaticRoutes({queryParams: {namespace: selectedNamespace}});
-
+  const {data: staticRoutes, isLoading: loading, error} = useGetStaticRoutesQuery({namespace: selectedNamespace});
   const renderedNamespacesOptions = useMemo(() => {
     return namespaces?.map(namespace => (
       <Option key={namespace.name} value={namespace.name}>
@@ -45,32 +43,18 @@ const StaticRoutesList: React.FC = () => {
   const onNamespaceSelectHandler = (namespace: string) => {
     setSelectedNamespace(namespace);
     dispatch(selectStaticRoute(null));
+    trackEvent({eventName: Events.DROPDOWN_SELECTED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onNamespaceSelectionClearHandler = () => {
     setSelectedNamespace(undefined);
     dispatch(selectStaticRoute(null));
+    trackEvent({eventName: Events.DROPDOWN_SELECTED, type: ANALYTIC_TYPE.ACTION});
   };
-
-  useEffect(() => {
-    if (!loading && !isStaticRouteModalVisible) {
-      refetchStaticRoutes();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStaticRoute, isStaticRouteModalVisible]);
-
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-
-    dispatch(setStaticRoutes(data));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
 
   const handlePublishStaticRoute = () => {
     dispatch(openStaticRouteModal());
+    trackEvent({eventName: Events.PUBLISH_STATIC_ROUTES_MODAL_OPENED, type: ANALYTIC_TYPE.ACTION});
   };
 
   return (
@@ -94,15 +78,15 @@ const StaticRoutesList: React.FC = () => {
             {renderedNamespacesOptions}
           </S.Select>
         )}
-        <Button type="primary" onClick={handlePublishStaticRoute}>
+        <Button type="primary" disabled={Boolean(error)} onClick={handlePublishStaticRoute}>
           Publish New Static Route
         </Button>
       </S.TitleFiltersContainer>
 
       {loading && !staticRoutes ? (
         <Skeleton />
-      ) : error ? (
-        <ErrorLabel>{error.message}</ErrorLabel>
+      ) : error && 'error' in error ? (
+        <ErrorLabel>{error.error}</ErrorLabel>
       ) : (
         staticRoutes && (
           <StaticRoutesListTable

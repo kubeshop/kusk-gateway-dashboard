@@ -1,17 +1,14 @@
 import {useEffect} from 'react';
 
-import {Form, FormInstance, Switch} from 'antd';
+import {Form, Switch, Typography} from 'antd';
 
 import {useAppSelector} from '@redux/hooks';
 
-interface IProps {
-  form: FormInstance<any>;
-  isApiMocked: boolean;
-}
+import * as S from './styled';
 
-const Validation: React.FC<IProps> = props => {
-  const {form, isApiMocked} = props;
-
+const Validation = (): JSX.Element => {
+  const form = Form.useFormInstance();
+  const isApiMocked = Form.useWatch(['mocking', 'enabled']);
   const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
 
   useEffect(() => {
@@ -31,7 +28,22 @@ const Validation: React.FC<IProps> = props => {
   }, [isApiMocked, openApiSpec]);
 
   return (
-    <Form.Item label="Request validation" name={['validation', 'request', 'enabled']} valuePropName="checked">
+    <Form.Item
+      label={
+        <S.LabelContainer>
+          <Typography.Text>Request validation</Typography.Text>
+          <Typography.Link
+            href="https://kubeshop.github.io/kusk-gateway/reference/extension/#validation"
+            target="_blank"
+          >
+            learn more
+            <S.InfoLinkIcon height={15} width={15} />
+          </Typography.Link>
+        </S.LabelContainer>
+      }
+      name={['validation', 'request', 'enabled']}
+      valuePropName="checked"
+    >
       <Switch disabled={isApiMocked} />
     </Form.Item>
   );

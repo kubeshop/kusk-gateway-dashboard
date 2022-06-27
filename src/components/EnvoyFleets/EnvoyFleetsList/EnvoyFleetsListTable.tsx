@@ -1,9 +1,8 @@
 import React, {useMemo} from 'react';
 
-import {EnvoyFleetItem} from '@models/api';
-
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
+import {EnvoyFleetItem} from '@redux/services/kuskApi';
 
 import {ListTableColumnLabel} from '@components';
 

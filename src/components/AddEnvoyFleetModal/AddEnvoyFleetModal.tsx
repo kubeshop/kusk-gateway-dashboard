@@ -1,19 +1,22 @@
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
+import {useTracking} from 'react-tracking';
 
 import {Button, Form, Input, Radio, Select, Space, Steps} from 'antd';
 
-import {CheckCircleOutlined, InfoCircleOutlined, MinusCircleOutlined} from '@ant-design/icons';
-
 import {AlertEnum} from '@models/alert';
-import {ServicePortItem, useCreateFleet, useGetNamespaces} from '@models/api';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {setAlert} from '@redux/reducers/alert';
 import {closeEnvoyFleetModalModal} from '@redux/reducers/ui';
+import {useCreateFleetMutation, useGetNamespacesQuery} from '@redux/services/enhancedApi';
+
+import FormStep from './FormStep';
+import PortsInfo from './PortsInfo';
 
 import * as S from './styled';
 
-type FormSteps = 'fleetInfo' | 'portsInfo';
+type FormStepsType = 'fleetInfo' | 'portsInfo';
 
 interface FleetForm {
   fleetInfo: {
@@ -26,15 +29,22 @@ interface FleetForm {
   };
 }
 
+const orderedSteps: FormStepsType[] = ['fleetInfo', 'portsInfo'];
+
 const AddEnvoyFleetModal = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.PUBLISH_ENVOY_FLEET_MODAL_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useDispatch();
   const [form] = Form.useForm<FleetForm>();
-  const {data: namespaces} = useGetNamespaces({});
-  const {mutate: createFleet, loading: isLoadingNewFleet} = useCreateFleet({});
-  const [activeStep, setActiveStep] = useState<FormSteps>('fleetInfo');
+  const {data: namespaces} = useGetNamespacesQuery();
+  const [createFleet, {isLoading: isLoadingNewFleet}] = useCreateFleetMutation();
+  const [activeStep, setActiveStep] = useState<FormStepsType>('fleetInfo');
 
   const onBackHandler = () => {
     dispatch(closeEnvoyFleetModalModal());
+    trackEvent({eventName: Events.PUBLISH_ENVOY_FLEET_MODAL_DISMISSED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onStepHandler = async () => {
@@ -49,7 +59,7 @@ const AddEnvoyFleetModal = () => {
   const onSubmitHandler = async () => {
     const {fleetInfo, portsInfo} = await form.validateFields();
     form.submit();
-    const portsList: ServicePortItem[] = portsInfo.ports.map(p => ({
+    const portsList = portsInfo.ports.map(p => ({
       port: Number(p),
       name: 'fleet',
       nodePort: 1,
@@ -58,7 +68,7 @@ const AddEnvoyFleetModal = () => {
     }));
 
     try {
-      await createFleet({...fleetInfo, ports: portsList, status: 'available'});
+      await createFleet({serviceItem: {...fleetInfo, ports: portsList, status: 'available'}}).unwrap();
       dispatch(closeEnvoyFleetModalModal());
       dispatch(
         setAlert({
@@ -76,6 +86,7 @@ const AddEnvoyFleetModal = () => {
         })
       );
     }
+    trackEvent({eventName: Events.PUBLISH_ENVOY_FLEET_SUBMITTED, type: ANALYTIC_TYPE.ACTION});
   };
 
   return (
@@ -91,10 +102,14 @@ const AddEnvoyFleetModal = () => {
           </Button>
 
           <Button type="text" onClick={onStepHandler} disabled={activeStep === 'portsInfo'}>
-            Next
+            {orderedSteps[orderedSteps.indexOf(activeStep) + 1] || 'Next'}
           </Button>
 
-          <Button type="primary" disabled={isLoadingNewFleet} onClick={onSubmitHandler}>
+          <Button
+            type="primary"
+            disabled={isLoadingNewFleet || orderedSteps[1] !== activeStep}
+            onClick={onSubmitHandler}
+          >
             {isLoadingNewFleet ? 'Publishing Fleet...' : 'Publish'}
           </Button>
         </>
@@ -103,12 +118,10 @@ const AddEnvoyFleetModal = () => {
       <Form layout="vertical" form={form}>
         <S.Container>
           <S.StepsContainer>
-            <Steps direction="vertical" current={activeStep === 'fleetInfo' ? 1 : 2}>
-              <Steps.Step
-                title="Envoy Fleet Info"
-                icon={activeStep === 'fleetInfo' ? <InfoCircleOutlined /> : <CheckCircleOutlined />}
-              />
-              <Steps.Step title="Envoy Fleet Ports" icon={<InfoCircleOutlined />} />
+            <Steps direction="vertical" current={orderedSteps.indexOf(activeStep) + 1}>
+              {orderedSteps.map(step => (
+                <FormStep key={step} step={step} activeStep={activeStep} setActiveStep={setActiveStep} />
+              ))}
             </Steps>
           </S.StepsContainer>
 
@@ -149,38 +162,7 @@ const AddEnvoyFleetModal = () => {
             </S.FormStepContainer>
 
             <S.FormStepContainer $visible={activeStep === 'portsInfo'}>
-              <Form.Item
-                name="checkPorts"
-                rules={[
-                  ({getFieldValue}) => ({
-                    validator() {
-                      if (getFieldValue(['portsInfo', 'ports'])?.length === 0) {
-                        return Promise.reject(new Error('Add one port at least'));
-                      }
-                      return Promise.resolve();
-                    },
-                  }),
-                ]}
-              >
-                <Form.List name={['portsInfo', 'ports']}>
-                  {(fields, {add, remove}) => (
-                    <div>
-                      {fields.map(field => (
-                        <Form.Item
-                          name={[field.name]}
-                          rules={[{required: true, min: 1, max: 65535, message: 'type port number!'}]}
-                        >
-                          <div style={{display: 'flex', alignItems: 'center', gap: 16, margin: '4px 0'}}>
-                            <Input style={{width: 200}} placeholder="type port number!" type="number" />
-                            <MinusCircleOutlined style={{fontSize: 16}} onClick={() => remove(field.name)} />
-                          </div>
-                        </Form.Item>
-                      ))}
-                      <Button onClick={add}>Add Port</Button>
-                    </div>
-                  )}
-                </Form.List>
-              </Form.Item>
+              <PortsInfo />
             </S.FormStepContainer>
           </S.FormContainer>
         </S.Container>

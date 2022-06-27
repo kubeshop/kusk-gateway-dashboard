@@ -1,9 +1,10 @@
-import {Suspense, lazy, useEffect} from 'react';
+import {Suspense, lazy} from 'react';
+import {useTracking} from 'react-tracking';
 
-import {ServiceItem, useGetServices} from '@models/api';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
-import {useAppDispatch, useAppSelector} from '@redux/hooks';
-import {setServices} from '@redux/reducers/main';
+import {useAppSelector} from '@redux/hooks';
+import {useGetServicesQuery} from '@redux/services/enhancedApi';
 
 import {ApisList, Dashboard} from '@components';
 
@@ -11,41 +12,18 @@ const ApiPublishModal = lazy(() => import('@components/ApiPublishModal/ApiPublis
 const ApiInfo = lazy(() => import('@components/Apis/ApiInfo/ApiInfo'));
 
 const Apis: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const apis = useAppSelector(state => state.main.apis);
+  const {Track} = useTracking({page: Events.API_PAGE, type: ANALYTIC_TYPE.PAGE}, {dispatchOnMount: true});
   const isApiPublishModalVisible = useAppSelector(state => state.ui.apiPublishModal.isOpen);
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
-  const {data, error, loading} = useGetServices({});
-
-  useEffect(() => {
-    let items: ServiceItem[] = [];
-
-    if (loading) {
-      dispatch(setServices({items, isLoading: true}));
-      return;
-    }
-
-    if (error) {
-      dispatch(setServices({error: error.message, items, isLoading: true}));
-      return;
-    }
-
-    if (data) {
-      items = data;
-    }
-
-    dispatch(setServices({items, isLoading: false}));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apis, data, error, loading]);
+  useGetServicesQuery({});
 
   return (
-    <>
+    <Track>
       <Dashboard listElement={<ApisList />} infoElement={<ApiInfo />} selectedTableItem={selectedApi} />
 
       <Suspense fallback={null}>{isApiPublishModalVisible && <ApiPublishModal />}</Suspense>
-    </>
+    </Track>
   );
 };
 

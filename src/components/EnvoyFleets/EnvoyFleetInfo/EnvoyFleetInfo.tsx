@@ -1,16 +1,18 @@
 import {Suspense, lazy} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Modal, Skeleton} from 'antd';
 
 import {MenuInfo} from 'rc-menu/lib/interface';
 
 import {AlertEnum} from '@models/alert';
-import {useDeleteFleet} from '@models/api';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 import {setEnvoyFleetInfoActiveTab} from '@redux/reducers/ui';
+import {useDeleteApiMutation} from '@redux/services/enhancedApi';
 
 import {InfoTabs} from '@components';
 import {
@@ -45,10 +47,14 @@ const menuItems = [
 ];
 
 const EnvoyFleetInfo: React.FC = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.ENVOY_FLEET_INFO_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useAppDispatch();
   const activeTab = useAppSelector(state => state.ui.envoyFleetInfoActiveTab);
   const selectedFleet = useAppSelector(state => state.main.selectedEnvoyFleet);
-  const {mutate: deleteFleet} = useDeleteFleet({namespace: selectedFleet?.namespace || ''});
+  const [deleteFleet] = useDeleteApiMutation();
   const onCloseHandler = () => {
     dispatch(selectEnvoyFleet(null));
     dispatch(setEnvoyFleetInfoActiveTab('crd'));
@@ -61,7 +67,7 @@ const EnvoyFleetInfo: React.FC = () => {
           title: `Do you want to delete ${selectedFleet.name} envoy fleet?`,
           onOk: async () => {
             try {
-              await deleteFleet(selectedFleet.name);
+              await deleteFleet({namespace: selectedFleet?.namespace || '', name: selectedFleet.name}).unwrap();
               dispatch(
                 setAlert({
                   title: 'Envoy fleet deleted successfully',
@@ -84,6 +90,7 @@ const EnvoyFleetInfo: React.FC = () => {
         });
       }
     }
+    trackEvent({eventName: Events.ENVOY_FLEET_MENU_CLICKED, type: ANALYTIC_TYPE.ACTION});
   };
 
   return (

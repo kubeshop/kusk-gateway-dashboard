@@ -1,12 +1,15 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useMemo, useState} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Button, Select, Skeleton, Tag} from 'antd';
 
-import {EnvoyFleetItem, useGetApis, useGetEnvoyFleets, useGetNamespaces} from '@models/api';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
-import {useAppDispatch, useAppSelector} from '@redux/hooks';
-import {selectApi, setApis} from '@redux/reducers/main';
+import {useAppDispatch} from '@redux/hooks';
+import {selectApi} from '@redux/reducers/main';
 import {openApiPublishModal} from '@redux/reducers/ui';
+import {useGetApisQuery, useGetEnvoyFleetsQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
+import {EnvoyFleetItem} from '@redux/services/kuskApi';
 
 import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
 
@@ -20,33 +23,28 @@ const {Option} = Select;
 
 const ApisList: React.FC = () => {
   const dispatch = useAppDispatch();
-  const apis = useAppSelector(state => state.main.apis);
-  const selectedApi = useAppSelector(state => state.main.selectedApi);
+  const {trackEvent} = useTracking(
+    {eventName: Events.API_LIST_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
 
   const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
-  const {data: namespaces} = useGetNamespaces({});
-  const {
-    data,
-    error,
-    loading,
-    refetch: refetchAPi,
-  } = useGetApis({
-    queryParams: {
-      fleetname: selectedFleet?.name,
-      fleetnamespace: selectedFleet?.namespace,
-      namespace: selectedNamespace,
-    },
+  const {data: namespaces} = useGetNamespacesQuery();
+  const {data, error, isError, isLoading} = useGetApisQuery({
+    fleetname: selectedFleet?.name,
+    fleetnamespace: selectedFleet?.namespace,
+    namespace: selectedNamespace,
   });
 
-  const envoyFleetsState = useGetEnvoyFleets({});
+  const {data: fleets, isLoading: isLoadingFleets} = useGetEnvoyFleetsQuery({});
 
   const renderedFleetsOptions = useMemo(() => {
-    if (!envoyFleetsState?.data?.length || !Array.isArray(envoyFleetsState.data)) {
+    if (!fleets?.length || !Array.isArray(fleets)) {
       return null;
     }
 
-    return envoyFleetsState.data
+    return fleets
       .filter(el => el.namespace.includes(selectedNamespace || ''))
       .map(envoyFleetItem => (
         <Option key={getEnvoyFleetKey(envoyFleetItem)} value={envoyFleetItem.name} envoyfleet={envoyFleetItem}>
@@ -54,7 +52,7 @@ const ApisList: React.FC = () => {
           {envoyFleetItem.name}
         </Option>
       ));
-  }, [envoyFleetsState.data, selectedNamespace]);
+  }, [fleets, selectedNamespace]);
 
   const renderedNamespaceOptions = useMemo(() => {
     return namespaces?.map(namespace => (
@@ -67,6 +65,7 @@ const ApisList: React.FC = () => {
   const onEnvoyFleetSelectHandler = (envoyFleetItem: EnvoyFleetItem) => {
     setSelectedFleet(envoyFleetItem);
     dispatch(selectApi(null));
+    trackEvent({eventName: Events.DROPDOWN_SELECTED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onNamespaceSelectHandler = (namespace: string) => {
@@ -88,36 +87,16 @@ const ApisList: React.FC = () => {
     dispatch(openApiPublishModal());
   };
 
-  useEffect(() => {
-    if (!loading) {
-      refetchAPi();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedApi]);
-
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-
-    dispatch(setApis(data));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
-
   return (
     <ContentWrapper>
       <PageTitle>APIs</PageTitle>
 
       <S.ActionsContainer>
         <S.FiltersContainer>
-          {envoyFleetsState.loading ? (
+          {isLoadingFleets ? (
             <Skeleton.Button />
-          ) : envoyFleetsState.error ? (
-            <ErrorLabel>{envoyFleetsState.error.message}</ErrorLabel>
           ) : (
-            envoyFleetsState.data && (
+            fleets && (
               <Select
                 allowClear
                 placeholder="Select a fleet"
@@ -132,9 +111,9 @@ const ApisList: React.FC = () => {
             )
           )}
 
-          {loading ? (
+          {isLoading ? (
             <Skeleton.Button />
-          ) : error ? null : (
+          ) : !namespaces ? null : (
             <Select
               allowClear
               placeholder="Select a namespace"
@@ -151,7 +130,7 @@ const ApisList: React.FC = () => {
         </S.FiltersContainer>
 
         <Button
-          disabled={loading || Boolean(error) || !Array.isArray(data)}
+          disabled={isLoading || Boolean(error) || !Array.isArray(data)}
           type="primary"
           onClick={showApiPublishModalHandler}
         >
@@ -159,12 +138,12 @@ const ApisList: React.FC = () => {
         </Button>
       </S.ActionsContainer>
 
-      {loading && !apis ? (
+      {isLoading ? (
         <Skeleton />
-      ) : error ? (
-        <ErrorLabel>{error.message}</ErrorLabel>
+      ) : isError && 'error' in error ? (
+        <ErrorLabel>{error.error}</ErrorLabel>
       ) : (
-        apis && <ApisListTable apis={apis} />
+        data && <ApisListTable apis={data} />
       )}
     </ContentWrapper>
   );

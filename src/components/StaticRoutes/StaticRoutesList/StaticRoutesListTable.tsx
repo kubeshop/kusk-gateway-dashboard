@@ -1,9 +1,8 @@
 import {useMemo} from 'react';
 
-import {StaticRouteItem} from '@models/api';
-
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectStaticRoute} from '@redux/reducers/main';
+import {StaticRouteItem} from '@redux/services/kuskApi';
 
 import {ListTableColumnLabel} from '@components';
 

@@ -1,8 +1,12 @@
 import {useMemo} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {useTracking} from 'react-tracking';
+
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectStaticRoute} from '@redux/reducers/main';
+import {useGetStaticRoutesQuery} from '@redux/services/enhancedApi';
 
 import {getStaticRouteKey} from '@utils/staticRoute';
 
@@ -14,9 +18,13 @@ const columns = [
 ];
 
 const StaticRoutes: React.FC = () => {
+  useTracking(
+    {eventName: Events.ENVOY_FLEET_STATIC_ROUTES_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useAppDispatch();
   const envoyFleetStaticRoutes = useAppSelector(state => state.main.selectedEnvoyFleet?.staticRoutes);
-  const staticRoutes = useAppSelector(state => state.main.staticRoutes);
+  const {data: staticRoutes = []} = useGetStaticRoutesQuery({});
 
   const navigate = useNavigate();
 

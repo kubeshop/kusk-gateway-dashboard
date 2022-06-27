@@ -2,7 +2,19 @@ import {Radio, Input as RawInput, Select as RawSelect} from 'antd';
 
 import styled from 'styled-components';
 
+import ExternalLinkIcon from '@components/Icons/ExternalLink';
+
 import Colors from '@styles/colors';
+
+export const LabelContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const InfoLinkIcon = styled(ExternalLinkIcon)`
+  vertical-align: middle;
+  margin-left: 4px;
+`;
 
 export const ExtensionSubHeading = styled.h4`
   font-size: 16px;

@@ -1,4 +1,4 @@
-import {ApiItem, ApiItemFleet} from '@models/api';
+import {ApiItem, ApiItemFleet} from '@redux/services/kuskApi';
 
 export const getApiKey = (api: ApiItem | ApiItemFleet | null) => (api ? `${api.namespace}-${api.name}` : '');
 
