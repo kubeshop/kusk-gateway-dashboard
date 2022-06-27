@@ -1,16 +1,13 @@
 import {useEffect} from 'react';
 
-import {Form, FormInstance, Switch} from 'antd';
+import {Form, Switch, Typography} from 'antd';
 
 import {useAppSelector} from '@redux/hooks';
 
-interface IProps {
-  form: FormInstance<any>;
-}
+import * as S from './styled';
 
-const Websocket: React.FC<IProps> = props => {
-  const {form} = props;
-
+const Websocket = (): JSX.Element => {
+  const form = Form.useFormInstance();
   const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
 
   useEffect(() => {
@@ -26,7 +23,22 @@ const Websocket: React.FC<IProps> = props => {
   }, [openApiSpec]);
 
   return (
-    <Form.Item label="Websocket" name="websocket" valuePropName="checked">
+    <Form.Item
+      label={
+        <S.LabelContainer>
+          <Typography.Text>Websocket</Typography.Text>
+          <Typography.Link
+            href="https://kubeshop.github.io/kusk-gateway/reference/extension/#websocket"
+            target="_blank"
+          >
+            learn more
+            <S.InfoLinkIcon height={15} width={15} />
+          </Typography.Link>
+        </S.LabelContainer>
+      }
+      name="websocket"
+      valuePropName="checked"
+    >
       <Switch />
     </Form.Item>
   );

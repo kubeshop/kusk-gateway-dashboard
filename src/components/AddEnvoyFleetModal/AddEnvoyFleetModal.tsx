@@ -1,9 +1,11 @@
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
+import {useTracking} from 'react-tracking';
 
 import {Button, Form, Input, Radio, Select, Space, Steps} from 'antd';
 
 import {AlertEnum} from '@models/alert';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {setAlert} from '@redux/reducers/alert';
 import {closeEnvoyFleetModalModal} from '@redux/reducers/ui';
@@ -30,6 +32,10 @@ interface FleetForm {
 const orderedSteps: FormStepsType[] = ['fleetInfo', 'portsInfo'];
 
 const AddEnvoyFleetModal = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.PUBLISH_ENVOY_FLEET_MODAL_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useDispatch();
   const [form] = Form.useForm<FleetForm>();
   const {data: namespaces} = useGetNamespacesQuery();
@@ -38,6 +44,7 @@ const AddEnvoyFleetModal = () => {
 
   const onBackHandler = () => {
     dispatch(closeEnvoyFleetModalModal());
+    trackEvent({eventName: Events.PUBLISH_ENVOY_FLEET_MODAL_DISMISSED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onStepHandler = async () => {
@@ -79,6 +86,7 @@ const AddEnvoyFleetModal = () => {
         })
       );
     }
+    trackEvent({eventName: Events.PUBLISH_ENVOY_FLEET_SUBMITTED, type: ANALYTIC_TYPE.ACTION});
   };
 
   return (
