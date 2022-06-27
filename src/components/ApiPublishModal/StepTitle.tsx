@@ -37,7 +37,7 @@ const StepTitle: React.FC<IProps> = props => {
         )}
       </S.StepTitleContainer>
 
-      {step !== 'apiInfo' && step === activeStep && (
+      {step !== 'apiSettings' && step === activeStep && (
         <S.LearnMoreContainer href={documentationLink} rel="noopener noreferrer" target="_blank">
           Learn more
           <ExternalLinkIcon height={15} width={15} />

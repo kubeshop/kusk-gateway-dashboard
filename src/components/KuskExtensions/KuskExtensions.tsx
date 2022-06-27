@@ -1,9 +1,12 @@
+import {useTracking} from 'react-tracking';
+
 import {Collapse, Skeleton} from 'antd';
 
 import YAML from 'yaml';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
 
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 import {KuskExtensionsItem} from '@models/dashboard';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
@@ -23,6 +26,7 @@ import * as S from './styled';
 const {Panel} = Collapse;
 
 const KuskExtensions: React.FC = () => {
+  useTracking({eventName: Events.API_KUSK_EXTENSION_LOADED, type: ANALYTIC_TYPE.ACTION}, {dispatchOnMount: true});
   const dispatch = useAppDispatch();
   const kuskExtensionsActiveKeys = useAppSelector(state => state.ui.kuskExtensionsActiveKeys);
   const selectedApi = useAppSelector(state => state.main.selectedApi);

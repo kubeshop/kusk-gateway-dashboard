@@ -9,6 +9,7 @@ import {SIDEBAR_WIDTH} from '@constants/constants';
 
 import {NotificationBox, Sidebar} from '@components';
 
+import Tracker from './analytics/AnalyticsContext';
 import Router from './routes';
 
 const AppContainer = styled.div`
@@ -20,14 +21,16 @@ const AppContainer = styled.div`
 
 const App = () => {
   return (
-    <AppContainer>
-      <NotificationBox />
-      <Sidebar />
+    <Tracker>
+      <AppContainer>
+        <NotificationBox />
+        <Sidebar />
 
-      <Suspense fallback={<Skeleton />}>
-        <Router />
-      </Suspense>
-    </AppContainer>
+        <Suspense fallback={<Skeleton />}>
+          <Router />
+        </Suspense>
+      </AppContainer>
+    </Tracker>
   );
 };
 

@@ -5,6 +5,7 @@ module.exports = {
   webpack: {
     alias: {
       '@assets': path.resolve(__dirname, 'src/assets'),
+      '@analytics': path.resolve(__dirname, 'src/analytics'),
       '@components': path.resolve(__dirname, 'src/components'),
       '@constants': path.resolve(__dirname, 'src/constants'),
       '@models': path.resolve(__dirname, 'src/models'),
