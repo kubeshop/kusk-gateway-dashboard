@@ -48,12 +48,12 @@ const renderedNextButtonText: {[key: number]: string} = {
   0: 'Add API Settings',
   1: 'Add Fleet Info',
   2: 'Add Target',
-  3: 'HostS',
+  3: 'Add Hosts',
   4: 'Add QOS',
   5: 'Add CORS',
   6: 'Add Cache',
   7: 'Add Rate Limiting',
-  8: 'Authentication',
+  8: 'Add Authentication',
   9: 'Publish',
 };
 

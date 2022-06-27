@@ -103,7 +103,7 @@ const CORS: React.FC<IProps> = props => {
         <Switch />
       </Form.Item>
 
-      <Form.Item label="Max age" name={['cors', 'max_age']}>
+      <Form.Item label="Max age (in seconds)" name={['cors', 'max_age']}>
         <S.Input type="number" />
       </Form.Item>
     </>
