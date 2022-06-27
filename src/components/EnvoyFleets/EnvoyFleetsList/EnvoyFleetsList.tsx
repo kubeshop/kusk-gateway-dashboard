@@ -1,6 +1,9 @@
 import {useMemo, useState} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Button, Skeleton} from 'antd';
+
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {useAppDispatch} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
@@ -16,6 +19,10 @@ import * as S from './styled';
 const {Option} = S.Select;
 
 const EnvoyFleetsList: React.FC = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.ENVOY_FLEET_LIST_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useAppDispatch();
 
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
@@ -34,6 +41,7 @@ const EnvoyFleetsList: React.FC = () => {
   const onNamespaceSelectHandler = (namespace: string) => {
     setSelectedNamespace(namespace);
     dispatch(selectEnvoyFleet(null));
+    trackEvent({eventName: Events.DROPDOWN_SELECTED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onNamespaceSelectionClearHandler = () => {
@@ -43,6 +51,7 @@ const EnvoyFleetsList: React.FC = () => {
 
   const onPublishEnvoyFleetHandle = () => {
     dispatch(openEnvoyFleetModalModal());
+    trackEvent({eventName: Events.PUBLISH_ENVOY_FLEET_MODAL_OPENED, type: ANALYTIC_TYPE.ACTION});
   };
 
   return (
@@ -66,15 +75,15 @@ const EnvoyFleetsList: React.FC = () => {
             {renderedNamespacesOptions}
           </S.Select>
         )}
-        <Button type="primary" onClick={onPublishEnvoyFleetHandle}>
+        <Button type="primary" disabled={Boolean(error)} onClick={onPublishEnvoyFleetHandle}>
           Publish New Envoy Fleet
         </Button>
       </S.TitleFiltersContainer>
 
       {isLoading ? (
         <Skeleton />
-      ) : error ? (
-        <ErrorLabel>{error}</ErrorLabel>
+      ) : error && 'error' in error ? (
+        <ErrorLabel>{error.error}</ErrorLabel>
       ) : (
         data && <EnvoyFleetsListTable envoyFleets={data.filter(el => el.namespace.includes(selectedNamespace || ''))} />
       )}

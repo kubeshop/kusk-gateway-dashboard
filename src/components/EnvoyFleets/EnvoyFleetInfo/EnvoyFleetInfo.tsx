@@ -1,10 +1,12 @@
 import {Suspense, lazy} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Modal, Skeleton} from 'antd';
 
 import {MenuInfo} from 'rc-menu/lib/interface';
 
 import {AlertEnum} from '@models/alert';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
@@ -45,6 +47,10 @@ const menuItems = [
 ];
 
 const EnvoyFleetInfo: React.FC = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.ENVOY_FLEET_INFO_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useAppDispatch();
   const activeTab = useAppSelector(state => state.ui.envoyFleetInfoActiveTab);
   const selectedFleet = useAppSelector(state => state.main.selectedEnvoyFleet);
@@ -84,6 +90,7 @@ const EnvoyFleetInfo: React.FC = () => {
         });
       }
     }
+    trackEvent({eventName: Events.ENVOY_FLEET_MENU_CLICKED, type: ANALYTIC_TYPE.ACTION});
   };
 
   return (

@@ -1,11 +1,13 @@
 import {useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
+import {useTracking} from 'react-tracking';
 
 import {Button, Form, Steps} from 'antd';
 
 import YAML from 'yaml';
 
 import {AlertEnum} from '@models/alert';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 import {PathMatch, StaticRoute, StaticRouteForm} from '@models/main';
 import {StaticRouteStepType} from '@models/ui';
 
@@ -58,6 +60,10 @@ const steps: Array<{step: StaticRouteStepType; title: string; documentationLink:
 ];
 
 const AddStaticRouteModal = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.PUBLISH_STATIC_ROUTES_MODAL_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useDispatch();
   const [form] = Form.useForm<StaticRouteForm>();
   const [openPathModal, setOpenPathModal] = useState<boolean>(false);
@@ -136,10 +142,12 @@ const AddStaticRouteModal = () => {
         })
       );
     }
+    trackEvent({eventName: Events.PUBLISH_STATIC_ROUTES_SUBMITTED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onBackHandler = () => {
     dispatch(closeStaticRouteModal());
+    trackEvent({eventName: Events.PUBLISH_STATIC_ROUTES_MODAL_DISMISSED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const handleNextStep = async () => {
