@@ -1,4 +1,5 @@
 import {Suspense, lazy, useEffect, useMemo, useState} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Button, Form, Radio, Skeleton, Steps} from 'antd';
 
@@ -6,34 +7,36 @@ import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
 import {AlertEnum} from '@models/alert';
-import {ApiItem, useDeployApi} from '@models/api';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 import {ApiContent} from '@models/main';
 import {StepType} from '@models/ui';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
-import {setApis, setNewApiContent} from '@redux/reducers/main';
+import {setNewApiContent} from '@redux/reducers/main';
 import {
   closeApiPublishModal,
   setApiPublishModalActiveStep,
   setApiPublishModalLastCompletedStep,
 } from '@redux/reducers/ui';
+import {useDeployApiMutation} from '@redux/services/enhancedApi';
+import {ApiItem} from '@redux/services/kuskApi';
 
 import FleetInfo from './FleetInfo';
 import Step from './Step';
 
 import * as S from './styled';
 
-const ApiInfo = lazy(() => import('./ApiInfo'));
 const CORS = lazy(() => import('./extensions/CORS'));
-const Hosts = lazy(() => import('./extensions/Hosts'));
+const ApiSettings = lazy(() => import('./ApiSettings'));
 const OpenApiSpec = lazy(() => import('./OpenApiSpec'));
-const Path = lazy(() => import('./extensions/Path'));
+const Hosts = lazy(() => import('./extensions/Hosts'));
 const QOS = lazy(() => import('./extensions/QOS'));
 const Redirect = lazy(() => import('./extensions/Redirect'));
 const Upstream = lazy(() => import('./extensions/Upstream'));
-const Validation = lazy(() => import('./extensions/Validation'));
-const Websocket = lazy(() => import('./extensions/Websocket'));
+const Cache = lazy(() => import('./extensions/Cache'));
+const RateLimiting = lazy(() => import('./extensions/RateLimiting'));
+const BasicAuthentication = lazy(() => import('./extensions/BasicAuthentication'));
 
 interface StepItem {
   step: StepType;
@@ -42,36 +45,39 @@ interface StepItem {
 }
 
 const renderedNextButtonText: {[key: number]: string} = {
-  0: 'Add API Info',
+  0: 'Add API Settings',
   1: 'Add Fleet Info',
   2: 'Add Target',
-  3: 'Add Validation',
-  4: 'Add Hosts',
-  5: 'Add QOS',
-  6: 'Add Path',
-  7: 'Add CORS',
-  8: 'Add Websocket',
+  3: 'Add Hosts',
+  4: 'Add QOS',
+  5: 'Add CORS',
+  6: 'Add Cache',
+  7: 'Add Rate Limiting',
+  8: 'Add Authentication',
   9: 'Publish',
 };
 
 const orderedSteps: StepType[] = [
   'openApiSpec',
-  'apiInfo',
+  'apiSettings',
   'fleetInfo',
   'target',
-  'validation',
   'hosts',
   'qos',
-  'path',
   'cors',
-  'websocket',
+  'caching',
+  'rateLimiting',
+  'authentication',
 ];
 
 const ApiPublishModal: React.FC = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.PUBLISH_API_MODAL_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useAppDispatch();
   const activeStep = useAppSelector(state => state.ui.apiPublishModal.activeStep);
   const apiContent = useAppSelector(state => state.main.newApiContent);
-  const apis = useAppSelector(state => state.main.apis);
   const lastCompletedStep = useAppSelector(state => state.ui.apiPublishModal.lastCompletedStep);
 
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -82,7 +88,7 @@ const ApiPublishModal: React.FC = () => {
   const [targetSelection, setTargetSelection] = useState<string>('upstream');
   const [upstreamReference, setUpstreamReference] = useState<string>('service');
 
-  const {mutate: deployAPI} = useDeployApi({});
+  const [deployAPI] = useDeployApiMutation();
 
   const [form] = Form.useForm();
 
@@ -91,7 +97,7 @@ const ApiPublishModal: React.FC = () => {
   const steps: StepItem[] = useMemo(
     () => [
       {documentationLink: 'https://swagger.io/specification', step: 'openApiSpec', title: 'OpenAPI Spec'},
-      {step: 'apiInfo', title: 'API Info'},
+      {step: 'apiSettings', title: 'API Settings'},
       {
         step: 'fleetInfo',
         title: 'Fleet Info',
@@ -102,12 +108,16 @@ const ApiPublishModal: React.FC = () => {
         step: 'target',
         title: 'Target',
       },
-      {step: 'validation', title: 'Validation'},
       {step: 'hosts', title: 'Hosts'},
       {step: 'qos', title: 'QOS'},
-      {step: 'path', title: 'Path'},
       {step: 'cors', title: 'CORS'},
-      {step: 'websocket', title: 'Websocket'},
+      {step: 'caching', title: 'Caching'},
+      {
+        step: 'rateLimiting',
+        title: 'Rate Limiting',
+        documentationLink: 'https://kubeshop.github.io/kusk-gateway/reference/extension/#rate-limiting',
+      },
+      {step: 'authentication', title: 'Authentication'},
     ],
     [targetSelection]
   );
@@ -170,16 +180,20 @@ const ApiPublishModal: React.FC = () => {
       }
 
       if (apiContent) {
-        if (activeStep === 'apiInfo') {
-          const {name, namespace} = values;
+        newApiContent = apiContent;
+        if (activeStep === 'apiSettings') {
+          const {name, namespace, validation, path, websocket} = values;
 
+          let openApiSpec = {
+            ...apiContent.openapi,
+            'x-kusk': {...apiContent.openapi['x-kusk'], validation, path, websocket},
+          };
           newApiContent = {
             name,
             namespace: namespace || 'default',
-            openapi: apiContent.openapi,
-
             envoyFleetNamespace: apiContent?.envoyFleetNamespace || '',
             envoyFleetName: apiContent?.envoyFleetNamespace || '',
+            openapi: openApiSpec,
           };
         }
 
@@ -237,17 +251,13 @@ const ApiPublishModal: React.FC = () => {
           newApiContent = {...apiContent, openapi: openApiSpec};
         }
 
-        if (activeStep === 'validation') {
-          const {validation} = values;
-
-          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], validation}};
-          newApiContent = {...apiContent, openapi: openApiSpec};
-        }
-
         if (activeStep === 'hosts') {
           const {hosts} = values;
 
-          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], hosts}};
+          let openApiSpec = {
+            ...apiContent.openapi,
+            'x-kusk': {...apiContent.openapi['x-kusk'], hosts},
+          };
           newApiContent = {...apiContent, openapi: openApiSpec};
         }
 
@@ -270,13 +280,6 @@ const ApiPublishModal: React.FC = () => {
           newApiContent = {...apiContent, openapi: openApiSpec};
         }
 
-        if (activeStep === 'path') {
-          const {path} = values;
-
-          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], path}};
-          newApiContent = {...apiContent, openapi: openApiSpec};
-        }
-
         if (activeStep === 'cors') {
           const {cors} = values;
 
@@ -288,15 +291,42 @@ const ApiPublishModal: React.FC = () => {
           newApiContent = {...apiContent, openapi: openApiSpec};
         }
 
-        if (activeStep === 'websocket') {
-          const {websocket} = values;
+        if (activeStep === 'caching') {
+          const {cache} = values;
+          if (cache.enabled) {
+            let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], cache}};
+            newApiContent = {...apiContent, openapi: openApiSpec};
+          }
+        }
 
-          let openApiSpec = {...apiContent.openapi, 'x-kusk': {...apiContent.openapi['x-kusk'], websocket}};
-          newApiContent = {...apiContent, openapi: openApiSpec};
+        if (activeStep === 'rateLimiting') {
+          const {
+            rateLimit: {enabled, ...rateLimitConfig},
+          } = values;
+          if (enabled) {
+            let openApiSpec = {
+              ...apiContent.openapi,
+              'x-kusk': {...apiContent.openapi['x-kusk'], rate_limit: rateLimitConfig},
+            };
+            newApiContent = {...apiContent, openapi: openApiSpec};
+          }
+        }
+
+        if (activeStep === 'authentication') {
+          const {
+            auth: {enabled, ...auth},
+          } = values;
+          if (enabled) {
+            let openApiSpec = {
+              ...apiContent.openapi,
+              'x-kusk': {...apiContent.openapi['x-kusk'], auth},
+            };
+            newApiContent = {...apiContent, openapi: openApiSpec};
+          }
         }
       }
 
-      if (!publish && activeStep !== 'websocket') {
+      if (!publish && activeStep !== 'authentication') {
         dispatch(setNewApiContent(newApiContent));
         dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) + 1]));
 
@@ -327,14 +357,14 @@ const ApiPublishModal: React.FC = () => {
           envoyFleetNamespace: newApiContent.envoyFleetNamespace,
           openapi: YAML.stringify(cleanDeep(newApiContent.openapi)),
         };
-
-        deployAPI(body)
+        deployAPI({body})
+          .unwrap()
           .then((response: any) => {
             const apiData: ApiItem = response;
 
-            dispatch(setApis([...apis, apiData]));
             dispatch(closeApiPublishModal());
             dispatch(setApiPublishModalActiveStep('openApiSpec'));
+            dispatch(setApiPublishModalLastCompletedStep('openApiSpec'));
             dispatch(setNewApiContent(null));
 
             dispatch(
@@ -351,11 +381,13 @@ const ApiPublishModal: React.FC = () => {
           });
       }
     });
+    trackEvent({eventName: Events.PUBLISH_API_SUBMITTED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onBackHandler = () => {
     dispatch(setApiPublishModalActiveStep(orderedSteps[orderedSteps.indexOf(activeStep) - 1]));
     setErrorMessage('');
+    trackEvent({eventName: Events.PUBLISH_API_MODAL_DISMISSED, type: ANALYTIC_TYPE.ACTION});
   };
 
   useEffect(() => {
@@ -396,7 +428,7 @@ const ApiPublishModal: React.FC = () => {
             </Button>
           ) : null}
 
-          {activeStep !== 'websocket' ? (
+          {activeStep !== 'authentication' ? (
             <Button type="default" onClick={() => onSubmitHandler()}>
               {renderedNextButtonText[activeStepIndex]}
             </Button>
@@ -423,6 +455,7 @@ const ApiPublishModal: React.FC = () => {
 
         <S.FormContainer>
           <Form
+            preserve
             form={form}
             initialValues={{openapi: ''}}
             layout="vertical"
@@ -436,10 +469,9 @@ const ApiPublishModal: React.FC = () => {
               {activeStep === 'openApiSpec' && (
                 <OpenApiSpec form={form} isApiMocked={isApiMocked} setIsApiMocked={value => setIsApiMocked(value)} />
               )}
-              {activeStep === 'apiInfo' && <ApiInfo form={form} />}
+              {activeStep === 'apiSettings' && <ApiSettings />}
               {activeStep === 'fleetInfo' && <FleetInfo form={form} />}
 
-              {activeStep === 'validation' && <Validation form={form} isApiMocked={isApiMocked} />}
               {activeStep === 'target' && (
                 <>
                   <S.RadioGroupContainer>
@@ -469,11 +501,13 @@ const ApiPublishModal: React.FC = () => {
                   )}
                 </>
               )}
-              {activeStep === 'hosts' && <Hosts form={form} />}
+
+              {activeStep === 'hosts' && <Hosts />}
               {activeStep === 'qos' && <QOS form={form} />}
-              {activeStep === 'path' && <Path form={form} />}
               {activeStep === 'cors' && <CORS form={form} />}
-              {activeStep === 'websocket' && <Websocket form={form} />}
+              {activeStep === 'caching' && <Cache />}
+              {activeStep === 'rateLimiting' && <RateLimiting />}
+              {activeStep === 'authentication' && <BasicAuthentication />}
             </Suspense>
           </Form>
         </S.FormContainer>

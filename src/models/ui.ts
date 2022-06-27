@@ -1,8 +1,18 @@
 import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from './dashboard';
 
-type StepType = 'openApiSpec' | 'apiInfo' | 'fleetInfo'| 'target' | 'validation' | 'hosts' | 'qos' | 'path' | 'cors' | 'websocket';
+type StepType =
+  | 'openApiSpec'
+  | 'apiSettings'
+  | 'fleetInfo'
+  | 'target'
+  | 'hosts'
+  | 'qos'
+  | 'cors'
+  | 'caching'
+  | 'rateLimiting'
+  | 'authentication';
 
-type StaticRouteStepType = 'routeInfo'| 'fleetInfo'| 'hosts'| 'paths';
+type StaticRouteStepType = 'routeInfo' | 'fleetInfo' | 'hosts' | 'paths';
 
 type PathModalStepType = 'path' | 'target' | 'qos' | 'cors' | 'websocket';
 

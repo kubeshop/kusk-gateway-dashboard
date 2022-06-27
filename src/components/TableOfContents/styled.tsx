@@ -1,4 +1,4 @@
-import {Collapse as RawCollapse, Tree as RawTree} from 'antd';
+import {Button, Collapse as RawCollapse, Tree as RawTree} from 'antd';
 
 import styled from 'styled-components';
 
@@ -71,6 +71,18 @@ export const Panel = styled(RawCollapse.Panel)`
   & .ant-collapse-arrow {
     margin-right: 8px !important;
   }
+`;
+
+export const TreeContainer = styled.div`
+  position: relative;
+`;
+
+export const CollapseTreeButton = styled(Button)`
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  margin: 8px !important;
 `;
 
 export const Tree = styled(RawTree)`

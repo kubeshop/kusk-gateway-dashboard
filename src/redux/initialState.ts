@@ -8,16 +8,10 @@ const initialAlertState: AlertState = {
 
 const initialMainState: MainState = {
   apiEndpoint: '/api/',
-  apis: [],
   newApiContent: null,
   selectedApi: null,
   selectedEnvoyFleet: null,
   selectedStaticRoute: null,
-  services: {
-    isLoading: true,
-    items: [],
-  },
-  staticRoutes: [],
 };
 
 const initialUiState: UiState = {
@@ -44,7 +38,7 @@ const initialUiState: UiState = {
   staticRouteModal: {
     isOpen: false,
     activeStep: 'routeInfo',
-    lastCompletedStep: 'routeInfo'
+    lastCompletedStep: 'routeInfo',
   },
   tableOfContentsHeight: {
     apiDefinition: 500,

@@ -1,12 +1,14 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useMemo, useState} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Button, Skeleton} from 'antd';
 
-import {useGetEnvoyFleets, useGetNamespaces} from '@models/api';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
-import {useAppDispatch, useAppSelector} from '@redux/hooks';
+import {useAppDispatch} from '@redux/hooks';
 import {selectEnvoyFleet} from '@redux/reducers/main';
 import {openEnvoyFleetModalModal} from '@redux/reducers/ui';
+import {useGetEnvoyFleetsQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 
 import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
 
@@ -17,19 +19,16 @@ import * as S from './styled';
 const {Option} = S.Select;
 
 const EnvoyFleetsList: React.FC = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.ENVOY_FLEET_LIST_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useAppDispatch();
-  const selectedEnvoyFleet = useAppSelector(state => state.main.selectedEnvoyFleet);
-  const isEnvoyFleetPublishModalVisible = useAppSelector(state => state.ui.envoyFleetModal.isOpen);
 
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
 
-  const {data: namespaces} = useGetNamespaces({});
-  const {
-    data,
-    error,
-    loading,
-    refetch: refetchEnvoyFleet,
-  } = useGetEnvoyFleets({queryParams: {namespace: selectedNamespace}});
+  const {data: namespaces} = useGetNamespacesQuery();
+  const {data, error, isLoading} = useGetEnvoyFleetsQuery({namespace: selectedNamespace});
 
   const renderedNamespacesOptions = useMemo(() => {
     return namespaces?.map(namespace => (
@@ -42,6 +41,7 @@ const EnvoyFleetsList: React.FC = () => {
   const onNamespaceSelectHandler = (namespace: string) => {
     setSelectedNamespace(namespace);
     dispatch(selectEnvoyFleet(null));
+    trackEvent({eventName: Events.DROPDOWN_SELECTED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onNamespaceSelectionClearHandler = () => {
@@ -51,22 +51,15 @@ const EnvoyFleetsList: React.FC = () => {
 
   const onPublishEnvoyFleetHandle = () => {
     dispatch(openEnvoyFleetModalModal());
+    trackEvent({eventName: Events.PUBLISH_ENVOY_FLEET_MODAL_OPENED, type: ANALYTIC_TYPE.ACTION});
   };
-
-  useEffect(() => {
-    if (!loading && !isEnvoyFleetPublishModalVisible) {
-      refetchEnvoyFleet();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedEnvoyFleet, isEnvoyFleetPublishModalVisible]);
 
   return (
     <ContentWrapper>
       <PageTitle>Envoy Fleets</PageTitle>
 
       <S.TitleFiltersContainer>
-        {loading ? (
+        {isLoading ? (
           <Skeleton.Button />
         ) : error ? null : (
           <S.Select
@@ -82,15 +75,15 @@ const EnvoyFleetsList: React.FC = () => {
             {renderedNamespacesOptions}
           </S.Select>
         )}
-        <Button type="primary" onClick={onPublishEnvoyFleetHandle}>
+        <Button type="primary" disabled={Boolean(error)} onClick={onPublishEnvoyFleetHandle}>
           Publish New Envoy Fleet
         </Button>
       </S.TitleFiltersContainer>
 
-      {loading ? (
+      {isLoading ? (
         <Skeleton />
-      ) : error ? (
-        <ErrorLabel>{error.message}</ErrorLabel>
+      ) : error && 'error' in error ? (
+        <ErrorLabel>{error.error}</ErrorLabel>
       ) : (
         data && <EnvoyFleetsListTable envoyFleets={data.filter(el => el.namespace.includes(selectedNamespace || ''))} />
       )}

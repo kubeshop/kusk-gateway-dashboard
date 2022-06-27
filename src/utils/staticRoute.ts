@@ -1,4 +1,4 @@
-import {StaticRouteItem} from '@models/api';
+import {StaticRouteItem} from '@redux/services/kuskApi';
 
 export const getStaticRouteKey = (staticRoute: StaticRouteItem | null) =>
   staticRoute ? `${staticRoute.namespace}-${staticRoute.name}` : '';

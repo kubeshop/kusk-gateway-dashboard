@@ -3,6 +3,8 @@
     "paths": {
       "@assets/*": ["src/assets/*"],
       "@assets": ["src/assets/"],
+      "@analytics/*": ["src/analytics/*"],
+      "@analytics": ["src/analytics/"],
       "@components/*": ["src/components/*"],
       "@components": ["src/components/"],
       "@constants/*": ["src/constants/*"],

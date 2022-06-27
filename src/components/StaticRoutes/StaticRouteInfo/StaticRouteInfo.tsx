@@ -1,16 +1,18 @@
 import {Suspense, lazy} from 'react';
+import {useTracking} from 'react-tracking';
 
 import {Modal, Skeleton} from 'antd';
 
 import {MenuInfo} from 'rc-menu/lib/interface';
 
 import {AlertEnum} from '@models/alert';
-import {useDeleteStaticRoute} from '@models/api';
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 import {selectStaticRoute} from '@redux/reducers/main';
 import {setStaticRouteInfoActiveTab} from '@redux/reducers/ui';
+import {useDeleteApiMutation} from '@redux/services/enhancedApi';
 
 import {InfoTabs} from '@components';
 import {
@@ -39,14 +41,19 @@ const menuItems = [
 ];
 
 const StaticRouteInfo: React.FC = () => {
+  const {trackEvent} = useTracking(
+    {eventName: Events.STATIC_ROUTES_INFO_LOADED, type: ANALYTIC_TYPE.ACTION},
+    {dispatchOnMount: true}
+  );
   const dispatch = useAppDispatch();
   const activeTab = useAppSelector(state => state.ui.staticRouteInfoActiveTab);
   const selectedStaticRoute = useAppSelector(state => state.main.selectedStaticRoute);
-  const {mutate: deleteStaticRoute} = useDeleteStaticRoute({namespace: selectedStaticRoute?.namespace || ''});
+  const [deleteStaticRoute] = useDeleteApiMutation();
 
   const onCloseHandler = () => {
     dispatch(selectStaticRoute(null));
     dispatch(setStaticRouteInfoActiveTab('crd'));
+    trackEvent({eventName: Events.STATIC_ROUTES_INFO_CLOSED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onMenuItemClick = async (event: MenuInfo) => {
@@ -57,7 +64,10 @@ const StaticRouteInfo: React.FC = () => {
           icon: <InfoPanelDeleteIcon />,
           onOk: async () => {
             try {
-              await deleteStaticRoute(selectedStaticRoute.name);
+              await deleteStaticRoute({
+                namespace: selectedStaticRoute?.namespace || '',
+                name: selectedStaticRoute.name,
+              }).unwrap();
               dispatch(
                 setAlert({
                   title: 'Static Route deleted successfully',
@@ -80,6 +90,7 @@ const StaticRouteInfo: React.FC = () => {
         });
       }
     }
+    trackEvent({eventName: Events.STATIC_ROUTES_MENU_CLICKED, type: ANALYTIC_TYPE.ACTION});
   };
 
   return (

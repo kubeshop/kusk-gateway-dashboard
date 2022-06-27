@@ -1,8 +1,12 @@
 import {useMemo} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {useTracking} from 'react-tracking';
+
+import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
+import {useGetApisQuery} from '@redux/services/enhancedApi';
 
 import {getApiKey} from '@utils/api';
 
@@ -14,8 +18,9 @@ const columns = [
 ];
 
 const APIs: React.FC = () => {
+  useTracking({eventName: Events.ENVOY_FLEET_API_LOADED, type: ANALYTIC_TYPE.ACTION}, {dispatchOnMount: true});
   const dispatch = useAppDispatch();
-  const apis = useAppSelector(state => state.main.apis);
+  const {data: apis = []} = useGetApisQuery({});
   const envoyFleetApis = useAppSelector(state => state.main.selectedEnvoyFleet?.apis);
 
   const navigate = useNavigate();

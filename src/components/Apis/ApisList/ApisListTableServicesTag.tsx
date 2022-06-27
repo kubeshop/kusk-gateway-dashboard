@@ -2,9 +2,8 @@ import {useMemo} from 'react';
 
 import {Skeleton} from 'antd';
 
-import {ApiItem} from '@models/api';
-
-import {useAppSelector} from '@redux/hooks';
+import {useGetServicesQuery} from '@redux/services/enhancedApi';
+import {ApiItem} from '@redux/services/kuskApi';
 
 import * as S from './ApisListTableServicesTag.styled';
 
@@ -17,21 +16,21 @@ interface IProps {
 const ApisListTableServicesTag: React.FC<IProps> = props => {
   const {api, apiKey, selectedApiKey} = props;
 
-  const services = useAppSelector(state => state.main.services);
+  const {data: services = [], ...servicesInfo} = useGetServicesQuery({});
 
   const service = useMemo(() => {
-    if (!Array.isArray(services.items)) {
+    if (!Array.isArray(services)) {
       return undefined;
     }
 
-    return services.items.find(s => s.name === api.service.name && s.namespace === api.service.namespace);
-  }, [api.service.name, api.service.namespace, services.items]);
+    return services.find(s => s.name === api.service.name && s.namespace === api.service.namespace);
+  }, [api.service.name, api.service.namespace, services]);
 
   return (
     <S.Container>
-      {services.isLoading ? (
+      {servicesInfo.isLoading ? (
         <Skeleton.Button />
-      ) : services.error || !service || service.status === 'unavailable' ? (
+      ) : servicesInfo.error || !service || service.status === 'unavailable' ? (
         <S.FalseTag>Unavailable</S.FalseTag>
       ) : (
         service?.status === 'available' && <S.TrueTag>Available</S.TrueTag>
