@@ -50,6 +50,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            SEGMENT_API_KEY=${{ secrets.REACT_APP_SEGMENT_API_KEY }}
 
   helm_chart_version_bump:
     name: "Trigger Helm chart appVersion update"
