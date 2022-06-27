@@ -21,3 +21,5 @@ jobs:
           context: .
           file: Dockerfile
           push: false
+          build-args: |
+            SEGMENT_API_KEY=${{ secrets.REACT_APP_SEGMENT_API_KEY }}
