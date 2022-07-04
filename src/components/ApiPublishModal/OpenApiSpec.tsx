@@ -1,25 +1,20 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useMemo, useState} from 'react';
 
-import {Checkbox, Form, FormInstance} from 'antd';
+import {Checkbox, Form} from 'antd';
 
 import YAML from 'yaml';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
 
-import {useAppSelector} from '@redux/hooks';
-
 import * as S from './OpenApiSpec.styled';
 
 interface IProps {
-  form: FormInstance<any>;
   isApiMocked: boolean;
   setIsApiMocked: (value: boolean) => void;
 }
 
 const OpenApiSpec: React.FC<IProps> = props => {
-  const {form, isApiMocked, setIsApiMocked} = props;
-
-  const apiContent = useAppSelector(state => state.main.newApiContent);
+  const {isApiMocked, setIsApiMocked} = props;
 
   const [warnings, setWarnings] = useState<string[]>([]);
 
@@ -46,22 +41,6 @@ const OpenApiSpec: React.FC<IProps> = props => {
       </S.WarningsContainer>
     );
   }, [isApiMocked, warnings]);
-
-  useEffect(() => {
-    if (!apiContent) {
-      return;
-    }
-
-    const mocking = apiContent.openapi['x-kusk']?.mocking;
-
-    if (mocking) {
-      form.setFieldsValue({mocking});
-    }
-
-    form.setFieldsValue({openapi: YAML.stringify(apiContent.openapi)});
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiContent]);
 
   return (
     <>

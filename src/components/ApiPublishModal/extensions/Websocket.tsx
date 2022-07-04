@@ -1,27 +1,8 @@
-import {useEffect} from 'react';
-
 import {Form, Switch, Typography} from 'antd';
-
-import {useAppSelector} from '@redux/hooks';
 
 import * as S from './styled';
 
 const Websocket = (): JSX.Element => {
-  const form = Form.useFormInstance();
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
-
-  useEffect(() => {
-    const websocket = openApiSpec['x-kusk'].websocket;
-
-    if (!websocket) {
-      return;
-    }
-
-    form.setFieldsValue({websocket});
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openApiSpec]);
-
   return (
     <Form.Item
       label={

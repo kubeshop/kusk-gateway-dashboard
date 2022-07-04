@@ -1,53 +1,33 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect} from 'react';
 
-import {Form, FormInstance, Radio, Switch} from 'antd';
-
-import {useAppSelector} from '@redux/hooks';
+import {Form, Radio, Switch} from 'antd';
 
 import * as S from './styled';
 
 const {Option} = S.Select;
 
 interface IProps {
-  form: FormInstance<any>;
   selectedTab: string;
   setSelectedTab: (tabKey: string) => void;
+  isRequiredFields: boolean;
 }
 
 const Redirect: React.FC<IProps> = props => {
-  const {form, selectedTab, setSelectedTab} = props;
-
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
-
-  const isApiMocked = useMemo(() => {
-    if (!openApiSpec) {
-      return false;
-    }
-
-    const mocking = openApiSpec['x-kusk']?.mocking?.enabled;
-
-    if (mocking) {
-      return true;
-    }
-
-    return false;
-  }, [openApiSpec]);
-
+  const {selectedTab, setSelectedTab, isRequiredFields} = props;
+  const form = Form.useFormInstance();
   useEffect(() => {
-    const redirect = openApiSpec['x-kusk'].redirect;
+    const redirect = form.getFieldValue('redirect');
 
     if (!redirect) {
       return;
     }
-
-    form.setFieldsValue({redirect});
 
     if (!redirect['path_redirect'] && redirect['rewrite_regex']) {
       setSelectedTab('rewrite_regex');
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openApiSpec]);
+  }, []);
 
   return (
     <>
@@ -63,7 +43,7 @@ const Redirect: React.FC<IProps> = props => {
         name={['redirect', 'host_redirect']}
         rules={[
           {
-            required: !isApiMocked,
+            required: isRequiredFields,
             message: 'Please enter name!',
           },
         ]}
@@ -74,9 +54,10 @@ const Redirect: React.FC<IProps> = props => {
       <Form.Item
         label="Port redirect"
         name={['redirect', 'port_redirect']}
+        getValueFromEvent={e => Number(e.target.value)}
         rules={[
           {
-            required: !isApiMocked,
+            required: isRequiredFields,
             message: 'Please enter name!',
           },
         ]}
@@ -86,11 +67,11 @@ const Redirect: React.FC<IProps> = props => {
 
       <Form.Item label="Response code" name={['redirect', 'response_code']}>
         <S.Select allowClear placeholder="Select redirect response code">
-          <Option value="301">301</Option>
-          <Option value="302">302</Option>
-          <Option value="303">303</Option>
-          <Option value="307">307</Option>
-          <Option value="308">308</Option>
+          <Option value={301}>301</Option>
+          <Option value={302}>302</Option>
+          <Option value={303}>303</Option>
+          <Option value={307}>307</Option>
+          <Option value={308}>308</Option>
         </S.Select>
       </Form.Item>
 
