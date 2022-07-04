@@ -209,7 +209,6 @@ const AddStaticRouteModal = () => {
 
         <S.FormContainer>
           <Form.Provider
-            onFormChange={(formName: string, {changedFields, forms}) => console.log('fired', changedFields, forms)}
             onFormFinish={(name, {forms, values}) => {
               if (name === 'addPathForm') {
                 const {staticRouteForm} = forms;
