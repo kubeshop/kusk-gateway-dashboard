@@ -30,7 +30,9 @@ interface FleetForm {
 }
 
 const orderedSteps: FormStepsType[] = ['fleetInfo', 'portsInfo'];
-
+const renderedNextButtonText: {[key: number]: string} = {
+  1: 'Add Ports Info',
+};
 const AddEnvoyFleetModal = () => {
   const {trackEvent} = useTracking(
     {eventName: Events.PUBLISH_ENVOY_FLEET_MODAL_LOADED, type: ANALYTIC_TYPE.ACTION},
@@ -57,9 +59,10 @@ const AddEnvoyFleetModal = () => {
   };
 
   const onSubmitHandler = async () => {
-    const {fleetInfo, portsInfo} = await form.validateFields();
+    await form.validateFields();
+    const {fleetInfo, portsInfo} = await form.getFieldsValue(true);
     form.submit();
-    const portsList = portsInfo.ports.map(p => ({
+    const portsList = portsInfo.ports.map((p: string) => ({
       port: Number(p),
       name: 'fleet',
       nodePort: 1,
@@ -102,7 +105,7 @@ const AddEnvoyFleetModal = () => {
           </Button>
 
           <Button type="text" onClick={onStepHandler} disabled={activeStep === 'portsInfo'}>
-            {orderedSteps[orderedSteps.indexOf(activeStep) + 1] || 'Next'}
+            {renderedNextButtonText[orderedSteps.indexOf(activeStep) + 1] || 'Next'}
           </Button>
 
           <Button
@@ -115,7 +118,7 @@ const AddEnvoyFleetModal = () => {
         </>
       }
     >
-      <Form layout="vertical" form={form}>
+      <Form preserve layout="vertical" form={form}>
         <S.Container>
           <S.StepsContainer>
             <Steps direction="vertical" current={orderedSteps.indexOf(activeStep) + 1}>
@@ -126,44 +129,44 @@ const AddEnvoyFleetModal = () => {
           </S.StepsContainer>
 
           <S.FormContainer>
-            <S.FormStepContainer $visible={activeStep === 'fleetInfo'}>
-              <Form.Item
-                name={['fleetInfo', 'name']}
-                label="Name"
-                rules={[{required: true, message: 'Enter envoy fleet name!'}]}
-              >
-                <Input />
-              </Form.Item>
+            {activeStep === 'fleetInfo' && (
+              <>
+                <Form.Item
+                  name={['fleetInfo', 'name']}
+                  label="Name"
+                  rules={[{required: true, message: 'Enter envoy fleet name!'}]}
+                >
+                  <Input />
+                </Form.Item>
 
-              <Form.Item
-                name={['fleetInfo', 'namespace']}
-                label="Namespace"
-                rules={[{required: true, message: 'Enter target namespace!'}]}
-              >
-                <Select>
-                  {namespaces?.map(namespace => (
-                    <Select.Option value={namespace.name}>{namespace.name}</Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
+                <Form.Item
+                  name={['fleetInfo', 'namespace']}
+                  label="Namespace"
+                  rules={[{required: true, message: 'Enter target namespace!'}]}
+                >
+                  <Select>
+                    {namespaces?.map(namespace => (
+                      <Select.Option value={namespace.name}>{namespace.name}</Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
 
-              <Form.Item
-                name={['fleetInfo', 'serviceType']}
-                label="Service type"
-                rules={[{required: true, message: 'Select service type!'}]}
-              >
-                <Radio.Group>
-                  <Space direction="vertical">
-                    <Radio value="LoadBalancer">LoadBalancer</Radio>
-                    <Radio value="ClusterIP">ClusterIP</Radio>
-                  </Space>
-                </Radio.Group>
-              </Form.Item>
-            </S.FormStepContainer>
+                <Form.Item
+                  name={['fleetInfo', 'serviceType']}
+                  label="Service type"
+                  rules={[{required: true, message: 'Select service type!'}]}
+                >
+                  <Radio.Group>
+                    <Space direction="vertical">
+                      <Radio value="LoadBalancer">LoadBalancer</Radio>
+                      <Radio value="ClusterIP">ClusterIP</Radio>
+                    </Space>
+                  </Radio.Group>
+                </Form.Item>
+              </>
+            )}
 
-            <S.FormStepContainer $visible={activeStep === 'portsInfo'}>
-              <PortsInfo />
-            </S.FormStepContainer>
+            {activeStep === 'portsInfo' && <PortsInfo />}
           </S.FormContainer>
         </S.Container>
       </Form>

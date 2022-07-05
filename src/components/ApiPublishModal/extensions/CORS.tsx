@@ -1,12 +1,10 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 
 import {Button, Checkbox, Form, FormInstance, Switch} from 'antd';
 
 import styled from 'styled-components';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
-
-import {useAppSelector} from '@redux/hooks';
 
 import {FormList} from '@components';
 
@@ -32,8 +30,6 @@ const StyledButton = styled(Button)`
 const CORS: React.FC<IProps> = props => {
   const {form} = props;
 
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
-
   const [areCheckedAll, setAreCheckedAll] = useState(false);
 
   const onCheckHandler = () => {
@@ -45,16 +41,6 @@ const CORS: React.FC<IProps> = props => {
       setAreCheckedAll(true);
     }
   };
-
-  useEffect(() => {
-    const cors = openApiSpec['x-kusk']?.cors;
-
-    if (!cors) {
-      return;
-    }
-
-    form.setFieldsValue({cors});
-  }, [form, openApiSpec]);
 
   return (
     <>
@@ -103,7 +89,11 @@ const CORS: React.FC<IProps> = props => {
         <Switch />
       </Form.Item>
 
-      <Form.Item label="Max age (in seconds)" name={['cors', 'max_age']}>
+      <Form.Item
+        label="Max age (in seconds)"
+        name={['cors', 'max_age']}
+        getValueFromEvent={e => Number(e.target.value)}
+      >
         <S.Input type="number" />
       </Form.Item>
     </>

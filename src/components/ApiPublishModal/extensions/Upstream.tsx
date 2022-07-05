@@ -1,8 +1,7 @@
 import {useEffect, useMemo, useState} from 'react';
 
-import {Form, FormInstance, Radio, Skeleton, Tag} from 'antd';
+import {Form, Radio, Skeleton, Tag} from 'antd';
 
-import {useAppSelector} from '@redux/hooks';
 import {useGetServicesQuery} from '@redux/services/enhancedApi';
 import {ServiceItem} from '@redux/services/kuskApi';
 
@@ -13,34 +12,18 @@ import * as S from './styled';
 const {Option} = S.Select;
 
 interface IProps {
-  form: FormInstance<any>;
   reference: string;
   setReference: (reference: string) => void;
+  isRequiredFields: boolean;
 }
 
 const Upstream: React.FC<IProps> = props => {
-  const {form, reference, setReference} = props;
-
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
+  const {reference, setReference, isRequiredFields} = props;
+  const form = Form.useFormInstance();
   const {data: services = [], ...servicesInfo} = useGetServicesQuery({});
 
   const formService = form.getFieldValue('service');
-
   const [selectedService, setSelectedService] = useState<ServiceItem | undefined>(formService || undefined);
-
-  const isApiMocked = useMemo(() => {
-    if (!openApiSpec) {
-      return false;
-    }
-
-    const mocking = openApiSpec['x-kusk']?.mocking?.enabled;
-
-    if (mocking) {
-      return true;
-    }
-
-    return false;
-  }, [openApiSpec]);
 
   const selectedServicePorts = useMemo(() => {
     if (!selectedService) {
@@ -53,7 +36,7 @@ const Upstream: React.FC<IProps> = props => {
   const onServiceSelectClearHandler = () => {
     setSelectedService(undefined);
 
-    const upstreamService = openApiSpec['x-kusk']?.upstream?.service;
+    const upstreamService = form.getFieldValue(['upstream', 'service']);
 
     if (upstreamService) {
       form.setFieldsValue({service: upstreamService});
@@ -67,38 +50,31 @@ const Upstream: React.FC<IProps> = props => {
   };
 
   useEffect(() => {
-    const upstream = openApiSpec['x-kusk'].upstream;
+    const {upstream} = form.getFieldsValue(true);
 
     if (!upstream) {
       return;
     }
-
-    form.setFieldsValue({upstream});
 
     if (!upstream.service && upstream.host) {
       setReference('host');
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openApiSpec]);
+  }, []);
 
   useEffect(() => {
     if (!selectedService) {
       return;
     }
-
-    const specPort = openApiSpec['x-kusk']?.upstream?.service?.port;
-
     form.setFieldsValue({
       upstream: {
         service: {
           name: selectedService.name,
           namespace: selectedService.namespace,
-          port: selectedServicePorts.find(port => port === specPort) ? specPort : undefined,
         },
       },
     });
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedService, formService]);
 
@@ -154,7 +130,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'service', 'name']}
             rules={[
               {
-                required: !isApiMocked,
+                required: isRequiredFields,
                 message: 'Please enter name!',
               },
             ]}
@@ -167,7 +143,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'service', 'namespace']}
             rules={[
               {
-                required: !isApiMocked,
+                required: isRequiredFields,
                 message: 'Please enter namespace!',
               },
             ]}
@@ -183,7 +159,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'service', 'port']}
             rules={[
               {
-                required: !isApiMocked,
+                required: isRequiredFields,
                 message: `Please ${selectedService ? 'choose' : 'enter'} a valid port!`,
               },
             ]}
@@ -191,7 +167,7 @@ const Upstream: React.FC<IProps> = props => {
             {selectedService ? (
               <S.Select placeholder="Target port to which requests should be routed">
                 {selectedServicePorts.map(port => (
-                  <Option key={port} value={port}>
+                  <Option key={port} value={Number(port)}>
                     {port}
                   </Option>
                 ))}
@@ -208,7 +184,7 @@ const Upstream: React.FC<IProps> = props => {
             name={['upstream', 'host', 'hostname']}
             rules={[
               {
-                required: !isApiMocked,
+                required: isRequiredFields,
                 message: 'Please enter hostname!',
               },
             ]}
@@ -218,9 +194,10 @@ const Upstream: React.FC<IProps> = props => {
           <Form.Item
             label="Port"
             name={['upstream', 'host', 'port']}
+            getValueFromEvent={e => Number(e.target.value)}
             rules={[
               {
-                required: !isApiMocked,
+                required: isRequiredFields,
                 message: 'Please enter port!',
               },
             ]}

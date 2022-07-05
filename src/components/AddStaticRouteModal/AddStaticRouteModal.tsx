@@ -16,7 +16,6 @@ import {closeStaticRouteModal} from '@redux/reducers/ui';
 import {useCreateStaticRouteMutation} from '@redux/services/enhancedApi';
 
 import {FormStep} from '@components/FormStep';
-import {FormStepLayout} from '@components/FormStepLayout';
 
 import {cleanEmptyFields} from '@utils/staticRoute';
 
@@ -80,9 +79,9 @@ const AddStaticRouteModal = () => {
   );
 
   const onSubmitHandler = async () => {
-    const {routeInfo, fleetInfo, paths, hosts} = await form.validateFields();
+    await form.validateFields();
+    const {routeInfo, fleetInfo, paths, hosts} = (await form.getFieldsValue(true)) as StaticRouteForm;
     try {
-      form.submit();
       const newStaticRouteDefinition: StaticRoute = {
         apiVersion: 'gateway.kusk.io/v1alpha1',
         kind: 'StaticRoute',
@@ -94,7 +93,7 @@ const AddStaticRouteModal = () => {
             name: fleetInfo.targetEnvoyFleet.split(',')[1],
             namespace: fleetInfo.targetEnvoyFleet.split(',')[0],
           },
-          hosts: hosts.hosts || [],
+          hosts: hosts?.hosts || [],
           paths: paths.paths.reduce<Record<string, PathMatch>>((accPaths, path) => {
             const methods = path.path.methods.reduce<Partial<PathMatch>>((acc, method) => {
               acc[method] = {
@@ -218,22 +217,14 @@ const AddStaticRouteModal = () => {
               }
             }}
           >
-            <Form form={form} layout="vertical" name="staticRouteForm">
-              <FormStepLayout visible={activeStep === 'routeInfo'}>
-                <StaticRouteInfo />
-              </FormStepLayout>
+            <Form preserve form={form} layout="vertical" name="staticRouteForm">
+              {activeStep === 'routeInfo' && <StaticRouteInfo />}
 
-              <FormStepLayout visible={activeStep === 'fleetInfo'}>
-                <FleetInfo />
-              </FormStepLayout>
+              {activeStep === 'fleetInfo' && <FleetInfo />}
 
-              <FormStepLayout visible={activeStep === 'hosts'}>
-                <Hosts />
-              </FormStepLayout>
+              {activeStep === 'hosts' && <Hosts />}
 
-              <FormStepLayout visible={activeStep === 'paths'}>
-                <Paths setAddPathModal={setOpenPathModal} />
-              </FormStepLayout>
+              {activeStep === 'paths' && <Paths setAddPathModal={setOpenPathModal} />}
             </Form>
             {openPathModal && <AddPathModal setAddPathModal={setOpenPathModal} />}
           </Form.Provider>
