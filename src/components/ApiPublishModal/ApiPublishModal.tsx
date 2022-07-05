@@ -81,7 +81,7 @@ const ApiPublishModal: React.FC = () => {
   const lastCompletedStep = useAppSelector(state => state.ui.apiPublishModal.lastCompletedStep);
 
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [isApiMocked, setIsApiMocked] = useState<boolean>(false);
+  const isApiMocked = Form.useWatch(['mocking', 'enabled']);
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
   const [isPublishDisabled, setIsPublishedDisabled] = useState<boolean>(true);
   const [redirectTabSelection, setRedirectTabSelection] = useState<string>('path_redirect');
@@ -348,9 +348,7 @@ const ApiPublishModal: React.FC = () => {
             }}
           >
             <Suspense fallback={<Skeleton />}>
-              {activeStep === 'openApiSpec' && (
-                <OpenApiSpec isApiMocked={isApiMocked} setIsApiMocked={value => setIsApiMocked(value)} />
-              )}
+              {activeStep === 'openApiSpec' && <OpenApiSpec />}
               {activeStep === 'apiSettings' && <ApiSettings />}
               {activeStep === 'fleetInfo' && <FleetInfo form={form} />}
 
