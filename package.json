@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@lukeed/uuid": "^2.0.0",
-    "@reduxjs/toolkit": "1.8.1",
+    "@reduxjs/toolkit": "1.8.2",
     "@rtk-incubator/rtk-query": "^0.3.0",
     "@rtk-query/codegen-openapi": "^1.0.0-alpha.1",
     "@segment/analytics-next": "^1.38.0",
