@@ -2,7 +2,8 @@ import {useEffect} from 'react';
 
 import {Form, Select} from 'antd';
 
-import {useAppSelector} from '@redux/hooks';
+import YAML from 'yaml';
+
 import {useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 import {ApiItem} from '@redux/services/kuskApi';
 
@@ -11,19 +12,27 @@ import * as S from './ApiInfo.styled';
 const ApiInfo = (): JSX.Element => {
   const form = Form.useFormInstance();
 
-  const apiContent = useAppSelector(state => state.main.newApiContent);
   const {data: apis} = useGetApisQuery({});
   const {data: namespaces} = useGetNamespacesQuery();
 
   useEffect(() => {
-    if (!apiContent) {
-      return;
+    const values = form.getFieldsValue(true);
+    const {openapi, mocking, name} = values;
+
+    let parsedOpenApi = YAML.parse(JSON.parse(JSON.stringify(openapi)));
+    let apiName = name || formatApiName(parsedOpenApi?.info?.title);
+    if (mocking?.enabled) {
+      if (!apiName.startsWith('mock-')) {
+        apiName = `mock-${apiName}`;
+      }
+    } else if (!mocking?.enabled && apiName.startsWith('mock-')) {
+      apiName = apiName.replace('mock-', '');
     }
 
-    form.setFieldsValue({name: apiContent.name, namespace: apiContent.namespace});
+    form.setFieldsValue({name: apiName});
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiContent]);
+  }, []);
 
   return (
     <>
@@ -73,6 +82,14 @@ const ApiInfo = (): JSX.Element => {
     </>
   );
 };
+
+const formatApiName = (name: string) =>
+  name
+    ? name
+        .trim()
+        .replace(/[\W_]+/g, '-')
+        .toLowerCase()
+    : '';
 
 const checkDuplicateAPI = (apis: ApiItem[], apiKey: string) =>
   apis.find(api => `${api.namespace}-${api.name}` === apiKey);

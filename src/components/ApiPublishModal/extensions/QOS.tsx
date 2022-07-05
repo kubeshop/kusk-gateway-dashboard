@@ -1,43 +1,27 @@
-import {useEffect} from 'react';
-
-import {Form, FormInstance} from 'antd';
-
-import {useAppSelector} from '@redux/hooks';
+import {Form} from 'antd';
 
 import * as S from './styled';
 
-interface IProps {
-  form: FormInstance<any>;
-}
-
-const QOS: React.FC<IProps> = props => {
-  const {form} = props;
-
-  const openApiSpec = useAppSelector(state => state.main.newApiContent?.openapi || {});
-
-  useEffect(() => {
-    const qos = openApiSpec['x-kusk']?.qos;
-
-    if (!qos) {
-      return;
-    }
-
-    form.setFieldsValue({qos});
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openApiSpec]);
-
+const QOS: React.FC = () => {
   return (
     <>
-      <Form.Item label="Idle timeout (in seconds)" name={['qos', 'idle_timeout']}>
+      <Form.Item
+        label="Idle timeout (in seconds)"
+        name={['qos', 'idle_timeout']}
+        getValueFromEvent={e => Number(e.target.value)}
+      >
         <S.Input placeholder="Timeout for idle connections" type="number" />
       </Form.Item>
 
-      <Form.Item label="Retries" name={['qos', 'retries']}>
+      <Form.Item label="Retries" name={['qos', 'retries']} getValueFromEvent={e => Number(e.target.value)}>
         <S.Input placeholder="Number of retries" type="number" />
       </Form.Item>
 
-      <Form.Item label="Request timeout (in seconds)" name={['qos', 'request_timeout']}>
+      <Form.Item
+        label="Request timeout (in seconds)"
+        name={['qos', 'request_timeout']}
+        getValueFromEvent={e => Number(e.target.value)}
+      >
         <S.Input placeholder="Total request timeout" type="number" />
       </Form.Item>
     </>

@@ -1,9 +1,15 @@
 import {Form, InputNumber, Select, Switch} from 'antd';
 
 const RateLimiting = () => {
+  const form = Form.useFormInstance();
   return (
     <>
-      <Form.Item label="Enable" name={['rateLimit', 'enabled']} valuePropName="checked" initialValue={false}>
+      <Form.Item
+        label="Enable"
+        name={['rateLimit', 'enabled']}
+        valuePropName="checked"
+        initialValue={Boolean(form.getFieldValue(['rateLimit']))}
+      >
         <Switch />
       </Form.Item>
       <div style={{display: 'grid', gridTemplateColumns: '180px 180px'}}>

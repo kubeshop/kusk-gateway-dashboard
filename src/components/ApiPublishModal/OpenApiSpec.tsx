@@ -1,25 +1,18 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useMemo, useState} from 'react';
 
-import {Checkbox, Form, FormInstance} from 'antd';
+import {Checkbox, Form} from 'antd';
 
 import YAML from 'yaml';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
 
-import {useAppSelector} from '@redux/hooks';
-
 import * as S from './OpenApiSpec.styled';
 
-interface IProps {
-  form: FormInstance<any>;
-  isApiMocked: boolean;
-  setIsApiMocked: (value: boolean) => void;
-}
+interface IProps {}
 
-const OpenApiSpec: React.FC<IProps> = props => {
-  const {form, isApiMocked, setIsApiMocked} = props;
-
-  const apiContent = useAppSelector(state => state.main.newApiContent);
+const OpenApiSpec: React.FC<IProps> = () => {
+  const form = Form.useFormInstance();
+  const isApiMocked = Form.useWatch(['mocking', 'enabled']);
 
   const [warnings, setWarnings] = useState<string[]>([]);
 
@@ -47,21 +40,10 @@ const OpenApiSpec: React.FC<IProps> = props => {
     );
   }, [isApiMocked, warnings]);
 
-  useEffect(() => {
-    if (!apiContent) {
-      return;
-    }
-
-    const mocking = apiContent.openapi['x-kusk']?.mocking;
-
-    if (mocking) {
-      form.setFieldsValue({mocking});
-    }
-
-    form.setFieldsValue({openapi: YAML.stringify(apiContent.openapi)});
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiContent]);
+  const copyXKuskToForm = (spec: string) => {
+    const openapi = YAML.parse(spec);
+    form.setFieldsValue({...openapi['x-kusk']});
+  };
 
   return (
     <>
@@ -95,6 +77,7 @@ const OpenApiSpec: React.FC<IProps> = props => {
             if (!spec) {
               setWarnings([]);
             } else {
+              copyXKuskToForm(spec);
               setWarnings(checkMockingExamples(YAML.parse(JSON.parse(JSON.stringify(spec)))));
             }
           }}
@@ -104,7 +87,7 @@ const OpenApiSpec: React.FC<IProps> = props => {
       {renderedWarnings}
 
       <Form.Item name={['mocking', 'enabled']} valuePropName="checked">
-        <Checkbox onChange={e => setIsApiMocked(e.target.checked)}>Enable mocking</Checkbox>
+        <Checkbox>Enable mocking</Checkbox>
       </Form.Item>
     </>
   );

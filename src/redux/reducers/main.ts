@@ -29,11 +29,11 @@ export const mainSlice = createSlice({
         localStorage.removeItem(KUSK_SETTINGS_TARGET_API);
       }
     },
-    setNewApiContent: (state: Draft<MainState>, action: PayloadAction<ApiContent | null>) => {
-      state.newApiContent = action.payload;
+    setNewApiFormContent: (state: Draft<MainState>, action: PayloadAction<ApiContent | null>) => {
+      state.newApiFormContent = action.payload;
     },
   },
 });
 
-export const {selectApi, selectEnvoyFleet, selectStaticRoute, setApiEndpoint, setNewApiContent} = mainSlice.actions;
+export const {selectApi, selectEnvoyFleet, selectStaticRoute, setApiEndpoint, setNewApiFormContent} = mainSlice.actions;
 export default mainSlice.reducer;

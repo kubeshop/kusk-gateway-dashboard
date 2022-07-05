@@ -8,7 +8,7 @@ const initialAlertState: AlertState = {
 
 const initialMainState: MainState = {
   apiEndpoint: '/api/',
-  newApiContent: null,
+  newApiFormContent: null,
   selectedApi: null,
   selectedEnvoyFleet: null,
   selectedStaticRoute: null,

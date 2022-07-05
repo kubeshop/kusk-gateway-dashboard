@@ -4,7 +4,7 @@ interface MainState {
   /** API server endpoint */
   apiEndpoint: string;
   /** content of the new publishing API */
-  newApiContent: ApiContent | null;
+  newApiFormContent: {[key: string]: any} | null;
   /**  currently selected API */
   selectedApi: ApiItem | null;
   /**  currently selected Envoy Fleet */
