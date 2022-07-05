@@ -15,7 +15,7 @@ html {
 
 body {
     background-color: #151515;
-    font-family: "PT Sans", "Roboto", sans-serif;
+    // font-family: "PT Sans", "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
