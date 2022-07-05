@@ -43,7 +43,6 @@ const OpenApiSpec: React.FC<IProps> = () => {
   const copyXKuskToForm = (spec: string) => {
     const openapi = YAML.parse(spec);
     form.setFieldsValue({...openapi['x-kusk']});
-    console.log(form.getFieldsValue(true));
   };
 
   return (
