@@ -8,13 +8,11 @@ import {SUPPORTED_METHODS} from '@constants/constants';
 
 import * as S from './OpenApiSpec.styled';
 
-interface IProps {
-  isApiMocked: boolean;
-  setIsApiMocked: (value: boolean) => void;
-}
+interface IProps {}
 
-const OpenApiSpec: React.FC<IProps> = props => {
-  const {isApiMocked, setIsApiMocked} = props;
+const OpenApiSpec: React.FC<IProps> = () => {
+  const form = Form.useFormInstance();
+  const isApiMocked = Form.useWatch(['mocking', 'enabled']);
 
   const [warnings, setWarnings] = useState<string[]>([]);
 
@@ -41,6 +39,12 @@ const OpenApiSpec: React.FC<IProps> = props => {
       </S.WarningsContainer>
     );
   }, [isApiMocked, warnings]);
+
+  const copyXKuskToForm = (spec: string) => {
+    const openapi = YAML.parse(spec);
+    form.setFieldsValue({...openapi['x-kusk']});
+    console.log(form.getFieldsValue(true));
+  };
 
   return (
     <>
@@ -74,6 +78,7 @@ const OpenApiSpec: React.FC<IProps> = props => {
             if (!spec) {
               setWarnings([]);
             } else {
+              copyXKuskToForm(spec);
               setWarnings(checkMockingExamples(YAML.parse(JSON.parse(JSON.stringify(spec)))));
             }
           }}
@@ -83,7 +88,7 @@ const OpenApiSpec: React.FC<IProps> = props => {
       {renderedWarnings}
 
       <Form.Item name={['mocking', 'enabled']} valuePropName="checked">
-        <Checkbox onChange={e => setIsApiMocked(e.target.checked)}>Enable mocking</Checkbox>
+        <Checkbox>Enable mocking</Checkbox>
       </Form.Item>
     </>
   );

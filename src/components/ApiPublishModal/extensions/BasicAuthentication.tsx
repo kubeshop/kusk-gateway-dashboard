@@ -1,10 +1,17 @@
 import {Form, Input, InputNumber, Select, Switch} from 'antd';
 
 const BasicAuthentication = () => {
+  const form = Form.useFormInstance();
   const isAuthEnabled = Form.useWatch(['auth', 'enabled']);
+
   return (
     <>
-      <Form.Item label="Enable" name={['auth', 'enabled']} valuePropName="checked" initialValue={false}>
+      <Form.Item
+        label="Enable"
+        name={['auth', 'enabled']}
+        valuePropName="checked"
+        initialValue={Boolean(form.getFieldValue(['auth']))}
+      >
         <Switch />
       </Form.Item>
       <Form.Item label="Authentication Scheme" name={['auth', 'scheme']} initialValue="basic">
