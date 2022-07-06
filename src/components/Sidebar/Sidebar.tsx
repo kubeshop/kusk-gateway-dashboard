@@ -21,7 +21,7 @@ const Sidebar = () => {
             <S.SettingsFilled />
           </Link>
         </S.IconContainer>
-        
+
         <S.IconContainer>
           <a href="https://github.com/kubeshop/kusk-gateway" target="_blank" rel="noopener noreferrer">
             <S.GithubFilled />

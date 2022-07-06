@@ -15,13 +15,13 @@ const DashboardMenu: React.FC = () => {
     <S.DashboardMenuContainer>
       <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="APIs List">
         <Link to="/">
-          <S.Icon $border component={ApiIcon} $active={pathname === '/'} />
+          <S.Icon component={ApiIcon} $active={pathname === '/'} />
         </Link>
       </Tooltip>
 
       <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="EnvoyFleets List">
         <Link to="/envoy-fleets">
-          <S.Icon $border component={EnvoyFleetIcon} $active={pathname === '/envoy-fleets'} />
+          <S.Icon component={EnvoyFleetIcon} $active={pathname === '/envoy-fleets'} />
         </Link>
       </Tooltip>
 

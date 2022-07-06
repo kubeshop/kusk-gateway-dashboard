@@ -60,8 +60,7 @@ export const SidebarContainer = styled.div`
   left: 0;
   z-index: 1;
   width: ${SIDEBAR_WIDTH}px;
-  background: ${Colors.blackPure};
-  padding-top: 20px;
+  padding-top: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
