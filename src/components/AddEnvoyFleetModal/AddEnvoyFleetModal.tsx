@@ -41,7 +41,7 @@ const AddEnvoyFleetModal = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm<FleetForm>();
   const {data: namespaces} = useGetNamespacesQuery();
-  const [createFleet, {isLoading: isLoadingNewFleet}] = useCreateFleetMutation();
+  const [createFleet, {isLoading: isLoadingNewFleet, isError, error, reset}] = useCreateFleetMutation();
   const [activeStep, setActiveStep] = useState<FormStepsType>('fleetInfo');
 
   const onBackHandler = () => {
@@ -70,25 +70,15 @@ const AddEnvoyFleetModal = () => {
       targetPort: p,
     }));
 
-    try {
-      await createFleet({serviceItem: {...fleetInfo, ports: portsList, status: 'available'}}).unwrap();
-      dispatch(closeEnvoyFleetModalModal());
-      dispatch(
-        setAlert({
-          title: 'The Envoy fleet deployed successfully',
-          description: `${fleetInfo.name} was deployed successfully in ${fleetInfo.namespace} namespace!`,
-          type: AlertEnum.Success,
-        })
-      );
-    } catch (e) {
-      dispatch(
-        setAlert({
-          title: 'Failed to deploy the Envoy fleet',
-          description: `Something went wrong!`,
-          type: AlertEnum.Error,
-        })
-      );
-    }
+    await createFleet({serviceItem: {...fleetInfo, ports: portsList, status: 'available'}}).unwrap();
+    dispatch(closeEnvoyFleetModalModal());
+    dispatch(
+      setAlert({
+        title: 'The Envoy fleet deployed successfully',
+        description: `${fleetInfo.name} was deployed successfully in ${fleetInfo.namespace} namespace!`,
+        type: AlertEnum.Success,
+      })
+    );
     trackEvent({eventName: Events.PUBLISH_ENVOY_FLEET_SUBMITTED, type: ANALYTIC_TYPE.ACTION});
   };
 
@@ -118,7 +108,18 @@ const AddEnvoyFleetModal = () => {
         </>
       }
     >
-      <Form preserve layout="vertical" form={form}>
+      {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" />}
+
+      <Form
+        preserve
+        layout="vertical"
+        form={form}
+        onValuesChange={() => {
+          if (isError) {
+            reset();
+          }
+        }}
+      >
         <S.Container>
           <S.StepsContainer>
             <Steps direction="vertical" current={orderedSteps.indexOf(activeStep) + 1}>
