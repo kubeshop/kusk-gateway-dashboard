@@ -85,8 +85,8 @@ const StaticRoutesList: React.FC = () => {
 
       {loading && !staticRoutes ? (
         <Skeleton />
-      ) : error && 'error' in error ? (
-        <ErrorLabel>{error.error}</ErrorLabel>
+      ) : error ? (
+        <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
         staticRoutes && (
           <StaticRoutesListTable

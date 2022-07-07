@@ -51,7 +51,7 @@ const Paths: React.FC<IProps> = ({setAddPathModal}) => {
                   extra={<InfoPanelDeleteIcon onClick={event => handleDeletePath(event, path)} />}
                 >
                   {path.path.methods.map((method: string) => (
-                    <div style={{margin: ' 8px 0'}} key={method}>
+                    <div style={{margin: ' 8px 0'}} key={`${path.path.name}__${method}`}>
                       <Typography.Text>
                         <Tag style={{width: 62, textAlign: 'center'}}>{method}</Tag>
                         <Typography.Text>{path.path.name}</Typography.Text>

@@ -260,7 +260,7 @@ const ApiPublishModal: React.FC = () => {
         );
       })
       .catch(err => {
-        setErrorMessage(err.data);
+        setErrorMessage(err.message);
         setIsPublishing(false);
       });
 

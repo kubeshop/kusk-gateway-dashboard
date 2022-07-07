@@ -82,8 +82,8 @@ const EnvoyFleetsList: React.FC = () => {
 
       {isLoading ? (
         <Skeleton />
-      ) : error && 'error' in error ? (
-        <ErrorLabel>{error.error}</ErrorLabel>
+      ) : error ? (
+        <ErrorLabel>{error.message}</ErrorLabel>
       ) : (
         data && <EnvoyFleetsListTable envoyFleets={data.filter(el => el.namespace.includes(selectedNamespace || ''))} />
       )}

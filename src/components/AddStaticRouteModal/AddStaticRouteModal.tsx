@@ -68,7 +68,8 @@ const AddStaticRouteModal = () => {
   const [openPathModal, setOpenPathModal] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<StaticRouteStepType>('routeInfo');
   const [lastVisitedStep, setLastVisitedStep] = useState<StaticRouteStepType>('routeInfo');
-  const [createStaticRoute, {isLoading: isPublishingStaticRoute}] = useCreateStaticRouteMutation();
+  const [createStaticRoute, {isLoading: isPublishingStaticRoute, error, isError, reset}] =
+    useCreateStaticRouteMutation();
 
   const activeStepIndex = useMemo(() => orderedSteps.indexOf(activeStep), [activeStep]);
   const disablePublishButton = useMemo(
@@ -81,66 +82,58 @@ const AddStaticRouteModal = () => {
   const onSubmitHandler = async () => {
     await form.validateFields();
     const {routeInfo, fleetInfo, paths, hosts} = (await form.getFieldsValue(true)) as StaticRouteForm;
-    try {
-      const newStaticRouteDefinition: StaticRoute = {
-        apiVersion: 'gateway.kusk.io/v1alpha1',
-        kind: 'StaticRoute',
-        metadata: {
-          name: routeInfo.name,
-        },
-        spec: {
-          fleet: {
-            name: fleetInfo.targetEnvoyFleet.split(',')[1],
-            namespace: fleetInfo.targetEnvoyFleet.split(',')[0],
-          },
-          hosts: hosts?.hosts || [],
-          paths: paths.paths.reduce<Record<string, PathMatch>>((accPaths, path) => {
-            const methods = path.path.methods.reduce<Partial<PathMatch>>((acc, method) => {
-              acc[method] = {
-                redirect: path.redirect || undefined,
-                route: {
-                  cors: Object.values(path.cors).some(e => e) ? path.cors : undefined,
-                  qos: Object.values(path.qos).some(e => e) ? path.qos : undefined,
-                  upstream: path.upstream || undefined,
-                  websocket: path.websocket.websocket || undefined,
-                },
-              };
-              return acc;
-            }, {});
 
-            accPaths[path.path.name] = {
-              ...methods,
+    const newStaticRouteDefinition: StaticRoute = {
+      apiVersion: 'gateway.kusk.io/v1alpha1',
+      kind: 'StaticRoute',
+      metadata: {
+        name: routeInfo.name,
+      },
+      spec: {
+        fleet: {
+          name: fleetInfo.targetEnvoyFleet.split(',')[1],
+          namespace: fleetInfo.targetEnvoyFleet.split(',')[0],
+        },
+        hosts: hosts?.hosts || [],
+        paths: paths.paths.reduce<Record<string, PathMatch>>((accPaths, path) => {
+          const methods = path.path.methods.reduce<Partial<PathMatch>>((acc, method) => {
+            acc[method] = {
+              redirect: path.redirect || undefined,
+              route: {
+                cors: Object.values(path.cors).some(e => e) ? path.cors : undefined,
+                qos: Object.values(path.qos).some(e => e) ? path.qos : undefined,
+                upstream: path.upstream || undefined,
+                websocket: path.websocket.websocket || undefined,
+              },
             };
-            return accPaths;
-          }, {}),
-        },
-      };
-      await createStaticRoute({
-        body: {
-          name: routeInfo.name,
-          namespace: routeInfo.namespace,
-          envoyFleetNamespace: fleetInfo.targetEnvoyFleet.split(',')[0],
-          envoyFleetName: fleetInfo.targetEnvoyFleet.split(',')[1],
-          openapi: YAML.stringify(cleanEmptyFields(JSON.parse(JSON.stringify(newStaticRouteDefinition)))),
-        },
-      }).unwrap();
-      dispatch(
-        setAlert({
-          title: 'Static route deployed successfully',
-          description: `${routeInfo.name} was deployed successfully in ${routeInfo.namespace} namespace!`,
-          type: AlertEnum.Success,
-        })
-      );
-      dispatch(closeStaticRouteModal());
-    } catch (e) {
-      dispatch(
-        setAlert({
-          title: "couldn't create the static route",
-          description: `Something went wrong!`,
-          type: AlertEnum.Error,
-        })
-      );
-    }
+            return acc;
+          }, {});
+
+          accPaths[path.path.name] = {
+            ...methods,
+          };
+          return accPaths;
+        }, {}),
+      },
+    };
+    await createStaticRoute({
+      body: {
+        name: routeInfo.name,
+        namespace: routeInfo.namespace,
+        envoyFleetNamespace: fleetInfo.targetEnvoyFleet.split(',')[0],
+        envoyFleetName: fleetInfo.targetEnvoyFleet.split(',')[1],
+        openapi: YAML.stringify(cleanEmptyFields(JSON.parse(JSON.stringify(newStaticRouteDefinition)))),
+      },
+    }).unwrap();
+    dispatch(
+      setAlert({
+        title: 'Static route deployed successfully',
+        description: `${routeInfo.name} was deployed successfully in ${routeInfo.namespace} namespace!`,
+        type: AlertEnum.Success,
+      })
+    );
+    dispatch(closeStaticRouteModal());
+
     trackEvent({eventName: Events.PUBLISH_STATIC_ROUTES_SUBMITTED, type: ANALYTIC_TYPE.ACTION});
   };
 
@@ -189,6 +182,8 @@ const AddStaticRouteModal = () => {
         </>
       }
     >
+      {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" closable />}
+
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={activeStepIndex}>
@@ -217,7 +212,17 @@ const AddStaticRouteModal = () => {
               }
             }}
           >
-            <Form preserve form={form} layout="vertical" name="staticRouteForm">
+            <Form
+              preserve
+              form={form}
+              layout="vertical"
+              name="staticRouteForm"
+              onValuesChange={() => {
+                if (isError) {
+                  reset();
+                }
+              }}
+            >
               {activeStep === 'routeInfo' && <StaticRouteInfo />}
 
               {activeStep === 'fleetInfo' && <FleetInfo />}

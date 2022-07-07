@@ -140,8 +140,8 @@ const ApisList: React.FC = () => {
 
       {isLoading ? (
         <Skeleton />
-      ) : isError && 'error' in error ? (
-        <ErrorLabel>{error.error}</ErrorLabel>
+      ) : isError ? (
+        <ErrorLabel>{error?.message}</ErrorLabel>
       ) : (
         data && <ApisListTable apis={data} />
       )}
