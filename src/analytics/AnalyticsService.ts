@@ -1,4 +1,4 @@
-import {KUSK_USER_ANALYTICS_ID} from '@constants/constants';
+import {KUSK_USER_ANALYTICS_ID, KUSK_USER_ANALYTICS_OFF} from '@constants/constants';
 
 import {ANALYTIC_TYPE, AnalyticEvent} from '@models/analytics';
 
@@ -8,7 +8,12 @@ import {AnalyticsBrowser} from '@segment/analytics-next';
 let analytics: AnalyticsBrowser | null = null;
 
 (function initSegmentService(): AnalyticsBrowser | null {
-  if (process.env.REACT_APP_ANALYTICS_DISABLED?.toLowerCase() === 'true' || !process.env.REACT_APP_SEGMENT_API_KEY) {
+  const isAnalyticsOff = localStorage.getItem(KUSK_USER_ANALYTICS_OFF);
+  if (
+    process.env.REACT_APP_ANALYTICS_DISABLED?.toLowerCase() === 'true' ||
+    !process.env.REACT_APP_SEGMENT_API_KEY ||
+    isAnalyticsOff === 'true'
+  ) {
     return null;
   }
 
