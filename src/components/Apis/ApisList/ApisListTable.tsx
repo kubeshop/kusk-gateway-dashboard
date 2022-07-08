@@ -9,7 +9,6 @@ import {ListTableColumnLabel} from '@components';
 import {getApiKey} from '@utils/api';
 
 import * as S from './ApisListTable.styled';
-import ApisListTableServicesTag from './ApisListTableServicesTag';
 
 interface IProps {
   apis: ApiItem[];
@@ -51,15 +50,6 @@ const ApisListTable: React.FC<IProps> = props => {
       render: (value: string, record: any) => (
         <ListTableColumnLabel itemKey={record.key} selectedKey={selectedApiKey} value={value} />
       ),
-    },
-    {
-      title: 'Services',
-      dataIndex: 'services',
-      key: 'services',
-      render: (_: any, record: any) => (
-        <ApisListTableServicesTag api={record.apiItem} apiKey={record.key} selectedApiKey={selectedApiKey} />
-      ),
-      width: '35%',
     },
   ];
 
