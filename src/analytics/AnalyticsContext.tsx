@@ -8,7 +8,6 @@ const Tracker: FC = ({children}) => {
     {},
     {
       dispatchOnMount: true,
-      dispatch: data => {},
     }
   );
   return <Track>{children}</Track>;
