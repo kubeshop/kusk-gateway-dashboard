@@ -1,4 +1,4 @@
-import {Menu as RawMenu} from 'antd';
+import {Menu as RawMenu, Typography} from 'antd';
 
 import {
   CloseOutlined as RawCloseOutlined,
@@ -72,10 +72,10 @@ export const InfoPaneContainer = styled.div`
   grid-row-gap: 30px;
 `;
 
-export const PageTitle = styled.h2`
-  color: ${Colors.grey9};
+export const PageTitle = styled(Typography.Title).attrs({
+  level: 2,
+})`
   font-size: 20px;
-  font-family: 'Roboto', sans-serif;
   white-space: nowrap;
   margin-bottom: 20px;
 `;
