@@ -11,7 +11,8 @@ import {openApiPublishModal} from '@redux/reducers/ui';
 import {useGetApisQuery, useGetEnvoyFleetsQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 import {EnvoyFleetItem} from '@redux/services/kuskApi';
 
-import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
+import {ContentWrapper, PageTitle} from '@components/AntdCustom';
+import {KuskApisDown} from '@components/KuskApiDown';
 
 import {getEnvoyFleetKey} from '@utils/envoyFleet';
 
@@ -88,7 +89,9 @@ const ApisList: React.FC = () => {
     dispatch(openApiPublishModal());
   };
 
-  return (
+  return isError ? (
+    <KuskApisDown />
+  ) : (
     <ContentWrapper>
       <div>
         <PageTitle>API gateways</PageTitle>
@@ -145,13 +148,7 @@ const ApisList: React.FC = () => {
             </Button>
           </S.ActionsContainer>
 
-          {isLoading ? (
-            <Skeleton />
-          ) : isError ? (
-            <ErrorLabel>{error?.message}</ErrorLabel>
-          ) : (
-            data && <ApisListTable apis={data} />
-          )}
+          {isLoading ? <Skeleton /> : data && <ApisListTable apis={data} />}
         </>
       )}
     </ContentWrapper>
