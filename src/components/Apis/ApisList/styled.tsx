@@ -21,3 +21,13 @@ export const FiltersContainer = styled.div`
 export const QuestionCircleOutlined = styled(RawQuestionsCircleOutlined)`
   cursor: pointer;
 `;
+
+export const HelpSection = styled.div`
+  display: grid;
+  justify-content: center;
+  margin-top: 60px;
+`;
+
+export const Header = styled.div`
+  margin-bottom: 24px;
+`;

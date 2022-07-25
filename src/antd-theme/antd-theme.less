@@ -24,7 +24,7 @@
 
 // Table
 @table-border-color: @grey400;
-
+@border-color-base: #e2e8f0;
 @border-radius-base: 4px;
 
 @body-background: #fafafa;
@@ -34,11 +34,22 @@
 @heading-color: #18181b;
 @icon-color: #71717a;
 
+//menu
+@menu-bg: #fafafa;
+
 // Disabled states
 @disabled-color: #52525b;
 @disabled-bg: @background-color-base;
 @disabled-active-bg: tint(@black, 90%);
 @disabled-color-dark: fade(#fff, 35%);
+
+// Tag
+// --
+@tag-border-radius: @border-radius-base;
+@tag-default-bg: #f4f4f5;
+@tag-default-color: #71717a;
+@tag-font-size: 12px;
+@tag-line-height: 14px;
 
 .ant-table table {
   border: 1px solid @table-border-color;

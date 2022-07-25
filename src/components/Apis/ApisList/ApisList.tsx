@@ -1,20 +1,17 @@
 import {useMemo, useState} from 'react';
-import {useTracking} from 'react-tracking';
 
-import {Button, Select, Skeleton, Tag, Typography} from 'antd';
+import {Button, Input, Select, Skeleton, Typography} from 'antd';
 
-import {ANALYTIC_TYPE, Events} from '@models/analytics';
+import {SearchOutlined} from '@ant-design/icons';
 
 import {useAppDispatch} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
 import {openApiPublishModal} from '@redux/reducers/ui';
-import {useGetApisQuery, useGetEnvoyFleetsQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
-import {EnvoyFleetItem} from '@redux/services/kuskApi';
+import {useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 
 import {ContentWrapper, PageTitle} from '@components/AntdCustom';
+import {DiscordCard, HelpCard, HelpCardGroup} from '@components/HelpCard';
 import {KuskApisDown} from '@components/KuskApiDown';
-
-import {getEnvoyFleetKey} from '@utils/envoyFleet';
 
 import ApisListTable from './ApisListTable';
 import EmptyApisList from './EmptyApisList';
@@ -25,36 +22,13 @@ const {Option} = Select;
 
 const ApisList: React.FC = () => {
   const dispatch = useAppDispatch();
-  const {trackEvent} = useTracking(
-    {eventName: Events.API_LIST_LOADED, type: ANALYTIC_TYPE.ACTION},
-    {dispatchOnMount: true}
-  );
 
-  const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
+  const [searchApiName, setSearchApiName] = useState<string>('');
   const {data: namespaces} = useGetNamespacesQuery();
   const {data, error, isError, isLoading} = useGetApisQuery({
-    fleetname: selectedFleet?.name,
-    fleetnamespace: selectedFleet?.namespace,
     namespace: selectedNamespace,
   });
-
-  const {data: fleets, isLoading: isLoadingFleets} = useGetEnvoyFleetsQuery({});
-
-  const renderedFleetsOptions = useMemo(() => {
-    if (!fleets?.length || !Array.isArray(fleets)) {
-      return null;
-    }
-
-    return fleets
-      .filter(el => el.namespace.includes(selectedNamespace || ''))
-      .map(envoyFleetItem => (
-        <Option key={getEnvoyFleetKey(envoyFleetItem)} value={envoyFleetItem.name} envoyfleet={envoyFleetItem}>
-          <Tag>{envoyFleetItem.namespace}</Tag>
-          {envoyFleetItem.name}
-        </Option>
-      ));
-  }, [fleets, selectedNamespace]);
 
   const renderedNamespaceOptions = useMemo(() => {
     return namespaces?.map(namespace => (
@@ -64,25 +38,18 @@ const ApisList: React.FC = () => {
     ));
   }, [namespaces]);
 
-  const onEnvoyFleetSelectHandler = (envoyFleetItem: EnvoyFleetItem) => {
-    setSelectedFleet(envoyFleetItem);
-    dispatch(selectApi(null));
-    trackEvent({eventName: Events.DROPDOWN_SELECTED, type: ANALYTIC_TYPE.ACTION});
-  };
-
   const onNamespaceSelectHandler = (namespace: string) => {
     setSelectedNamespace(namespace);
-    dispatch(selectApi(null));
-  };
-
-  const onEnvoyFleetSelectionClearHandler = () => {
-    setSelectedFleet(undefined);
     dispatch(selectApi(null));
   };
 
   const onNamespaceSelectionClearHandler = () => {
     setSelectedNamespace(undefined);
     dispatch(selectApi(null));
+  };
+
+  const onSearchApiNameChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setSearchApiName(e.currentTarget.value);
   };
 
   const showApiPublishModalHandler = () => {
@@ -93,33 +60,18 @@ const ApisList: React.FC = () => {
     <KuskApisDown />
   ) : (
     <ContentWrapper>
-      <div>
+      <S.Header>
         <PageTitle>API gateways</PageTitle>
         <Typography.Text type="secondary">Explore your APIs at a glance...</Typography.Text>
-      </div>
+      </S.Header>
+
       {data?.length === 0 ? (
         <EmptyApisList />
       ) : (
         <>
           <S.ActionsContainer>
             <S.FiltersContainer>
-              {isLoadingFleets ? (
-                <Skeleton.Button />
-              ) : (
-                fleets && (
-                  <Select
-                    allowClear
-                    placeholder="Select a fleet"
-                    showSearch
-                    onClear={onEnvoyFleetSelectionClearHandler}
-                    onSelect={(value: any, option: any) => {
-                      onEnvoyFleetSelectHandler(option.envoyfleet);
-                    }}
-                  >
-                    {renderedFleetsOptions}
-                  </Select>
-                )
-              )}
+              <Input allowClear prefix={<SearchOutlined />} placeholder="API Name" onChange={onSearchApiNameChange} />
 
               {isLoading ? (
                 <Skeleton.Button />
@@ -144,11 +96,23 @@ const ApisList: React.FC = () => {
               type="primary"
               onClick={showApiPublishModalHandler}
             >
-              Publish new API
+              Add a new API gateway
             </Button>
           </S.ActionsContainer>
 
-          {isLoading ? <Skeleton /> : data && <ApisListTable apis={data} />}
+          {isLoading ? (
+            <Skeleton />
+          ) : (
+            data && <ApisListTable apis={data.filter(el => el.name.includes(searchApiName))} />
+          )}
+          <S.HelpSection>
+            <HelpCardGroup>
+              <HelpCard title="Handle different environments for one API gateway" link="" />
+              <HelpCard title="Version your gateway like a pro" link="" />
+              <HelpCard title="How to deploy your API gateway" link="" />
+            </HelpCardGroup>
+            <DiscordCard />
+          </S.HelpSection>
         </>
       )}
     </ContentWrapper>
