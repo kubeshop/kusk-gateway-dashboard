@@ -13,9 +13,11 @@ import styled from 'styled-components';
 import Colors from '@styles/colors';
 
 export const Container = styled.div`
-  grid-area: nav;
+  position: sticky;
+  top: 0;
   height: 64px;
   padding: 16px;
+  background-color: #18181b;
   display: flex;
   align-items: center;
 `;

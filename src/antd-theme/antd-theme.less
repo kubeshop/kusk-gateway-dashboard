@@ -1,4 +1,4 @@
-@font-family: 'Roboto';
+@font-family: Roboto;
 
 // Blue palette
 @blue400: #60a5fa;
@@ -27,6 +27,18 @@
 
 @border-radius-base: 4px;
 
+@body-background: #fafafa;
+
+@text-color: #18181b;
+@text-color-secondary: #52525b;
+@heading-color: #18181b;
+
+// Disabled states
+@disabled-color: #52525b;
+@disabled-bg: @background-color-base;
+@disabled-active-bg: tint(@black, 90%);
+@disabled-color-dark: fade(#fff, 35%);
+
 .ant-table table {
   border: 1px solid @table-border-color;
 }
@@ -49,6 +61,10 @@
 .header-dropdown-menu .ant-dropdown-menu-item {
   color: #71717a;
   margin: 0 16px;
+}
+
+.header-dropdown-menu ul li:first-child {
+  color: #3f3f46 !important;
 }
 
 .header-dropdown-menu ul li:not(:last-child) {

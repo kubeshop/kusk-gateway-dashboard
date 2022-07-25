@@ -8,8 +8,6 @@ import {useGetApisQuery} from '@redux/services/enhancedApi';
 
 import KuskLogo from '@assets/KuskLogo.svg';
 
-import Colors from '@styles/colors';
-
 import * as S from './styled';
 
 const Header = () => {
@@ -57,34 +55,15 @@ const Header = () => {
           </span>
         </S.Dropdown>
 
-        <S.Dropdown overlay={apisMenu}>
-          <span>
-            <S.DropdownLabel>{apis[0]?.name}</S.DropdownLabel>
-            <DownOutlined />
-          </span>
-        </S.Dropdown>
-
-        {false && (
-          <S.Dropdown overlay={menu}>
+        {apis.length > 0 && (
+          <S.Dropdown overlay={apisMenu}>
             <span>
-              <S.APIVersionLabel>v 1.1</S.APIVersionLabel>
-
-              <DownOutlined style={{color: Colors.spunPearl, fontSize: 10, verticalAlign: 'middle'}} />
+              <S.DropdownLabel>{apis[0]?.name}</S.DropdownLabel>
+              <DownOutlined />
             </span>
           </S.Dropdown>
         )}
-
-        {false && (
-          <S.Dropdown overlay={menu}>
-            <S.EnvButton>
-              <S.EnvStatus />
-              STAGING ENV
-              <DownOutlined />
-            </S.EnvButton>
-          </S.Dropdown>
-        )}
       </div>
-
       <S.OptionsContainer>
         <S.IconContainer>
           <a href="https://github.com/kubeshop/kusk-gateway" target="_blank" rel="noopener noreferrer">
