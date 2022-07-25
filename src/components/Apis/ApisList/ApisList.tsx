@@ -16,6 +16,7 @@ import {ContentWrapper, ErrorLabel, PageTitle} from '@components/AntdCustom';
 import {getEnvoyFleetKey} from '@utils/envoyFleet';
 
 import ApisListTable from './ApisListTable';
+import EmptyApisList from './EmptyApisList';
 
 import * as S from './styled';
 
@@ -89,61 +90,66 @@ const ApisList: React.FC = () => {
 
   return (
     <ContentWrapper>
-      <PageTitle>APIs</PageTitle>
+      <PageTitle>API gateways</PageTitle>
+      {data?.length === 0 ? (
+        <EmptyApisList />
+      ) : (
+        <>
+          <S.ActionsContainer>
+            <S.FiltersContainer>
+              {isLoadingFleets ? (
+                <Skeleton.Button />
+              ) : (
+                fleets && (
+                  <Select
+                    allowClear
+                    placeholder="Select a fleet"
+                    showSearch
+                    onClear={onEnvoyFleetSelectionClearHandler}
+                    onSelect={(value: any, option: any) => {
+                      onEnvoyFleetSelectHandler(option.envoyfleet);
+                    }}
+                  >
+                    {renderedFleetsOptions}
+                  </Select>
+                )
+              )}
 
-      <S.ActionsContainer>
-        <S.FiltersContainer>
-          {isLoadingFleets ? (
-            <Skeleton.Button />
-          ) : (
-            fleets && (
-              <Select
-                allowClear
-                placeholder="Select a fleet"
-                showSearch
-                onClear={onEnvoyFleetSelectionClearHandler}
-                onSelect={(value: any, option: any) => {
-                  onEnvoyFleetSelectHandler(option.envoyfleet);
-                }}
-              >
-                {renderedFleetsOptions}
-              </Select>
-            )
-          )}
+              {isLoading ? (
+                <Skeleton.Button />
+              ) : !namespaces ? null : (
+                <Select
+                  allowClear
+                  placeholder="Select a namespace"
+                  value={selectedNamespace}
+                  showSearch
+                  onClear={onNamespaceSelectionClearHandler}
+                  onSelect={(value: any) => {
+                    onNamespaceSelectHandler(value);
+                  }}
+                >
+                  {renderedNamespaceOptions}
+                </Select>
+              )}
+            </S.FiltersContainer>
+
+            <Button
+              disabled={isLoading || Boolean(error) || !Array.isArray(data)}
+              type="primary"
+              onClick={showApiPublishModalHandler}
+            >
+              Publish new API
+            </Button>
+          </S.ActionsContainer>
 
           {isLoading ? (
-            <Skeleton.Button />
-          ) : !namespaces ? null : (
-            <Select
-              allowClear
-              placeholder="Select a namespace"
-              value={selectedNamespace}
-              showSearch
-              onClear={onNamespaceSelectionClearHandler}
-              onSelect={(value: any) => {
-                onNamespaceSelectHandler(value);
-              }}
-            >
-              {renderedNamespaceOptions}
-            </Select>
+            <Skeleton />
+          ) : isError ? (
+            <ErrorLabel>{error?.message}</ErrorLabel>
+          ) : (
+            data && <ApisListTable apis={data} />
           )}
-        </S.FiltersContainer>
-
-        <Button
-          disabled={isLoading || Boolean(error) || !Array.isArray(data)}
-          type="primary"
-          onClick={showApiPublishModalHandler}
-        >
-          Publish new API
-        </Button>
-      </S.ActionsContainer>
-
-      {isLoading ? (
-        <Skeleton />
-      ) : isError ? (
-        <ErrorLabel>{error?.message}</ErrorLabel>
-      ) : (
-        data && <ApisListTable apis={data} />
+        </>
       )}
     </ContentWrapper>
   );
