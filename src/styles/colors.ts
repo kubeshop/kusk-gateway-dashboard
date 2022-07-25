@@ -6,6 +6,8 @@ enum Colors {
   grey2 = '#151515',
   grey1 = '#888888',
   grey0 = '#acacac',
+  zinc2 = '#E4E4E7',
+  zinc4 = '#A1A1AA',
   spunPearl = '#a1a1aa',
   swaggerUIGrey = '#333333',
 

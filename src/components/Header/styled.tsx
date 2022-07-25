@@ -17,6 +17,7 @@ export const Container = styled.div`
   top: 0;
   height: 64px;
   padding: 16px;
+  z-index: 5;
   background-color: #18181b;
   display: flex;
   align-items: center;
