@@ -6,8 +6,6 @@ import {
 
 import styled from 'styled-components';
 
-import {SIDEBAR_WIDTH} from '@constants/constants';
-
 import Colors from '@styles/colors';
 
 export const Logo = styled.img`
@@ -54,13 +52,7 @@ export const SettingsFilled = styled(RawSettingFilled)`
 `;
 
 export const SidebarContainer = styled.div`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-  width: ${SIDEBAR_WIDTH}px;
-  padding-top: 40px;
+  grid-area: sidebar;
   display: flex;
   flex-direction: column;
   align-items: center;

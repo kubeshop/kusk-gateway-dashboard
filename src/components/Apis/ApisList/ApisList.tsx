@@ -1,7 +1,7 @@
 import {useMemo, useState} from 'react';
 import {useTracking} from 'react-tracking';
 
-import {Button, Select, Skeleton, Tag} from 'antd';
+import {Button, Select, Skeleton, Tag, Typography} from 'antd';
 
 import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
@@ -90,7 +90,10 @@ const ApisList: React.FC = () => {
 
   return (
     <ContentWrapper>
-      <PageTitle>API gateways</PageTitle>
+      <div>
+        <PageTitle>API gateways</PageTitle>
+        <Typography.Text type="secondary">Explore your APIs at a glance...</Typography.Text>
+      </div>
       {data?.length === 0 ? (
         <EmptyApisList />
       ) : (
