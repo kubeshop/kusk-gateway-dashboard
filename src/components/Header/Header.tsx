@@ -1,8 +1,10 @@
-import {Link, useNavigate} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 
 import {Menu, MenuProps} from 'antd';
 
 import {DownOutlined} from '@ant-design/icons';
+
+import {APP_ROUTES} from '@constants/constants';
 
 import {useGetApisQuery} from '@redux/services/enhancedApi';
 
@@ -12,6 +14,8 @@ import * as S from './styled';
 
 const Header = () => {
   const navigate = useNavigate();
+  const {pathname: apiPath} = useLocation();
+  const apiName = apiPath.split('/').pop();
   const {data: apis = []} = useGetApisQuery({});
 
   const handleMenuClick: MenuProps['onClick'] = e => {
@@ -55,10 +59,10 @@ const Header = () => {
           </span>
         </S.Dropdown>
 
-        {apis.length > 0 && (
+        {apiName && APP_ROUTES.every(r => r !== apiName) && (
           <S.Dropdown overlay={apisMenu}>
             <span>
-              <S.DropdownLabel>{apis[0]?.name}</S.DropdownLabel>
+              <S.DropdownLabel>{apiName}</S.DropdownLabel>
               <DownOutlined />
             </span>
           </S.Dropdown>

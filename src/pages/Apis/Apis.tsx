@@ -9,7 +9,6 @@ import {useGetServicesQuery} from '@redux/services/enhancedApi';
 import {ApisList, Dashboard} from '@components';
 
 const ApiPublishModal = lazy(() => import('@components/ApiPublishModal/ApiPublishModal'));
-const ApiInfo = lazy(() => import('@components/Apis/ApiInfo/ApiInfo'));
 
 const Apis: React.FC = () => {
   const {Track} = useTracking({page: Events.API_PAGE, type: ANALYTIC_TYPE.PAGE}, {dispatchOnMount: true});
@@ -20,7 +19,7 @@ const Apis: React.FC = () => {
 
   return (
     <Track>
-      <Dashboard listElement={<ApisList />} infoElement={<ApiInfo />} selectedTableItem={selectedApi} />
+      <Dashboard listElement={<ApisList />} selectedTableItem={selectedApi} />
 
       <Suspense fallback={null}>{isApiPublishModalVisible && <ApiPublishModal />}</Suspense>
     </Track>

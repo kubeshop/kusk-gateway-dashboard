@@ -2,7 +2,7 @@ import {Typography} from 'antd';
 
 import Icon from '@ant-design/icons';
 
-import {RawExternalIcon} from '@components/AntdCustomIcons';
+import {RawExternalIcon} from '@components/Icons';
 
 import ApiDownImage from '@assets/apidown.svg';
 

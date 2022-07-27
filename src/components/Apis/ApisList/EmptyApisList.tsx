@@ -5,7 +5,7 @@ import Icon from '@ant-design/icons';
 import {useAppDispatch} from '@redux/hooks';
 import {openApiPublishModal} from '@redux/reducers/ui';
 
-import {RawExternalIcon} from '@components/AntdCustomIcons';
+import {RawExternalIcon} from '@components/Icons';
 
 import DashboardImg from '@assets/emptydashboard.svg';
 

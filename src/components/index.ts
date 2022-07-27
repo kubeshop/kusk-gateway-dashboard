@@ -10,6 +10,5 @@ export {KuskExtensions} from './KuskExtensions';
 export {ListTableColumnLabel} from './ListTableColumnLabel';
 export {NotificationBox} from './NotificationBox';
 export {PublicApiDefinition} from './PublicApiDefinition';
-export {Sidebar} from './Sidebar';
 export {StaticRoutesList, StaticRouteInfo} from './StaticRoutes';
 export {TableOfContents} from './TableOfContents';

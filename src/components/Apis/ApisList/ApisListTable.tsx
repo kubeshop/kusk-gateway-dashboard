@@ -1,4 +1,5 @@
 import {useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 
 import {Modal, Typography} from 'antd';
 
@@ -7,6 +8,7 @@ import {MoreOutlined} from '@ant-design/icons';
 import {AlertEnum} from '@models/alert';
 
 import {setAlert} from '@redux/reducers/alert';
+import {selectApi} from '@redux/reducers/main';
 import {useDeleteApiMutation} from '@redux/services/enhancedApi';
 import {ApiItem} from '@redux/services/kuskApi';
 
@@ -30,7 +32,9 @@ const ApiMenuItems = [
 const ApisListTable: React.FC<IProps> = props => {
   const {apis} = props;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [deleteAPI] = useDeleteApiMutation();
+
   const onDeleteItemClick = async (api: ApiItem) => {
     Modal.confirm({
       title: `Do you want to delete ${api.name} api?`,
@@ -59,10 +63,15 @@ const ApisListTable: React.FC<IProps> = props => {
     });
   };
 
+  const onApiItemClick = (api: ApiItem) => {
+    dispatch(selectApi(api));
+    navigate(api.name);
+  };
+
   return (
     <S.Grid>
       {apis.map(api => (
-        <S.GridItem key={`KEY_${api.name}`}>
+        <S.GridItem key={`KEY_${api.name}`} onClick={() => onApiItemClick(api)}>
           <Typography.Title level={4}>{api.name}</Typography.Title>
           <S.ApiInfoContainer>
             <S.ApiInfo>
