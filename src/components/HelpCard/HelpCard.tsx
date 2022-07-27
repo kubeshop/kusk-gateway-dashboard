@@ -1,6 +1,6 @@
 import Icon from '@ant-design/icons';
 
-import {RawExternalIcon} from '@components/AntdCustomIcons';
+import {RawExternalIcon} from '@components/Icons';
 
 import * as S from './styled';
 

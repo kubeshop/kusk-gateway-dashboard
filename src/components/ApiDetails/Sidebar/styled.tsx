@@ -1,4 +1,4 @@
-import {
+import AntdIcon, {
   GithubFilled as RawGithubFilled,
   QuestionCircleFilled as RawQuestionsCircleFilled,
   SettingFilled as RawSettingFilled,
@@ -52,9 +52,44 @@ export const SettingsFilled = styled(RawSettingFilled)`
 `;
 
 export const SidebarContainer = styled.div`
-  grid-area: sidebar;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 50px;
+  height: 100%;
+  background-color: ${Colors.zinc5};
+  box-shadow: 1px 0px 0px rgba(0, 0, 0, 0.25);
+`;
+
+export const DashboardMenuContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 72px;
+`;
+
+export const Icon = styled(AntdIcon)<{$active: boolean; $border?: boolean}>`
+  ${({$active, $border}) => `
+    color: ${$active ? Colors.cyan5 : Colors.grey1}};
+    border-bottom: ${$border ? `1px solid ${Colors.grey4}` : 'unset'};
+`};
+
+  width: 100%;
+  height: 100%;
+  transition: all 0.2s ease-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 0px 16px 0px;
+
+  &:hover {
+    cursor: pointer;
+    color: ${Colors.cyan5};
+  }
+
+  & svg {
+    width: 32px;
+    height: 32px;
+  }
 `;

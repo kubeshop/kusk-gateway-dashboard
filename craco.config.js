@@ -21,6 +21,10 @@ module.exports = {
           buffer: require.resolve('buffer'),
           process: require.resolve('process/browser'),
           stream: require.resolve('stream-browserify'),
+          http: require.resolve('stream-http'),
+          https: require.resolve('https-browserify'),
+          url: require.resolve('url'),
+          util: require.resolve('util'),
         },
       },
       plugins: [
