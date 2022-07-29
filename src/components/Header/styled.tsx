@@ -18,7 +18,7 @@ export const Container = styled.div`
   height: 64px;
   padding: 16px;
   z-index: 5;
-  background-color: #18181b;
+  background-color: ${Colors.zinc9};
   display: flex;
   align-items: center;
 `;
