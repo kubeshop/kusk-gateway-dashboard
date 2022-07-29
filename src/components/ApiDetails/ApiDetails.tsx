@@ -14,7 +14,7 @@ import {Sidebar} from './Sidebar';
 import * as S from './styled';
 
 const ApiDetails = () => {
-  const [activeSection, setActiveSection] = useState<APIDetailsSections>('dashboard');
+  const [activeSection, setActiveSection] = useState<APIDetailsSections>('routes');
   return (
     <S.Container>
       <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} />
