@@ -1,5 +1,6 @@
 import {Action, ThunkAction, configureStore} from '@reduxjs/toolkit';
 
+import {ApiListenerMiddleware} from './listeners/ApiListener';
 import {alertSlice} from './reducers/alert';
 import {mainSlice} from './reducers/main';
 import {uiSlice} from './reducers/ui';
@@ -12,7 +13,8 @@ export const store = configureStore({
     ui: uiSlice.reducer,
     [enhancedApi.reducerPath]: enhancedApi.reducer,
   },
-  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(enhancedApi.middleware),
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().prepend(ApiListenerMiddleware.middleware).concat(enhancedApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

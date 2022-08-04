@@ -16,11 +16,16 @@ type StaticRouteStepType = 'routeInfo' | 'fleetInfo' | 'hosts' | 'paths';
 
 type PathModalStepType = 'path' | 'target' | 'qos' | 'cors' | 'websocket';
 
+type APIDetailsSections = 'dashboard' | 'openapiBrowser' | 'routes' | 'deployments' | 'logs' | 'settings';
+
+type ApiCanvasType = 'template' | 'blank';
 interface UiState {
   apiPublishModal: {
     activeStep: StepType;
     isOpen: boolean;
     lastCompletedStep: StepType;
+    isCanvasApiModalOpen: boolean;
+    apiCanvasType: ApiCanvasType;
   };
   apiInfoActiveTab: ApiInfoTabs;
   dashboardPaneConfiguration: DashboardPaneConfiguration;
@@ -48,4 +53,12 @@ interface DashboardPaneConfiguration {
   rightPaneWidth: number;
 }
 
-export type {DashboardPaneConfiguration, StepType, UiState, StaticRouteStepType, PathModalStepType};
+export type {
+  DashboardPaneConfiguration,
+  StepType,
+  UiState,
+  StaticRouteStepType,
+  PathModalStepType,
+  APIDetailsSections,
+  ApiCanvasType,
+};

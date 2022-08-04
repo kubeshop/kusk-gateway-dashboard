@@ -5,7 +5,7 @@ import {ANALYTIC_TYPE, Events} from '@models/analytics';
 import {useAppSelector} from '@redux/hooks';
 import {useGetServicesQuery} from '@redux/services/enhancedApi';
 
-import {Dashboard, StaticRouteInfo, StaticRoutesList} from '@components';
+import {Dashboard, StaticRoutesList} from '@components';
 
 const StaticRoutes: React.FC = () => {
   const {Track} = useTracking({page: Events.STATIC_ROUTES_PAGE, type: ANALYTIC_TYPE.PAGE}, {dispatchOnMount: true});
@@ -14,11 +14,7 @@ const StaticRoutes: React.FC = () => {
 
   return (
     <Track>
-      <Dashboard
-        listElement={<StaticRoutesList />}
-        infoElement={<StaticRouteInfo />}
-        selectedTableItem={selectedStaticRoute}
-      />
+      <Dashboard listElement={<StaticRoutesList />} selectedTableItem={selectedStaticRoute} />
     </Track>
   );
 };
