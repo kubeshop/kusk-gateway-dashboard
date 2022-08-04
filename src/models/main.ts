@@ -7,10 +7,14 @@ interface MainState {
   newApiFormContent: {[key: string]: any} | null;
   /**  currently selected API */
   selectedApi: ApiItem | null;
+  /**  currently selected API */
+  selectedApiOpenapiSpec: any | null;
   /**  currently selected Envoy Fleet */
   selectedEnvoyFleet: EnvoyFleetItem | null;
   /**  currently selected Static Route */
   selectedStaticRoute: StaticRouteItem | null;
+  /**  selected api changed settings */
+  selectedApiNewSettings: {[key: string]: any} | null;
 }
 
 interface ApiContent {
