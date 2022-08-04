@@ -1,27 +1,37 @@
-import {Card, InputNumber, Typography} from 'antd';
+import {Form, InputNumber, Switch, Typography} from 'antd';
 
-import {CardHeading} from '@components/AntdCustom';
+import {useAppSelector} from '@redux/hooks';
+
+import {FormCard} from '@components/FormCard';
 
 import * as S from './styled';
 
 const Caching = () => {
+  const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
+  const xKusk = selectedAPIOpenSpec['x-kusk'];
   return (
-    <Card title={<CardHeading heading="Caching" subHeading="Current support for caching is experimental" />}>
+    <FormCard
+      heading="Caching"
+      subHeading="Current support for caching is experimental"
+      helpTopic="Caching"
+      helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#caching"
+      cardProps={{
+        extra: (
+          <Form.Item name={['caching', 'enabled']} valuePropName="checked" initialValue={xKusk?.cache?.enabled}>
+            <Switch />
+          </Form.Item>
+        ),
+      }}
+    >
       <S.CardItem>
         <Typography.Text type="secondary">Max age (in seconds)</Typography.Text>
-        <InputNumber value={60} />
+        <Form.Item name={['caching', 'max_age']} initialValue={xKusk?.cache?.max_age || 60}>
+          <InputNumber />
+        </Form.Item>
       </S.CardItem>
+
       <S.Divider />
-      <S.CardActions>
-        <Typography.Text type="secondary">
-          Learn more about&nbsp;
-          <Typography.Link href="https://kubeshop.github.io/kusk-gateway/reference/extension/#caching" target="_blank">
-            Caching
-          </Typography.Link>
-        </Typography.Text>
-        <S.SaveButton>Save</S.SaveButton>
-      </S.CardActions>
-    </Card>
+    </FormCard>
   );
 };
 export default Caching;

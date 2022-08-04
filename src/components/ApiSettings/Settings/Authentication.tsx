@@ -1,54 +1,81 @@
-import {Card, Input, InputNumber, Select, Switch, Typography} from 'antd';
+import {Form, Input, InputNumber, Select, Switch} from 'antd';
 
-import {CardHeading} from '@components/AntdCustom';
+import {useAppSelector} from '@redux/hooks';
+
+import {FormCard} from '@components/FormCard';
 
 import * as S from './styled';
 
 const Authentication = () => {
+  const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
+  const xKusk = selectedAPIOpenSpec['x-kusk'];
   return (
-    <Card
-      title={<CardHeading heading="Authentication" subHeading="Configure HTTP Authentication for your API " />}
-      extra={<Switch />}
+    <FormCard
+      heading="Authentication"
+      subHeading="Configure HTTP Authentication for your API"
+      helpTopic="Authentication"
+      helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#authentication"
+      cardProps={{
+        extra: (
+          <Form.Item
+            label="Enable"
+            name={['auth', 'enabled']}
+            valuePropName="checked"
+            initialValue={Boolean(xKusk.auth)}
+          >
+            <Switch />
+          </Form.Item>
+        ),
+      }}
+      formProps={{layout: 'vertical'}}
     >
-      <S.CardItem>
-        <Typography.Text>Authentication scheme</Typography.Text>
-        <Select value="basic">
+      <Form.Item label="Authentication Scheme" name={['auth', 'scheme']} initialValue={xKusk?.auth?.scheme}>
+        <Select>
           <Select.Option value="basic">Basic</Select.Option>
         </Select>
-      </S.CardItem>
+      </Form.Item>
 
-      <S.CardItem>
-        <Typography.Text>Path prefix</Typography.Text>
-        <Input placeholder="Path prefix" />
-      </S.CardItem>
+      <Form.Item label="Path Prefix" name={['auth', 'path_prefix']} initialValue={xKusk?.auth?.path_prefix}>
+        <Input placeholder="e.g. /login" />
+      </Form.Item>
 
       <S.Row>
         <S.CardItem style={{flex: 1}}>
-          <Typography.Text>Hostname</Typography.Text>
-          <Input placeholder="https://example.com" />
+          <Form.Item
+            label="Hostname"
+            name={['auth', 'auth-upstream', 'host', 'hostname']}
+            initialValue={xKusk?.auth && xKusk?.auth['auth-upstream'] && xKusk?.auth['auth-upstream'].host.hostname}
+            rules={[
+              {
+                required: true,
+                message: 'Please enter hostname!',
+              },
+            ]}
+          >
+            <Input placeholder="e.g. example.com" />
+          </Form.Item>
         </S.CardItem>
-
-        <S.CardItem>
-          <Typography.Text>Port</Typography.Text>
-          <InputNumber value={443} />
-        </S.CardItem>
+        <Form.Item
+          label="Port"
+          name={['auth', 'auth-upstream', 'host', 'port']}
+          initialValue={xKusk?.auth && xKusk?.auth['auth-upstream'] && xKusk?.auth['auth-upstream'].host.port}
+          rules={[
+            {
+              required: true,
+              message: 'Please enter port!',
+            },
+          ]}
+        >
+          <InputNumber
+            style={{minWidth: '100%'}}
+            placeholder="Target port to which requests should be routed"
+            type="number"
+          />
+        </Form.Item>
       </S.Row>
 
       <S.Divider />
-
-      <S.CardActions>
-        <Typography.Text type="secondary">
-          Learn more about&nbsp;
-          <Typography.Link
-            href="https://kubeshop.github.io/kusk-gateway/reference/extension/#authentication"
-            target="_blank"
-          >
-            Authentication
-          </Typography.Link>
-        </Typography.Text>
-        <S.SaveButton>Save</S.SaveButton>
-      </S.CardActions>
-    </Card>
+    </FormCard>
   );
 };
 

@@ -1,9 +1,17 @@
+import {useState} from 'react';
+
 import {Button, Typography} from 'antd';
+
+import {AddTargetModal} from './AddTargetModal';
 
 import * as S from './styled';
 
 const Targets = () => {
+  const [showAddTargetModal, setShowAddTargetModal] = useState(false);
   const targets: Array<{}> = [];
+  const onAddTargetClick = () => {
+    setShowAddTargetModal(!showAddTargetModal);
+  };
   return (
     <S.Container>
       <div>
@@ -16,8 +24,11 @@ const Targets = () => {
         </Typography.Text>
       </div>
       <div>
-        <Button type="primary">{targets.length === 0 ? 'Define your first target' : 'Define a new target'}</Button>
+        <Button type="primary" onClick={onAddTargetClick}>
+          {targets.length === 0 ? 'Define your first target' : 'Define a new target'}
+        </Button>
       </div>
+      {showAddTargetModal && <AddTargetModal closeModal={() => setShowAddTargetModal(false)} />}
     </S.Container>
   );
 };

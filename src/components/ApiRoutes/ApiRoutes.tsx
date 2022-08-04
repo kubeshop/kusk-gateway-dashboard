@@ -2,12 +2,9 @@ import {Button, Input, Select, Table, Typography} from 'antd';
 
 import {DownCircleOutlined, RightCircleOutlined} from '@ant-design/icons';
 
-import YAML from 'yaml';
-
 import {SUPPORTED_METHODS} from '@constants/constants';
 
 import {useAppSelector} from '@redux/hooks';
-import {useGetApiCrdQuery} from '@redux/services/enhancedApi';
 
 import * as S from './styled';
 
@@ -21,12 +18,12 @@ const expandIcon = ({expanded, onExpand, record}: any) =>
   );
 const columns = [
   {
-    title: 'ROUTE',
+    title: 'PATH',
     dataIndex: 'route',
     key: 'route',
   },
   {
-    title: 'METHODS',
+    title: 'OPERATIONS',
     dataIndex: 'methods',
     key: 'methods',
     render: (_: any, {methods}: any) => (
@@ -47,31 +44,25 @@ const columns = [
 ];
 
 const ApiRoutes = () => {
-  const selectedAPI = useAppSelector(state => state.main.selectedApi);
+  const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
 
-  const {data} = useGetApiCrdQuery({
-    name: selectedAPI?.name || '',
-    namespace: selectedAPI?.namespace || '',
-  });
-
-  const openapiSpec = (data as any)?.spec?.spec && YAML.parse((data as any)?.spec.spec);
-  const dataSource = Object.keys(openapiSpec?.paths || {}).map(path => {
+  const dataSource = Object.keys(selectedAPIOpenSpec?.paths || {}).map(path => {
     return {
       key: path,
       route: path,
-      methods: Object.keys(openapiSpec.paths[path]).join(','),
+      methods: Object.keys(selectedAPIOpenSpec.paths[path]).join(','),
       source: '',
     };
   });
 
   return (
     <>
-      <Typography.Title>Routes</Typography.Title>
+      <Typography.Title>Paths</Typography.Title>
 
       <S.Options>
         <S.FiltersWrapper>
-          <Input placeholder="Route" />
-          <Select placeholder="Filter by method">
+          <Input placeholder="Path" />
+          <Select placeholder="Filter by operation">
             {METHODS.map(method => (
               <Select.Option key={method} value={method}>
                 {method.toUpperCase()}

@@ -1,37 +1,30 @@
-import {useState} from 'react';
+import {useAppSelector} from '@redux/hooks';
 
-import {Card, Input, Typography} from 'antd';
-
-import {DeleteOutlined} from '@ant-design/icons';
-
-import {CardHeading} from '@components/AntdCustom';
+import {FormCard} from '@components/FormCard';
+import {FormList} from '@components/FormList';
 
 import * as S from './styled';
 
 const Hosts = () => {
-  const [hosts] = useState<string[]>([]);
+  const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
+  const xKusk = selectedAPIOpenSpec['x-kusk'];
   return (
-    <Card title={<CardHeading heading="Hosts" subHeading="Configure which domains your api should listen to" />}>
-      {hosts.map(host => (
-        <S.Row key={host}>
-          <Input value={host} />
-          <DeleteOutlined />
-        </S.Row>
-      ))}
-
-      <S.AddButton>Add a new host</S.AddButton>
+    <FormCard
+      heading="Hosts"
+      subHeading="Configure which domains your api should listen to"
+      helpTopic="Hosts"
+      helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#hosts"
+    >
+      <FormList
+        addButtonText="Add a new host"
+        name="hosts"
+        placeholder="e.g. example.com"
+        requiredMessage="Enter host or delete this field."
+        initialValue={xKusk?.hosts}
+      />
 
       <S.Divider />
-      <S.CardActions>
-        <Typography.Text type="secondary">
-          Learn more about&nbsp;
-          <Typography.Link href="https://kubeshop.github.io/kusk-gateway/reference/extension/#hosts" target="_blank">
-            Hosts
-          </Typography.Link>
-        </Typography.Text>
-        <S.SaveButton>Save</S.SaveButton>
-      </S.CardActions>
-    </Card>
+    </FormCard>
   );
 };
 

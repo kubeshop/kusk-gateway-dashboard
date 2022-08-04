@@ -1,7 +1,7 @@
 import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from '@models/dashboard';
-import {DashboardPaneConfiguration, StaticRouteStepType, StepType, UiState} from '@models/ui';
+import {ApiCanvasType, DashboardPaneConfiguration, StaticRouteStepType, StepType, UiState} from '@models/ui';
 
 import initialState from '@redux/initialState';
 
@@ -19,6 +19,16 @@ export const uiSlice = createSlice({
       state.apiPublishModal.isOpen = true;
     },
 
+    openCanvasApiModal: (state: Draft<UiState>) => {
+      state.apiPublishModal.isCanvasApiModalOpen = true;
+    },
+    closeCanvasApiModal: (state: Draft<UiState>) => {
+      state.apiPublishModal.isCanvasApiModalOpen = false;
+      state.apiPublishModal.apiCanvasType = 'blank';
+    },
+    setApiCanvasType: (state: Draft<UiState>, action: PayloadAction<ApiCanvasType>) => {
+      state.apiPublishModal.apiCanvasType = action.payload;
+    },
     setApiDefinitionTableOfContentsHeight: (state: Draft<UiState>, action: PayloadAction<number>) => {
       state.tableOfContentsHeight.apiDefinition = action.payload;
     },
@@ -96,6 +106,9 @@ export const uiSlice = createSlice({
 export const {
   closeApiPublishModal,
   openApiPublishModal,
+  openCanvasApiModal,
+  closeCanvasApiModal,
+  setApiCanvasType,
   setApiDefinitionTableOfContentsHeight,
   setApiInfoActiveTab,
   setApiPublishModalActiveStep,
