@@ -26,9 +26,7 @@ const ApisList: React.FC = () => {
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
   const [searchApiName, setSearchApiName] = useState<string>('');
   const {data: namespaces} = useGetNamespacesQuery();
-  const {data, error, isError, isLoading} = useGetApisQuery({
-    namespace: selectedNamespace,
-  });
+  const {data, error, isError, isLoading} = useGetApisQuery({});
 
   const renderedNamespaceOptions = useMemo(() => {
     return namespaces?.map(namespace => (
@@ -61,7 +59,7 @@ const ApisList: React.FC = () => {
   ) : (
     <ContentWrapper>
       <S.Header>
-        <PageTitle>API gateways</PageTitle>
+        <PageTitle>APIS</PageTitle>
         <Typography.Text type="secondary">Explore your APIs at a glance...</Typography.Text>
       </S.Header>
 
@@ -96,7 +94,7 @@ const ApisList: React.FC = () => {
               type="primary"
               onClick={showApiPublishModalHandler}
             >
-              Add a new API gateway
+              Add a new API
             </Button>
           </S.ActionsContainer>
 

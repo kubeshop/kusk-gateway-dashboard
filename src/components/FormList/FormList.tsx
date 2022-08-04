@@ -1,7 +1,7 @@
 import {Button, Form} from 'antd';
 import {NamePath} from 'antd/lib/form/interface';
 
-import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {DeleteOutlined} from '@ant-design/icons';
 
 import * as S from './styled';
 
@@ -11,16 +11,17 @@ interface IProps {
   requiredMessage: string;
   label?: string;
   placeholder?: string;
+  initialValue?: any;
 }
 
 const FormList: React.FC<IProps> = props => {
-  const {addButtonText, label = '', name, placeholder = '', requiredMessage} = props;
+  const {addButtonText, label = '', name, placeholder = '', requiredMessage, initialValue} = props;
 
   return (
     <>
       {label && <S.Label>{label}</S.Label>}
 
-      <Form.List name={name}>
+      <Form.List name={name} initialValue={initialValue}>
         {(fields, {add, remove}) => (
           <>
             {fields.map(field => (
@@ -29,15 +30,16 @@ const FormList: React.FC<IProps> = props => {
                   <S.Input placeholder={placeholder} />
                 </Form.Item>
 
-                <MinusCircleOutlined onClick={() => remove(field.name)} />
+                <DeleteOutlined onClick={() => remove(field.name)} />
               </S.Space>
             ))}
-
-            <Form.Item>
-              <Button icon={<PlusOutlined />} type="default" onClick={() => add('', 0)}>
-                {addButtonText}
-              </Button>
-            </Form.Item>
+            <S.ButtonContainer>
+              <Form.Item>
+                <Button type="default" onClick={() => add('', 0)}>
+                  {addButtonText}
+                </Button>
+              </Form.Item>
+            </S.ButtonContainer>
           </>
         )}
       </Form.List>
