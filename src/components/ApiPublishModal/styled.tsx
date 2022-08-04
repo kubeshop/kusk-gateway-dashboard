@@ -1,8 +1,12 @@
-import {Alert as RawAlert, Modal as RawModal} from 'antd';
+import {Input, Alert as RawAlert, Modal as RawModal} from 'antd';
+
+import {ExclamationCircleOutlined as RawExclamationCircleOutlined} from '@ant-design/icons';
 
 import styled from 'styled-components';
 
 import {GlobalScrollbarStyle} from '@utils/scrollbar';
+
+import Colors from '@styles/colors';
 
 export const Alert = styled(RawAlert)`
   margin-bottom: 20px;
@@ -37,12 +41,16 @@ export const Label = styled.div`
 `;
 
 export const Modal = styled(RawModal)`
-  top: min(5%, 10px);
-
   & .ant-modal-body {
-    height: 80vh;
+    background-color: ${Colors.cyanBlue};
+    min-height: fit-content;
     overflow-y: auto;
     ${GlobalScrollbarStyle}
+  }
+
+  & .ant-modal-footer {
+    background-color: ${Colors.cyanBlue};
+    border-top: none;
   }
 `;
 
@@ -55,4 +63,22 @@ export const StepsContainer = styled.div`
   height: fit-content;
   position: sticky;
   top: 0;
+`;
+
+export const ExclamationCircleOutlined = styled(RawExclamationCircleOutlined)`
+  margin-right: 10px;
+`;
+
+export const Textarea = styled(Input.TextArea)`
+  ${GlobalScrollbarStyle}
+`;
+
+export const WarningsContainer = styled.div`
+  color: ${Colors.yellow500};
+  margin-bottom: 15px;
+
+  & a {
+    color: ${Colors.yellow500};
+    text-decoration: underline;
+  }
 `;

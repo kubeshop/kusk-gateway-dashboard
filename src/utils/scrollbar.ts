@@ -6,10 +6,10 @@ export const GlobalScrollbarStyle = `
   }
 
   ::-webkit-scrollbar-track {
-    background: ${Colors.grey2};
+    background: ${Colors.zinc1};
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${Colors.grey5};
+    background: ${Colors.zinc2};
   }
 `;

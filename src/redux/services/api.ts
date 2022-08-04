@@ -8,7 +8,14 @@ const dynamicBaseQuery: BaseQueryFn<string | FetchArgs, unknown, {message: strin
   extraOptions
 ) => {
   const baseUrl = (WebApi.getState() as RootState).main.apiEndpoint;
-  const rawBaseQuery = fetchBaseQuery({baseUrl});
+  const rawBaseQuery = fetchBaseQuery({
+    baseUrl,
+    prepareHeaders: headers => {
+      headers.set('Content-Type', 'application/json');
+      headers.set('Accept', 'application/json');
+      return headers;
+    },
+  });
   const result = await rawBaseQuery(args, WebApi, extraOptions);
   if (result.error) {
     return {...result, error: {message: result.error.data as string}};

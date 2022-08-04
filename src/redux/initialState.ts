@@ -10,15 +10,19 @@ const initialMainState: MainState = {
   apiEndpoint: '/api/',
   newApiFormContent: null,
   selectedApi: null,
+  selectedApiOpenapiSpec: null,
   selectedEnvoyFleet: null,
   selectedStaticRoute: null,
+  selectedApiNewSettings: null,
 };
 
 const initialUiState: UiState = {
   apiPublishModal: {
     activeStep: 'openApiSpec',
     isOpen: false,
+    isCanvasApiModalOpen: false,
     lastCompletedStep: 'openApiSpec',
+    apiCanvasType: 'blank',
   },
   apiInfoActiveTab: 'crd',
   dashboardPaneConfiguration: {
