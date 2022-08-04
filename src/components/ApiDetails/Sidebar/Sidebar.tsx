@@ -41,7 +41,7 @@ const Sidebar = (props: IProps) => {
           />
         </Tooltip>
 
-        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="Routes List">
+        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="Paths List">
           <S.Icon
             component={StaticRouteIcon}
             $active={activeSection === 'routes'}
