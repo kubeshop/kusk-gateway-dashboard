@@ -113,7 +113,9 @@ const CanvasApiModal = () => {
       }
       onCancel={onBackHandler}
     >
-      <Typography.Title level={2}>Create an API from scratch</Typography.Title>
+      <Typography.Title level={2}>
+        Create an API from {apiCanvasType === 'template' ? 'template' : 'scratch'}
+      </Typography.Title>
       <Form layout="vertical" form={form}>
         <Form.Item
           name="name"
