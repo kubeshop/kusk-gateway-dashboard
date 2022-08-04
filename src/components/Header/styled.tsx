@@ -24,12 +24,37 @@ export const Container = styled.div`
 `;
 
 export const Logo = styled.img`
-  width: 70px;
   height: 36px;
   cursor: pointer;
 `;
 
-export const OptionsContainer = styled.div`
+export const Options = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const TeamWrapper = styled.div`
+  width: 78px;
+  border-left: 1px solid #27272a;
+  padding: 20px;
+`;
+
+export const Divider = styled.div`
+  display: block;
+  position: relative;
+  margin: 0 16px;
+  &::before {
+    content: '';
+    position: absolute;
+    top: -24px;
+    bottom: -24px;
+    left: 0;
+    width: 1px;
+    background-color: #27272a;
+  }
+`;
+
+export const RightContent = styled.div`
   display: flex;
   margin-left: auto;
   gap: 16px;
@@ -63,11 +88,6 @@ export const SettingsFilled = styled(RawSettingFilled)`
   color: ${Colors.whitePure};
   font-size: 18px;
   cursor: pointer;
-`;
-
-export const TeamContainer = styled.div`
-  width: 78px;
-  margin-left: 24px;
 `;
 
 export const Dropdown = styled(RawDropdown).attrs({

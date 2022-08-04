@@ -51,14 +51,15 @@ const Header = () => {
       <Link to="/">
         <S.Logo id="sidebar-kusk-logo" src={KuskLogo} alt="Kusk" />
       </Link>
-      <div style={{display: 'flex', marginLeft: 24, alignItems: 'center'}}>
+      <S.Options>
+        <S.Divider />
         <S.Dropdown overlay={menu}>
-          <span style={{minWidth: 78}}>
+          <span style={{minWidth: 78, marginLeft: 16}}>
             <S.TeamLabel>K</S.TeamLabel>
             <DownOutlined />
           </span>
         </S.Dropdown>
-
+        <S.Divider />
         {apiName && APP_ROUTES.every(r => r !== apiName) && (
           <S.Dropdown overlay={apisMenu}>
             <span>
@@ -67,8 +68,9 @@ const Header = () => {
             </span>
           </S.Dropdown>
         )}
-      </div>
-      <S.OptionsContainer>
+      </S.Options>
+
+      <S.RightContent>
         <S.IconContainer>
           <a href="https://github.com/kubeshop/kusk-gateway" target="_blank" rel="noopener noreferrer">
             <S.GithubFilled />
@@ -80,7 +82,7 @@ const Header = () => {
             <S.QuestionCircleFilled />
           </a>
         </S.IconContainer>
-      </S.OptionsContainer>
+      </S.RightContent>
     </S.Container>
   );
 };
