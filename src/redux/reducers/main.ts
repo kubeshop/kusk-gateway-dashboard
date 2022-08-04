@@ -66,7 +66,7 @@ export const mainSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(updateApiSettings.fulfilled, (state, action) => {});
+    builder.addCase(updateApiSettings.fulfilled, () => {});
   },
 });
 

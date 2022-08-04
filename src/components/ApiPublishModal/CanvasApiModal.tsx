@@ -41,6 +41,7 @@ const CanvasApiModal = () => {
     if (apiCanvasType === 'template') {
       form.setFieldsValue({openapi: YAML.stringify(ToDoTemplate), name: formatApiName(ToDoTemplate?.info?.title)});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -49,6 +50,7 @@ const CanvasApiModal = () => {
       let apiName = form.getFieldValue('name') || formatApiName(parsedOpenApi?.info?.title);
       form.setFieldsValue({name: apiName});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openapiField]);
 
   const onBackHandler = () => {
@@ -93,7 +95,7 @@ const CanvasApiModal = () => {
           })
         );
       })
-      .catch(err => {});
+      .catch(() => {});
   };
 
   return (
