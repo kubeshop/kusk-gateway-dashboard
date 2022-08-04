@@ -4,6 +4,8 @@ import {Menu, MenuProps} from 'antd';
 
 import {DownOutlined} from '@ant-design/icons';
 
+import {skipToken} from '@reduxjs/toolkit/query/react';
+
 import {APP_ROUTES} from '@constants/constants';
 
 import {useGetApisQuery} from '@redux/services/enhancedApi';
@@ -16,7 +18,8 @@ const Header = () => {
   const navigate = useNavigate();
   const {pathname: apiPath} = useLocation();
   const apiName = apiPath.split('/').pop();
-  const {data: apis = []} = useGetApisQuery({});
+  const isApiRoute = apiName && APP_ROUTES.every(r => r !== apiName);
+  const {data: apis = []} = useGetApisQuery(isApiRoute ? {} : skipToken);
 
   const handleMenuClick: MenuProps['onClick'] = e => {
     if (e.key === 'settings') {
@@ -60,7 +63,7 @@ const Header = () => {
           </span>
         </S.Dropdown>
         <S.Divider />
-        {apiName && APP_ROUTES.every(r => r !== apiName) && (
+        {isApiRoute && (
           <S.Dropdown overlay={apisMenu}>
             <span>
               <S.DropdownLabel>{apiName}</S.DropdownLabel>
