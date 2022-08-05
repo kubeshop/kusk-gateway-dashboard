@@ -21,6 +21,7 @@ const RestfulProviderApp: React.FC = () => {
     const localStorageApiEndpoint = localStorage.getItem(KUSK_SETTINGS_TARGET_API);
 
     if (!localStorageApiEndpoint) {
+      setLoadingBaseUrl(false);
       return;
     }
 
