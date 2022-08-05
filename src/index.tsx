@@ -19,13 +19,13 @@ const RestfulProviderApp: React.FC = () => {
   const [loadingBaseUrl, setLoadingBaseUrl] = useState<boolean>(true);
   useEffect(() => {
     const localStorageApiEndpoint = localStorage.getItem(KUSK_SETTINGS_TARGET_API);
-
+    setLoadingBaseUrl(false);
     if (!localStorageApiEndpoint) {
       return;
     }
 
     dispatch(setApiEndpoint(localStorageApiEndpoint));
-    setLoadingBaseUrl(false);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
