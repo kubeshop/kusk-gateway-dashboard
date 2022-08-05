@@ -67,7 +67,7 @@ const Header = () => {
               type: AlertEnum.Success,
             })
           );
-          navigate(`/${api.name}`);
+          navigate(`/${api.namespace}/${api.name}`);
         },
       }))}
     />
