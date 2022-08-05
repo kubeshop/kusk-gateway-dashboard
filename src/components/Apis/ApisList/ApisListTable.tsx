@@ -37,10 +37,11 @@ const ApisListTable: React.FC<IProps> = props => {
 
   const onDeleteItemClick = async (api: ApiItem) => {
     Modal.confirm({
-      title: `Do you want to delete ${api.name} api?`,
-      okText: 'Delete',
+      title: `Delete API ${api.name}`,
+      content: `Are you sure you want to delete API ${api.name}?`,
+      okText: 'Yes, delete',
+      cancelText: 'Cancel',
       okType: 'danger',
-      cancelText: 'No',
       onOk: async () => {
         if (api) {
           try {

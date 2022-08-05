@@ -23,10 +23,11 @@ const GeneralSettings = () => {
 
   const onDeleteClickHandler = () => {
     Modal.confirm({
-      title: `Do you want to delete ${selectedAPI?.name} api?`,
-      okText: 'Delete',
+      title: `Delete API ${selectedAPI?.name}`,
+      content: `Are you sure you want to delete API ${selectedAPI?.name}?`,
+      okText: 'Yes, delete',
+      cancelText: 'Cancel',
       okType: 'danger',
-      cancelText: 'No',
       onOk: async () => {
         if (selectedAPI) {
           try {
