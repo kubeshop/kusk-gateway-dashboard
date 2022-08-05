@@ -38,6 +38,9 @@ const ApisListTable: React.FC<IProps> = props => {
   const onDeleteItemClick = async (api: ApiItem) => {
     Modal.confirm({
       title: `Do you want to delete ${api.name} api?`,
+      okText: 'Delete',
+      okType: 'danger',
+      cancelText: 'No',
       onOk: async () => {
         if (api) {
           try {
@@ -83,7 +86,15 @@ const ApisListTable: React.FC<IProps> = props => {
               <Typography.Text>{api.version}</Typography.Text>
             </S.ApiInfo>
 
-            <S.Menu selectable={false} mode="horizontal" items={ApiMenuItems} onClick={() => onDeleteItemClick(api)} />
+            <S.Menu
+              selectable={false}
+              mode="horizontal"
+              items={ApiMenuItems}
+              onClick={event => {
+                event.domEvent.stopPropagation();
+                onDeleteItemClick(api);
+              }}
+            />
           </S.ApiInfoContainer>
         </S.GridItem>
       ))}

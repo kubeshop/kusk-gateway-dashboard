@@ -24,6 +24,9 @@ const GeneralSettings = () => {
   const onDeleteClickHandler = () => {
     Modal.confirm({
       title: `Do you want to delete ${selectedAPI?.name} api?`,
+      okText: 'Delete',
+      okType: 'danger',
+      cancelText: 'No',
       onOk: async () => {
         if (selectedAPI) {
           try {
@@ -136,7 +139,7 @@ const GeneralSettings = () => {
           />
         }
       >
-        <S.DeleteButton size="large" onClick={onDeleteClickHandler}>
+        <S.DeleteButton danger size="large" type="primary" onClick={onDeleteClickHandler}>
           Delete
         </S.DeleteButton>
       </S.DeleteCard>
