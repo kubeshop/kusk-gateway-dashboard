@@ -1,3 +1,4 @@
+import {useDispatch} from 'react-redux';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 
 import {Menu, MenuProps} from 'antd';
@@ -8,6 +9,7 @@ import {skipToken} from '@reduxjs/toolkit/query/react';
 
 import {APP_ROUTES} from '@constants/constants';
 
+import {selectApi} from '@redux/reducers/main';
 import {useGetApisQuery} from '@redux/services/enhancedApi';
 
 import KuskLogo from '@assets/KuskLogo.svg';
@@ -15,6 +17,7 @@ import KuskLogo from '@assets/KuskLogo.svg';
 import * as S from './styled';
 
 const Header = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const {pathname: apiPath} = useLocation();
   const apiName = apiPath.split('/').pop();
@@ -47,7 +50,17 @@ const Header = () => {
     />
   );
 
-  const apisMenu = <Menu items={apis.map(api => ({label: api.name, key: api.name}))} />;
+  const apisMenu = (
+    <Menu
+      items={apis.map(api => ({
+        label: api.name,
+        key: `${api.namespace}-${api.name}`,
+        onClick: () => {
+          dispatch(selectApi(api));
+        },
+      }))}
+    />
+  );
 
   return (
     <S.Container>

@@ -74,7 +74,7 @@ const ApisListTable: React.FC<IProps> = props => {
   return (
     <S.Grid>
       {apis.map(api => (
-        <S.GridItem key={`KEY_${api.name}`} onClick={() => onApiItemClick(api)}>
+        <S.GridItem key={`KEY_${api.namespace}_${api.name}`} onClick={() => onApiItemClick(api)}>
           <Typography.Title level={4}>{api.name}</Typography.Title>
           <S.ApiInfoContainer>
             <S.ApiInfo>
