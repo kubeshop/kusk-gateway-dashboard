@@ -9,6 +9,9 @@ import {skipToken} from '@reduxjs/toolkit/query/react';
 
 import {APP_ROUTES} from '@constants/constants';
 
+import {AlertEnum} from '@models/alert';
+
+import {setAlert} from '@redux/reducers/alert';
 import {selectApi} from '@redux/reducers/main';
 import {useGetApisQuery} from '@redux/services/enhancedApi';
 
@@ -57,6 +60,14 @@ const Header = () => {
         key: `${api.namespace}-${api.name}`,
         onClick: () => {
           dispatch(selectApi(api));
+          dispatch(
+            setAlert({
+              title: 'API selected',
+              description: `${api.name} is selected`,
+              type: AlertEnum.Success,
+            })
+          );
+          navigate(`/${api.name}`);
         },
       }))}
     />
