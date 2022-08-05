@@ -16,6 +16,7 @@ const dynamicBaseQuery: BaseQueryFn<string | FetchArgs, unknown, {message: strin
       return headers;
     },
   });
+
   const result = await rawBaseQuery(args, WebApi, extraOptions);
   if (result.error) {
     return {...result, error: {message: result.error.data as string}};

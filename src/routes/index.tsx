@@ -12,7 +12,7 @@ const Router = () => {
   let element = useRoutes([
     {path: '*', element: <ContentWrapper>Page not found!</ContentWrapper>},
     {path: '/', element: <Apis />},
-    {path: ':api', element: <Api />},
+    {path: '/:namespace/:api', element: <Api />},
     {path: '/settings', element: <Settings />},
   ]);
 

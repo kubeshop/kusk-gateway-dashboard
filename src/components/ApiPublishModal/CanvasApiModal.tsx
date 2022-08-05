@@ -97,7 +97,7 @@ const CanvasApiModal = () => {
           })
         );
         dispatch(selectApi(apiData));
-        navigate(`/${apiData.name}`);
+        navigate(`/${apiData.namespace}/${apiData.name}`);
       })
       .catch(() => {});
   };
