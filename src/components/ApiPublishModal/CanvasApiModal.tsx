@@ -118,7 +118,9 @@ const CanvasApiModal = () => {
       </Typography.Title>
       <Form layout="vertical" form={form}>
         <Form.Item
+          hasFeedback
           name="name"
+          dependencies={['namespace']}
           rules={[
             {required: true, message: 'Enter API name!'},
             {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern!'},
@@ -126,9 +128,9 @@ const CanvasApiModal = () => {
             () => {
               return {
                 validator(_, value) {
-                  const namespace = form.getFieldValue('namespace') || 'default';
+                  const namespace = form.getFieldValue('namespace');
 
-                  if (checkDuplicateAPI(apis || [], `${namespace}-${value}`)) {
+                  if (namespace && checkDuplicateAPI(apis || [], `${namespace}-${value}`)) {
                     return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
                   }
 
