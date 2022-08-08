@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 
 import {Button, Form, Input, Select, Tag, Typography} from 'antd';
 
@@ -13,6 +14,7 @@ import {ApiContent} from '@models/main';
 
 import {useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
+import {selectApi} from '@redux/reducers/main';
 import {closeApiPublishModal, closeCanvasApiModal} from '@redux/reducers/ui';
 import {
   useDeployApiMutation,
@@ -27,6 +29,7 @@ import ToDoTemplate from '../../constants/rawOpenApiSpec.json';
 import * as S from './styled';
 
 const CanvasApiModal = () => {
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const apiCanvasType = useAppSelector(state => state.ui.apiPublishModal.apiCanvasType);
@@ -86,7 +89,6 @@ const CanvasApiModal = () => {
 
         dispatch(closeApiPublishModal());
         dispatch(closeCanvasApiModal());
-
         dispatch(
           setAlert({
             title: 'API deployed successfully',
@@ -94,6 +96,8 @@ const CanvasApiModal = () => {
             type: AlertEnum.Success,
           })
         );
+        dispatch(selectApi(apiData));
+        navigate(`/${apiData.namespace}/${apiData.name}`);
       })
       .catch(() => {});
   };
@@ -118,7 +122,9 @@ const CanvasApiModal = () => {
       </Typography.Title>
       <Form layout="vertical" form={form}>
         <Form.Item
+          hasFeedback
           name="name"
+          dependencies={['namespace']}
           rules={[
             {required: true, message: 'Enter API name!'},
             {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern!'},
@@ -126,9 +132,9 @@ const CanvasApiModal = () => {
             () => {
               return {
                 validator(_, value) {
-                  const namespace = form.getFieldValue('namespace') || 'default';
+                  const namespace = form.getFieldValue('namespace');
 
-                  if (checkDuplicateAPI(apis || [], `${namespace}-${value}`)) {
+                  if (namespace && checkDuplicateAPI(apis || [], `${namespace}-${value}`)) {
                     return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
                   }
 

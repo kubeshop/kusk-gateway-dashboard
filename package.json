@@ -10,11 +10,11 @@
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "13.5.0",
     "@types/jest": "27.5.2",
-    "@types/node": "16.11.41",
+    "@types/node": "16.11.42",
     "@types/react": "17.0.47",
     "@types/react-dom": "17.0.17",
     "@types/react-redux": "7.1.24",
-    "antd": "4.21.5",
+    "antd": "4.21.6",
     "https-browserify": "^1.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -83,6 +83,5 @@
     "resize-observer-polyfill": "1.5.1",
     "stream-browserify": "3.0.0",
     "swagger-ui-react": "4.10.3"
-  },
-  "proxy": "http://localhost:8080"
+  }
 }

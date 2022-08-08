@@ -4,7 +4,7 @@ const injectedRtkApi = api.injectEndpoints({
   endpoints: build => ({
     getApis: build.query<GetApisApiResponse, GetApisApiArg>({
       query: queryArg => ({
-        url: `/apis?`,
+        url: `/apis`,
         params: {
           fleetname: queryArg.fleetname,
           fleetnamespace: queryArg.fleetnamespace,

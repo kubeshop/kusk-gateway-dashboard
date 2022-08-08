@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
@@ -16,18 +16,23 @@ import './antd-theme/antd-customized.css';
 
 const RestfulProviderApp: React.FC = () => {
   const dispatch = useAppDispatch();
-
+  const [loadingBaseUrl, setLoadingBaseUrl] = useState<boolean>(true);
   useEffect(() => {
     const localStorageApiEndpoint = localStorage.getItem(KUSK_SETTINGS_TARGET_API);
 
     if (!localStorageApiEndpoint) {
+      setLoadingBaseUrl(false);
       return;
     }
 
     dispatch(setApiEndpoint(localStorageApiEndpoint));
-
+    setLoadingBaseUrl(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (loadingBaseUrl) {
+    return null;
+  }
 
   return <App />;
 };

@@ -37,7 +37,11 @@ const ApisListTable: React.FC<IProps> = props => {
 
   const onDeleteItemClick = async (api: ApiItem) => {
     Modal.confirm({
-      title: `Do you want to delete ${api.name} api?`,
+      title: `Delete API ${api.name}`,
+      content: `Are you sure you want to delete API ${api.name}?`,
+      okText: 'Yes, delete',
+      cancelText: 'Cancel',
+      okType: 'danger',
       onOk: async () => {
         if (api) {
           try {
@@ -65,13 +69,13 @@ const ApisListTable: React.FC<IProps> = props => {
 
   const onApiItemClick = (api: ApiItem) => {
     dispatch(selectApi(api));
-    navigate(api.name);
+    navigate(`${api.namespace}/${api.name}`);
   };
 
   return (
     <S.Grid>
       {apis.map(api => (
-        <S.GridItem key={`KEY_${api.name}`} onClick={() => onApiItemClick(api)}>
+        <S.GridItem key={`KEY_${api.namespace}_${api.name}`} onClick={() => onApiItemClick(api)}>
           <Typography.Title level={4}>{api.name}</Typography.Title>
           <S.ApiInfoContainer>
             <S.ApiInfo>
@@ -83,7 +87,15 @@ const ApisListTable: React.FC<IProps> = props => {
               <Typography.Text>{api.version}</Typography.Text>
             </S.ApiInfo>
 
-            <S.Menu selectable={false} mode="horizontal" items={ApiMenuItems} onClick={() => onDeleteItemClick(api)} />
+            <S.Menu
+              selectable={false}
+              mode="horizontal"
+              items={ApiMenuItems}
+              onClick={event => {
+                event.domEvent.stopPropagation();
+                onDeleteItemClick(api);
+              }}
+            />
           </S.ApiInfoContainer>
         </S.GridItem>
       ))}

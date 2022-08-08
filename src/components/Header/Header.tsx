@@ -1,11 +1,18 @@
+import {useDispatch} from 'react-redux';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 
 import {Menu, MenuProps} from 'antd';
 
 import {DownOutlined} from '@ant-design/icons';
 
+import {skipToken} from '@reduxjs/toolkit/query/react';
+
 import {APP_ROUTES} from '@constants/constants';
 
+import {AlertEnum} from '@models/alert';
+
+import {setAlert} from '@redux/reducers/alert';
+import {selectApi} from '@redux/reducers/main';
 import {useGetApisQuery} from '@redux/services/enhancedApi';
 
 import KuskLogo from '@assets/KuskLogo.svg';
@@ -13,10 +20,12 @@ import KuskLogo from '@assets/KuskLogo.svg';
 import * as S from './styled';
 
 const Header = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const {pathname: apiPath} = useLocation();
   const apiName = apiPath.split('/').pop();
-  const {data: apis = []} = useGetApisQuery({});
+  const isApiRoute = apiName && APP_ROUTES.every(r => r !== apiName);
+  const {data: apis = []} = useGetApisQuery(isApiRoute ? {} : skipToken);
 
   const handleMenuClick: MenuProps['onClick'] = e => {
     if (e.key === 'settings') {
@@ -44,7 +53,25 @@ const Header = () => {
     />
   );
 
-  const apisMenu = <Menu items={apis.map(api => ({label: api.name, key: api.name}))} />;
+  const apisMenu = (
+    <Menu
+      items={apis.map(api => ({
+        label: api.name,
+        key: `${api.namespace}-${api.name}`,
+        onClick: () => {
+          dispatch(selectApi(api));
+          dispatch(
+            setAlert({
+              title: 'API selected',
+              description: `${api.name} is selected`,
+              type: AlertEnum.Success,
+            })
+          );
+          navigate(`/${api.namespace}/${api.name}`);
+        },
+      }))}
+    />
+  );
 
   return (
     <S.Container>
@@ -60,7 +87,7 @@ const Header = () => {
           </span>
         </S.Dropdown>
         <S.Divider />
-        {apiName && APP_ROUTES.every(r => r !== apiName) && (
+        {isApiRoute && (
           <S.Dropdown overlay={apisMenu}>
             <span>
               <S.DropdownLabel>{apiName}</S.DropdownLabel>
