@@ -86,16 +86,17 @@ const ApisListTable: React.FC<IProps> = props => {
               <S.InfoLabel>VERSION</S.InfoLabel>
               <Typography.Text>{api.version}</Typography.Text>
             </S.ApiInfo>
-
-            <S.Menu
-              selectable={false}
-              mode="horizontal"
-              items={ApiMenuItems}
-              onClick={event => {
-                event.domEvent.stopPropagation();
-                onDeleteItemClick(api);
-              }}
-            />
+            <div onClick={e => e.stopPropagation()}>
+              <S.Menu
+                selectable={false}
+                mode="horizontal"
+                items={ApiMenuItems}
+                onClick={event => {
+                  event.domEvent.stopPropagation();
+                  onDeleteItemClick(api);
+                }}
+              />
+            </div>
           </S.ApiInfoContainer>
         </S.GridItem>
       ))}
