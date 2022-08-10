@@ -1,6 +1,7 @@
 import {Draft, PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
 import cleanDeep from 'clean-deep';
+import _ from 'lodash';
 import YAML from 'yaml';
 
 import {KUSK_SETTINGS_TARGET_API} from '@constants/constants';
@@ -12,26 +13,25 @@ import {enhancedApi} from '@redux/services/enhancedApi';
 import {ApiItem, EnvoyFleetItem, StaticRouteItem} from '@redux/services/kuskApi';
 import {RootState} from '@redux/store';
 
-const updateApiSettings = createAsyncThunk<any, void, {state: RootState}>(
+export const updateApiSettings = createAsyncThunk<any, {editedOpenapi?: any}, {state: RootState}>(
   'main/updateApiSettings',
-  async (_, {getState, dispatch}) => {
+  async ({editedOpenapi}, {getState, dispatch}) => {
     const selectedApi = getState().main.selectedApi;
     const selectedApiOpenapiSpec = getState().main.selectedApiOpenapiSpec;
-    const selectedApiNewSettings = getState().main.selectedApiNewSettings;
-    const openapiObj = {...selectedApiOpenapiSpec, ...selectedApiNewSettings?.Kusk};
+    const openapiObj = _.merge({}, selectedApiOpenapiSpec, editedOpenapi);
 
     const body = {
-      name: selectedApiNewSettings?.name || selectedApi?.name,
-      namespace: selectedApiNewSettings?.namespace || selectedApi?.namespace,
-      envoyFleetName: selectedApiNewSettings?.envoyFleetName || selectedApi?.fleet?.name,
-      envoyFleetNamespace: selectedApiNewSettings?.envoyFleetNamespace || selectedApi?.fleet?.namespace,
+      name: editedOpenapi?.name || selectedApi?.name,
+      namespace: editedOpenapi?.namespace || selectedApi?.namespace,
+      envoyFleetName: editedOpenapi?.envoyFleetName || selectedApi?.fleet?.name,
+      envoyFleetNamespace: editedOpenapi?.envoyFleetNamespace || selectedApi?.fleet?.namespace,
       openapi: YAML.stringify(cleanDeep(openapiObj)),
     };
+
     if (selectedApi) {
-      await dispatch(
-        enhancedApi.endpoints.deleteApi.initiate({name: selectedApi.name, namespace: selectedApi.namespace})
+      return dispatch(
+        enhancedApi.endpoints.updateApi.initiate({name: selectedApi.name, namespace: selectedApi.namespace, body})
       ).unwrap();
-      await dispatch(enhancedApi.endpoints.deployApi.initiate({body})).unwrap();
     }
   }
 );

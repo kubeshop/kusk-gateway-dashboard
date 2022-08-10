@@ -1,11 +1,12 @@
 import {useDispatch} from 'react-redux';
 
-import {Form, Input, Modal, Select, Switch, Typography} from 'antd';
+import {Form, Input, Modal, Select, Switch} from 'antd';
 
 import {AlertEnum} from '@models/alert';
 
 import {useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
+import {updateApiSettings} from '@redux/reducers/main';
 import {useDeleteApiMutation, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 
 import {CardHeading} from '@components/AntdCustom';
@@ -53,9 +54,17 @@ const GeneralSettings = () => {
     });
   };
 
+  const onSaveClickHandler = (values: any) => {
+    dispatch(updateApiSettings({editedOpenapi: values}));
+  };
+
   return (
     <S.Container>
-      <FormCard heading="Display name" subHeading="Please provide the display name of your API">
+      <FormCard
+        heading="Display name"
+        subHeading="Please provide the display name of your API"
+        formProps={{onFinish: onSaveClickHandler}}
+      >
         <Form.Item name="name" initialValue={selectedAPI?.name}>
           <Input placeholder="My first API being renamed" />
         </Form.Item>
@@ -63,11 +72,11 @@ const GeneralSettings = () => {
       </FormCard>
 
       <FormCard
-        heading="Namespace & Labels"
+        heading="Namespace"
         subHeading="Define which namespace and labels this API is assigned to"
         helpTopic="Namespaces & Labels"
         helpLink="https://kubeshop.github.io/kusk-gateway/customresources/api/"
-        formProps={{layout: 'vertical'}}
+        formProps={{layout: 'vertical', onFinish: onSaveClickHandler}}
       >
         <Form.Item label="Namespace" name="namespace" initialValue={selectedAPI?.namespace}>
           <Select placeholder="namespace">
@@ -78,12 +87,6 @@ const GeneralSettings = () => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item>
-          <S.CardItem>
-            <Typography.Text type="secondary">Labels</Typography.Text>
-            <Select placeholder="label" />
-          </S.CardItem>
-        </Form.Item>
         <S.Divider />
       </FormCard>
 
@@ -93,7 +96,7 @@ const GeneralSettings = () => {
         helpTopic="API Prefixes"
         helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#path"
       >
-        <Form.Item name={['prefix']} initialValue={xKusk?.prefix}>
+        <Form.Item name={['x-kusk', 'path', 'prefix']} initialValue={xKusk?.prefix}>
           <Input placeholder="/api/" />
         </Form.Item>
         <S.Divider />
@@ -102,10 +105,11 @@ const GeneralSettings = () => {
       <FormCard
         heading="Request validation"
         subHeading="Validate all incoming requests against the corresponding OpenAPI definition."
+        formProps={{onFinish: onSaveClickHandler}}
         cardProps={{
           extra: (
             <Form.Item
-              name={['validation', 'enabled']}
+              name={['x-kusk', 'validation', 'request', 'enabled']}
               valuePropName="checked"
               initialValue={xKusk?.validation?.request?.enabled}
             >
@@ -122,10 +126,10 @@ const GeneralSettings = () => {
         subHeading='Handle "Upgrade: websocket" and other actions related to Websocket HTTP headers.'
         helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#websocket"
         helpTopic="Websockets"
-        formProps={{name: 'websockets'}}
+        formProps={{name: 'websockets', onFinish: onSaveClickHandler}}
         cardProps={{
           extra: (
-            <Form.Item name="websocket" valuePropName="checked" initialValue={xKusk?.websocket}>
+            <Form.Item name={['x-kusk', 'websocket']} valuePropName="checked" initialValue={xKusk?.websocket}>
               <Switch />
             </Form.Item>
           ),

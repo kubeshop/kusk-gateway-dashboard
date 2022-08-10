@@ -21,8 +21,7 @@ const Upstream: React.FC<IProps> = props => {
   const form = Form.useFormInstance();
   const {data: services = [], ...servicesInfo} = useGetServicesQuery({});
 
-  const formService = form.getFieldValue('service');
-  const [selectedService, setSelectedService] = useState<ServiceItem | undefined>(formService || undefined);
+  const [selectedService, setSelectedService] = useState<ServiceItem | undefined>();
 
   const selectedServicePorts = useMemo(() => {
     if (!selectedService) {
@@ -53,27 +52,17 @@ const Upstream: React.FC<IProps> = props => {
       return;
     }
     form.setFieldsValue({
-      upstream: {
-        service: {
-          name: selectedService.name,
-          namespace: selectedService.namespace,
+      'x-kusk': {
+        upstream: {
+          service: {
+            name: selectedService.name,
+            namespace: selectedService.namespace,
+          },
         },
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedService, formService]);
-
-  useEffect(() => {
-    if (!formService) {
-      return;
-    }
-
-    const service = services.find(s => `${s.namespace}-${s.name}` === formService);
-
-    if (service) {
-      setSelectedService(service);
-    }
-  }, [formService, services]);
+  }, [selectedService]);
 
   return (
     <>
@@ -85,7 +74,7 @@ const Upstream: React.FC<IProps> = props => {
             <ErrorLabel>{servicesInfo.error}</ErrorLabel>
           ) : (
             <div style={{display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16}}>
-              <Form.Item label="Cluster service" name="service">
+              <Form.Item label="Cluster service">
                 <Select
                   allowClear
                   placeholder="Select cluster service"
@@ -106,7 +95,7 @@ const Upstream: React.FC<IProps> = props => {
 
               <Form.Item
                 label="Port"
-                name={['upstream', 'service', 'port']}
+                name={['x-kusk', 'upstream', 'service', 'port']}
                 rules={[
                   {
                     required: isRequiredFields,
@@ -131,7 +120,7 @@ const Upstream: React.FC<IProps> = props => {
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16}}>
             <Form.Item
               label="Name"
-              name={['upstream', 'service', 'name']}
+              name={['x-kusk', 'upstream', 'service', 'name']}
               rules={[
                 {
                   required: isRequiredFields,
@@ -144,7 +133,7 @@ const Upstream: React.FC<IProps> = props => {
 
             <Form.Item
               label="Namespace"
-              name={['upstream', 'service', 'namespace']}
+              name={['x-kusk', 'upstream', 'service', 'namespace']}
               rules={[
                 {
                   required: isRequiredFields,
@@ -160,7 +149,7 @@ const Upstream: React.FC<IProps> = props => {
         <>
           <Form.Item
             label="Hostname"
-            name={['upstream', 'host', 'hostname']}
+            name={['x-kusk', 'upstream', 'host', 'hostname']}
             rules={[
               {
                 required: isRequiredFields,
@@ -172,7 +161,7 @@ const Upstream: React.FC<IProps> = props => {
           </Form.Item>
           <Form.Item
             label="Port"
-            name={['upstream', 'host', 'port']}
+            name={['x-kusk', 'upstream', 'host', 'port']}
             getValueFromEvent={e => Number(e.target.value)}
             rules={[
               {
@@ -187,11 +176,11 @@ const Upstream: React.FC<IProps> = props => {
       )}
 
       <S.ExtensionSubHeading>Rewrite</S.ExtensionSubHeading>
-      <Form.Item label="Pattern" name={['upstream', 'rewrite', 'rewrite_regex', 'pattern']}>
+      <Form.Item label="Pattern" name={['x-kusk', 'upstream', 'rewrite', 'rewrite_regex', 'pattern']}>
         <Input placeholder="Regex pattern that should be rewritten" />
       </Form.Item>
 
-      <Form.Item label="Substitution" name={['upstream', 'rewrite', 'rewrite_regex', 'substitution']}>
+      <Form.Item label="Substitution" name={['x-kusk', 'upstream', 'rewrite', 'rewrite_regex', 'substitution']}>
         <Input placeholder="Substitution for specified regex pattern" />
       </Form.Item>
     </>
