@@ -1,8 +1,11 @@
+import {useDispatch} from 'react-redux';
+
 import {Checkbox, Form, Input, Switch} from 'antd';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
 
 import {useAppSelector} from '@redux/hooks';
+import {updateApiSettings} from '@redux/reducers/main';
 
 import {FormCard} from '@components/FormCard';
 import {FormList} from '@components/FormList';
@@ -12,9 +15,13 @@ import * as S from './styled';
 const METHODS = SUPPORTED_METHODS.slice(0, -1).map(method => method.toUpperCase());
 
 const CORS = () => {
+  const dispatch = useDispatch();
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
   const xKusk = selectedAPIOpenSpec['x-kusk'];
 
+  const onSaveClickHandler = (values: any) => {
+    dispatch(updateApiSettings({editedOpenapi: values}));
+  };
   return (
     <S.Container>
       <FormCard
@@ -22,11 +29,12 @@ const CORS = () => {
         subHeading="Please provide the CORS origin"
         helpTopic="Origins"
         helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        formProps={{onFinish: onSaveClickHandler}}
       >
         <FormList
           addButtonText="Add a new origin"
           label="Origins"
-          name={['cors', 'origins']}
+          name={['x-kusk', 'cors', 'origins']}
           initialValue={xKusk?.cors?.origins}
           requiredMessage="Enter origin or delete the field."
         />
@@ -39,8 +47,9 @@ const CORS = () => {
         subHeading="Which CORS request methods would you like to allow?"
         helpTopic="CORS Request Methods"
         helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        formProps={{onFinish: onSaveClickHandler}}
       >
-        <Form.Item name={['cors', 'methods']} initialValue={xKusk?.cors?.methods}>
+        <Form.Item name={['x-kusk', 'cors', 'methods']} initialValue={xKusk?.cors?.methods}>
           <Checkbox.Group>
             {METHODS.map(method => (
               <Checkbox key={method} value={method}>
@@ -57,11 +66,12 @@ const CORS = () => {
         subHeading="Please provide the CORS headers"
         helpTopic="Origins"
         helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        formProps={{onFinish: onSaveClickHandler}}
       >
         <FormList
           addButtonText="Add a new header"
           label="Headers"
-          name={['cors', 'headers']}
+          name={['x-kusk', 'cors', 'headers']}
           initialValue={xKusk?.cors?.headers}
           requiredMessage="Enter header or delete the field."
         />
@@ -73,11 +83,12 @@ const CORS = () => {
         subHeading="Please provide the CORS exposed headers"
         helpTopic="Origins"
         helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        formProps={{onFinish: onSaveClickHandler}}
       >
         <FormList
           addButtonText="Add a new exposed header"
           label="Headers"
-          name={['cors', 'exposed_headers']}
+          name={['x-kusk', 'cors', 'exposed_headers']}
           initialValue={xKusk?.cors?.expose_headers}
           requiredMessage="Enter header or delete the field."
         />
@@ -89,11 +100,12 @@ const CORS = () => {
         subHeading="Please provide the Credentials"
         helpTopic="Origins"
         helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        formProps={{onFinish: onSaveClickHandler}}
         cardProps={{
           extra: (
             <Form.Item
               label="Credentials"
-              name={['cors', 'credentials']}
+              name={['x-kusk', 'cors', 'credentials']}
               valuePropName="checked"
               initialValue={xKusk?.cors?.credentials}
             >
@@ -108,11 +120,11 @@ const CORS = () => {
         subHeading="Please provide the CORS exposed headers"
         helpTopic="Origins"
         helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
-        formProps={{layout: 'vertical'}}
+        formProps={{layout: 'vertical', onFinish: onSaveClickHandler}}
       >
         <Form.Item
           label="Max age (in seconds)"
-          name={['cors', 'max_age']}
+          name={['x-kusk', 'cors', 'max_age']}
           initialValue={xKusk?.cors?.max_age || 60}
           getValueFromEvent={e => Number(e.target.value)}
         >

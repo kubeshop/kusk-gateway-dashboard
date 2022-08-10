@@ -19,7 +19,7 @@ const FormCard: FC<IProps> = ({heading, subHeading, helpTopic, helpLink, cardPro
   const [form] = Form.useForm();
 
   return (
-    <Form form={form} {...formProps} disabled>
+    <Form form={form} {...formProps}>
       <Card {...cardProps} title={<CardHeading heading={heading} subHeading={subHeading} />}>
         {children}
         <S.CardActions>

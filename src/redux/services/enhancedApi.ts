@@ -9,6 +9,9 @@ export const enhancedApi = kuskApi.enhanceEndpoints({
     getApi: {
       providesTags: ['API'],
     },
+    updateApi: {
+      invalidatesTags: ['API'],
+    },
     getApiCrd: {
       providesTags: ['API'],
     },
