@@ -36,3 +36,9 @@ export const RadioGroup = styled(Radio.Group)`
 export const Select = styled(RawSelect)`
   background-color: ${Colors.grey2};
 `;
+
+export const RedirectGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 8px;
+`;

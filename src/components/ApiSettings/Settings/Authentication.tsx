@@ -1,14 +1,27 @@
+import {useDispatch} from 'react-redux';
+
 import {Form, Input, InputNumber, Select, Switch} from 'antd';
 
 import {useAppSelector} from '@redux/hooks';
+import {updateApiSettings} from '@redux/reducers/main';
 
 import {FormCard} from '@components/FormCard';
 
 import * as S from './styled';
 
 const Authentication = () => {
+  const dispatch = useDispatch();
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
   const xKusk = selectedAPIOpenSpec['x-kusk'];
+
+  const onSaveClickHandler = (values: any) => {
+    const {enabled, ...rest} = values;
+    if (enabled) {
+      dispatch(updateApiSettings({editedOpenapi: rest}));
+    } else {
+      dispatch(updateApiSettings({editedOpenapi: {'x-kusk': {auth: null}}}));
+    }
+  };
   return (
     <FormCard
       heading="Authentication"
@@ -17,25 +30,20 @@ const Authentication = () => {
       helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#authentication"
       cardProps={{
         extra: (
-          <Form.Item
-            label="Enable"
-            name={['auth', 'enabled']}
-            valuePropName="checked"
-            initialValue={Boolean(xKusk.auth)}
-          >
+          <Form.Item label="Enable" name={['enabled']} valuePropName="checked" initialValue={Boolean(xKusk.auth)}>
             <Switch />
           </Form.Item>
         ),
       }}
-      formProps={{layout: 'vertical'}}
+      formProps={{layout: 'vertical', onFinish: onSaveClickHandler}}
     >
-      <Form.Item label="Authentication Scheme" name={['auth', 'scheme']} initialValue={xKusk?.auth?.scheme}>
+      <Form.Item label="Authentication Scheme" name={['x-kusk', 'auth', 'scheme']} initialValue={xKusk?.auth?.scheme}>
         <Select>
           <Select.Option value="basic">Basic</Select.Option>
         </Select>
       </Form.Item>
 
-      <Form.Item label="Path Prefix" name={['auth', 'path_prefix']} initialValue={xKusk?.auth?.path_prefix}>
+      <Form.Item label="Path Prefix" name={['x-kusk', 'auth', 'path_prefix']} initialValue={xKusk?.auth?.path_prefix}>
         <Input placeholder="e.g. /login" />
       </Form.Item>
 
@@ -43,7 +51,7 @@ const Authentication = () => {
         <S.CardItem style={{flex: 1}}>
           <Form.Item
             label="Hostname"
-            name={['auth', 'auth-upstream', 'host', 'hostname']}
+            name={['x-kusk', 'auth', 'auth-upstream', 'host', 'hostname']}
             initialValue={xKusk?.auth && xKusk?.auth['auth-upstream'] && xKusk?.auth['auth-upstream'].host.hostname}
             rules={[
               {
@@ -57,7 +65,7 @@ const Authentication = () => {
         </S.CardItem>
         <Form.Item
           label="Port"
-          name={['auth', 'auth-upstream', 'host', 'port']}
+          name={['x-kusk', 'auth', 'auth-upstream', 'host', 'port']}
           initialValue={xKusk?.auth && xKusk?.auth['auth-upstream'] && xKusk?.auth['auth-upstream'].host.port}
           rules={[
             {

@@ -1,8 +1,11 @@
+import {useDispatch} from 'react-redux';
+
 import {Checkbox, Form, InputNumber, Select, Switch, Typography} from 'antd';
 
 import styled from 'styled-components';
 
 import {useAppSelector} from '@redux/hooks';
+import {updateApiSettings} from '@redux/reducers/main';
 
 import {FormCard} from '@components/FormCard';
 
@@ -15,19 +18,31 @@ const CardLayout = styled.div`
 `;
 
 const RateLimiting = () => {
+  const dispatch = useDispatch();
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
   const xKusk = selectedAPIOpenSpec['x-kusk'];
+
+  const onSubmitHandler = (values: any) => {
+    const {enabled, ...rateLimit} = values;
+    if (enabled) {
+      dispatch(updateApiSettings({editedOpenapi: rateLimit}));
+    } else {
+      dispatch(updateApiSettings({editedOpenapi: {'x-kusk': {rate_limiting: null}}}));
+    }
+  };
+
   return (
     <FormCard
       heading="Rate Limiting"
       subHeading="Limit the amount of requests this API should handle"
       helpTopic="Rate Limiting"
       helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#rate-limiting"
+      formProps={{onFinish: onSubmitHandler}}
       cardProps={{
         extra: (
           <Form.Item
             label="Enable"
-            name={['rateLimit', 'enabled']}
+            name={['enabled']}
             valuePropName="checked"
             initialValue={Boolean(xKusk['rate_limit'])}
           >
@@ -40,7 +55,7 @@ const RateLimiting = () => {
         <S.CardItem>
           <Typography.Text>Requests per unit</Typography.Text>
           <Form.Item
-            name={['rateLimit', 'requests_per_unit']}
+            name={['x-kusk', 'rate_limit', 'requests_per_unit']}
             initialValue={(xKusk['rate_limit'] && xKusk['rate_limit']['requests_per_unit']) || 60}
           >
             <InputNumber />
@@ -50,7 +65,7 @@ const RateLimiting = () => {
         <S.CardItem>
           <Typography.Text>Time unit</Typography.Text>
           <Form.Item
-            name={['rateLimit', 'unit']}
+            name={['x-kusk', 'rate_limit', 'unit']}
             initialValue={(xKusk['rate_limit'] && xKusk['rate_limit']['unit']) || 'second'}
           >
             <Select>
@@ -64,7 +79,7 @@ const RateLimiting = () => {
         <S.CardItem>
           <Typography.Text>Response code</Typography.Text>
           <Form.Item
-            name={['rateLimit', 'response_code']}
+            name={['x-kusk', 'rate_limit', 'response_code']}
             initialValue={(xKusk['rate_limit'] && xKusk['rate_limit']['response_code']) || 405}
           >
             <InputNumber />
@@ -72,7 +87,7 @@ const RateLimiting = () => {
         </S.CardItem>
       </CardLayout>
       <Form.Item
-        name={['rateLimit', 'per_connection']}
+        name={['x-kusk', 'rate_limit', 'per_connection']}
         valuePropName="checked"
         initialValue={(xKusk['rate_limit'] && xKusk['rate_limit']['per_connection']) || false}
       >

@@ -18,6 +18,9 @@ const injectedRtkApi = api.injectEndpoints({
     getApi: build.query<GetApiApiResponse, GetApiApiArg>({
       query: queryArg => ({url: `/apis/${queryArg['namespace']}/${queryArg.name}`}),
     }),
+    updateApi: build.mutation<UpdateApiApiResponse, UpdateApiApiArg>({
+      query: queryArg => ({url: `/apis/${queryArg['namespace']}/${queryArg.name}`, method: 'PUT', body: queryArg.body}),
+    }),
     deleteApi: build.mutation<DeleteApiApiResponse, DeleteApiApiArg>({
       query: queryArg => ({url: `/apis/${queryArg['namespace']}/${queryArg.name}`, method: 'DELETE'}),
     }),
@@ -94,6 +97,19 @@ export type GetApiApiResponse = /** status 200 API item */ ApiItem;
 export type GetApiApiArg = {
   namespace: string;
   name: string;
+};
+export type UpdateApiApiResponse = /** status 201 API deployed */ undefined;
+export type UpdateApiApiArg = {
+  namespace: string;
+  name: string;
+  /** API content that needs to be updated */
+  body: {
+    name?: string;
+    namespace?: string;
+    envoyFleetName?: string;
+    envoyFleetNamespace?: string;
+    openapi?: string;
+  };
 };
 export type DeleteApiApiResponse = unknown;
 export type DeleteApiApiArg = {
@@ -235,6 +251,7 @@ export const {
   useGetApisQuery,
   useDeployApiMutation,
   useGetApiQuery,
+  useUpdateApiMutation,
   useDeleteApiMutation,
   useGetApiCrdQuery,
   useGetApiDefinitionQuery,
