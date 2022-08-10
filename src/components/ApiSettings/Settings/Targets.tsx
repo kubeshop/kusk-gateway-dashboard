@@ -2,13 +2,17 @@ import {useState} from 'react';
 
 import {Button, Typography} from 'antd';
 
+import {useAppSelector} from '@redux/hooks';
+
 import {AddTargetModal} from './AddTargetModal';
 
 import * as S from './styled';
 
 const Targets = () => {
   const [showAddTargetModal, setShowAddTargetModal] = useState(false);
-  const targets: Array<{}> = [];
+  const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
+  const xKusk = selectedAPIOpenSpec['x-kusk'];
+  const hasTarget = xKusk['upstream'] || xKusk['redirect'];
   const onAddTargetClick = () => {
     setShowAddTargetModal(!showAddTargetModal);
   };
