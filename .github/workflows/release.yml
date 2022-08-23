@@ -71,10 +71,6 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     steps:
-      - name: Set environment variable
-        run: |
-          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
-          echo RELEASE_VERSION=${SOURCE_TAG:1} >> $GITHUB_ENV
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -82,8 +78,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Create Docker manifest and push multi-arch image to Registry
         run: |
-          docker manifest create ${{ github.repository }}:${{ env.RELEASE_VERSION }} --amend ${{ github.repository }}:${{ env.RELEASE_VERSION }}-arm64 --amend ${{ github.repository }}:${{ env.RELEASE_VERSION }}-amd64
-          docker manifest push -p ${{ github.repository }}:${{ env.RELEASE_VERSION }}
+          docker manifest create ${{ github.repository }}:${{ github.ref_name }} --amend ${{ github.repository }}:${{ github.ref_name }}-arm64 --amend ${{ github.repository }}:${{ github.ref_name }}-amd64
+          docker manifest push -p ${{ github.repository }}:${{ github.ref_name }}
 
   helm_chart_version_bump:
     name: "Trigger Helm chart appVersion update"
