@@ -50,7 +50,6 @@ jobs:
         with:
           images: kubeshop/kusk-gateway-dashboard
           tags: |
-            type=match,pattern=v(.*)
             type=sha
           flavor: |
             latest=true
@@ -61,7 +60,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ github.repository }}:${{ github.ref_name }}-${{ matrix.name }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             SEGMENT_API_KEY=${{ secrets.REACT_APP_SEGMENT_API_KEY }}
