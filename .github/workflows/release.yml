@@ -19,6 +19,13 @@ jobs:
     name: Create and upload release-artifacts
     if: github.event.base_ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: "arm64"
+            path: arm64v8/nginx:1.22.0-alpine
+          - name: "amd64"
+            path: nginx:1.22.0-alpine
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -56,9 +63,27 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
           build-args: |
             SEGMENT_API_KEY=${{ secrets.REACT_APP_SEGMENT_API_KEY }}
+            TARGET=${{ matrix.path }}
+
+  create_manifest:
+    needs: build_multi_platform_images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set environment variable
+        run: |
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+          echo RELEASE_VERSION=${SOURCE_TAG:1} >> $GITHUB_ENV
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Create Docker manifest and push multi-arch image to Registry
+        run: |
+          docker manifest create ${{ github.repository }}:${{ env.RELEASE_VERSION }} --amend ${{ github.repository }}:${{ env.RELEASE_VERSION }}-arm64 --amend ${{ github.repository }}:${{ env.RELEASE_VERSION }}-amd64
+          docker manifest push -p ${{ github.repository }}:${{ env.RELEASE_VERSION }}
 
   helm_chart_version_bump:
     name: "Trigger Helm chart appVersion update"
