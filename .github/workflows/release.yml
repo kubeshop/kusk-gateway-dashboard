@@ -79,6 +79,9 @@ jobs:
         run: |
           docker manifest create ${{ github.repository }}:${{ github.ref_name }} --amend ${{ github.repository }}:${{ github.ref_name }}-arm64 --amend ${{ github.repository }}:${{ github.ref_name }}-amd64
           docker manifest push -p ${{ github.repository }}:${{ github.ref_name }}
+          
+          docker manifest create ${{ github.repository }}:latest --amend ${{ github.repository }}:${{ github.ref_name }}-arm64 --amend ${{ github.repository }}:${{ github.ref_name }}-amd64
+          docker manifest push -p ${{ github.repository }}:latest
 
   helm_chart_version_bump:
     name: "Trigger Helm chart appVersion update"
