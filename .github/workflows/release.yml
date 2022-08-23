@@ -68,7 +68,7 @@ jobs:
             TARGET=${{ matrix.path }}
 
   create_manifest:
-    needs: build_multi_platform_images
+    needs: release
     runs-on: ubuntu-latest
     steps:
       - name: Set environment variable
@@ -87,7 +87,7 @@ jobs:
 
   helm_chart_version_bump:
     name: "Trigger Helm chart appVersion update"
-    needs: "release"
+    needs: "create_manifest"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
