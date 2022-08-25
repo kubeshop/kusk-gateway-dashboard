@@ -84,3 +84,14 @@ export const FileTextOutlinedIcon = styled(FileTextOutlined)<{$active: boolean; 
     height: 24px;
   }
 `;
+
+export const RightPane = styled.div`
+  position: absolute;
+  left: 50%;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  padding: 20px;
+  border-left: 1px solid ${Colors.grey10};
+  background-color: ${Colors.zinc5};
+`;

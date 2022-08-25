@@ -15,7 +15,7 @@ export const SwaggerUIStyle = `
     & label span,
     & h4,
     & h5 {
-      color: ${Colors.whitePure};
+      color: ${Colors.zinc9};
     }
 
     & h3.opblock-tag {
@@ -44,18 +44,17 @@ export const SwaggerUIStyle = `
       border: 1px solid ${Colors.grey1};
 
       & h4 span {
-        color: ${Colors.whitePure};
+        color: ${Colors.zinc9};
       }
 
       & svg {
-        fill: ${Colors.whitePure};
+        fill: ${Colors.zinc9};
       }
 
       & h4 {
         cursor: default;
         
         &:hover {
-          background: ${Colors.grey4};
         }
 
         & button {
@@ -74,11 +73,11 @@ export const SwaggerUIStyle = `
     }
 
     & svg.arrow {
-      fill: ${Colors.whitePure};
+      fill: ${Colors.zinc9};
     }
 
     & .btn {
-      color: ${Colors.whitePure};
+      color: ${Colors.zinc9};
 
       &.cancel {
         color: #ff6060;
@@ -110,25 +109,25 @@ export const SwaggerUIStyle = `
       margin: 0px 0px 50px 0px;
 
       & .base-url {
-        color: ${Colors.whitePure};
+        color: ${Colors.zinc9};
       }
 
       & .title {
-        color: ${Colors.whitePure};
+        color: ${Colors.zinc9};
       }
 
       & .markdown {
         & p {
-          color: ${Colors.whitePure};
+          color: ${Colors.zinc9};
         }
       }
     }
 
     & .model {
-      color: ${Colors.whitePure};
+      color: ${Colors.zinc9};
 
       &-title {
-        color: ${Colors.grey9};
+        color: ${Colors.zinc9};
       }
     }
 
@@ -138,16 +137,16 @@ export const SwaggerUIStyle = `
     }
 
     & .parameters-container {
-      color: ${Colors.whitePure};
+      color: ${Colors.zinc9};
 
       & th, & p {
-        color: ${Colors.whitePure};
+        color: ${Colors.zinc9};
       }
 
       & .parameter {
         &__name,
         &__type {
-          color: ${Colors.whitePure};
+          color: ${Colors.zinc9};
         }
       }
     }
@@ -155,32 +154,30 @@ export const SwaggerUIStyle = `
     & .renderedMarkdown,
     & .markdown {
       & p {
-        color: ${Colors.whitePure};
+        color: ${Colors.zinc9};
         margin: 0 auto !important;
       }
     }
 
     & .responses-wrapper {
       & td {
-        color: ${Colors.whitePure};
+        color: ${Colors.zinc9};
       }
     }
 
     & .scheme-container {
       margin-top: 50px;
-      color: ${Colors.whitePure};
-      background: ${Colors.grey4};
+      color: ${Colors.zinc9};
       box-shadow: none;
       padding: 0;
 
       & label {
-        color: ${Colors.whitePure};
+        color: ${Colors.zinc9};
       }
     }
 
     & .tab {
       & li:first-of-type:after {
-        background: rgba(255, 255, 255, 0.3);
       }
 
       & .tabitem {
@@ -191,7 +188,7 @@ export const SwaggerUIStyle = `
 
       & .active {
         & button.tablinks {
-          color: ${Colors.whitePure};
+          color: ${Colors.zinc9};
           font-weight: bold;
         }
       }
@@ -204,11 +201,11 @@ export const SwaggerUIStyle = `
 
     & .opblock {
       &-description p {
-        color: ${Colors.whitePure};
+        color: ${Colors.zinc9};
       }
 
       &-tag {
-        color: ${Colors.whitePure};
+        color: ${Colors.zinc9};
 
         & small {
           color: ${Colors.grey1};
@@ -216,13 +213,12 @@ export const SwaggerUIStyle = `
       }
 
       & .opblock-section-header {
-        background: ${Colors.grey4};
 
         & h4 {
-          color: ${Colors.whitePure};
+          color: ${Colors.zinc9};
 
           & span {
-            color: ${Colors.whitePure};
+            color: ${Colors.zinc9};
 
             &:after {
               bottom: -10px !important;
@@ -232,16 +228,16 @@ export const SwaggerUIStyle = `
       }
 
       & .opblock-summary-path {
-        color: ${Colors.whitePure};
+        color: ${Colors.zinc9};
         max-width: none;
 
         &__deprecated {
-          color: ${Colors.whitePure};
+          color: ${Colors.zinc9};
         }
       }
 
       & .opblock-summary-description {
-        color: ${Colors.whitePure};
+        color: ${Colors.zinc9};
         padding-top: 2.5px;
       }
     }

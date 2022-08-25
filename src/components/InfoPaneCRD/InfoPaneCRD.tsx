@@ -10,13 +10,7 @@ const InfoPaneCRD: React.FC<IProps> = props => {
   const {yaml} = props;
 
   return (
-    <S.InfoPaneCRD
-      language="yaml"
-      style={ghcolors}
-      customStyle={{fontFamily: 'roboto', fontSize: 14, fontWeight: 700}}
-      wrapLines
-      wrapLongLines
-    >
+    <S.InfoPaneCRD language="yaml" style={ghcolors} wrapLines wrapLongLines>
       {yaml}
     </S.InfoPaneCRD>
   );

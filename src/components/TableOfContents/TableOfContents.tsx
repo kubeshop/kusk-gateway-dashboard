@@ -3,7 +3,6 @@ import {useDispatch} from 'react-redux';
 import {ResizableBox} from 'react-resizable';
 import useMeasure from 'react-use/lib/useMeasure';
 
-import {Button} from 'antd';
 import {DataNode} from 'antd/lib/tree';
 
 import {DownOutlined} from '@ant-design/icons';
@@ -14,8 +13,6 @@ import {TableOfContentsItem} from '@models/swaggerUI';
 
 import {useAppSelector} from '@redux/hooks';
 import {setApiDefinitionTableOfContentsHeight, setPublicApiDefinitionTableOfContentsHeight} from '@redux/reducers/ui';
-
-import {ApiRawYaml} from '@components/ApiRawYaml';
 
 import {getOperationId} from '@swaggerUI/utils/operations';
 import {getPathId} from '@swaggerUI/utils/path';
@@ -37,9 +34,7 @@ const TableOfContents: React.FC<IProps> = props => {
   const tableOfContentsHeight = useAppSelector(state => state.ui.tableOfContentsHeight);
 
   const [containerRef, {height}] = useMeasure<HTMLDivElement>();
-  const [showYaml, setShowYaml] = useState<boolean>(false);
 
-  const [status, setStatus] = useState<'collapsed' | 'expanded'>('expanded');
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [tableContentStatus, setTableContentStatus] = useState<'collapsed' | 'expanded'>('expanded');
 
@@ -69,29 +64,14 @@ const TableOfContents: React.FC<IProps> = props => {
     [apiInfoActiveTab, height, tableOfContentsHeight.apiDefinition, tableOfContentsHeight.publicApiDefinition]
   );
 
-  const onCollapseChangeHandler = (activeKeys: string | string[]) => {
-    if (activeKeys.length) {
-      setStatus('expanded');
-    } else {
-      setStatus('collapsed');
-    }
-  };
-
   const onCollapseExpandButtonClickHandler = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.stopPropagation();
     e.currentTarget.blur();
-    setShowYaml(false);
     if (tableContentStatus === 'collapsed') {
       setTableContentStatus('expanded');
     } else {
       setTableContentStatus('collapsed');
     }
-  };
-
-  const onShowYamlHandler = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    e.stopPropagation();
-    e.currentTarget.blur();
-    setShowYaml(!showYaml);
   };
 
   useEffect(() => {
@@ -116,18 +96,8 @@ const TableOfContents: React.FC<IProps> = props => {
   }
 
   return (
-    <S.Collapse defaultActiveKey="1" onChange={onCollapseChangeHandler}>
-      <S.Panel
-        extra={
-          status === 'expanded' ? (
-            <Button style={{marginRight: 8}} onClick={onShowYamlHandler}>
-              {showYaml ? 'Show Tree' : 'Show YAML'}
-            </Button>
-          ) : null
-        }
-        header="Table of contents"
-        key="1"
-      >
+    <S.Collapse defaultActiveKey="1">
+      <S.Panel header="Table of contents" key="1">
         <S.ContentContainer ref={containerRef}>
           <ResizableBox
             // Infinity as a placeholder because value 100% is not allowed
@@ -141,33 +111,29 @@ const TableOfContents: React.FC<IProps> = props => {
             handle={resizableHandler}
             onResizeStop={resizeTableOfContentsHandler}
           >
-            {showYaml ? (
-              <ApiRawYaml />
-            ) : (
-              <S.TreeContainer>
-                <S.Tree
-                  expandedKeys={expandedKeys}
-                  showLine={{showLeafIcon: false}}
-                  showIcon={false}
-                  switcherIcon={<DownOutlined />}
-                  treeData={treeData}
-                  onExpand={expandedKeysValue => {
-                    if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
-                      setTimeout(() => setTableContentStatus('collapsed'), 200);
-                    }
+            <S.TreeContainer>
+              <S.Tree
+                expandedKeys={expandedKeys}
+                showLine={{showLeafIcon: false}}
+                showIcon={false}
+                switcherIcon={<DownOutlined />}
+                treeData={treeData}
+                onExpand={expandedKeysValue => {
+                  if (!expandedKeysValue.length || expandedKeysValue.length === 1) {
+                    setTimeout(() => setTableContentStatus('collapsed'), 200);
+                  }
 
-                    if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
-                      setTimeout(() => setTableContentStatus('expanded'), 200);
-                    }
+                  if (expandedKeysValue.length - 1 === treeData[0].children?.length) {
+                    setTimeout(() => setTableContentStatus('expanded'), 200);
+                  }
 
-                    setExpandedKeys(expandedKeysValue);
-                  }}
-                />
-                <S.CollapseTreeButton type="default" onClick={onCollapseExpandButtonClickHandler}>
-                  {tableContentStatus === 'collapsed' ? 'Expand operations' : 'Collapse operations'}
-                </S.CollapseTreeButton>
-              </S.TreeContainer>
-            )}
+                  setExpandedKeys(expandedKeysValue);
+                }}
+              />
+              <S.CollapseTreeButton type="default" onClick={onCollapseExpandButtonClickHandler}>
+                {tableContentStatus === 'collapsed' ? 'Expand operations' : 'Collapse operations'}
+              </S.CollapseTreeButton>
+            </S.TreeContainer>
           </ResizableBox>
         </S.ContentContainer>
       </S.Panel>

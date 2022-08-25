@@ -2,17 +2,15 @@ import {PrismLight as SyntaxHighlighter} from 'react-syntax-highlighter';
 
 import styled from 'styled-components';
 
-import {GlobalScrollbarStyle} from '@utils/scrollbar';
-
 export const InfoPaneCRD = styled(SyntaxHighlighter)`
-  height: 100%;
   overflow-x: hidden !important;
   margin: 0 !important;
   padding: 24px;
   border-radius: 4px;
-  & code {
+  code {
+    font-family: roboto !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
     word-break: break-word !important;
   }
-
-  ${GlobalScrollbarStyle};
 `;

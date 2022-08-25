@@ -1,6 +1,6 @@
 import {useTracking} from 'react-tracking';
 
-import {Collapse, Skeleton} from 'antd';
+import {Card, Skeleton} from 'antd';
 
 import YAML from 'yaml';
 
@@ -9,8 +9,7 @@ import {SUPPORTED_METHODS} from '@constants/constants';
 import {ANALYTIC_TYPE, Events} from '@models/analytics';
 import {KuskExtensionsItem} from '@models/dashboard';
 
-import {useAppDispatch, useAppSelector} from '@redux/hooks';
-import {setKuskExtensionsActiveKeys} from '@redux/reducers/ui';
+import {useAppSelector} from '@redux/hooks';
 import {useGetApiCrdQuery} from '@redux/services/enhancedApi';
 
 import {ErrorLabel} from '@components/AntdCustom';
@@ -19,16 +18,11 @@ import {getOperationId} from '@swaggerUI/utils/operations';
 import {getPathId} from '@swaggerUI/utils/path';
 
 import KuskExtensionsPanelContent from './KuskExtensionsPanelContent';
-import KuskExtensionsPanelHeader from './KuskExtensionsPanelHeader';
 
 import * as S from './styled';
 
-const {Panel} = Collapse;
-
 const KuskExtensions: React.FC = () => {
   useTracking({eventName: Events.API_KUSK_EXTENSION_LOADED, type: ANALYTIC_TYPE.ACTION}, {dispatchOnMount: true});
-  const dispatch = useAppDispatch();
-  const kuskExtensionsActiveKeys = useAppSelector(state => state.ui.kuskExtensionsActiveKeys);
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
   const {data, isLoading, error} = useGetApiCrdQuery({
@@ -43,46 +37,20 @@ const KuskExtensions: React.FC = () => {
       ) : error ? (
         <ErrorLabel>{error}</ErrorLabel>
       ) : (
-        data &&
-        Object.entries(createKuskExtensions(YAML.parse((data as any).spec.spec))).map(kuskExtensionEntry => {
-          const [level, entry] = kuskExtensionEntry;
+        <Card style={{marginTop: 85}}>
+          {data &&
+            Object.entries(createKuskExtensions(YAML.parse((data as any).spec.spec))).map(kuskExtensionEntry => {
+              const [_, entry] = kuskExtensionEntry;
 
-          const title = level.charAt(0).toUpperCase() + level.substring(1);
+              if (entry && entry.length) {
+                return entry
+                  .sort((a: any, b: any) => a.path.localeCompare(b.path))
+                  .map(item => <KuskExtensionsPanelContent kuskExtension={item.kuskExtension} path={item.path} />);
+              }
 
-          if (entry && entry.length) {
-            return (
-              <S.LevelContainer key={level}>
-                <S.LevelTitle>{title} level</S.LevelTitle>
-
-                <Collapse
-                  activeKey={kuskExtensionsActiveKeys[level]}
-                  onChange={keys => dispatch(setKuskExtensionsActiveKeys({keys: keys as string[], level}))}
-                >
-                  {entry
-                    .sort((a: any, b: any) => a.path.localeCompare(b.path))
-                    .map(item => (
-                      <Panel
-                        header={
-                          <KuskExtensionsPanelHeader
-                            level={level}
-                            method={item.method}
-                            path={item.path}
-                            tag={item.tag}
-                          />
-                        }
-                        key={item.id}
-                        id={item.id}
-                      >
-                        <KuskExtensionsPanelContent kuskExtension={item.kuskExtension} />
-                      </Panel>
-                    ))}
-                </Collapse>
-              </S.LevelContainer>
-            );
-          }
-
-          return null;
-        })
+              return null;
+            })}
+        </Card>
       )}
     </S.KuskExtensionsContainer>
   );
@@ -96,7 +64,7 @@ const createKuskExtensions = (spec: any) => {
   };
 
   if (spec['x-kusk']) {
-    kuskExtensions['top'].push({id: 'top-level-extension', kuskExtension: spec['x-kusk'], path: 'Top-level extension'});
+    kuskExtensions['top'].push({id: 'root-extension', kuskExtension: spec['x-kusk'], path: 'Root Level'});
   }
 
   Object.entries(spec.paths).forEach((pathEntry: [string, any]) => {
