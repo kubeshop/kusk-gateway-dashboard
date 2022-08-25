@@ -1,15 +1,17 @@
-import {Tree as RawTree} from 'antd';
+import {Tree as RawTree, Typography} from 'antd';
 
 import styled from 'styled-components';
 
+import Colors from '@styles/colors';
+
 const {DirectoryTree} = RawTree;
 
-export const ExtensionValueLabel = styled.span<{$type: string}>`
-  ${({$type}) => `
-    color: ${
-      $type === 'number' ? 'rgb(211, 99, 99)' : $type === 'boolean' ? 'rgb(252, 194, 140)' : 'rgb(162, 252, 162)'
-    }
-  `}
+export const ExtensionLabel = styled(Typography.Text)<{$hasChildren: boolean}>`
+  color: ${({$hasChildren}) => ($hasChildren ? Colors.grey11 : Colors.blue400)};
+`;
+
+export const ExtensionValueLabel = styled.span`
+  color: #3f3f46;
 `;
 
 export const Tree = styled(DirectoryTree)`
@@ -24,5 +26,12 @@ export const Tree = styled(DirectoryTree)`
   & .ant-tree-treenode-switcher-open,
   & .ant-tree-treenode-switcher-close {
     width: max-content;
+  }
+
+  & .ant-tree-switcher-leaf-line::before {
+    border-right: 1px dashed #d9d9d9;
+  }
+  & .ant-tree-switcher-leaf-line::after {
+    border-bottom: 1px dashed #d9d9d9;
   }
 `;

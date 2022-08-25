@@ -25,7 +25,7 @@ const ApiDetails = () => {
   const {pathname: apiPath} = useLocation();
   const dispatch = useDispatch();
   const selectedApi = useAppSelector(state => state.main.selectedApi);
-  const [activeSection, setActiveSection] = useState<APIDetailsSections>('routes');
+  const [activeSection, setActiveSection] = useState<APIDetailsSections>('openapiBrowser');
   const pathArray = apiPath.split('/').filter(el => el);
   const {data: api} = useGetApiQuery(selectedApi ? skipToken : {namespace: pathArray[0], name: pathArray[1]});
 

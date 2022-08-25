@@ -6,6 +6,7 @@ import * as S from './KuskExtensionsPanelContent.styled';
 
 interface IProps {
   kuskExtension: {[key: string]: any};
+  path: string;
 }
 
 const createExtensionTreeNode = (key: string, children: any): DataNode => {
@@ -18,14 +19,14 @@ const createExtensionTreeNode = (key: string, children: any): DataNode => {
   }
 
   let title: JSX.Element = (
-    <div>
+    <S.ExtensionLabel $hasChildren={children && typeof children === 'object'}>
       {key}
       {propertyValue?.toString() && (
         <>
-          : <S.ExtensionValueLabel $type={typeof children}>{propertyValue.toString()}</S.ExtensionValueLabel>
+          : <S.ExtensionValueLabel>{propertyValue.toString()}</S.ExtensionValueLabel>
         </>
       )}
-    </div>
+    </S.ExtensionLabel>
   );
 
   const node: DataNode = {
@@ -42,9 +43,18 @@ const createExtensionTreeNode = (key: string, children: any): DataNode => {
 };
 
 const KuskExtensionsPanelContent: React.FC<IProps> = props => {
-  const {kuskExtension} = props;
-
+  const {kuskExtension, path} = props;
   const treeData = Object.entries(kuskExtension).map(([key, children]) => createExtensionTreeNode(key, children));
+
+  let title: JSX.Element = <S.ExtensionLabel $hasChildren>{path.toString()}</S.ExtensionLabel>;
+
+  const root: DataNode[] = [
+    {
+      key: path,
+      title,
+      children: treeData,
+    },
+  ];
 
   return (
     <S.Tree
@@ -54,7 +64,7 @@ const KuskExtensionsPanelContent: React.FC<IProps> = props => {
       showLine={{showLeafIcon: false}}
       showIcon={false}
       switcherIcon={<DownOutlined />}
-      treeData={treeData}
+      treeData={root}
     />
   );
 };
