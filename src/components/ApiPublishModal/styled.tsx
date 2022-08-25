@@ -54,17 +54,6 @@ export const Modal = styled(RawModal)`
   }
 `;
 
-export const RadioGroupContainer = styled.div`
-  margin-bottom: 15px;
-`;
-
-export const StepsContainer = styled.div`
-  padding-right: 5px;
-  height: fit-content;
-  position: sticky;
-  top: 0;
-`;
-
 export const ExclamationCircleOutlined = styled(RawExclamationCircleOutlined)`
   margin-right: 10px;
 `;
