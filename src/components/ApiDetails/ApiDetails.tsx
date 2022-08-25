@@ -17,6 +17,8 @@ import {ApiOpenSpec} from '@components/ApiOpenSpec';
 import {ApiRoutes} from '@components/ApiRoutes';
 import {ApiSettings} from '@components/ApiSettings';
 
+import {ApiNotFound} from './Api404';
+import {ApiSkelton} from './ApiSkelton';
 import {Sidebar} from './Sidebar';
 
 import * as S from './styled';
@@ -27,7 +29,11 @@ const ApiDetails = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
   const [activeSection, setActiveSection] = useState<APIDetailsSections>('openapiBrowser');
   const pathArray = apiPath.split('/').filter(el => el);
-  const {data: api} = useGetApiQuery(selectedApi ? skipToken : {namespace: pathArray[0], name: pathArray[1]});
+  const {
+    data: api,
+    isLoading: isLoadingApi,
+    isError,
+  } = useGetApiQuery(selectedApi ? skipToken : {namespace: pathArray[0], name: pathArray[1]});
 
   useEffect(() => {
     if (api) {
@@ -35,6 +41,14 @@ const ApiDetails = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api]);
+
+  if (isLoadingApi) {
+    return <ApiSkelton />;
+  }
+
+  if (isError) {
+    return <ApiNotFound />;
+  }
 
   return (
     <S.Container>
