@@ -1,18 +1,16 @@
-import {Alert as RawAlert, Modal as RawModal} from 'antd';
+import {Button, Alert as RawAlert, Modal as RawModal} from 'antd';
 
-import styled, {css} from 'styled-components';
+import styled from 'styled-components';
 
 import {GlobalScrollbarStyle} from '@utils/scrollbar';
+
+import Colors from '@styles/colors';
 
 export const Alert = styled(RawAlert)`
   margin-bottom: 20px;
 `;
 
 export const Container = styled.div`
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  grid-column-gap: 10px;
-
   & input::-webkit-outer-spin-button,
   & input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -34,11 +32,21 @@ export const Label = styled.div`
 `;
 
 export const Modal = styled(RawModal)`
-  top: min(10%, 100px);
   & .ant-modal-body {
-    height: 70vh;
+    background-color: ${Colors.zinc5};
+    min-height: fit-content;
     overflow-y: auto;
     ${GlobalScrollbarStyle}
+  }
+
+  & .ant-modal-header {
+    background-color: ${Colors.zinc5};
+    border-bottom: none;
+  }
+
+  & .ant-modal-footer {
+    background-color: ${Colors.zinc5};
+    border-top: none;
   }
 `;
 
@@ -54,15 +62,16 @@ export const StepsContainer = styled.div`
   ${GlobalScrollbarStyle};
 `;
 
-export const FormStepContainer = styled.div<{$visible: boolean}>`
-  ${({$visible}) => {
-    if ($visible) {
-      return css`
-        display: block;
-      `;
-    }
-    return css`
-      display: none;
-    `;
-  }}
+export const PortItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 4px 0;
+`;
+
+export const AddPortButton = styled(Button)`
+  color: ${Colors.blue500} !important;
+  & .anticon {
+    color: ${Colors.blue500} !important;
+  }
 `;

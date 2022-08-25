@@ -42,14 +42,19 @@ export const Label = styled.div`
 
 export const Modal = styled(RawModal)`
   & .ant-modal-body {
-    background-color: ${Colors.cyanBlue};
+    background-color: ${Colors.zinc5};
     min-height: fit-content;
     overflow-y: auto;
     ${GlobalScrollbarStyle}
   }
 
+  & .ant-modal-header {
+    background-color: ${Colors.zinc5};
+    border-bottom: none;
+  }
+
   & .ant-modal-footer {
-    background-color: ${Colors.cyanBlue};
+    background-color: ${Colors.zinc5};
     border-top: none;
   }
 `;
@@ -69,5 +74,21 @@ export const WarningsContainer = styled.div`
   & a {
     color: ${Colors.yellow500};
     text-decoration: underline;
+  }
+`;
+
+export const AddDeploymentOption = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  &::before {
+    content: '';
+    position: absolute;
+    height: 1px;
+    left: 0;
+    right: 0;
+    top: 0;
+    background-color: ${Colors.zinc2};
   }
 `;
