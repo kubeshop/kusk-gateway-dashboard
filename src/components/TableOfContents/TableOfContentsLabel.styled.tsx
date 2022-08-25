@@ -22,7 +22,6 @@ export const ApiOutlined = styled(RawApiOutlined)`
   transition: all 0.2s ease-in;
 
   &:hover {
-    color: ${Colors.whitePure} !important;
   }
 `;
 
@@ -42,7 +41,6 @@ export const LabelMethodTag = styled(RawTag)<{$deprecated: boolean; $method: str
     opacity: ${$deprecated ? '0.6' : '1'};
   `}
 
-  font-weight: bold;
   color: ${Colors.grey2};
   border: none;
   padding: 1px 8px;
