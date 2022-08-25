@@ -40,7 +40,7 @@ const KuskExtensions: React.FC = () => {
         <Card style={{marginTop: 85}}>
           {data &&
             Object.entries(createKuskExtensions(YAML.parse((data as any).spec.spec))).map(kuskExtensionEntry => {
-              const [_, entry] = kuskExtensionEntry;
+              const [, entry] = kuskExtensionEntry;
 
               if (entry && entry.length) {
                 return entry
