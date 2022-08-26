@@ -40,13 +40,16 @@ const AddEnvoyFleetModal = () => {
     await form.validateFields();
     const {fleetInfo, portsInfo} = await form.getFieldsValue(true);
     form.submit();
-    const portsList = portsInfo.ports.map((p: string) => ({
-      port: Number(p),
-      name: 'fleet',
-      nodePort: 1,
-      protocol: 'tcp',
-      targetPort: p,
-    }));
+    const portsList = portsInfo.ports
+      .map((p: {[key: string]: string}) => Object.values(p))
+      .flat()
+      .map((p: string) => ({
+        port: Number(p),
+        name: 'fleet',
+        nodePort: 1,
+        protocol: 'tcp',
+        targetPort: p,
+      }));
 
     await createFleet({serviceItem: {...fleetInfo, ports: portsList, status: 'available'}}).unwrap();
     dispatch(closeEnvoyFleetModalModal());
