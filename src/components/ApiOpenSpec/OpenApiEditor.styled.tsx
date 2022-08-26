@@ -8,7 +8,8 @@ export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 32px;
+  margin-top: 44px;
+  margin-bottom: 28px;
   width: 49%;
   padding-right: 4px;
 `;
