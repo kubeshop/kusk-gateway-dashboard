@@ -13,9 +13,9 @@ const ApiOpenSpec = () => {
   return (
     <>
       <S.Header>
-        <S.FileTextOutlinedIcon $active={activeTab === 'editor'} onClick={() => setActiveTab('editor')} />
+        <S.ApiDocsIcon $active={activeTab === 'editor'} onClick={() => setActiveTab('editor')} />
         <S.CRDIcon $active={activeTab === 'crd'} onClick={() => setActiveTab('crd')} />
-        <S.ApiOutlinedIcon $active={activeTab === 'xkusk'} onClick={() => setActiveTab('xkusk')} />
+        <S.ExtensionIcon $active={activeTab === 'xkusk'} onClick={() => setActiveTab('xkusk')} />
       </S.Header>
       <>
         {activeTab === 'editor' && <OpenApiEditor />}
