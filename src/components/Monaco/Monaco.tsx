@@ -35,7 +35,6 @@ const Monaco = ({openapi}: {openapi: string}) => {
       selectOnLineNumbers: true,
       readOnly: true,
       renderValidationDecorations: 'on',
-      fontWeight: 'bold',
       glyphMargin: true,
       minimap: {
         enabled: false,

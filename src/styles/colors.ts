@@ -11,6 +11,7 @@ enum Colors {
 
   zinc1 = '#f4f4f5',
   zinc2 = '#E4E4E7',
+  zinc250 = '#B9B9C1',
   zinc4 = '#A1A1AA',
   zinc5 = '#FAFAFA',
   zinc6 = '#71717A',
@@ -36,6 +37,8 @@ enum Colors {
   yellow500 = '#EAB308',
   yellow700 = '#a16207',
 
+  amber500 = '#F59E0B',
+
   blue700 = '#1D4ED8',
   blue600 = '#2563EB',
   blue500 = '#3B82F6',
@@ -53,6 +56,7 @@ enum Colors {
   pink100 = '#fce7f3',
 
   sky700 = '#0369a1',
+  sky600 = '#0284C7',
   sky500 = '#0ea5e9',
   sky100 = '#e0f2fe',
 
@@ -65,6 +69,7 @@ enum Colors {
   emerald100 = '#d1fae5',
 
   lime700 = '#4d7c0f',
+  lime600 = '#65A30D',
   lime500 = '#84cc16',
   lime100 = '#ecfccb',
 }
