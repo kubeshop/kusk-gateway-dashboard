@@ -1,6 +1,6 @@
 import {useDispatch} from 'react-redux';
 
-import {Tooltip, Typography} from 'antd';
+import {Tooltip} from 'antd';
 
 import {TOOLTIP_DELAY} from '@constants/constants';
 import {AlertEnum} from '@models/alert';

@@ -3,10 +3,6 @@ import {Tooltip} from 'antd';
 
 import {TOOLTIP_DELAY} from '@constants/constants';
 
-import {Tooltip} from 'antd';
-
-import {TOOLTIP_DELAY} from '@constants/constants';
-
 import CRD from './CRD';
 import KuskExtension from './KuskExtension';
 import OpenApiEditor from './OpenApiEditor';
@@ -20,8 +16,8 @@ const ApiOpenSpec = () => {
   return (
     <>
       <S.Header>
-        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="bottom" title="Open API Spec & Playground">
-          <S.FileTextOutlinedIcon $active={activeTab === 'editor'} onClick={() => setActiveTab('editor')} />
+        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="bottom" title="API Docs">
+          <S.ApiDocsIcon $active={activeTab === 'editor'} onClick={() => setActiveTab('editor')} />
         </Tooltip>
         <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="bottom" title="CRD">
           <S.CRDIcon $active={activeTab === 'crd'} onClick={() => setActiveTab('crd')} />
