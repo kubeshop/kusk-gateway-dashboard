@@ -14,4 +14,7 @@ export const Content = styled.div`
   position: relative;
   background-color: ${Colors.zinc1};
   padding: 32px;
+  padding-bottom: 0;
+  height: 100%;
+  overflow-y: scroll;
 `;

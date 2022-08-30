@@ -23,6 +23,8 @@ export const RightPane = styled.div`
   padding: 20px;
   border-left: 1px solid ${Colors.grey10};
   background-color: ${Colors.zinc5};
+  height: 100%;
+  overflow-y: scroll;
 `;
 
 export const CopyYamlButton = styled(CopyOutlined)`

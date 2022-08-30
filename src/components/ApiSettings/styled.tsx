@@ -5,7 +5,7 @@ import Colors from '@styles/colors';
 export const SettingsContainer = styled.div`
   position: relative;
   display: grid;
-  grid-template-columns: minmax(20%, 270px) auto;
+  grid-template-columns: minmax(20%, 190px) 1fr;
   margin-top: 60px;
 `;
 
