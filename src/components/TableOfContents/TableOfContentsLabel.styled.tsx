@@ -5,6 +5,7 @@ import {ApiOutlined as RawApiOutlined} from '@ant-design/icons';
 import styled from 'styled-components';
 
 import Colors from '@styles/colors';
+import {Transitions} from '@styles/global';
 
 const swaggerUIMethodsColors: {[method: string]: string} = {
   delete: '#F93E3E',
@@ -19,7 +20,7 @@ const swaggerUIMethodsColors: {[method: string]: string} = {
 export const ApiOutlined = styled(RawApiOutlined)`
   font-size: 18px;
 
-  transition: all 0.2s ease-in;
+  transition: ${Transitions.default};
 
   &:hover {
   }

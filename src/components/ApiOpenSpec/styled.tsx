@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import {CRDIcon as BaseCRDIcon} from '@components/Icons';
 
 import Colors from '@styles/colors';
+import {Transitions} from '@styles/global';
 
 export const Header = styled.div`
   position: absolute;
@@ -25,7 +26,7 @@ export const CRDIcon = styled(AntdIcon).attrs({
     color: ${$active ? Colors.cyan5 : Colors.grey1}};
     border-bottom: ${$border ? `1px solid ${Colors.grey4}` : 'unset'};
 `};
-  transition: all 0.2s ease-in;
+  transition: ${Transitions.default};
   padding: 16px 0px 16px 0px;
 
   &:hover {
@@ -45,7 +46,7 @@ export const ApiOutlinedIcon = styled(ApiOutlined)<{$active: boolean; $border?: 
     border-bottom: ${$border ? `1px solid ${Colors.grey4}` : 'unset'};
 `};
 
-  transition: all 0.2s ease-in;
+  transition: ${Transitions.default};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,7 +69,7 @@ export const FileTextOutlinedIcon = styled(FileTextOutlined)<{$active: boolean; 
     border-bottom: ${$border ? `1px solid ${Colors.grey4}` : 'unset'};
 `};
 
-  transition: all 0.2s ease-in;
+  transition: ${Transitions.default};
   display: flex;
   align-items: center;
   justify-content: center;

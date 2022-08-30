@@ -3,6 +3,7 @@ import {Button, Collapse as RawCollapse, Tree as RawTree} from 'antd';
 import styled from 'styled-components';
 
 import {GlobalScrollbarStyle} from '@utils/scrollbar';
+import {Transitions} from '@styles/global';
 
 export const Collapse = styled(RawCollapse)`
   margin-bottom: 30px;
@@ -38,7 +39,7 @@ export const ContentLabel = styled.div<{$level: 'top' | 'path' | 'operation'; $r
   `}
 
   width: max-content;
-  transition: all 0.2s ease-in;
+  transition: ${Transitions.default};
 
   &:hover {
     ${({$ref}) => {
