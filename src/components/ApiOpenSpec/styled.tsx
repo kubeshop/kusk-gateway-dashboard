@@ -14,14 +14,10 @@ import {
 import Colors from '@styles/colors';
 
 export const Header = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
   display: flex;
   justify-content: flex-start;
   gap: 24px;
-  padding: 0 32px;
+  padding: 0 20px;
   border-bottom: 1px solid ${Colors.grey10};
 `;
 
