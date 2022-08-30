@@ -32,9 +32,9 @@ const OpenApiEditor = () => {
     );
   };
   return (
-    <>
+    <S.Container>
       <S.Header>
-        <Typography.Title level={3}>Open API Spec</Typography.Title>
+        <S.Title level={3}>Open API Spec</S.Title>
 
         <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="bottom" title="Copy to clipboard">
           <S.CopyYamlButton onClick={onClipboardClick} />
@@ -44,7 +44,7 @@ const OpenApiEditor = () => {
       <S.RightPane>
         <ApiDefinition />
       </S.RightPane>
-    </>
+    </S.Container>
   );
 };
 

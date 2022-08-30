@@ -1,26 +1,24 @@
-import {Typography} from 'antd';
-
 import {useAppSelector} from '@redux/hooks';
 
 import {KuskExtensions} from '@components/KuskExtensions';
 import {Monaco} from '@components/Monaco';
 
-import * as S from './styled';
+import * as S from './KuskExtension.styled';
 
 const KuskExtension = () => {
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
   return (
-    <>
-      <Typography.Title level={3} style={{marginTop: 32}}>
+    <S.Container>
+      <S.Title level={3} style={{marginTop: 20, marginBottom: 20}}>
         Kusk Extensions
-      </Typography.Title>
+      </S.Title>
 
       <Monaco openapi={selectedAPIOpenSpec} />
 
       <S.RightPane>
         <KuskExtensions />
       </S.RightPane>
-    </>
+    </S.Container>
   );
 };
 

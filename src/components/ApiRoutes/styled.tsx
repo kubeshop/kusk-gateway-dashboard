@@ -2,7 +2,9 @@ import {Tag as AntTag} from 'antd';
 
 import styled, {css} from 'styled-components';
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  padding: 24px 32px;
+`;
 
 export const FiltersWrapper = styled.div`
   display: grid;

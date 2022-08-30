@@ -2,6 +2,10 @@ import styled from 'styled-components';
 
 import Colors from '@styles/colors';
 
+export const Container = styled.div`
+  padding: 24px 32px;
+`;
+
 export const SettingsContainer = styled.div`
   position: relative;
   display: grid;

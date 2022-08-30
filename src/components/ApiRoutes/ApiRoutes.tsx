@@ -56,7 +56,7 @@ const ApiRoutes = () => {
   });
 
   return (
-    <>
+    <S.Container>
       <Typography.Title>Paths</Typography.Title>
 
       <S.Options>
@@ -82,7 +82,7 @@ const ApiRoutes = () => {
         columns={columns}
         dataSource={dataSource}
       />
-    </>
+    </S.Container>
   );
 };
 export default ApiRoutes;
