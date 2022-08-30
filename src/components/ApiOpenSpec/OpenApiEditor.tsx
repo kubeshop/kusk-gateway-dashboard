@@ -1,7 +1,8 @@
 import {useDispatch} from 'react-redux';
 
-import {Typography} from 'antd';
+import {Tooltip, Typography} from 'antd';
 
+import {TOOLTIP_DELAY} from '@constants/constants';
 import {AlertEnum} from '@models/alert';
 
 import {useAppSelector} from '@redux/hooks';
@@ -35,7 +36,9 @@ const OpenApiEditor = () => {
       <S.Header>
         <Typography.Title level={3}>Open API Spec</Typography.Title>
 
-        <S.CopyYamlButton onClick={onClipboardClick} />
+        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="bottom" title="Copy to clipboard">
+          <S.CopyYamlButton onClick={onClipboardClick} />
+        </Tooltip>
       </S.Header>
       <Monaco openapi={selectedAPIOpenSpec} />
       <S.RightPane>

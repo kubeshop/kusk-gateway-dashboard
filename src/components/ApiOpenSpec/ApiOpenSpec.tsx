@@ -1,4 +1,7 @@
 import {useState} from 'react';
+import {Tooltip} from 'antd';
+
+import {TOOLTIP_DELAY} from '@constants/constants';
 
 import CRD from './CRD';
 import KuskExtension from './KuskExtension';
@@ -13,9 +16,15 @@ const ApiOpenSpec = () => {
   return (
     <>
       <S.Header>
-        <S.FileTextOutlinedIcon $active={activeTab === 'editor'} onClick={() => setActiveTab('editor')} />
-        <S.CRDIcon $active={activeTab === 'crd'} onClick={() => setActiveTab('crd')} />
-        <S.ApiOutlinedIcon $active={activeTab === 'xkusk'} onClick={() => setActiveTab('xkusk')} />
+        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="bottom" title="Open API Spec & Playground">
+          <S.FileTextOutlinedIcon $active={activeTab === 'editor'} onClick={() => setActiveTab('editor')} />
+        </Tooltip>
+        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="bottom" title="CRD">
+          <S.CRDIcon $active={activeTab === 'crd'} onClick={() => setActiveTab('crd')} />
+        </Tooltip>
+        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="bottom" title="Extensions">
+          <S.ApiOutlinedIcon $active={activeTab === 'xkusk'} onClick={() => setActiveTab('xkusk')} />
+        </Tooltip>
       </S.Header>
       <>
         {activeTab === 'editor' && <OpenApiEditor />}
