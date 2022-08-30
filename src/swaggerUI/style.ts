@@ -4,6 +4,8 @@ import Colors from '@styles/colors';
 
 export const SwaggerUIStyle = `
 & .swagger-ui {
+    font-family: 'Roboto', sans-serif !important;
+
     & button {
       outline: none !important;
     }
@@ -114,6 +116,12 @@ export const SwaggerUIStyle = `
 
       & .title {
         color: ${Colors.zinc9};
+        font-size: 24px;
+        font-weight: 600;
+        font-family: 'Roboto', sans-serif;
+        & small {
+          border-radius: 4px;
+        }
       }
 
       & .markdown {
@@ -129,6 +137,21 @@ export const SwaggerUIStyle = `
       &-title {
         color: ${Colors.zinc9};
       }
+    }
+
+    & section {
+      & .models {
+        background: ${Colors.whitePure};
+        border: 1px solid ${Colors.zinc2};
+
+        & .model-container {
+          margin-top: 20px;
+          background: ${Colors.zinc2};
+          & svg {
+            fill: ${Colors.zinc9};
+          }
+        }
+      } 
     }
 
     & .model-toggle:after {
@@ -206,7 +229,9 @@ export const SwaggerUIStyle = `
 
       &-tag {
         color: ${Colors.zinc9};
-
+        font-size: 18px;
+        font-weight: 600;
+        border: none;
         & small {
           color: ${Colors.grey1};
         }
@@ -241,5 +266,94 @@ export const SwaggerUIStyle = `
         padding-top: 2.5px;
       }
     }
+
+    .opblock {
+      background: ${Colors.whitePure} !important;
+      border-color: ${Colors.zinc1} !important;   
+      .opblock-summary {
+        border-color: ${Colors.zinc2} !important;
+      }
+      svg.arrow {
+        width: 12px;
+        height: 12px;
+        margin-right: 8px;
+      }
+    }
+
+    .opblock.opblock-get {
+      .opblock-summary-method {
+        background: ${Colors.sky100};
+        color: ${Colors.sky700};
+        border: 1px solid ${Colors.sky500};
+      }
+      .tab-item.active h4 span:after {
+        background: ${Colors.sky500};
+      }
+    }
+    .opblock.opblock-delete {
+      .opblock-summary-method {
+        background: ${Colors.pink100};
+        color: ${Colors.pink700};
+        border: 1px solid ${Colors.pink500};
+      }
+      .tab-item.active h4 span:after {
+        background: ${Colors.pink500};
+      }
+    }
+    .opblock.opblock-patch {
+      .opblock-summary-method {
+        background: ${Colors.emerald100};
+        color: ${Colors.emerald700};
+        border: 1px solid ${Colors.emerald500};
+      }
+      .tab-item.active h4 span:after {
+        background: ${Colors.emerald500};
+      }
+    }
+    .opblock.opblock-post {
+      .opblock-summary-method {
+        background: ${Colors.lime100};
+        color: ${Colors.lime700};
+        border: 1px solid ${Colors.lime500};
+      }
+      .tab-item.active h4 span:after {
+        background: ${Colors.lime500};
+      }
+    }
+    .opblock.opblock-put {
+      .opblock-summary-method {
+        background: ${Colors.yellow100};
+        color: ${Colors.yellow700};
+        border: 1px solid ${Colors.yellow500};
+      }
+      .tab-item.active h4 span:after {
+        background: ${Colors.yellow500};
+      }
+    }
+    .opblock.opblock-head {
+      .opblock-summary-method {
+        background: ${Colors.violet100};
+        color: ${Colors.violet700};
+        border: 1px solid ${Colors.violet500};
+      }
+      .tab-item.active h4 span:after {
+        background: ${Colors.violet500};
+      }
+    }
+    .opblock.opblock-options {
+      .opblock-summary-method {
+        background: ${Colors.blue100};
+        color: ${Colors.blue700};
+        border: 1px solid ${Colors.blue500};
+      }
+      .tab-item.active h4 span:after {
+        background: ${Colors.blue500};
+      }
+    }
   }
 `;
+// background: ${Colors.blue100};
+// border-color: ${Colors.blue500};
+// .opblock-summary {
+//   border-color: ${Colors.blue500};
+// }

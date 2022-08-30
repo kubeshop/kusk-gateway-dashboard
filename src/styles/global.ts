@@ -2,6 +2,10 @@ import {createGlobalStyle} from 'styled-components';
 
 import Colors from './colors';
 
+export const Transitions = {
+  default: 'all 0.2s ease-in',
+};
+
 export const GlobalStyle = createGlobalStyle`
 *, *:before, *:after {
   box-sizing: inherit;
