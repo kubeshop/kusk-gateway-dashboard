@@ -140,9 +140,7 @@ const Header = () => {
         </S.IconContainer>
         <Dropdown arrow overlay={helpMenu}>
           <S.IconContainer>
-            <a href="https://kubeshop.github.io/kusk-gateway/" target="_blank" rel="noopener noreferrer">
-              <S.QuestionCircleFilled />
-            </a>
+            <S.QuestionCircleFilled />
           </S.IconContainer>
         </Dropdown>
       </S.RightContent>
