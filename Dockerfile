@@ -9,7 +9,7 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm ci
+RUN npm ci --omit=dev --prefer-offline
 COPY . ./
 RUN REACT_APP_SEGMENT_API_KEY=${SEGMENT_API_KEY} npm run build
 
