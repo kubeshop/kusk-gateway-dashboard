@@ -13,6 +13,8 @@ import {ContentWrapper, PageTitle} from '@components/AntdCustom';
 import {DiscordCard, HelpCard, HelpCardGroup} from '@components/HelpCard';
 import {KuskApisDown} from '@components/KuskApiDown';
 
+import NoResultsImg from '@assets/noresults.svg';
+
 import ApisListTable from './ApisListTable';
 import EmptyApisList from './EmptyApisList';
 
@@ -100,8 +102,16 @@ const ApisList: React.FC = () => {
 
           {isLoading ? (
             <Skeleton />
+          ) : data && data.filter(el => el.name.includes(searchApiName)).length > 0 ? (
+            <ApisListTable apis={data.filter(el => el.name.includes(searchApiName))} />
           ) : (
-            data && <ApisListTable apis={data.filter(el => el.name.includes(searchApiName))} />
+            <S.NoResults>
+              <img src={NoResultsImg} />
+              <Typography.Title level={2}>No results found.</Typography.Title>
+              <Typography.Text type="secondary">
+                Try altering your search or filters to find what you’re looking for.
+              </Typography.Text>
+            </S.NoResults>
           )}
           <S.HelpSection>
             <HelpCardGroup>

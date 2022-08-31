@@ -31,3 +31,20 @@ export const HelpSection = styled.div`
 export const Header = styled.div`
   margin-bottom: 24px;
 `;
+
+export const NoResults = styled.div`
+  min-width: 100%;
+  width: 100%;
+  margin-top: 60px;
+  text-align: center;
+
+  img {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 32px;
+  }
+
+  h2 {
+    margin-bottom: 24px !important;
+  }
+`;
