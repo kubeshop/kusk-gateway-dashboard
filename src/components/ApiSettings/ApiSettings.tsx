@@ -19,7 +19,7 @@ type Settings = 'general' | 'caching' | 'cors' | 'rateLimiting' | 'qos' | 'targe
 const ApiSettings = () => {
   const [selectedSettingsItem, setSelectedSettingsItem] = useState<Settings>('general');
   return (
-    <>
+    <S.Container>
       <Typography.Title level={2}>Settings</Typography.Title>
       <Typography.Text type="secondary">
         Update your API settings and general preferences.&nbsp;
@@ -64,7 +64,7 @@ const ApiSettings = () => {
             Deployments
           </S.ListItem>
         </S.List>
-        <div>
+        <div style={{padding: '0 20px 0 20px'}}>
           {selectedSettingsItem === 'general' && <GeneralSettings />}
           {selectedSettingsItem === 'caching' && <Caching />}
           {selectedSettingsItem === 'cors' && <CORS />}
@@ -76,7 +76,7 @@ const ApiSettings = () => {
           {selectedSettingsItem === 'deployments' && <Deployments />}
         </div>
       </S.SettingsContainer>
-    </>
+    </S.Container>
   );
 };
 export default ApiSettings;

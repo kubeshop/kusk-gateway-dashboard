@@ -5,24 +5,40 @@ import {ApiOutlined as RawApiOutlined} from '@ant-design/icons';
 import styled from 'styled-components';
 
 import Colors from '@styles/colors';
+import {Transitions} from '@styles/global';
 
 const swaggerUIMethodsColors: {[method: string]: string} = {
-  delete: '#F93E3E',
-  get: '#61AFFE',
-  head: '#9012FE',
-  options: '#0D5AA7',
-  patch: '#50E3C2',
-  post: '#49CC90',
-  put: '#FCA130',
+  delete: Colors.pink500,
+  get: Colors.sky500,
+  head: Colors.violet500,
+  options: Colors.blue500,
+  patch: Colors.emerald500,
+  post: Colors.lime500,
+  put: Colors.yellow500,
+};
+const swaggerUIMethodsTextColors: {[method: string]: string} = {
+  delete: Colors.pink700,
+  get: Colors.sky700,
+  head: Colors.violet700,
+  options: Colors.blue700,
+  patch: Colors.emerald700,
+  post: Colors.lime700,
+  put: Colors.yellow700,
+};
+const swaggerUIMethodsBackgroundColors: {[method: string]: string} = {
+  delete: Colors.pink100,
+  get: Colors.sky100,
+  head: Colors.violet100,
+  options: Colors.blue100,
+  patch: Colors.emerald100,
+  post: Colors.lime100,
+  put: Colors.yellow100,
 };
 
 export const ApiOutlined = styled(RawApiOutlined)`
   font-size: 18px;
 
-  transition: all 0.2s ease-in;
-
-  &:hover {
-  }
+  transition: ${Transitions.default};
 `;
 
 export const Container = styled.div<{$level: 'top' | 'path' | 'operation'}>`
@@ -37,13 +53,12 @@ export const Container = styled.div<{$level: 'top' | 'path' | 'operation'}>`
 
 export const LabelMethodTag = styled(RawTag)<{$deprecated: boolean; $method: string}>`
   ${({$deprecated, $method}) => `
-    background-color: ${$deprecated ? '#EBEBEB' : swaggerUIMethodsColors[$method]};
+    background-color: ${$deprecated ? '#EBEBEB' : swaggerUIMethodsBackgroundColors[$method]};
+    border: 1px solid ${$deprecated ? '#EBEBEB' : swaggerUIMethodsColors[$method]};
+    color: ${$deprecated ? '#000' : swaggerUIMethodsTextColors[$method]};
     opacity: ${$deprecated ? '0.6' : '1'};
   `}
-
-  color: ${Colors.grey2};
-  border: none;
-  padding: 1px 8px;
+  padding: 4px 4px;
   margin: 0;
 `;
 

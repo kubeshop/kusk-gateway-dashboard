@@ -1,27 +1,16 @@
 import {Typography} from 'antd';
 
-import {CopyOutlined} from '@ant-design/icons';
-
 import styled from 'styled-components';
 
 import Colors from '@styles/colors';
 
 export const Container = styled.div`
-  height: calc(100% - 84px);
   padding: 0 20px;
-`;
-
-export const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 20px 0;
-  width: 49%;
-  padding-right: 4px;
+  height: calc(100% - 84px);
 `;
 
 export const Title = styled(Typography.Title)`
-  margin-bottom: 0 !important;
+  margin: 20px 0 !important;
 `;
 
 export const RightPane = styled.div`
@@ -34,9 +23,5 @@ export const RightPane = styled.div`
   border-left: 1px solid ${Colors.grey10};
   background-color: ${Colors.zinc5};
   height: 100%;
-  overflow-y: scroll;
-`;
-
-export const CopyYamlButton = styled(CopyOutlined)`
-  font-size: 24px;
+  overflow-y: auto;
 `;

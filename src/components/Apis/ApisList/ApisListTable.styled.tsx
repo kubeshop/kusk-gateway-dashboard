@@ -2,6 +2,9 @@ import {Menu as RawMenu, Table as RawTable, Tag, Typography} from 'antd';
 
 import styled from 'styled-components';
 
+import Colors from '@styles/colors';
+import {Shadows, Transitions} from '@styles/global';
+
 export const Table = styled(RawTable)`
   & .ant-table-tbody > tr:hover > td {
     cursor: pointer;
@@ -17,10 +20,14 @@ export const Grid = styled.div`
 export const GridItem = styled.div`
   position: relative;
   padding: 20px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid ${Colors.zinc2};
   border-radius: 4px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: ${Shadows.cardShadow};
   cursor: pointer;
+  transition: ${Transitions.default};
+  &:hover {
+    border-color: ${Colors.blue400};
+  }
 `;
 
 export const ApiInfoContainer = styled.div`
@@ -46,8 +53,9 @@ export const InfoTag = styled(Tag)`
 export const Menu = styled(RawMenu)`
   position: absolute;
   top: 0px;
-  right: 0px;
+  right: -10px;
   border-bottom: none !important;
+  background: none;
 
   .ant-menu-item:hover::after,
   .ant-menu-submenu:hover::after,

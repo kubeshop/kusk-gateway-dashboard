@@ -14,11 +14,13 @@ enum Colors {
   zinc4 = '#A1A1AA',
   zinc5 = '#FAFAFA',
   zinc6 = '#71717A',
+  zinc8 = '#27272A',
   zinc9 = '#18181B',
 
   spunPearl = '#a1a1aa',
   swaggerUIGrey = '#333333',
 
+  cyan7 = '#0e7490',
   cyan5 = '#06B6D4',
   cyan2 = '#9AF2EC',
   cyan1 = '#5CDBD3',
@@ -29,13 +31,16 @@ enum Colors {
   magenta1 = '#551C3B',
   magenta0 = '#291321',
 
+  yellow100 = '#fef9c3',
   yellow400 = '#FACC15',
   yellow500 = '#EAB308',
+  yellow700 = '#a16207',
 
   blue700 = '#1D4ED8',
   blue600 = '#2563EB',
   blue500 = '#3B82F6',
   blue400 = '#60A5FA',
+  blue100 = '#dbeafe',
 
   rose500 = '#F43F5E',
 
@@ -43,6 +48,25 @@ enum Colors {
   whitePure = '#ffffff',
 
   pink = '#EC4899',
+  pink700 = '#be185d',
+  pink500 = '#ec4899',
+  pink100 = '#fce7f3',
+
+  sky700 = '#0369a1',
+  sky500 = '#0ea5e9',
+  sky100 = '#e0f2fe',
+
+  violet700 = '#6d28d9',
+  violet500 = '#8b5cf6',
+  violet100 = '#ede9fe',
+
+  emerald700 = '#047857',
+  emerald500 = '#10b981',
+  emerald100 = '#d1fae5',
+
+  lime700 = '#4d7c0f',
+  lime500 = '#84cc16',
+  lime100 = '#ecfccb',
 }
 
 export default Colors;

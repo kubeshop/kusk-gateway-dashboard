@@ -8,6 +8,7 @@ import {
 import styled from 'styled-components';
 
 import Colors from '@styles/colors';
+import {Shadows, Transitions} from '@styles/global';
 
 export const Container = styled.div`
   display: flex;
@@ -40,7 +41,9 @@ export const Card = styled.a.attrs({
   padding: 12px;
   border: 1px solid ${Colors.zinc2};
   border-radius: 4px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.04);
+  align-items: center;
+  box-shadow: ${Shadows.cardShadow};
+  transition: ${Transitions.default};
 
   :hover {
     border: 1px solid ${Colors.blue500};
