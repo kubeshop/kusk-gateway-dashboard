@@ -1,7 +1,7 @@
 import {useDispatch} from 'react-redux';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 
-import {Menu, MenuProps} from 'antd';
+import {Dropdown, Menu, MenuProps} from 'antd';
 
 import {DownOutlined} from '@ant-design/icons';
 
@@ -73,6 +73,41 @@ const Header = () => {
     />
   );
 
+  const helpMenu = () => (
+    <Menu
+      items={[
+        {
+          label: 'Release Notes',
+          key: '1',
+          onClick: () => {
+            window.open('https://kubeshop.io/blog-projects/kusk', '_blank');
+          },
+        },
+        {
+          label: 'Documentation',
+          key: '2',
+          onClick: () => {
+            window.open('https://docs.kusk.io/', '_blank');
+          },
+        },
+        {
+          label: 'Discord',
+          key: '3',
+          onClick: () => {
+            window.open('https://discord.com/channels/884464549347074049/913784299273211905', '_blank');
+          },
+        },
+        {
+          label: 'Privacy Policy',
+          key: '4',
+          onClick: () => {
+            window.open('https://docs.kusk.io/privacy', '_blank');
+          },
+        },
+      ]}
+    />
+  );
+
   return (
     <S.Container>
       <Link to="/">
@@ -103,12 +138,11 @@ const Header = () => {
             <S.GithubFilled />
           </a>
         </S.IconContainer>
-
-        <S.IconContainer>
-          <a href="https://kubeshop.github.io/kusk-gateway/" target="_blank" rel="noopener noreferrer">
+        <Dropdown arrow overlay={helpMenu}>
+          <S.IconContainer>
             <S.QuestionCircleFilled />
-          </a>
-        </S.IconContainer>
+          </S.IconContainer>
+        </Dropdown>
       </S.RightContent>
     </S.Container>
   );
