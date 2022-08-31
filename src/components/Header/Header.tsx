@@ -81,18 +81,18 @@ const Header = () => {
       <S.Options>
         <S.Divider />
         <S.Dropdown overlay={menu}>
-          <span style={{minWidth: 78, marginLeft: 16}}>
+          <S.DropdownContainer style={{minWidth: 78}}>
             <S.TeamLabel>K</S.TeamLabel>
             <DownOutlined />
-          </span>
+          </S.DropdownContainer>
         </S.Dropdown>
         <S.Divider />
         {isApiRoute && (
           <S.Dropdown overlay={apisMenu}>
-            <span>
+            <S.DropdownContainer>
               <S.DropdownLabel>{apiName}</S.DropdownLabel>
               <DownOutlined />
-            </span>
+            </S.DropdownContainer>
           </S.Dropdown>
         )}
       </S.Options>

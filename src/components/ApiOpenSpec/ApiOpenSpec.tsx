@@ -1,5 +1,4 @@
 import {useState} from 'react';
-
 import {Tooltip} from 'antd';
 
 import {TOOLTIP_DELAY} from '@constants/constants';

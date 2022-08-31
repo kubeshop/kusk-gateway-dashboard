@@ -11,21 +11,24 @@ import {
 import styled from 'styled-components';
 
 import Colors from '@styles/colors';
+import {Transitions} from '@styles/global';
 
 export const Container = styled.div`
   position: sticky;
   top: 0;
   height: 64px;
-  padding: 16px;
   z-index: 5;
   background-color: ${Colors.zinc9};
   display: flex;
   align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
 `;
 
 export const Logo = styled.img`
   height: 36px;
   cursor: pointer;
+  margin-right: 16px;
 `;
 
 export const Options = styled.div`
@@ -42,7 +45,7 @@ export const TeamWrapper = styled.div`
 export const Divider = styled.div`
   display: block;
   position: relative;
-  margin: 0 16px;
+  margin: 0;
   &::before {
     content: '';
     position: absolute;
@@ -51,6 +54,16 @@ export const Divider = styled.div`
     left: 0;
     width: 1px;
     background-color: #27272a;
+  }
+`;
+
+export const DropdownContainer = styled.span`
+  height: 100%;
+  padding: 20px 16px;
+  cursor: pointer;
+  background-color: ${Colors.zinc9};
+  &:hover {
+    background-color: ${Colors.zinc8};
   }
 `;
 
@@ -65,7 +78,7 @@ export const IconContainer = styled.div`
   justify-content: center;
   padding: 8px 0;
   opacity: 0.5;
-  transition: all 0.2s ease-in;
+  transition:${Transitions.default};
 
   &:hover {
     opacity: 1;

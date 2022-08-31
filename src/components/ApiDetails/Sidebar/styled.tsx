@@ -7,6 +7,7 @@ import AntdIcon, {
 import styled from 'styled-components';
 
 import Colors from '@styles/colors';
+import {Transitions} from '@styles/global';
 
 export const Logo = styled.img`
   height: 36px;
@@ -24,7 +25,7 @@ export const IconContainer = styled.div`
   justify-content: center;
   padding: 8px 0;
   opacity: 0.5;
-  transition: all 0.2s ease-in;
+  transition: ${Transitions.default};
 
   &:hover {
     opacity: 1;
@@ -77,7 +78,7 @@ export const Icon = styled(AntdIcon)<{$active: boolean; $border?: boolean}>`
 
   width: 100%;
   height: 100%;
-  transition: all 0.2s ease-in;
+  transition: ${Transitions.default};
   display: flex;
   align-items: center;
   justify-content: center;

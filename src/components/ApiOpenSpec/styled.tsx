@@ -12,6 +12,7 @@ import {
 } from '@components/Icons';
 
 import Colors from '@styles/colors';
+import {Transitions} from '@styles/global';
 
 export const Header = styled.div`
   display: flex;
@@ -28,7 +29,7 @@ export const CRDIcon = styled(AntdIcon).attrs<{$active: boolean; $border?: boole
     color: ${$active ? Colors.cyan5 : Colors.grey1}};
     border-bottom: ${$border ? `1px solid ${Colors.grey4}` : 'unset'};
 `};
-  transition: all 0.2s ease-in;
+  transition: ${Transitions.default};
   padding: 16px 0px 16px 0px;
 
   &:hover {
@@ -49,7 +50,11 @@ export const ApiDocsIcon = styled(AntdIcon).attrs<{$active: boolean; $border?: b
     color: ${$active ? Colors.cyan5 : Colors.grey1}};
     border-bottom: ${$border ? `1px solid ${Colors.grey4}` : 'unset'};
 `};
-  transition: all 0.2s ease-in;
+
+  transition: ${Transitions.default};
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 16px 0px 16px 0px;
 
   &:hover {
@@ -70,7 +75,11 @@ export const ExtensionIcon = styled(AntdIcon).attrs<{$active: boolean; $border?:
     color: ${$active ? Colors.cyan5 : Colors.grey1}};
     border-bottom: ${$border ? `1px solid ${Colors.grey4}` : 'unset'};
 `};
-  transition: all 0.2s ease-in;
+
+  transition: ${Transitions.default};
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 16px 0px 16px 0px;
 
   &:hover {

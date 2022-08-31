@@ -6,8 +6,7 @@ import Colors from '@styles/colors';
 
 export const Container = styled.div`
   padding: 0 20px;
-  height: 100%;
-  margin-bottom: 16px;
+  height: calc(100% - 84px);
 `;
 
 export const Title = styled(Typography.Title)`
@@ -23,4 +22,6 @@ export const RightPane = styled.div`
   padding: 20px;
   border-left: 1px solid ${Colors.grey10};
   background-color: ${Colors.zinc5};
+  height: 100%;
+  overflow-y: auto;
 `;

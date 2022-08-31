@@ -7,9 +7,8 @@ import styled from 'styled-components';
 import Colors from '@styles/colors';
 
 export const Container = styled.div`
-  height: 100%;
+  height: calc(100% - 84px);
   padding: 0 20px;
-  margin-bottom: 16px;
 `;
 
 export const Header = styled.div`
@@ -34,6 +33,8 @@ export const RightPane = styled.div`
   padding: 20px;
   border-left: 1px solid ${Colors.grey10};
   background-color: ${Colors.zinc5};
+  height: 100%;
+  overflow-y: scroll;
 `;
 
 export const CopyYamlButton = styled(CopyOutlined)`

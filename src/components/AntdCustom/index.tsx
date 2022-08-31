@@ -76,7 +76,7 @@ export const PageTitle = styled(Typography.Title).attrs({
   level: 2,
 })`
   font-size: 20px;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   margin-bottom: 20px;
 `;
 
@@ -84,6 +84,7 @@ const SubHeading = styled(Typography.Text)`
   color: ${Colors.zinc6};
   font-size: 14px;
   line-height: 16px;
+  width: 100%;
 `;
 
 export const CardHeading = ({heading, subHeading}: {heading: string; subHeading: string}) => {

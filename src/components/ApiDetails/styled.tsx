@@ -13,4 +13,7 @@ export const Container = styled.div`
 export const Content = styled.div`
   position: relative;
   background-color: ${Colors.zinc1};
+  padding: 0;
+  height: 100%;
+  overflow-y: auto;
 `;

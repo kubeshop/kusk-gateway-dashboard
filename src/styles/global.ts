@@ -2,6 +2,14 @@ import {createGlobalStyle} from 'styled-components';
 
 import Colors from './colors';
 
+export const Shadows = {
+  cardShadow: '0px 4px 12px rgba(0, 0, 0, 0.04);',
+};
+
+export const Transitions = {
+  default: 'all 0.2s ease-in',
+};
+
 export const GlobalStyle = createGlobalStyle`
 *, *:before, *:after {
   box-sizing: inherit;
@@ -20,6 +28,10 @@ body {
 
 body #root {
   height: 100%;
+}
+
+.ant-form-item {
+  margin-bottom: 0;
 }
 
 .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
@@ -46,5 +58,9 @@ body #root {
 
 .custom-antd-table-selected-row {
   background: rgba(255, 255, 255, .1);
+}
+
+.ant-card-head-title {
+  white-space: normal;
 }
 `;

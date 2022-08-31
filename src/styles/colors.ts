@@ -14,6 +14,7 @@ enum Colors {
   zinc4 = '#A1A1AA',
   zinc5 = '#FAFAFA',
   zinc6 = '#71717A',
+  zinc8 = '#27272A',
   zinc9 = '#18181B',
 
   spunPearl = '#a1a1aa',

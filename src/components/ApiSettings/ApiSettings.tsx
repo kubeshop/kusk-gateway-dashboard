@@ -64,7 +64,7 @@ const ApiSettings = () => {
             Deployments
           </S.ListItem>
         </S.List>
-        <div>
+        <div style={{padding: '0 20px 0 20px'}}>
           {selectedSettingsItem === 'general' && <GeneralSettings />}
           {selectedSettingsItem === 'caching' && <Caching />}
           {selectedSettingsItem === 'cors' && <CORS />}
