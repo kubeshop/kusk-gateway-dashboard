@@ -8,7 +8,12 @@ import {KUSK_MONACO_THEME} from '@utils/Monaco';
 
 import * as S from './Monaco.styled';
 
-const Monaco = ({openapi}: {openapi: string}) => {
+interface IProps {
+  openapi: string;
+  fullWidth?: boolean;
+}
+
+const Monaco = ({openapi, fullWidth}: IProps) => {
   const [containerRef, {width: containerWidth}] = useMeasure<HTMLDivElement>();
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const [editor, setEditor] = useState(editorRef.current);
@@ -44,7 +49,7 @@ const Monaco = ({openapi}: {openapi: string}) => {
   }, []);
 
   return (
-    <S.MonacoContainer ref={containerRef}>
+    <S.MonacoContainer ref={containerRef} $fullWidth={fullWidth}>
       <MonacoEditor
         width={containerWidth}
         height="auto"
