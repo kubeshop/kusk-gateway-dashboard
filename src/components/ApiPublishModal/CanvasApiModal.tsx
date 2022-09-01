@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
-import {Button, Form, Input, Select, Tag, Typography} from 'antd';
+import {Button, Form, Input, Select, Tag} from 'antd';
 
 import cleanDeep from 'clean-deep';
 import {BaseSelectRef} from 'rc-select';
@@ -115,6 +115,7 @@ const CanvasApiModal = () => {
     <S.Modal
       visible
       closable
+      title={`Create an API from ${apiCanvasType === 'template' ? 'template' : 'scratch'}`}
       footer={
         <>
           <Button onClick={onBackHandler}>Back</Button>
@@ -126,13 +127,12 @@ const CanvasApiModal = () => {
       }
       onCancel={onBackHandler}
     >
-      <Typography.Title level={2}>
-        Create an API from {apiCanvasType === 'template' ? 'template' : 'scratch'}
-      </Typography.Title>
       <Form layout="vertical" form={form}>
         <Form.Item
           hasFeedback
           name="name"
+          label="Name"
+          required
           dependencies={['namespace']}
           rules={[
             {required: true, message: 'Enter API name!'},
@@ -153,11 +153,12 @@ const CanvasApiModal = () => {
             },
           ]}
         >
-          <Input placeholder="Name" />
+          <Input />
         </Form.Item>
 
         <Form.Item
           name="namespace"
+          label="Namespace"
           rules={[
             {
               required: true,
@@ -165,7 +166,7 @@ const CanvasApiModal = () => {
             },
           ]}
         >
-          <Select placeholder="Namespace">
+          <Select>
             {namespaces?.map(el => (
               <Select.Option key={el.name} value={el.name}>
                 {el.name}
@@ -175,7 +176,9 @@ const CanvasApiModal = () => {
         </Form.Item>
 
         <Form.Item
+          required
           name="envoyFleet"
+          label="Deployment"
           rules={[
             {
               required: true,
@@ -183,7 +186,7 @@ const CanvasApiModal = () => {
             },
           ]}
         >
-          <Select placeholder="Deployment" ref={deploymentRef}>
+          <Select ref={deploymentRef}>
             {envoyFleets?.map(fleet => (
               <Select.Option key={fleet.name} value={`${fleet.namespace},${fleet.name}`}>
                 <Tag>{fleet.namespace}</Tag>
@@ -201,7 +204,9 @@ const CanvasApiModal = () => {
         </Form.Item>
 
         <Form.Item
+          required
           name="openapi"
+          label="Open API Spec"
           rules={[
             {
               required: true,
@@ -222,7 +227,7 @@ const CanvasApiModal = () => {
         >
           <S.Textarea
             rows={10}
-            placeholder="OpenAPI Spec in YAML/JSON format"
+            placeholder="Enter the OpenAPI Spec in YAML/JSON format"
             onChange={e => {
               const spec = e.target.value;
 

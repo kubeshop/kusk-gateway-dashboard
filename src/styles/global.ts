@@ -41,7 +41,7 @@ body #root {
 .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::after {
   display: inline-block;
   margin-left: 4px;
-  color: ${Colors.rose500};
+  color: ${Colors.pink500};
   font-size: 14px;
   font-family: SimSun, sans-serif;
   line-height: 1;

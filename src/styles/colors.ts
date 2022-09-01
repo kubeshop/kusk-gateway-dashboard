@@ -45,8 +45,6 @@ enum Colors {
   blue400 = '#60A5FA',
   blue100 = '#dbeafe',
 
-  rose500 = '#F43F5E',
-
   blackPure = '#000000',
   whitePure = '#ffffff',
 
