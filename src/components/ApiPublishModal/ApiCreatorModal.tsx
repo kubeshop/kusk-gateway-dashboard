@@ -1,11 +1,13 @@
 import {useDispatch} from 'react-redux';
 
-import {Card, Modal, Typography} from 'antd';
+import {Card, Modal} from 'antd';
 
 import {closeApiPublishModal, openCanvasApiModal, setApiCanvasType} from '@redux/reducers/ui';
 
-import apiBlankCanvas from '../../assets/apiBlankCanvas.svg';
-import ApiTemplate from '../../assets/apiTemplate.svg';
+import apiBlankCanvas from '@assets/apiBlankCanvas.svg';
+import ApiImportFile from '@assets/apiImportFile.svg';
+import ApiTemplate from '@assets/apiTemplate.svg';
+
 import * as S from './ApiCreatorModal.styled';
 
 const ApiCreatorModal = () => {
@@ -26,16 +28,29 @@ const ApiCreatorModal = () => {
   };
 
   return (
-    <Modal visible footer={null} onCancel={onBackHandler}>
-      <Typography.Title level={2}>Create an API</Typography.Title>
+    <Modal visible footer={null} width="608px" onCancel={onBackHandler}>
+      <S.ModalTitle>Create an API</S.ModalTitle>
       <S.Heading type="secondary">Select how you’d like to create your API</S.Heading>
       <S.Grid>
         <S.Card hoverable cover={<img src={ApiTemplate} />} onClick={onTemplateClickHandler}>
-          <Card.Meta title="ToDo App Template" description="Use this template as a quick starter to explore" />
+          <Card.Meta
+            title="ToDo App Template"
+            description={<S.Description>Use this template as a quick starter to explore</S.Description>}
+          />
+        </S.Card>
+
+        <S.Card hoverable cover={<img src={ApiImportFile} />} onClick={onTemplateClickHandler}>
+          <Card.Meta
+            title="Select from file"
+            description={<S.Description type="secondary">Import your OpenAPI spec from file or URL</S.Description>}
+          />
         </S.Card>
 
         <S.Card hoverable cover={<img src={apiBlankCanvas} />} onClick={onBlankClickHandler}>
-          <Card.Meta title="Blank canvas" description="Add your API based on your OpenAPI spec" />
+          <Card.Meta
+            title="Blank canvas"
+            description={<S.Description>Add your API based on your OpenAPI spec</S.Description>}
+          />
         </S.Card>
       </S.Grid>
     </Modal>
