@@ -12,9 +12,9 @@ const KuskExtension = () => {
       <S.Title level={3} style={{marginTop: 20, marginBottom: 20}}>
         Kusk Extensions
       </S.Title>
-
-      <Monaco openapi={selectedAPIOpenSpec} />
-
+      <S.EditorContainer>
+        <Monaco openapi={selectedAPIOpenSpec} />
+      </S.EditorContainer>
       <S.RightPane>
         <KuskExtensions />
       </S.RightPane>
