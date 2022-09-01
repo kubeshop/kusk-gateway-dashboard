@@ -28,8 +28,7 @@ const ApiCreatorModal = () => {
   };
 
   return (
-    <Modal visible footer={null} width="608px" onCancel={onBackHandler}>
-      <S.ModalTitle>Create an API</S.ModalTitle>
+    <Modal visible footer={null} title="Create an API" onCancel={onBackHandler}>
       <S.Heading type="secondary">Select how you’d like to create your API</S.Heading>
       <S.Grid>
         <S.Card hoverable cover={<img src={ApiTemplate} />} onClick={onTemplateClickHandler}>

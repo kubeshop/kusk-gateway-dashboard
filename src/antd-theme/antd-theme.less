@@ -5,14 +5,13 @@
 @blue500: #3b82f6;
 @blue600: #2563eb;
 
-// Rose palette
-@rose500: #f43f5e;
+@pink500: #ec4899;
 
 // Grey palette
 @grey400: #262626;
 
 // Error
-@error-color: @rose500;
+@error-color: @pink500;
 
 // Link
 @link-color: @blue400;
@@ -20,7 +19,7 @@
 @link-active-color: @blue600;
 
 // Form
-@label-required-color: @rose500;
+@label-required-color: @pink500;
 
 // Table
 @table-border-color: @grey400;
@@ -36,7 +35,6 @@
 @text-color: #18181b;
 @text-color-secondary: #52525b;
 @heading-color: #18181b;
-@heading-5-size: 18px;
 
 @icon-color: #71717a;
 
@@ -67,6 +65,74 @@
 
 //tooltip
 @tooltip-bg: #374151;
+
+//Modal
+@modal-bg: #fafafa;
+
+@modal-header-title-line-height: 33px;
+@modal-header-title-font-size: 28px;
+@modal-header-close-size: 16px;
+@modal-close-color: #71717a;
+@modal-header-padding-vertical: 24px;
+
+h1.ant-typography {
+  font-size: 34px;
+  line-height: 40px;
+}
+
+h2.ant-typography {
+  font-size: 28px;
+  line-height: 32px;
+}
+
+h3.ant-typography {
+  font-size: 24px;
+  line-height: 30px;
+}
+
+h5.ant-typography {
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.ant-typography {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.ant-typography.ant-typography-secondary {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+//Modal classes
+.ant-modal-header {
+  background-color: @modal-bg;
+  border-bottom: none;
+}
+
+.ant-modal-close {
+  top: 24px;
+  right: 24px;
+}
+
+.ant-modal-title {
+  font-size: 28px;
+  line-height: 32px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.ant-modal-body {
+  padding-top: 0;
+  background-color: @modal-bg;
+}
+
+.ant-modal-footer {
+  background-color: @modal-bg;
+  border-top: none;
+  padding: 8px 24px 24px;
+}
 
 .ant-table table {
   border: 1px solid @table-border-color;

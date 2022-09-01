@@ -3,6 +3,7 @@ import {useDispatch} from 'react-redux';
 import {Tooltip} from 'antd';
 
 import {TOOLTIP_DELAY} from '@constants/constants';
+
 import {AlertEnum} from '@models/alert';
 
 import {useAppSelector} from '@redux/hooks';
@@ -40,7 +41,9 @@ const OpenApiEditor = () => {
           <S.CopyYamlButton onClick={onClipboardClick} />
         </Tooltip>
       </S.Header>
-      <Monaco openapi={selectedAPIOpenSpec} />
+      <S.EditorContainer>
+        <Monaco openapi={selectedAPIOpenSpec} />
+      </S.EditorContainer>
       <S.RightPane>
         <ApiDefinition />
       </S.RightPane>

@@ -42,20 +42,9 @@ export const Label = styled.div`
 
 export const Modal = styled(RawModal)`
   & .ant-modal-body {
-    background-color: ${Colors.zinc5};
     min-height: fit-content;
     overflow-y: auto;
     ${GlobalScrollbarStyle}
-  }
-
-  & .ant-modal-header {
-    background-color: ${Colors.zinc5};
-    border-bottom: none;
-  }
-
-  & .ant-modal-footer {
-    background-color: ${Colors.zinc5};
-    border-top: none;
   }
 `;
 

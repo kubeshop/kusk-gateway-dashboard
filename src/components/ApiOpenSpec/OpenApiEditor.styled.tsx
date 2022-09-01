@@ -24,6 +24,13 @@ export const Title = styled(Typography.Title)`
   margin-bottom: 0 !important;
 `;
 
+export const EditorContainer = styled.div`
+  display: flex;
+  min-height: calc(100% - 118px);
+  width: 49%;
+  padding-right: 8px;
+`;
+
 export const RightPane = styled.div`
   position: absolute;
   left: 50%;
