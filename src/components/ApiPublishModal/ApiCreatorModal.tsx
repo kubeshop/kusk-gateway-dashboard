@@ -1,6 +1,6 @@
 import {useDispatch} from 'react-redux';
 
-import {Card, Modal, Typography} from 'antd';
+import {Card, Modal} from 'antd';
 
 import {closeApiPublishModal, openCanvasApiModal, setApiCanvasType} from '@redux/reducers/ui';
 
@@ -26,8 +26,7 @@ const ApiCreatorModal = () => {
   };
 
   return (
-    <Modal visible footer={null} onCancel={onBackHandler}>
-      <Typography.Title level={2}>Create an API</Typography.Title>
+    <Modal visible footer={null} title="Create an API" onCancel={onBackHandler}>
       <S.Heading type="secondary">Select how you’d like to create your API</S.Heading>
       <S.Grid>
         <S.Card hoverable cover={<img src={ApiTemplate} />} onClick={onTemplateClickHandler}>

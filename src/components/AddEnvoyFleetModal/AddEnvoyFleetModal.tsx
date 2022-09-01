@@ -86,7 +86,6 @@ const AddEnvoyFleetModal = () => {
         preserve
         layout="vertical"
         form={form}
-        requiredMark={false}
         onValuesChange={() => {
           if (isError) {
             reset();
@@ -96,6 +95,7 @@ const AddEnvoyFleetModal = () => {
         <S.Container>
           <S.FormContainer>
             <Form.Item
+              required
               name={['fleetInfo', 'name']}
               label="Name"
               rules={[
@@ -120,6 +120,7 @@ const AddEnvoyFleetModal = () => {
             </Form.Item>
 
             <Form.Item
+              required
               name={['fleetInfo', 'namespace']}
               label="Cluster service"
               rules={[{required: true, message: 'Enter target cluster!'}]}
@@ -134,19 +135,20 @@ const AddEnvoyFleetModal = () => {
             </Form.Item>
 
             <Form.Item
+              required
               name={['fleetInfo', 'serviceType']}
               label="Service type"
               rules={[{required: true, message: 'Select service type!'}]}
             >
               <Radio.Group>
                 <Space direction="horizontal">
-                  <Radio value="LoadBalancer">LoadBalancer</Radio>
-                  <Radio value="ClusterIP">ClusterIP</Radio>
+                  <Radio value="LoadBalancer">Public - Load Balancer</Radio>
+                  <Radio value="ClusterIP">Private - Cluster IP</Radio>
                 </Space>
               </Radio.Group>
             </Form.Item>
 
-            <Form.Item label="Port">
+            <Form.Item required label="Port">
               <Form.List name={['portsInfo', 'ports']} initialValue={[{}]}>
                 {(fields, {add, remove}) => (
                   <div>

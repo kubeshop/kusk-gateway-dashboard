@@ -5,14 +5,13 @@
 @blue500: #3b82f6;
 @blue600: #2563eb;
 
-// Rose palette
-@rose500: #f43f5e;
+@pink500: #ec4899;
 
 // Grey palette
 @grey400: #262626;
 
 // Error
-@error-color: @rose500;
+@error-color: @pink500;
 
 // Link
 @link-color: @blue400;
@@ -20,7 +19,7 @@
 @link-active-color: @blue600;
 
 // Form
-@label-required-color: @rose500;
+@label-required-color: @pink500;
 
 // Table
 @table-border-color: @grey400;
@@ -68,6 +67,8 @@
 @tooltip-bg: #374151;
 
 //Modal
+@modal-bg: #fafafa;
+
 @modal-header-title-line-height: 33px;
 @modal-header-title-font-size: 28px;
 @modal-header-close-size: 16px;
@@ -106,6 +107,7 @@ h5.ant-typography {
 
 //Modal classes
 .ant-modal-header {
+  background-color: @modal-bg;
   border-bottom: none;
 }
 
@@ -118,7 +120,18 @@ h5.ant-typography {
   font-size: 28px;
   line-height: 32px;
   font-weight: 700;
-  margin-bottom: 32px;
+  margin-bottom: 12px;
+}
+
+.ant-modal-body {
+  padding-top: 0;
+  background-color: @modal-bg;
+}
+
+.ant-modal-footer {
+  background-color: @modal-bg;
+  border-top: none;
+  padding: 8px 24px 24px;
 }
 
 .ant-table table {

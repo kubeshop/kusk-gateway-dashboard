@@ -25,7 +25,9 @@ const Apis: React.FC = () => {
       <Dashboard listElement={<ApisList />} selectedTableItem={selectedApi} />
 
       <Suspense fallback={null}>{isApiPublishModalVisible && <ApiCreatorModal />}</Suspense>
-      <Suspense fallback={null}>{isCanvasApiModalVisible && <CanvasApiModal />}</Suspense>
+      <Suspense fallback={null}>
+        {isCanvasApiModalVisible && !isEnvoyFleetPublishModalVisible && <CanvasApiModal />}
+      </Suspense>
       <Suspense fallback={null}>{isEnvoyFleetPublishModalVisible && <AddEnvoyFleetModal />}</Suspense>
     </Track>
   );
