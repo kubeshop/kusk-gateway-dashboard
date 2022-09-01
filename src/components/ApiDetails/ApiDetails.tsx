@@ -10,9 +10,6 @@ import {useAppSelector} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
 import {useGetApiQuery} from '@redux/services/enhancedApi';
 
-import {ApiDashboard} from '@components/ApiDashboard';
-import {ApiDeployments} from '@components/ApiDeployments';
-import {ApiLogs} from '@components/ApiLogs';
 import {ApiOpenSpec} from '@components/ApiOpenSpec';
 import {ApiRoutes} from '@components/ApiRoutes';
 import {ApiSettings} from '@components/ApiSettings';
@@ -54,11 +51,8 @@ const ApiDetails = () => {
     <S.Container>
       <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} />
       <S.Content>
-        {activeSection === 'dashboard' && <ApiDashboard />}
         {activeSection === 'openapiBrowser' && <ApiOpenSpec />}
         {activeSection === 'routes' && <ApiRoutes />}
-        {activeSection === 'deployments' && <ApiDeployments />}
-        {activeSection === 'logs' && <ApiLogs />}
         {activeSection === 'settings' && <ApiSettings />}
       </S.Content>
     </S.Container>

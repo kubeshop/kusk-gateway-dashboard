@@ -4,14 +4,7 @@ import {TOOLTIP_DELAY} from '@constants/constants';
 
 import {APIDetailsSections} from '@models/ui';
 
-import {
-  ApiAnalyticsIcon,
-  ApiDashboardIcon,
-  ApiDeploymentsIcon,
-  ApiIcon,
-  ApiSettingsIcon,
-  StaticRouteIcon,
-} from '@components/Icons';
+import {ApiIcon, ApiSettingsIcon, StaticRouteIcon} from '@components/Icons';
 
 import * as S from './styled';
 
@@ -25,14 +18,6 @@ const Sidebar = (props: IProps) => {
   return (
     <S.SidebarContainer>
       <S.DashboardMenuContainer>
-        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="Dashboard">
-          <S.Icon
-            component={ApiDashboardIcon}
-            $active={activeSection === 'dashboard'}
-            onClick={() => setActiveSection('dashboard')}
-          />
-        </Tooltip>
-
         <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="Open API Spec">
           <S.Icon
             component={ApiIcon}
@@ -46,22 +31,6 @@ const Sidebar = (props: IProps) => {
             component={StaticRouteIcon}
             $active={activeSection === 'routes'}
             onClick={() => setActiveSection('routes')}
-          />
-        </Tooltip>
-
-        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="Deployments">
-          <S.Icon
-            component={ApiDeploymentsIcon}
-            $active={activeSection === 'deployments'}
-            onClick={() => setActiveSection('deployments')}
-          />
-        </Tooltip>
-
-        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="Analytics">
-          <S.Icon
-            component={ApiAnalyticsIcon}
-            $active={activeSection === 'logs'}
-            onClick={() => setActiveSection('logs')}
           />
         </Tooltip>
 
