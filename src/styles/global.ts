@@ -31,7 +31,7 @@ body #root {
 }
 
 .ant-form-item {
-  margin-bottom: 0;
+  margin-bottom: 24px;
 }
 
 .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
