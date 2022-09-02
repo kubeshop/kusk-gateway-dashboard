@@ -1,14 +1,14 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
-import {Button, Form, Input, Select, Tag} from 'antd';
+import {Button, Form, Input, Select} from 'antd';
 
 import cleanDeep from 'clean-deep';
-import {BaseSelectRef} from 'rc-select';
 import YAML from 'yaml';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
+import ToDoTemplate from '@constants/rawOpenApiSpec.json';
 
 import {AlertEnum} from '@models/alert';
 import {ApiContent} from '@models/main';
@@ -16,16 +16,11 @@ import {ApiContent} from '@models/main';
 import {useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 import {selectApi} from '@redux/reducers/main';
-import {closeApiPublishModal, closeCanvasApiModal, openEnvoyFleetModalModal} from '@redux/reducers/ui';
-import {
-  useDeployApiMutation,
-  useGetApisQuery,
-  useGetEnvoyFleetsQuery,
-  useGetNamespacesQuery,
-} from '@redux/services/enhancedApi';
+import {closeApiPublishModal, closeCanvasApiModal} from '@redux/reducers/ui';
+import {useDeployApiMutation, useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 import {ApiItem} from '@redux/services/kuskApi';
 
-import ToDoTemplate from '../../constants/rawOpenApiSpec.json';
+import {FleetDropdown} from './FormComponents';
 
 import * as S from './styled';
 
@@ -33,12 +28,10 @@ const CanvasApiModal = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const deploymentRef = useRef<BaseSelectRef | null>(null);
   const apiCanvasType = useAppSelector(state => state.ui.apiPublishModal.apiCanvasType);
   const openapiField = Form.useWatch('openapi', form);
   const [warnings, setWarnings] = useState<string[]>([]);
   const {data: apis} = useGetApisQuery({});
-  const {data: envoyFleets} = useGetEnvoyFleetsQuery({});
   const {data: namespaces} = useGetNamespacesQuery();
   const [deployAPI] = useDeployApiMutation();
 
@@ -102,13 +95,6 @@ const CanvasApiModal = () => {
         navigate(`/${apiData.namespace}/${apiData.name}`);
       })
       .catch(() => {});
-  };
-
-  const onAddDeploymentClickHandler = () => {
-    deploymentRef?.current?.blur();
-    setTimeout(() => {
-      dispatch(openEnvoyFleetModalModal());
-    }, 100);
   };
 
   return (
@@ -186,21 +172,7 @@ const CanvasApiModal = () => {
             },
           ]}
         >
-          <Select ref={deploymentRef}>
-            {envoyFleets?.map(fleet => (
-              <Select.Option key={fleet.name} value={`${fleet.namespace},${fleet.name}`}>
-                <Tag>{fleet.namespace}</Tag>
-                {fleet.name}
-              </Select.Option>
-            ))}
-            <Select.Option disabled value="00">
-              <S.AddDeploymentOption>
-                <Button type="primary" onClick={onAddDeploymentClickHandler}>
-                  Add deployment target
-                </Button>
-              </S.AddDeploymentOption>
-            </Select.Option>
-          </Select>
+          <FleetDropdown />
         </Form.Item>
 
         <Form.Item

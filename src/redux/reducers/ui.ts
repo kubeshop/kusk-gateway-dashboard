@@ -22,9 +22,16 @@ export const uiSlice = createSlice({
     openCanvasApiModal: (state: Draft<UiState>) => {
       state.apiPublishModal.isCanvasApiModalOpen = true;
     },
+
     closeCanvasApiModal: (state: Draft<UiState>) => {
       state.apiPublishModal.isCanvasApiModalOpen = false;
       state.apiPublishModal.apiCanvasType = 'blank';
+    },
+    openFileApiModal: (state: Draft<UiState>) => {
+      state.apiPublishModal.isFileApiModalOpen = true;
+    },
+    closeFileApiModal: (state: Draft<UiState>) => {
+      state.apiPublishModal.isFileApiModalOpen = false;
     },
     setApiCanvasType: (state: Draft<UiState>, action: PayloadAction<ApiCanvasType>) => {
       state.apiPublishModal.apiCanvasType = action.payload;
@@ -108,6 +115,8 @@ export const {
   openApiPublishModal,
   openCanvasApiModal,
   closeCanvasApiModal,
+  openFileApiModal,
+  closeFileApiModal,
   setApiCanvasType,
   setApiDefinitionTableOfContentsHeight,
   setApiInfoActiveTab,

@@ -25,6 +25,7 @@ interface UiState {
     isOpen: boolean;
     lastCompletedStep: StepType;
     isCanvasApiModalOpen: boolean;
+    isFileApiModalOpen: boolean;
     apiCanvasType: ApiCanvasType;
   };
   apiInfoActiveTab: ApiInfoTabs;

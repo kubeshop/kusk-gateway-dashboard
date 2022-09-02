@@ -40,10 +40,3 @@ export const Card = styled(AntCard)`
     text-align: center;
   }
 `;
-
-export const Description = styled(Typography.Text).attrs({
-  type: 'secondary',
-})`
-  font-size: 12px;
-  line-height: 18px;
-`;

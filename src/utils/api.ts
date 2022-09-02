@@ -5,3 +5,6 @@ export const getApiKey = (api: ApiItem | ApiItemFleet | null) => (api ? `${api.n
 export const getUniqueNamespaces = (apis: {namespace: string}[]) => {
   return [...Array.from(new Set(apis.map(el => el.namespace)))];
 };
+
+export const checkDuplicateAPI = (apis: ApiItem[], apiKey: string) =>
+  apis.find(api => `${api.namespace}-${api.name}` === apiKey);
