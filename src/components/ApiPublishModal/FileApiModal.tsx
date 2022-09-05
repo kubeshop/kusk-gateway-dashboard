@@ -73,9 +73,6 @@ const FileApiModal = () => {
         );
         dispatch(selectApi(apiData));
         navigate(`/${apiData.namespace}/${apiData.name}`);
-      })
-      .catch(e => {
-        console.log(e);
       });
   };
 
