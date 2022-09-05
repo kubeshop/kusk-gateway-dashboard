@@ -2,6 +2,7 @@ enum Colors {
   grey11 = '#7D7D7D',
   grey10 = '#E2E8F0',
   grey9 = '#dbdbdb',
+  grey6 = '#D1D5DB',
   grey5 = '#434343',
   grey4 = '#262626',
   grey3 = '#1d1d1d',
@@ -15,6 +16,7 @@ enum Colors {
   zinc4 = '#A1A1AA',
   zinc5 = '#FAFAFA',
   zinc6 = '#71717A',
+  zinc7 = '#52525B',
   zinc8 = '#27272A',
   zinc9 = '#18181B',
 

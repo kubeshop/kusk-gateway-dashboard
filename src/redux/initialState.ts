@@ -21,6 +21,7 @@ const initialUiState: UiState = {
     activeStep: 'openApiSpec',
     isOpen: false,
     isCanvasApiModalOpen: false,
+    isFileApiModalOpen: false,
     lastCompletedStep: 'openApiSpec',
     apiCanvasType: 'blank',
   },

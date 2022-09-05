@@ -13,3 +13,4 @@ export {default as ApiDocsSolid} from './ApiDocsSolid';
 export {default as ApiDocsOutlined} from './ApiDocsOutlined';
 export {default as ExtensionSolid} from './ExtensionSolid';
 export {default as ExtensionOutlined} from './ExtensionOutlined';
+export {default as FileInputIcon} from './FileInputIcon';
