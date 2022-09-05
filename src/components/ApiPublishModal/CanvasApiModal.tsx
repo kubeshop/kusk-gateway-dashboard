@@ -20,6 +20,8 @@ import {closeApiPublishModal, closeCanvasApiModal} from '@redux/reducers/ui';
 import {useDeployApiMutation, useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 import {ApiItem} from '@redux/services/kuskApi';
 
+import {checkDuplicateAPI, formatApiName} from '@utils/api';
+
 import {FleetDropdown} from './FormComponents';
 
 import * as S from './styled';
@@ -168,7 +170,7 @@ const CanvasApiModal = () => {
           rules={[
             {
               required: true,
-              message: 'Please select envoy fleet!',
+              message: 'Please select deployment!',
             },
           ]}
         >
@@ -292,16 +294,5 @@ const checkMockingExamples = (spec: {[key: string]: any}) => {
 
   return warnings;
 };
-
-const checkDuplicateAPI = (apis: ApiItem[], apiKey: string) =>
-  apis.find(api => `${api.namespace}-${api.name}` === apiKey);
-
-const formatApiName = (name: string) =>
-  name
-    ? name
-        .trim()
-        .replace(/[\W_]+/g, '-')
-        .toLowerCase()
-    : '';
 
 export default CanvasApiModal;

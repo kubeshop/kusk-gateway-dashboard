@@ -1,34 +1,23 @@
+import React from 'react';
+
 import {Typography, UploadProps} from 'antd';
+import {DraggerProps} from 'antd/lib/upload';
 
 import {FileInputIcon} from '@components/Icons';
 
 import * as S from './FilePicker.styled';
 
-const FilePicker = () => {
+const FilePicker: React.VFC<DraggerProps> = props => {
   const uploadProps: UploadProps = {
     name: 'file',
     accept: '.yaml,.yml',
     multiple: false,
     maxCount: 1,
-    customRequest: () => {},
-    onChange(info) {
-      const {status} = info.file;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        console.log(info.file, info.fileList);
-      } else if (status === 'error') {
-        console.log(info.file, info.fileList);
-      }
-    },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
-    },
+    beforeUpload: () => false,
   };
 
   return (
-    <S.Dragger {...uploadProps}>
+    <S.Dragger {...uploadProps} {...props}>
       <S.Container>
         <FileInputIcon />
 
@@ -36,7 +25,7 @@ const FilePicker = () => {
           <p>Click or drag your OpenAPI spec to this area to upload</p>
         </Typography.Text>
         <Typography.Text>
-          <p>Format accepted: YAML/JSON</p>
+          <p>Format accepted: YAML</p>
         </Typography.Text>
       </S.Container>
     </S.Dragger>

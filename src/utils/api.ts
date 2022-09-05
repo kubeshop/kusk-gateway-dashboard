@@ -8,3 +8,11 @@ export const getUniqueNamespaces = (apis: {namespace: string}[]) => {
 
 export const checkDuplicateAPI = (apis: ApiItem[], apiKey: string) =>
   apis.find(api => `${api.namespace}-${api.name}` === apiKey);
+
+export const formatApiName = (name: string) =>
+  name
+    ? name
+        .trim()
+        .replace(/[\W_]+/g, '-')
+        .toLowerCase()
+    : '';

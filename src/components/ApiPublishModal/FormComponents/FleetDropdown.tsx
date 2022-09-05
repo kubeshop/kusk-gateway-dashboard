@@ -1,4 +1,4 @@
-import {useRef} from 'react';
+import {VFC, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Button, Select, Tag} from 'antd';
@@ -10,7 +10,7 @@ import {useGetEnvoyFleetsQuery} from '@redux/services/enhancedApi';
 
 import * as S from './FleetDropdown.styled';
 
-const FleetDropdown = () => {
+const FleetDropdown: VFC = props => {
   const dispatch = useDispatch();
   const deploymentRef = useRef<BaseSelectRef | null>(null);
   const {data: envoyFleets} = useGetEnvoyFleetsQuery({});
@@ -23,7 +23,7 @@ const FleetDropdown = () => {
   };
 
   return (
-    <Select ref={deploymentRef}>
+    <Select ref={deploymentRef} {...props}>
       {envoyFleets?.map(fleet => (
         <Select.Option key={fleet.name} value={`${fleet.namespace},${fleet.name}`}>
           <Tag>{fleet.namespace}</Tag>
