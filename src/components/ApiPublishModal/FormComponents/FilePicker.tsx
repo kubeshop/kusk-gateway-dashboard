@@ -25,7 +25,7 @@ const FilePicker: React.VFC<DraggerProps> = props => {
           <p>Click or drag your OpenAPI spec to this area to upload</p>
         </Typography.Text>
         <Typography.Text>
-          <p>Format accepted: YAML</p>
+          <p>Format accepted: YAML/JSON</p>
         </Typography.Text>
       </S.Container>
     </S.Dragger>

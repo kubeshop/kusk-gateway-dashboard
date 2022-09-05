@@ -100,9 +100,9 @@ const FileApiModal = () => {
                   try {
                     const openapi = await readFile((value as any).file);
                     if (openapi) {
-                      let parsedOpenApi = YAML.parse(openapi);
+                      let parsedOpenApi = YAML.parse(YAML.parse(JSON.parse(JSON.stringify(openapi))));
                       let apiName = form.getFieldValue('name') || formatApiName(parsedOpenApi?.info?.title);
-                      form.setFieldsValue({name: apiName, openapi});
+                      form.setFieldsValue({name: apiName, openapi: parsedOpenApi});
 
                       return Promise.resolve();
                     }
@@ -127,9 +127,9 @@ const FileApiModal = () => {
                   try {
                     const openapi = await fetchOpenapiURL(value);
                     if (openapi) {
-                      let parsedOpenApi = YAML.parse(openapi);
+                      let parsedOpenApi = YAML.parse(YAML.parse(JSON.parse(JSON.stringify(openapi))));
                       let apiName = form.getFieldValue('name') || formatApiName(parsedOpenApi?.info?.title);
-                      form.setFieldsValue({name: apiName, openapi});
+                      form.setFieldsValue({name: apiName, openapi: parsedOpenApi});
                       return Promise.resolve();
                     }
                   } catch (e) {
