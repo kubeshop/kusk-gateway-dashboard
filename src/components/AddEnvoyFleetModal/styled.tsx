@@ -46,7 +46,6 @@ export const Modal = styled(RawModal)`
 
   & .ant-modal-footer {
     background-color: ${Colors.zinc5};
-    border-top: none;
   }
 `;
 

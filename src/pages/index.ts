@@ -1,4 +1,4 @@
 export {Apis} from './Apis';
 export {EnvoyFleets} from './EnvoyFleets';
-export {Settings} from './Settings';
+export {GlobalSettings} from './GlobalSettings';
 export {StaticRoutes} from './StaticRoutes';

@@ -1,3 +1,5 @@
+import {ReactNode} from 'react';
+
 import {Menu as RawMenu, Typography} from 'antd';
 
 import {
@@ -87,7 +89,7 @@ const SubHeading = styled(Typography.Text)`
   width: 100%;
 `;
 
-export const CardHeading = ({heading, subHeading}: {heading: string; subHeading: string}) => {
+export const CardHeading = ({heading, subHeading}: {heading: string; subHeading: string | ReactNode}) => {
   return (
     <>
       <Typography.Title level={5}>{heading}</Typography.Title>
