@@ -74,7 +74,7 @@ const GeneralSettings = () => {
       <FormCard
         heading="Namespace"
         subHeading="Define which namespace and labels this API is assigned to"
-        helpTopic="Namespaces & Labels"
+        helpTopic="Namespaces"
         helpLink="https://kubeshop.github.io/kusk-gateway/customresources/api/"
         formProps={{layout: 'vertical', onFinish: onSaveClickHandler}}
       >
@@ -95,8 +95,9 @@ const GeneralSettings = () => {
         subHeading="Define your prefix for every route on this API"
         helpTopic="API Prefixes"
         helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#path"
+        formProps={{onFinish: onSaveClickHandler}}
       >
-        <Form.Item name={['x-kusk', 'path', 'prefix']} initialValue={xKusk?.prefix}>
+        <Form.Item name={['x-kusk', 'path', 'prefix']} initialValue={xKusk?.path?.prefix}>
           <Input placeholder="/api/" />
         </Form.Item>
         <S.Divider />
