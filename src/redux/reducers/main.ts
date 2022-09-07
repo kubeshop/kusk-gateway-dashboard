@@ -6,12 +6,15 @@ import YAML from 'yaml';
 
 import {KUSK_SETTINGS_TARGET_API} from '@constants/constants';
 
+import {AlertEnum} from '@models/alert';
 import {ApiContent, MainState} from '@models/main';
 
 import initialState from '@redux/initialState';
 import {enhancedApi} from '@redux/services/enhancedApi';
 import {ApiItem, EnvoyFleetItem, StaticRouteItem} from '@redux/services/kuskApi';
 import {RootState} from '@redux/store';
+
+import {setAlert} from './alert';
 
 export const updateApiSettings = createAsyncThunk<any, {editedOpenapi?: any}, {state: RootState}>(
   'main/updateApiSettings',
@@ -29,9 +32,19 @@ export const updateApiSettings = createAsyncThunk<any, {editedOpenapi?: any}, {s
     };
 
     if (selectedApi) {
-      return dispatch(
+      const result: any = await dispatch(
         enhancedApi.endpoints.updateApi.initiate({name: selectedApi.name, namespace: selectedApi.namespace, body})
       ).unwrap();
+      enhancedApi.util.invalidateTags(['API']);
+      dispatch(selectApiOpenSpec(YAML.parse((result as any)?.spec?.spec || '')));
+      dispatch(
+        setAlert({
+          title: 'API updated successfully',
+          description: `${result.metadata.name} was deployed successfully in ${result.metadata.namespace} namespace!`,
+          type: AlertEnum.Success,
+        })
+      );
+      return result;
     }
   }
 );
