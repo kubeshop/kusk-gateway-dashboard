@@ -2,7 +2,6 @@ export {AddServerModal} from './AddServerModal';
 export {ApiDefinition} from './ApiDefinition';
 export {ApiInfo, ApisList} from './Apis';
 export {Dashboard} from './Dashboard';
-export {EnvoyFleetInfo, EnvoyFleetsList} from './EnvoyFleets';
 export {FormList} from './FormList';
 export {InfoPaneCRD} from './InfoPaneCRD';
 export {InfoTabs} from './InfoTabs';
