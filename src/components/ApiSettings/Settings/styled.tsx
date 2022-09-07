@@ -35,8 +35,6 @@ export const DeleteButton = styled(Button)`
   display: block;
   margin-left: auto;
   width: 124px;
-  background-color: ${Colors.pink};
-  color: white;
 `;
 
 export const CardActions = styled.div`
