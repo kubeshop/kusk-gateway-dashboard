@@ -29,9 +29,13 @@ export const updateApiSettings = createAsyncThunk<any, {editedOpenapi?: any}, {s
     };
 
     if (selectedApi) {
-      return dispatch(
+      const result: any = await dispatch(
         enhancedApi.endpoints.updateApi.initiate({name: selectedApi.name, namespace: selectedApi.namespace, body})
       ).unwrap();
+      enhancedApi.util.invalidateTags(['API']);
+      dispatch(selectApiOpenSpec(YAML.parse((result as any)?.spec?.spec || '')));
+
+      return result;
     }
   }
 );
