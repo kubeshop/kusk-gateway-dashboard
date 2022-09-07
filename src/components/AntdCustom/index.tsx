@@ -82,7 +82,7 @@ export const PageTitle = styled(Typography.Title).attrs({
   margin-bottom: 20px;
 `;
 
-const SubHeading = styled(Typography.Text)`
+export const SubHeading = styled(Typography.Text)`
   color: ${Colors.zinc6};
   font-size: 14px;
   line-height: 16px;
@@ -92,7 +92,9 @@ const SubHeading = styled(Typography.Text)`
 export const CardHeading = ({heading, subHeading}: {heading: string; subHeading: string | ReactNode}) => {
   return (
     <>
-      <Typography.Title level={5}>{heading}</Typography.Title>
+      <Typography.Title style={{marginBottom: 8}} level={5}>
+        {heading}
+      </Typography.Title>
       <SubHeading>{subHeading}</SubHeading>
     </>
   );

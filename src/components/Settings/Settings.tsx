@@ -14,13 +14,14 @@ const Settings = () => {
 
   return (
     <S.Container>
-      <Typography.Title level={2}>Settings</Typography.Title>
-      <Typography.Text type="secondary">
+      <S.Title level={1}>Settings</S.Title>
+      <S.SubHeading type="secondary">
         Update your kusk settings and general preferences.&nbsp;
         <Typography.Link target="_blank" href="https://docs.kusk.io/dashboard/overview/">
           Learn more
         </Typography.Link>
-      </Typography.Text>
+      </S.SubHeading>
+
       <S.SettingsContainer>
         <S.List>
           <S.ListItem $selected={selectedSettingsItem === 'kusk'} onClick={() => setSelectedSettingsItem('kusk')}>

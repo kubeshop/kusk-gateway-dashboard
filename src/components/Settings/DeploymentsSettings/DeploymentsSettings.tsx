@@ -5,6 +5,8 @@ import {Button, Form, Input, Tag, Typography} from 'antd';
 import {openEnvoyFleetModalModal} from '@redux/reducers/ui';
 import {useGetEnvoyFleetsQuery, useGetServicesQuery} from '@redux/services/enhancedApi';
 
+import {SubHeading} from '@components/AntdCustom';
+
 import * as S from './styled';
 
 const DeploymentsSettings = () => {
@@ -22,10 +24,10 @@ const DeploymentsSettings = () => {
     <>
       <S.Header>
         <div>
-          <Typography.Title level={2}>Deployment Fleets</Typography.Title>
-          <Typography.Text type="secondary">
+          <S.Title level={3}>Deployment Fleets</S.Title>
+          <SubHeading>
             Add deployment fleets (or envoy fleets) to expose and route your APIs and frontend applications.
-          </Typography.Text>
+          </SubHeading>
         </div>
         <Button type="primary" onClick={onAddDeploymentClickHandler}>
           Add deployment fleet

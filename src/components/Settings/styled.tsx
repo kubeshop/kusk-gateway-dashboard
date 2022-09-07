@@ -1,9 +1,20 @@
+import {Typography} from 'antd';
+
 import styled from 'styled-components';
 
 import Colors from '@styles/colors';
 
 export const Container = styled.div`
   padding: 24px 32px;
+`;
+
+export const Title = styled(Typography.Title)`
+  margin-bottom: 16px !important;
+`;
+
+export const SubHeading = styled(Typography.Text)`
+  font-size: 14px !important;
+  line-height: 20px !important;
 `;
 
 export const SettingsContainer = styled.div`
