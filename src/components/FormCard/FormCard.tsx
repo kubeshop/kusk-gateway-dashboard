@@ -1,6 +1,6 @@
 import {FC} from 'react';
 
-import {Card, CardProps, Form, FormProps, Typography} from 'antd';
+import {CardProps, Form, FormProps, Typography} from 'antd';
 
 import {CardHeading} from '@components/AntdCustom';
 
@@ -13,15 +13,39 @@ interface IProps {
   helpLink?: string;
   cardProps?: CardProps;
   formProps?: FormProps;
+  isViewMode?: boolean;
 }
 
-const FormCard: FC<IProps> = ({heading, subHeading, helpTopic, helpLink, cardProps, formProps, children}) => {
+const FormCard: FC<IProps> = props => {
+  const {heading, subHeading, helpTopic, helpLink, cardProps, formProps, children, isViewMode} = props;
   const [form] = Form.useForm();
 
-  return (
-    <Form form={form} {...formProps}>
-      <Card {...cardProps} title={<CardHeading heading={heading} subHeading={subHeading} />}>
+  return isViewMode ? (
+    <S.Card
+      {...cardProps}
+      title={
+        <CardHeading
+          heading={heading}
+          subHeading={
+            <Typography.Text>
+              {subHeading}
+              <Typography.Link href={helpLink} target="_blank">
+                &nbsp;Learn more
+              </Typography.Link>
+            </Typography.Text>
+          }
+        />
+      }
+    >
+      <Form form={form} disabled {...formProps}>
         {children}
+      </Form>
+    </S.Card>
+  ) : (
+    <Form form={form} {...formProps}>
+      <S.Card {...cardProps} title={<CardHeading heading={heading} subHeading={subHeading} />}>
+        {children}
+
         <S.CardActions>
           {helpTopic && (
             <Typography.Text type="secondary">
@@ -44,7 +68,7 @@ const FormCard: FC<IProps> = ({heading, subHeading, helpTopic, helpLink, cardPro
             )}
           </Form.Item>
         </S.CardActions>
-      </Card>
+      </S.Card>
     </Form>
   );
 };

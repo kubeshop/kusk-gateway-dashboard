@@ -2,7 +2,7 @@ import {createListenerMiddleware} from '@reduxjs/toolkit';
 
 import YAML from 'yaml';
 
-import {selectApi, selectApiOpenSpec} from '@redux/reducers/main';
+import {selectApi, selectApiOpenSpec, setApiEndpoint} from '@redux/reducers/main';
 import {enhancedApi} from '@redux/services/enhancedApi';
 
 export const ApiListenerMiddleware = createListenerMiddleware();
@@ -22,5 +22,13 @@ ApiListenerMiddleware.startListening({
       .unwrap();
 
     listenerApi.dispatch(selectApiOpenSpec(YAML.parse((apiCRD as any)?.spec?.spec || '')));
+  },
+});
+
+ApiListenerMiddleware.startListening({
+  actionCreator: setApiEndpoint,
+  effect: async (action, listenerApi) => {
+    listenerApi.cancelActiveListeners();
+    listenerApi.dispatch(enhancedApi.util.resetApiState());
   },
 });
