@@ -23,6 +23,7 @@ export const CardActions = styled.div`
   position: relative;
 
   .ant-form-item {
+    margin-left: auto;
     margin-bottom: 0;
   }
 `;
