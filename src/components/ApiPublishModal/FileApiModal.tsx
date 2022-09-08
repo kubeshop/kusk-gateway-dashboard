@@ -20,6 +20,8 @@ import {checkDuplicateAPI, formatApiName} from '@utils/api';
 
 import {FilePicker, FleetDropdown} from './FormComponents';
 
+import * as S from './styled';
+
 const FileApiModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,7 +29,7 @@ const FileApiModal = () => {
   const type = Form.useWatch('type', form);
   const {data: apis} = useGetApisQuery({});
   const {data: namespaces} = useGetNamespacesQuery();
-  const [deployAPI] = useDeployApiMutation();
+  const [deployAPI, {isError, error}] = useDeployApiMutation();
 
   const onBackHandler = () => {
     dispatch(closeFileApiModal());
@@ -43,7 +45,7 @@ const FileApiModal = () => {
       envoyFleetName: envoyFleet.split(',')[1],
       openapi,
     };
-    const openapiObj = YAML.parse(openapi);
+    const openapiObj = openapi;
     openapiObj['x-kusk'] = {
       mocking: {
         enabled: true,
@@ -78,6 +80,8 @@ const FileApiModal = () => {
 
   return (
     <Modal visible title="Create an API from file" onCancel={onBackHandler} onOk={onSubmitHandler} okText="Create API">
+      {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" closable />}
+
       <Form form={form} layout="vertical">
         <Form.Item required name="type" label="Import API via" initialValue="file">
           <Radio.Group>
@@ -97,7 +101,7 @@ const FileApiModal = () => {
                   try {
                     const openapi = await readFile((value as any).file);
                     if (openapi) {
-                      let parsedOpenApi = YAML.parse(YAML.parse(JSON.parse(JSON.stringify(openapi))));
+                      let parsedOpenApi = YAML.parse(JSON.parse(JSON.stringify(openapi)));
                       let apiName = form.getFieldValue('name') || formatApiName(parsedOpenApi?.info?.title);
                       form.setFieldsValue({name: apiName, openapi: parsedOpenApi});
 
@@ -124,7 +128,7 @@ const FileApiModal = () => {
                   try {
                     const openapi = await fetchOpenapiURL(value);
                     if (openapi) {
-                      let parsedOpenApi = YAML.parse(YAML.parse(JSON.parse(JSON.stringify(openapi))));
+                      let parsedOpenApi = YAML.parse(JSON.parse(JSON.stringify(openapi)));
                       let apiName = form.getFieldValue('name') || formatApiName(parsedOpenApi?.info?.title);
                       form.setFieldsValue({name: apiName, openapi: parsedOpenApi});
                       return Promise.resolve();
