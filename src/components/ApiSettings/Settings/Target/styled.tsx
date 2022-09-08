@@ -1,10 +1,13 @@
-import {Tag} from 'antd';
+import {Card as AntCard, Button, Tag} from 'antd';
 
 import styled, {css} from 'styled-components';
 
-export const TargetTag = styled(Tag)<{$type: 'redirect' | 'upstream'}>`
-  padding: 4px;
+import {Shadows} from '@styles/global';
 
+export const TargetTag = styled(Tag)<{$type: 'redirect' | 'service' | 'host'}>`
+  padding: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
   ${({$type}) => {
     if ($type === 'redirect') {
       return css`
@@ -13,12 +16,43 @@ export const TargetTag = styled(Tag)<{$type: 'redirect' | 'upstream'}>`
         border: 1px solid #0ea5e9;
       `;
     }
-    if ($type === 'upstream') {
+    if ($type === 'host') {
       return css`
         color: #a16207;
         background: #fef9c3;
         border: 1px solid #facc15;
       `;
     }
+    if ($type === 'service') {
+      return css`
+        color: #d97706;
+        background: #fef3c7;
+        border: 1px solid #fbbf24;
+      `;
+    }
   }}
+`;
+
+export const SaveButton = styled(Button).attrs({
+  type: 'primary',
+})`
+  display: block;
+  margin-left: auto;
+  width: 124px;
+`;
+
+export const Card = styled(AntCard)`
+  box-shadow: ${Shadows.cardShadow};
+`;
+
+export const CardActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+
+  .ant-form-item {
+    margin-left: auto;
+    margin-bottom: 0;
+  }
 `;

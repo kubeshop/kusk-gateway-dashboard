@@ -5,6 +5,7 @@ import {Button, Typography} from 'antd';
 import {useAppSelector} from '@redux/hooks';
 
 import {AddTargetModal} from './AddTargetModal';
+import {TargetCard} from './Target';
 
 import * as S from './styled';
 
@@ -12,7 +13,8 @@ const Targets = () => {
   const [showAddTargetModal, setShowAddTargetModal] = useState(false);
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
   const xKusk = selectedAPIOpenSpec['x-kusk'];
-  const hasTarget = xKusk['upstream'] || xKusk['redirect'];
+  const hasTarget = Boolean(xKusk['upstream']) || Boolean(xKusk['redirect']);
+
   const onAddTargetClick = () => {
     setShowAddTargetModal(!showAddTargetModal);
   };
@@ -27,11 +29,14 @@ const Targets = () => {
           </Typography.Link>
         </Typography.Text>
       </div>
-      <div>
-        <Button type="primary" size="large" onClick={onAddTargetClick}>
-          {targets.length === 0 ? 'Define your first target' : 'Define a new target'}
-        </Button>
-      </div>
+      {!hasTarget && (
+        <div>
+          <Button type="primary" size="large" onClick={onAddTargetClick}>
+            {hasTarget ? 'Define a new target' : 'Define your first target'}
+          </Button>
+        </div>
+      )}
+      {hasTarget && <TargetCard target={xKusk['upstream'] || {redirect: xKusk['redirect']}} />}
       {showAddTargetModal && <AddTargetModal closeModal={() => setShowAddTargetModal(false)} />}
     </S.Container>
   );

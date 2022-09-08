@@ -89,7 +89,7 @@ export const SubHeading = styled(Typography.Text)`
   width: 100%;
 `;
 
-export const CardHeading = ({heading, subHeading}: {heading: string; subHeading: string | ReactNode}) => {
+export const CardHeading = ({heading, subHeading}: {heading: string | ReactNode; subHeading: string | ReactNode}) => {
   return (
     <>
       <Typography.Title style={{marginBottom: 8}} level={5}>
