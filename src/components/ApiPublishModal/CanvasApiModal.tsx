@@ -35,7 +35,7 @@ const CanvasApiModal = () => {
   const [warnings, setWarnings] = useState<string[]>([]);
   const {data: apis} = useGetApisQuery({});
   const {data: namespaces} = useGetNamespacesQuery();
-  const [deployAPI] = useDeployApiMutation();
+  const [deployAPI, {isError, error}] = useDeployApiMutation();
 
   useEffect(() => {
     if (apiCanvasType === 'template') {
@@ -115,6 +115,8 @@ const CanvasApiModal = () => {
       }
       onCancel={onBackHandler}
     >
+      {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" closable />}
+
       <Form layout="vertical" form={form}>
         <Form.Item
           hasFeedback
