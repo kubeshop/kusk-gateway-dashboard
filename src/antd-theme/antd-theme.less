@@ -126,31 +126,30 @@ h5.ant-typography {
   background-color: transparent;
   border: 1px solid #3b82f6;
 }
-.ant-btn-primary:disabled {
+
+.ant-btn-primary:disabled,
+.ant-btn-primary[disabled]:hover {
   color: #60a5fa;
   background-color: #eff6ff;
 }
 
-.ant-btn-dangerous {
+.ant-btn-dangerous,
+.ant-btn-dangerous.ant-btn-default {
   color: #ffffff;
   background-color: #db2777;
 }
 
-.ant-btn-dangerous.ant-btn-primary:hover {
+.ant-btn-dangerous.ant-btn-primary:hover,
+.ant-btn-dangerous.ant-btn-default:hover {
   color: #db2777;
   background-color: transparent;
   border: 1px solid #db2777;
 }
 
-.ant-btn-dangerous.ant-btn-primary:disabled {
+.ant-btn-dangerous.ant-btn-primary:disabled,
+.ant-btn-dangerous.ant-btn-primary[disabled]:hover {
   color: #ec4899;
   background-color: #fdf2f8;
-}
-
-.ant-btn-dangerous.ant-btn-default:hover {
-  color: #ffffff;
-  background-color: #db2777;
-  border: 1px solid transparent;
 }
 
 .ant-btn-default {
@@ -164,7 +163,8 @@ h5.ant-typography {
   border: 1px solid #3b82f6;
 }
 
-.ant-btn-default:disabled {
+.ant-btn-default:disabled,
+.ant-btn-default[disabled]:hover {
   color: #a1a1aa;
   background-color: #fafafa;
 }
