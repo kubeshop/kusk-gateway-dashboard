@@ -11,7 +11,7 @@ import {selectApi} from '@redux/reducers/main';
 import {useGetApiQuery} from '@redux/services/enhancedApi';
 
 import {ApiOpenSpec} from '@components/ApiOpenSpec';
-import {ApiRoutes} from '@components/ApiRoutes';
+import {ApiPaths} from '@components/ApiPaths';
 import {ApiSettings} from '@components/ApiSettings';
 
 import {ApiNotFound} from './Api404';
@@ -52,7 +52,7 @@ const ApiDetails = () => {
       <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} />
       <S.Content>
         {activeSection === 'openapiBrowser' && <ApiOpenSpec />}
-        {activeSection === 'routes' && <ApiRoutes />}
+        {activeSection === 'routes' && <ApiPaths />}
         {activeSection === 'settings' && <ApiSettings />}
       </S.Content>
     </S.Container>
