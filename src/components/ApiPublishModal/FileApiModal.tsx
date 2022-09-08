@@ -134,7 +134,6 @@ const FileApiModal = () => {
                       return Promise.resolve();
                     }
                   } catch (e) {
-                    console.log(e);
                     throw new Error('Cannot fetch url!');
                   }
                 },
