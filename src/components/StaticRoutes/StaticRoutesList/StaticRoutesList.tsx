@@ -78,7 +78,7 @@ const StaticRoutesList: React.FC = () => {
             {renderedNamespacesOptions}
           </S.Select>
         )}
-        <Button type="primary" disabled={Boolean(error)} onClick={handlePublishStaticRoute}>
+        <Button type="primary" size="large" disabled={Boolean(error)} onClick={handlePublishStaticRoute}>
           Publish New Static Route
         </Button>
       </S.TitleFiltersContainer>
