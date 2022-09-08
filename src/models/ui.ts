@@ -19,7 +19,7 @@ type PathModalStepType = 'path' | 'target' | 'qos' | 'cors' | 'websocket';
 type APIDetailsSections = 'dashboard' | 'openapiBrowser' | 'routes' | 'deployments' | 'logs' | 'settings';
 
 type ApiCanvasType = 'template' | 'blank';
-type TargetType = 'redirect' | 'service' | 'host';
+type TargetType = 'redirect' | 'service' | 'host' | 'mocked';
 
 interface UiState {
   apiPublishModal: {

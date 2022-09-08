@@ -2,7 +2,9 @@ import {useState} from 'react';
 
 import {Button, Form, Input, Switch, Tag, Typography} from 'antd';
 
-import {CardHeading, SubHeading} from '@components/AntdCustom';
+import {TargetType} from '@models/ui';
+
+import {CardHeading, SubHeading, TargetTag} from '@components/AntdCustom';
 
 import {EditTarget} from './EditTarget';
 
@@ -11,8 +13,6 @@ import * as S from './styled';
 interface IProps {
   target: any;
 }
-
-type TargetType = 'redirect' | 'service' | 'host';
 
 const TargetCard = ({target}: IProps) => {
   const [isViewMode, setIsViewMode] = useState<boolean>(true);
@@ -48,7 +48,7 @@ const TargetCard = ({target}: IProps) => {
           heading={
             <Typography.Title level={3}>
               {title}
-              <S.TargetTag $type={type}>{title}</S.TargetTag>
+              <TargetTag $type={type}>{title}</TargetTag>
             </Typography.Title>
           }
           subHeading={subHeading}

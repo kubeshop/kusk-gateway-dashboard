@@ -1,6 +1,6 @@
 import {ReactNode} from 'react';
 
-import {Menu as RawMenu, Typography} from 'antd';
+import {Menu as RawMenu, Tag, Typography} from 'antd';
 
 import {
   CloseOutlined as RawCloseOutlined,
@@ -8,7 +8,9 @@ import {
   SettingOutlined as RawSettingOutlined,
 } from '@ant-design/icons';
 
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
+
+import {TargetType} from '@models/ui';
 
 import {GlobalScrollbarStyle} from '@utils/scrollbar';
 
@@ -99,3 +101,39 @@ export const CardHeading = ({heading, subHeading}: {heading: string | ReactNode;
     </>
   );
 };
+
+export const TargetTag = styled(Tag)<{$type: TargetType}>`
+  padding: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+  ${({$type}) => {
+    if ($type === 'redirect') {
+      return css`
+        color: #0369a1;
+        background: #e0f2fe;
+        border: 1px solid #0ea5e9;
+      `;
+    }
+    if ($type === 'host') {
+      return css`
+        color: #a16207;
+        background: #fef9c3;
+        border: 1px solid #facc15;
+      `;
+    }
+    if ($type === 'service') {
+      return css`
+        color: #d97706;
+        background: #fef3c7;
+        border: 1px solid #fbbf24;
+      `;
+    }
+    if ($type === 'mocked') {
+      return css`
+        color: #4d7c0f;
+        background: #ecfccb;
+        border: 1px solid #84cc16;
+      `;
+    }
+  }}
+`;
