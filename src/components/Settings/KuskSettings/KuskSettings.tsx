@@ -36,7 +36,7 @@ const KuskSettings: React.FC = () => {
       formProps={{initialValues: {apiEndpoint}, layout: 'vertical', onFinish: onFinishHandler}}
       cardProps={{
         extra: isViewMode && (
-          <Button type="default" onClick={onEditClickHandler}>
+          <Button type="default" size="large" onClick={onEditClickHandler}>
             Edit
           </Button>
         ),

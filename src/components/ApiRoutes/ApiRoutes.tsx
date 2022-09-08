@@ -72,7 +72,9 @@ const ApiRoutes = () => {
           <Select placeholder="Filter by source" />
         </S.FiltersWrapper>
 
-        <Button type="primary">Add a new route</Button>
+        <Button type="primary" size="large">
+          Add a new route
+        </Button>
       </S.Options>
 
       <Table

@@ -18,7 +18,7 @@ const ApiNotFound = () => {
       <S.Description>
         The page you are trying to access is unavailable, has been deleted or doesn’t exist.
       </S.Description>
-      <Button type="primary" onClick={onBackClickHandler}>
+      <Button type="primary" size="large" onClick={onBackClickHandler}>
         Back to dashboard
       </Button>
     </S.Container>

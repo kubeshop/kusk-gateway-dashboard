@@ -29,7 +29,7 @@ const DeploymentsSettings = () => {
             Add deployment fleets (or envoy fleets) to expose and route your APIs and frontend applications.
           </SubHeading>
         </div>
-        <Button type="primary" onClick={onAddDeploymentClickHandler}>
+        <Button type="primary" size="large" onClick={onAddDeploymentClickHandler}>
           Add deployment fleet
         </Button>
       </S.Header>

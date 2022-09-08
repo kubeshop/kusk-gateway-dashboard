@@ -24,7 +24,7 @@ const Targets = () => {
         </Typography.Text>
       </div>
       <div>
-        <Button type="primary" onClick={onAddTargetClick}>
+        <Button type="primary" size="large" onClick={onAddTargetClick}>
           {targets.length === 0 ? 'Define your first target' : 'Define a new target'}
         </Button>
       </div>
