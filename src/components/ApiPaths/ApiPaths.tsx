@@ -16,9 +16,7 @@ import * as S from './styled';
 
 const METHODS = SUPPORTED_METHODS.slice(0, -1);
 
-const expandIcon = ({expanded, onExpand, record}: any) => (
-  <RightCircleOutlined style={{marginRight: 16}} onClick={e => onExpand(record, e)} />
-);
+const expandIcon = () => <RightCircleOutlined style={{marginRight: 16}} />;
 
 const columns = [
   {
