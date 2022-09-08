@@ -20,6 +20,13 @@ const FormCard: FC<IProps> = props => {
   const {heading, subHeading, helpTopic, helpLink, cardProps, formProps, children, isViewMode} = props;
   const [form] = Form.useForm();
 
+  const onFinish = (values: any) => {
+    formProps?.onFinish && formProps?.onFinish(values);
+    setTimeout(() => {
+      form.resetFields();
+    }, 500);
+  };
+
   return isViewMode ? (
     <S.Card
       {...cardProps}
@@ -42,7 +49,7 @@ const FormCard: FC<IProps> = props => {
       </Form>
     </S.Card>
   ) : (
-    <Form form={form} {...formProps}>
+    <Form form={form} {...formProps} onFinish={onFinish}>
       <S.Card {...cardProps} title={<CardHeading heading={heading} subHeading={subHeading} />}>
         {children}
 
