@@ -5,6 +5,7 @@ import styled from 'styled-components';
 export const ActionsContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 20px;
   margin-bottom: 30px;
