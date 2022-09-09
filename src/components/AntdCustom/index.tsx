@@ -114,7 +114,14 @@ export const TargetTag = styled(Tag)<{$type: TargetType}>`
         border: 1px solid #0ea5e9;
       `;
     }
-    if ($type === 'service' || $type === 'host') {
+    if ($type === 'host') {
+      return css`
+        color: #a16207;
+        background: #fef9c3;
+        border: 1px solid #facc15;
+      `;
+    }
+    if ($type === 'service') {
       return css`
         color: #d97706;
         background: #fef3c7;
