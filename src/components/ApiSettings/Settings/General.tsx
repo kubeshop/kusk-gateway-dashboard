@@ -63,7 +63,7 @@ const GeneralSettings = () => {
       <FormCard
         heading="Display name"
         subHeading="Please provide the display name of your API"
-        formProps={{onFinish: onSaveClickHandler}}
+        formProps={{onFinish: onSaveClickHandler, disabled: true}}
       >
         <Form.Item name="name" initialValue={selectedAPI?.name}>
           <Input placeholder="My first API being renamed" />
@@ -76,7 +76,7 @@ const GeneralSettings = () => {
         subHeading="Define which namespace and labels this API is assigned to"
         helpTopic="Namespaces"
         helpLink="https://kubeshop.github.io/kusk-gateway/customresources/api/"
-        formProps={{layout: 'vertical', onFinish: onSaveClickHandler}}
+        formProps={{layout: 'vertical', onFinish: onSaveClickHandler, disabled: true}}
       >
         <Form.Item label="Namespace" name="namespace" initialValue={selectedAPI?.namespace}>
           <Select placeholder="namespace">
