@@ -130,9 +130,9 @@ export const TargetTag = styled(Tag)<{$type: TargetType}>`
     }
     if ($type === 'mocked') {
       return css`
-        color: #4d7c0f;
-        background: #ecfccb;
-        border: 1px solid #84cc16;
+        color: #059669;
+        background: #d1fae5;
+        border: 1px solid #10b981;
       `;
     }
   }}

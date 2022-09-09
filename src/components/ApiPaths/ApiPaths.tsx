@@ -2,7 +2,7 @@ import {FormEvent, useState} from 'react';
 
 import {Input, Select, Table, Typography} from 'antd';
 
-import {RightCircleOutlined} from '@ant-design/icons';
+import _ from 'lodash';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
 
@@ -16,8 +16,6 @@ import * as S from './styled';
 
 const METHODS = SUPPORTED_METHODS.slice(0, -1);
 
-const expandIcon = () => <RightCircleOutlined style={{marginRight: 16}} />;
-
 const columns = [
   {
     title: 'PATH',
@@ -28,7 +26,7 @@ const columns = [
     title: 'OPERATIONS',
     dataIndex: 'methods',
     key: 'methods',
-    render: (_: any, {methods}: any) => (
+    render: (arg: any, {methods}: any) => (
       <>
         {methods.split(',').map((method: string) => (
           <S.Tag key={method} $method={method}>
@@ -42,9 +40,9 @@ const columns = [
     title: 'SOURCE',
     dataIndex: 'source',
     key: 'source',
-    render: (_: any, {source}: any) => (
+    render: (arg: any, {source}: any) => (
       <TargetTag key={source} $type={source}>
-        {source.toUpperCase()}
+        {_.capitalize(source)}
       </TargetTag>
     ),
   },
@@ -109,13 +107,7 @@ const ApiRoutes = () => {
         </S.FiltersWrapper>
       </S.Options>
 
-      <Table
-        expandable={{
-          expandIcon,
-        }}
-        columns={columns}
-        dataSource={dataSource}
-      />
+      <Table columns={columns} dataSource={dataSource} />
     </S.Container>
   );
 };
