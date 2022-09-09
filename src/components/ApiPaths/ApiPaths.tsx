@@ -2,8 +2,6 @@ import {FormEvent, useState} from 'react';
 
 import {Input, Select, Table, Typography} from 'antd';
 
-import {RightCircleOutlined} from '@ant-design/icons';
-
 import {SUPPORTED_METHODS} from '@constants/constants';
 
 import {TargetType} from '@models/ui';
@@ -15,8 +13,6 @@ import {TargetTag} from '@components/AntdCustom';
 import * as S from './styled';
 
 const METHODS = SUPPORTED_METHODS.slice(0, -1);
-
-const expandIcon = () => <RightCircleOutlined style={{marginRight: 16}} />;
 
 const columns = [
   {
@@ -109,13 +105,7 @@ const ApiRoutes = () => {
         </S.FiltersWrapper>
       </S.Options>
 
-      <Table
-        expandable={{
-          expandIcon,
-        }}
-        columns={columns}
-        dataSource={dataSource}
-      />
+      <Table columns={columns} dataSource={dataSource} />
     </S.Container>
   );
 };
