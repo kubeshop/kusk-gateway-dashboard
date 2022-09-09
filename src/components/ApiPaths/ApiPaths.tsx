@@ -2,6 +2,8 @@ import {FormEvent, useState} from 'react';
 
 import {Input, Select, Table, Typography} from 'antd';
 
+import _ from 'lodash';
+
 import {SUPPORTED_METHODS} from '@constants/constants';
 
 import {TargetType} from '@models/ui';
@@ -24,7 +26,7 @@ const columns = [
     title: 'OPERATIONS',
     dataIndex: 'methods',
     key: 'methods',
-    render: (_: any, {methods}: any) => (
+    render: (arg: any, {methods}: any) => (
       <>
         {methods.split(',').map((method: string) => (
           <S.Tag key={method} $method={method}>
@@ -38,9 +40,9 @@ const columns = [
     title: 'SOURCE',
     dataIndex: 'source',
     key: 'source',
-    render: (_: any, {source}: any) => (
+    render: (arg: any, {source}: any) => (
       <TargetTag key={source} $type={source}>
-        {source.toUpperCase()}
+        {_.capitalize(source)}
       </TargetTag>
     ),
   },
