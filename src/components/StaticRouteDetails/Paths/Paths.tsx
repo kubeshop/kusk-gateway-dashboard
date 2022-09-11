@@ -73,9 +73,9 @@ const Paths = () => {
         pagination={false}
         columns={columns}
         dataSource={dataSource}
-        onRow={(record, rowIndex) => {
+        onRow={record => {
           return {
-            onClick: event => {
+            onClick: () => {
               dispatch(selectStaticRoutePath(record.path));
             },
           };
