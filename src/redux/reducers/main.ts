@@ -89,7 +89,7 @@ export const updateStaticRouteSettings = createAsyncThunk<any, {editedOpenapi?: 
         },
       })
     ).unwrap();
-    console.log(result);
+
     dispatch(
       setAlert({
         title: 'Static route deployed successfully',
