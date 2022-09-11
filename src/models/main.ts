@@ -13,6 +13,8 @@ interface MainState {
   selectedEnvoyFleet: EnvoyFleetItem | null;
   /**  currently selected Static Route */
   selectedStaticRoute: StaticRouteItem | null;
+  selectedStaticRouteSpec: any | null;
+  selectedStaticRoutePath: any | null;
   /**  selected api changed settings */
   selectedApiNewSettings: {[key: string]: any} | null;
 }

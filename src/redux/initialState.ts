@@ -13,6 +13,8 @@ const initialMainState: MainState = {
   selectedApiOpenapiSpec: null,
   selectedEnvoyFleet: null,
   selectedStaticRoute: null,
+  selectedStaticRouteSpec: null,
+  selectedStaticRoutePath: null,
   selectedApiNewSettings: null,
 };
 
@@ -42,8 +44,9 @@ const initialUiState: UiState = {
   staticRouteInfoActiveTab: 'crd',
   staticRouteModal: {
     isOpen: false,
-    activeStep: 'routeInfo',
-    lastCompletedStep: 'routeInfo',
+  },
+  staticRoutePathModal: {
+    isOpen: false,
   },
   tableOfContentsHeight: {
     apiDefinition: 500,

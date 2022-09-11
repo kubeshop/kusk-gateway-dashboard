@@ -35,10 +35,7 @@ export const Label = styled.div`
 `;
 
 export const Modal = styled(RawModal)`
-  top: min(10%, 100px);
-
   & .ant-modal-body {
-    height: 70vh;
     overflow-y: auto;
     ${GlobalScrollbarStyle}
   }

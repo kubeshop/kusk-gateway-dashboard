@@ -1,240 +1,173 @@
-import {useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {useTracking} from 'react-tracking';
+import {useNavigate} from 'react-router-dom';
 
-import {Button, Form, Steps} from 'antd';
+import {Checkbox, Form, Input, Select} from 'antd';
 
 import YAML from 'yaml';
 
+import {SUPPORTED_METHODS} from '@constants/constants';
+
 import {AlertEnum} from '@models/alert';
-import {ANALYTIC_TYPE, Events} from '@models/analytics';
-import {PathMatch, StaticRoute, StaticRouteForm} from '@models/main';
-import {StaticRouteStepType} from '@models/ui';
+import {StaticRoute} from '@models/main';
 
 import {setAlert} from '@redux/reducers/alert';
 import {closeStaticRouteModal} from '@redux/reducers/ui';
-import {useCreateStaticRouteMutation} from '@redux/services/enhancedApi';
+import {
+  useCreateStaticRouteMutation,
+  useGetNamespacesQuery,
+  useGetStaticRoutesQuery,
+} from '@redux/services/enhancedApi';
 
-import {FormStep} from '@components/FormStep';
+import {FleetDropdown} from '@components/FormComponents';
 
-import {cleanEmptyFields} from '@utils/staticRoute';
-
-import AddPathModal from './AddPathModal/AddPathModal';
-import FleetInfo from './FleetInfo';
-import Hosts from './Hosts';
-import Paths from './Paths';
-import StaticRouteInfo from './StaticRouteInfo';
+import {checkDuplicateStaticRoute} from '@utils/staticRoute';
 
 import * as S from './styled';
 
-const orderedSteps: Array<StaticRouteStepType> = ['routeInfo', 'fleetInfo', 'paths', 'hosts'];
-
-const renderedNextButtonText: {[key: number]: string} = {
-  0: 'Add Route Info',
-  1: 'Add Fleet Info',
-  2: 'Add Paths',
-  3: 'Add Hosts',
-  4: 'Publish',
-};
-
-const requiredSteps: Array<StaticRouteStepType> = ['routeInfo', 'fleetInfo', 'paths'];
-
-const steps: Array<{step: StaticRouteStepType; title: string; documentationLink: string}> = [
-  {step: 'routeInfo', title: 'Route Info', documentationLink: ''},
-  {
-    step: 'fleetInfo',
-    title: 'Fleet Info',
-    documentationLink: '',
-  },
-  {
-    step: 'paths',
-    title: 'Paths',
-    documentationLink: '',
-  },
-  {
-    step: 'hosts',
-    title: 'Hosts',
-    documentationLink: '',
-  },
-];
+const METHODS = SUPPORTED_METHODS.slice(0, -1);
 
 const AddStaticRouteModal = () => {
-  const {trackEvent} = useTracking(
-    {eventName: Events.PUBLISH_STATIC_ROUTES_MODAL_LOADED, type: ANALYTIC_TYPE.ACTION},
-    {dispatchOnMount: true}
-  );
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [form] = Form.useForm<StaticRouteForm>();
-  const [openPathModal, setOpenPathModal] = useState<boolean>(false);
-  const [activeStep, setActiveStep] = useState<StaticRouteStepType>('routeInfo');
-  const [lastVisitedStep, setLastVisitedStep] = useState<StaticRouteStepType>('routeInfo');
-  const [createStaticRoute, {isLoading: isPublishingStaticRoute, error, isError, reset}] =
-    useCreateStaticRouteMutation();
-
-  const activeStepIndex = useMemo(() => orderedSteps.indexOf(activeStep), [activeStep]);
-  const disablePublishButton = useMemo(
-    () =>
-      isPublishingStaticRoute ||
-      (requiredSteps.includes(activeStep) && requiredSteps.indexOf(activeStep) < requiredSteps.length - 1),
-    [isPublishingStaticRoute, activeStep]
-  );
+  const [form] = Form.useForm();
+  const [createStaticRoute, {error, isError, reset}] = useCreateStaticRouteMutation();
+  const {data: namespaces} = useGetNamespacesQuery();
+  const {data: staticRoutes} = useGetStaticRoutesQuery({});
 
   const onSubmitHandler = async () => {
     await form.validateFields();
-    const {routeInfo, fleetInfo, paths, hosts} = (await form.getFieldsValue(true)) as StaticRouteForm;
+    const {name, namespace, deployment, path, methods} = await form.getFieldsValue(true);
 
     const newStaticRouteDefinition: StaticRoute = {
       apiVersion: 'gateway.kusk.io/v1alpha1',
       kind: 'StaticRoute',
       metadata: {
-        name: routeInfo.name,
+        name,
       },
       spec: {
         fleet: {
-          name: fleetInfo.targetEnvoyFleet.split(',')[1],
-          namespace: fleetInfo.targetEnvoyFleet.split(',')[0],
+          name: deployment.split(',')[1],
+          namespace: deployment.split(',')[0],
         },
-        hosts: hosts?.hosts || [],
-        paths: paths.paths.reduce<Record<string, PathMatch>>((accPaths, path) => {
-          const methods = path.path.methods.reduce<Partial<PathMatch>>((acc, method) => {
-            acc[method] = {
-              redirect: path.redirect || undefined,
-              route: {
-                cors: Object.values(path.cors).some(e => e) ? path.cors : undefined,
-                qos: Object.values(path.qos).some(e => e) ? path.qos : undefined,
-                upstream: path.upstream || undefined,
-                websocket: path.websocket.websocket || undefined,
-              },
-            };
+        hosts: [],
+        paths: {
+          [path]: methods.reduce((acc: any, item: any) => {
+            acc[item] = {};
             return acc;
-          }, {});
-
-          accPaths[path.path.name] = {
-            ...methods,
-          };
-          return accPaths;
-        }, {}),
+          }, {}),
+        },
       },
     };
-    await createStaticRoute({
+
+    const result = await createStaticRoute({
       body: {
-        name: routeInfo.name,
-        namespace: routeInfo.namespace,
-        envoyFleetNamespace: fleetInfo.targetEnvoyFleet.split(',')[0],
-        envoyFleetName: fleetInfo.targetEnvoyFleet.split(',')[1],
-        openapi: YAML.stringify(cleanEmptyFields(JSON.parse(JSON.stringify(newStaticRouteDefinition)))),
+        name,
+        namespace,
+        envoyFleetNamespace: deployment.split(',')[0],
+        envoyFleetName: deployment.split(',')[1],
+        openapi: YAML.stringify(newStaticRouteDefinition),
       },
     }).unwrap();
     dispatch(
       setAlert({
         title: 'Static route deployed successfully',
-        description: `${routeInfo.name} was deployed successfully in ${routeInfo.namespace} namespace!`,
+        description: `${name} was deployed successfully in ${namespace} namespace!`,
         type: AlertEnum.Success,
       })
     );
     dispatch(closeStaticRouteModal());
-
-    trackEvent({eventName: Events.PUBLISH_STATIC_ROUTES_SUBMITTED, type: ANALYTIC_TYPE.ACTION});
+    navigate(`/staticroute/${result.namespace}/${result.name}`);
   };
 
   const onBackHandler = () => {
     dispatch(closeStaticRouteModal());
-    trackEvent({eventName: Events.PUBLISH_STATIC_ROUTES_MODAL_DISMISSED, type: ANALYTIC_TYPE.ACTION});
-  };
-
-  const handleNextStep = async () => {
-    const stepPath = activeStep;
-    const stepFields = form
-      .getFieldsError()
-      .map(el => el.name)
-      .filter(el => el[0] === stepPath);
-    await form.validateFields(stepFields);
-    setLastVisitedStep(activeStep);
-    setActiveStep(orderedSteps[activeStepIndex + 1]);
   };
 
   return (
     <S.Modal
       visible
       title="Publish Static Route"
-      width="900px"
+      width="824px"
       onCancel={onBackHandler}
-      footer={
-        <>
-          <Button type="text" onClick={onBackHandler}>
-            Cancel
-          </Button>
-
-          {activeStep !== 'hosts' ? (
-            <Button type="default" onClick={handleNextStep}>
-              {renderedNextButtonText[activeStepIndex + 1]}
-            </Button>
-          ) : null}
-
-          <Button
-            type="primary"
-            disabled={disablePublishButton}
-            loading={isPublishingStaticRoute}
-            onClick={onSubmitHandler}
-          >
-            {isPublishingStaticRoute ? 'Publishing Route...' : 'Publish'}
-          </Button>
-        </>
-      }
+      okText="Add static route"
+      onOk={onSubmitHandler}
     >
       {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" closable />}
 
-      <S.Container>
-        <S.StepsContainer>
-          <Steps direction="vertical" current={activeStepIndex}>
-            {steps.map(step => (
-              <FormStep
-                key={step.step}
-                documentationLink={step.documentationLink}
-                orderedSteps={orderedSteps}
-                activeStep={activeStep}
-                lastCompletedStep={lastVisitedStep}
-                setActiveStep={setActiveStep}
-                step={step.step}
-                title={step.title}
-              />
+      <Form
+        preserve
+        form={form}
+        layout="vertical"
+        name="staticRouteForm"
+        onValuesChange={() => {
+          if (isError) {
+            reset();
+          }
+        }}
+      >
+        <Form.Item
+          name="name"
+          label="Name"
+          required
+          dependencies={['namespace']}
+          rules={[
+            {required: true, message: 'Enter API name!'},
+            {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern!'},
+            {max: 63, type: 'string', message: 'Name is too long!'},
+            () => {
+              return {
+                validator(_, value) {
+                  const namespace = form.getFieldValue('namespace');
+
+                  if (namespace && checkDuplicateStaticRoute(staticRoutes || [], `${namespace}-${value}`)) {
+                    return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
+                  }
+
+                  return Promise.resolve();
+                },
+              };
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item name="namespace" label="Namespace" rules={[{required: true, message: 'Select target namespace'}]}>
+          <Select>
+            {namespaces?.map(namespace => (
+              <Select.Option key={namespace.name} value={namespace.name}>
+                {namespace.name}
+              </Select.Option>
             ))}
-          </Steps>
-        </S.StepsContainer>
+          </Select>
+        </Form.Item>
 
-        <S.FormContainer>
-          <Form.Provider
-            onFormFinish={(name, {forms, values}) => {
-              if (name === 'addPathForm') {
-                const {staticRouteForm} = forms;
-                const paths = staticRouteForm.getFieldValue(['paths', 'paths']) || [];
-                staticRouteForm.setFieldsValue({paths: {paths: [...paths, values]}});
-              }
-            }}
-          >
-            <Form
-              preserve
-              form={form}
-              layout="vertical"
-              name="staticRouteForm"
-              onValuesChange={() => {
-                if (isError) {
-                  reset();
-                }
-              }}
-            >
-              {activeStep === 'routeInfo' && <StaticRouteInfo />}
+        <Form.Item
+          label="Deployment"
+          name="deployment"
+          initialValue={form.getFieldValue('targetEnvoyFleet')}
+          rules={[
+            {
+              required: true,
+              message: 'Please select envoy fleet!',
+            },
+          ]}
+        >
+          <FleetDropdown />
+        </Form.Item>
+        <Form.Item required name="path" label="Path">
+          <Input />
+        </Form.Item>
 
-              {activeStep === 'fleetInfo' && <FleetInfo />}
-
-              {activeStep === 'hosts' && <Hosts />}
-
-              {activeStep === 'paths' && <Paths setAddPathModal={setOpenPathModal} />}
-            </Form>
-            {openPathModal && <AddPathModal setAddPathModal={setOpenPathModal} />}
-          </Form.Provider>
-        </S.FormContainer>
-      </S.Container>
+        <Form.Item label="Methods" name="methods" rules={[{required: true}]}>
+          <Checkbox.Group>
+            {METHODS.map(method => (
+              <Checkbox key={method} value={method}>
+                {method.toUpperCase()}
+              </Checkbox>
+            ))}
+          </Checkbox.Group>
+        </Form.Item>
+      </Form>
     </S.Modal>
   );
 };
