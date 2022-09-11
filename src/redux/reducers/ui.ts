@@ -1,7 +1,7 @@
 import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from '@models/dashboard';
-import {ApiCanvasType, DashboardPaneConfiguration, StaticRouteStepType, StepType, UiState} from '@models/ui';
+import {ApiCanvasType, DashboardPaneConfiguration, StepType, UiState} from '@models/ui';
 
 import initialState from '@redux/initialState';
 
@@ -88,15 +88,11 @@ export const uiSlice = createSlice({
     openStaticRouteModal: (state: Draft<UiState>) => {
       state.staticRouteModal.isOpen = true;
     },
-    nextStaticRouteModalActiveStep: (state: Draft<UiState>, action: PayloadAction<StaticRouteStepType>) => {
-      state.staticRouteModal.lastCompletedStep = state.staticRouteModal.activeStep;
-      state.staticRouteModal.activeStep = action.payload;
+    openStaticRoutePathModal: (state: Draft<UiState>) => {
+      state.staticRoutePathModal.isOpen = true;
     },
-    setStaticRouteModalActiveStep: (state: Draft<UiState>, action: PayloadAction<StaticRouteStepType>) => {
-      state.staticRouteModal.activeStep = action.payload;
-    },
-    setStaticRouteModalLastCompleteStep: (state: Draft<UiState>) => {
-      state.staticRouteModal.lastCompletedStep = state.staticRouteModal.activeStep;
+    closeStaticRoutePathModal: (state: Draft<UiState>) => {
+      state.staticRoutePathModal.isOpen = false;
     },
   },
   extraReducers: builder => {
@@ -131,8 +127,7 @@ export const {
   setStaticRouteInfoActiveTab,
   openStaticRouteModal,
   closeStaticRouteModal,
-  setStaticRouteModalActiveStep,
-  setStaticRouteModalLastCompleteStep,
-  nextStaticRouteModalActiveStep,
+  openStaticRoutePathModal,
+  closeStaticRoutePathModal,
 } = uiSlice.actions;
 export default uiSlice.reducer;

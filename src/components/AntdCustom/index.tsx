@@ -137,3 +137,54 @@ export const TargetTag = styled(Tag)<{$type: TargetType}>`
     }
   }}
 `;
+
+export const MethodTag = styled(Tag)<{$method: string}>`
+  padding: 4px;
+
+  ${({$method}) => {
+    if ($method === 'get') {
+      return css`
+        color: #4d7c0f;
+        background: #ecfccb;
+        border: 1px solid #84cc16;
+      `;
+    }
+    if ($method === 'delete') {
+      return css`
+        color: #be185d;
+        background: #fce7f3;
+        border: 1px solid #ec4899;
+      `;
+    }
+    if ($method === 'post') {
+      return css`
+        color: #0369a1;
+        background: #e0f2fe;
+        border: 1px solid #0ea5e9;
+      `;
+    }
+    if ($method === 'put') {
+      return css`
+        color: #a16207;
+        background: #fef9c3;
+        border: 1px solid #facc15;
+      `;
+    }
+  }}
+`;
+
+export const Divider = styled.div`
+  display: block;
+  position: relative;
+  margin: 16px 0;
+  height: 8px;
+  &::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    right: -24px;
+    top: 0;
+    height: 1px;
+    background-color: #f0f0f0;
+  }
+`;
