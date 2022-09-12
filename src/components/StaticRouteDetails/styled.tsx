@@ -9,8 +9,8 @@ import Colors from '@styles/colors';
 export const Container = styled.div`
   display: flex;
   align-items: flex-start;
-  min-height: calc(100vh - 64px);
-  overflow: hidden;
+  height: calc(100vh - 64px);
+  overflow: auto;
   background-color: ${Colors.zinc1};
 `;
 
@@ -44,6 +44,7 @@ export const Content = styled.div`
   position: sticky;
   top: 0;
   flex-grow: 1;
+  align-self: flex-start;
   padding: 20px;
   overflow-y: auto;
 `;
