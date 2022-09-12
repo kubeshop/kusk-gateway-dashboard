@@ -6,7 +6,7 @@ const Hosts = () => {
   return (
     <FormCard
       heading="Hosts"
-      subHeading="Configure which domains your api should listen to"
+      subHeading="Configure which domains your static route should listen to"
       helpTopic="Hosts"
       helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#hosts"
     >

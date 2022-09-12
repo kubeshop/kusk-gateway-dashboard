@@ -15,7 +15,7 @@ const RouteInfo = () => {
     <S.Container>
       <FormCard
         heading="Deployments"
-        subHeading="Select which environment to deploy this API to"
+        subHeading="Select which environment to deploy this Static route to"
         helpTopic="Environments and Envoy Fleet"
         helpLink="https://kubeshop.github.io/kusk-gateway/customresources/envoyfleet/"
       >
