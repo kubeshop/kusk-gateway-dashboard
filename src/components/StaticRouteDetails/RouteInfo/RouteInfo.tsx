@@ -15,13 +15,7 @@ const RouteInfo = () => {
 
   return isLoading || isLoadingNamespaces ? null : (
     <S.Container>
-      <FormCard
-        heading="Deployments"
-        subHeading="Select which environment to deploy this Static route to"
-        helpTopic="Environments and Envoy Fleet"
-        helpLink="https://kubeshop.github.io/kusk-gateway/customresources/envoyfleet/"
-        formProps={{layout: 'vertical'}}
-      >
+      <FormCard heading="Route Information" subHeading="" formProps={{layout: 'vertical'}}>
         <Form.Item
           name="name"
           label="Name"
