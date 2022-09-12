@@ -26,7 +26,7 @@ const StaticRouteDetails = () => {
   const [name, namespace] = pathname.split('/').reverse();
   const selectedRoutePath = useAppSelector(state => state.main.selectedStaticRoutePath);
 
-  const {data: crd} = useGetStaticRouteCrdQuery({name, namespace});
+  const {data: crd, isLoading} = useGetStaticRouteCrdQuery({name, namespace});
   const [selectedTab, setSelectedTab] = useState<RouteTabs>('info');
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const StaticRouteDetails = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTab]);
 
-  return (
+  return isLoading ? null : (
     <S.Container>
       <S.Content>
         <div>

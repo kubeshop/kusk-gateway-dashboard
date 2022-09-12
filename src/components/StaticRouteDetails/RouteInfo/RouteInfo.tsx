@@ -8,10 +8,10 @@ import {FormCard} from '@components/FormCard';
 import * as S from './styled';
 
 const RouteInfo = () => {
-  const {data: fleets} = useGetEnvoyFleetsQuery({});
+  const {data: fleets, isLoading} = useGetEnvoyFleetsQuery({});
   const selectedRouteSpec = useAppSelector(state => state.main.selectedStaticRouteSpec);
 
-  return (
+  return isLoading ? null : (
     <S.Container>
       <FormCard
         heading="Deployments"
