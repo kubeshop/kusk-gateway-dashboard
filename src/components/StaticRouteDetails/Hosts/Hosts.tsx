@@ -4,12 +4,7 @@ import {FormList} from '@components/FormList';
 
 const Hosts = () => {
   return (
-    <FormCard
-      heading="Hosts"
-      subHeading="Configure which domains your static route should listen to"
-      helpTopic="Hosts"
-      helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#hosts"
-    >
+    <FormCard heading="Hosts" subHeading="Configure which domains your static route should listen to">
       <FormList
         addButtonText="Add a new host"
         name={['x-kusk', 'hosts']}
