@@ -72,12 +72,6 @@ export const updateStaticRouteSettings = createAsyncThunk<any, {editedOpenapi?: 
       },
     };
 
-    await dispatch(enhancedApi.endpoints.deleteStaticRoute.initiate({name, namespace})).unwrap();
-    await new Promise(resolve => {
-      setTimeout(() => {
-        resolve('');
-      }, 20000);
-    });
     const result = await dispatch(
       enhancedApi.endpoints.createStaticRoute.initiate({
         body: {

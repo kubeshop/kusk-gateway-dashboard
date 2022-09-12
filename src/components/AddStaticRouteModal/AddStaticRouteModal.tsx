@@ -1,42 +1,42 @@
+import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
-import {Checkbox, Form, Input, Select} from 'antd';
+import {Form, Steps} from 'antd';
 
 import YAML from 'yaml';
-
-import {SUPPORTED_METHODS} from '@constants/constants';
 
 import {AlertEnum} from '@models/alert';
 import {StaticRoute} from '@models/main';
 
 import {setAlert} from '@redux/reducers/alert';
 import {closeStaticRouteModal} from '@redux/reducers/ui';
-import {
-  useCreateStaticRouteMutation,
-  useGetNamespacesQuery,
-  useGetStaticRoutesQuery,
-} from '@redux/services/enhancedApi';
+import {useCreateStaticRouteMutation} from '@redux/services/enhancedApi';
 
-import {FleetDropdown} from '@components/FormComponents';
+import {TargetForm} from '@components/TargetForm';
 
-import {checkDuplicateStaticRoute} from '@utils/staticRoute';
+import PathForm from './PathForm';
+import RouteInfo from './RouteInfoForm';
 
 import * as S from './styled';
-
-const METHODS = SUPPORTED_METHODS.slice(0, -1);
 
 const AddStaticRouteModal = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [createStaticRoute, {error, isError, reset}] = useCreateStaticRouteMutation();
-  const {data: namespaces} = useGetNamespacesQuery();
-  const {data: staticRoutes} = useGetStaticRoutesQuery({});
+  const [currentStep, setCurrentStep] = useState(0);
+  const step = currentStep === 0 ? 'routeInfo' : currentStep === 1 ? 'pathInfo' : 'targetInfo';
+
+  const okText = currentStep === 0 ? 'Add path' : currentStep === 1 ? 'Add target' : 'Create static route';
 
   const onSubmitHandler = async () => {
     await form.validateFields();
-    const {name, namespace, deployment, path, methods} = await form.getFieldsValue(true);
+    if (step !== 'targetInfo') {
+      setCurrentStep(currentStep + 1);
+      return;
+    }
+    const {name, namespace, deployment, path, methods, upstream, redirect} = await form.getFieldsValue(true);
 
     const newStaticRouteDefinition: StaticRoute = {
       apiVersion: 'gateway.kusk.io/v1alpha1',
@@ -52,7 +52,7 @@ const AddStaticRouteModal = () => {
         hosts: [],
         paths: {
           [path]: methods.reduce((acc: any, item: any) => {
-            acc[item] = {};
+            acc[item] = redirect ? {redirect} : {route: {upstream}};
             return acc;
           }, {}),
         },
@@ -83,91 +83,46 @@ const AddStaticRouteModal = () => {
     dispatch(closeStaticRouteModal());
   };
 
+  const onStepClickHandler = async (value: number) => {
+    await form.validateFields();
+    setCurrentStep(value);
+  };
+
   return (
     <S.Modal
       visible
-      title="Publish Static Route"
+      title="Create static route"
       width="824px"
       onCancel={onBackHandler}
-      okText="Add static route"
+      okText={okText}
       onOk={onSubmitHandler}
     >
       {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" closable />}
+      <S.Container>
+        <S.StepsContainer>
+          <Steps direction="vertical" current={currentStep}>
+            <Steps.Step title="Route info" onStepClick={() => onStepClickHandler(0)} />
+            <Steps.Step title="Path" onStepClick={() => onStepClickHandler(1)} />
+            <Steps.Step title="Target" onStepClick={() => onStepClickHandler(2)} />
+          </Steps>
+        </S.StepsContainer>
 
-      <Form
-        preserve
-        form={form}
-        layout="vertical"
-        name="staticRouteForm"
-        onValuesChange={() => {
-          if (isError) {
-            reset();
-          }
-        }}
-      >
-        <Form.Item
-          name="name"
-          label="Name"
-          required
-          dependencies={['namespace']}
-          rules={[
-            {required: true, message: 'Enter API name!'},
-            {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern!'},
-            {max: 63, type: 'string', message: 'Name is too long!'},
-            () => {
-              return {
-                validator(_, value) {
-                  const namespace = form.getFieldValue('namespace');
-
-                  if (namespace && checkDuplicateStaticRoute(staticRoutes || [], `${namespace}-${value}`)) {
-                    return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
-                  }
-
-                  return Promise.resolve();
-                },
-              };
-            },
-          ]}
+        <Form
+          preserve
+          form={form}
+          layout="vertical"
+          name="staticRouteForm"
+          onValuesChange={() => {
+            if (isError) {
+              reset();
+            }
+          }}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item name="namespace" label="Namespace" rules={[{required: true, message: 'Select target namespace'}]}>
-          <Select>
-            {namespaces?.map(namespace => (
-              <Select.Option key={namespace.name} value={namespace.name}>
-                {namespace.name}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        <Form.Item
-          label="Deployment"
-          name="deployment"
-          initialValue={form.getFieldValue('targetEnvoyFleet')}
-          rules={[
-            {
-              required: true,
-              message: 'Please select envoy fleet!',
-            },
-          ]}
-        >
-          <FleetDropdown />
-        </Form.Item>
-        <Form.Item required name="path" label="Path">
-          <Input />
-        </Form.Item>
-
-        <Form.Item label="Methods" name="methods" rules={[{required: true}]}>
-          <Checkbox.Group>
-            {METHODS.map(method => (
-              <Checkbox key={method} value={method}>
-                {method.toUpperCase()}
-              </Checkbox>
-            ))}
-          </Checkbox.Group>
-        </Form.Item>
-      </Form>
+          {step === 'routeInfo' && <RouteInfo />}
+          {step === 'pathInfo' && <PathForm />}
+          {step === 'targetInfo' && <TargetForm />}
+        </Form>
+      </S.Container>
     </S.Modal>
   );
 };

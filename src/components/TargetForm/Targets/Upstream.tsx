@@ -52,12 +52,10 @@ const Upstream: React.FC<IProps> = props => {
       return;
     }
     form.setFieldsValue({
-      'x-kusk': {
-        upstream: {
-          service: {
-            name: selectedService.name,
-            namespace: selectedService.namespace,
-          },
+      upstream: {
+        service: {
+          name: selectedService.name,
+          namespace: selectedService.namespace,
         },
       },
     });
@@ -74,7 +72,7 @@ const Upstream: React.FC<IProps> = props => {
             <ErrorLabel>{servicesInfo.error}</ErrorLabel>
           ) : (
             <div style={{display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16}}>
-              <Form.Item label="Cluster service">
+              <Form.Item label="Cluster service" rules={[{required: true}]}>
                 <Select
                   allowClear
                   placeholder="Select cluster service"
@@ -95,7 +93,7 @@ const Upstream: React.FC<IProps> = props => {
 
               <Form.Item
                 label="Port"
-                name={['x-kusk', 'upstream', 'service', 'port']}
+                name={['upstream', 'service', 'port']}
                 rules={[
                   {
                     required: isRequiredFields,
@@ -120,7 +118,7 @@ const Upstream: React.FC<IProps> = props => {
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16}}>
             <Form.Item
               label="Name"
-              name={['x-kusk', 'upstream', 'service', 'name']}
+              name={['upstream', 'service', 'name']}
               rules={[
                 {
                   required: isRequiredFields,
@@ -133,7 +131,7 @@ const Upstream: React.FC<IProps> = props => {
 
             <Form.Item
               label="Namespace"
-              name={['x-kusk', 'upstream', 'service', 'namespace']}
+              name={['upstream', 'service', 'namespace']}
               rules={[
                 {
                   required: isRequiredFields,
@@ -149,7 +147,7 @@ const Upstream: React.FC<IProps> = props => {
         <>
           <Form.Item
             label="Hostname"
-            name={['x-kusk', 'upstream', 'host', 'hostname']}
+            name={['upstream', 'host', 'hostname']}
             rules={[
               {
                 required: isRequiredFields,
@@ -161,7 +159,7 @@ const Upstream: React.FC<IProps> = props => {
           </Form.Item>
           <Form.Item
             label="Port"
-            name={['x-kusk', 'upstream', 'host', 'port']}
+            name={['upstream', 'host', 'port']}
             getValueFromEvent={e => Number(e.target.value)}
             rules={[
               {
@@ -176,11 +174,11 @@ const Upstream: React.FC<IProps> = props => {
       )}
 
       <S.ExtensionSubHeading>Rewrite</S.ExtensionSubHeading>
-      <Form.Item label="Pattern" name={['x-kusk', 'upstream', 'rewrite', 'rewrite_regex', 'pattern']}>
+      <Form.Item label="Pattern" name={['upstream', 'rewrite', 'rewrite_regex', 'pattern']}>
         <Input placeholder="Regex pattern that should be rewritten" />
       </Form.Item>
 
-      <Form.Item label="Substitution" name={['x-kusk', 'upstream', 'rewrite', 'rewrite_regex', 'substitution']}>
+      <Form.Item label="Substitution" name={['upstream', 'rewrite', 'rewrite_regex', 'substitution']}>
         <Input placeholder="Substitution for specified regex pattern" />
       </Form.Item>
     </>

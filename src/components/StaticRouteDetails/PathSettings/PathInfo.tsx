@@ -25,7 +25,7 @@ const PathInfo = () => {
       </Form.Item>
       <Divider />
 
-      <Form.Item label="Methods" name="methods" rules={[{required: true}]} initialValue={methods}>
+      <Form.Item label="Operations" name="methods" rules={[{required: true}]} initialValue={methods}>
         <Checkbox.Group style={{display: 'grid'}}>
           {METHODS.map(method => (
             <Checkbox style={{marginLeft: 0, marginTop: 16}} key={method} value={method}>

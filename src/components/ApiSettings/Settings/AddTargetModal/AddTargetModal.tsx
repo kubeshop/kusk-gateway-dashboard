@@ -1,14 +1,13 @@
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Form, Typography} from 'antd';
+import {Form} from 'antd';
 
 import _ from 'lodash';
 
 import {updateApiSettings} from '@redux/reducers/main';
 
-import Redirect from './Targets/Redirect';
-import Upstream from './Targets/Upstream';
+import {TargetForm} from '@components/TargetForm';
 
 import * as S from './styled';
 
@@ -19,12 +18,11 @@ interface IProps {
 const AddTargetModal = ({closeModal}: IProps) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const [targetSelection, setTargetSelection] = useState<string>('Upstream service');
 
   const onSubmitHandler = async () => {
     form.submit();
     const values = await form.validateFields();
-    const editedOpenapi = _.merge({...values}, {'x-kusk': {mocking: {enabled: false}}});
+    const editedOpenapi = _.merge({'x-kusk': values}, {'x-kusk': {mocking: {enabled: false}}});
 
     dispatch(updateApiSettings({editedOpenapi}));
     closeModal();
@@ -45,20 +43,8 @@ const AddTargetModal = ({closeModal}: IProps) => {
       onOk={onSubmitHandler}
       cancelButtonProps={{style: {display: 'none'}}}
     >
-      <Form layout="vertical" form={form}>
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, marginBottom: 16}}>
-          <Typography.Text>Type</Typography.Text>
-          <S.Segmented
-            value={targetSelection}
-            options={['Upstream service', 'Upstream host', 'Redirect']}
-            onChange={value => setTargetSelection(value.toString())}
-          />
-        </div>
-        {targetSelection.startsWith('Upstream') ? (
-          <Upstream reference={targetSelection === 'Upstream service' ? 'service' : 'host'} isRequiredFields={false} />
-        ) : (
-          <Redirect isRequiredFields={false} />
-        )}
+      <Form form={form} layout="vertical">
+        <TargetForm />
       </Form>
     </S.Modal>
   );

@@ -22,7 +22,7 @@ const columns = [
     key: 'path',
   },
   {
-    title: 'METHOD',
+    title: 'OPERATIONS',
     dataIndex: 'methods',
     key: 'methods',
     render: (args: any, {methods}: any) =>

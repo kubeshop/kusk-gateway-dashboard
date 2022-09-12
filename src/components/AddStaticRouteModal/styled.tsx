@@ -47,7 +47,7 @@ export const RadioGroupContainer = styled.div`
 
 export const StepsContainer = styled.div`
   padding-right: 5px;
-  height: fit-content;
+  align-self: start;
   position: sticky;
   top: 0;
   ${GlobalScrollbarStyle};
