@@ -46,6 +46,7 @@ export const Content = styled.div`
   flex-grow: 1;
   align-self: flex-start;
   padding: 20px;
+  padding-right: 40px;
   overflow-y: auto;
 `;
 
