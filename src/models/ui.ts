@@ -42,8 +42,9 @@ interface UiState {
   staticRouteInfoActiveTab: StaticRouteInfoTabs;
   staticRouteModal: {
     isOpen: boolean;
-    activeStep: StaticRouteStepType;
-    lastCompletedStep: StaticRouteStepType;
+  };
+  staticRoutePathModal: {
+    isOpen: boolean;
   };
   tableOfContentsHeight: {
     apiDefinition: number;

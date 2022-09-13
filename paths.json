@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "paths": {
+      "@hooks/*": ["src/hooks/*"],
+      "@hooks": ["src/hooks/"],
       "@assets/*": ["src/assets/*"],
       "@assets": ["src/assets/"],
       "@analytics/*": ["src/analytics/*"],

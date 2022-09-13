@@ -24,12 +24,12 @@ const Header = () => {
   const navigate = useNavigate();
   const {pathname: apiPath} = useLocation();
   const apiName = apiPath.split('/').pop();
-  const isApiRoute = apiName && APP_ROUTES.every(r => r !== apiName);
+  const isApiRoute = apiName && APP_ROUTES.every(r => !apiPath.includes(r));
   const {data: apis = []} = useGetApisQuery(isApiRoute ? {} : skipToken);
 
   const handleMenuClick: MenuProps['onClick'] = e => {
     if (e.key === 'settings') {
-      navigate('/settings');
+      navigate('/settings/kusk');
     }
   };
 
