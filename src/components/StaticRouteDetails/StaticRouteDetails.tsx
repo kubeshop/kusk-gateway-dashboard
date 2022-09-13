@@ -48,7 +48,7 @@ const StaticRouteDetails = () => {
 
   return isLoading ? null : (
     <S.Container>
-      <S.Content>
+      <S.Content onClick={() => dispatch(selectStaticRoutePath(null))}>
         <div>
           <Typography.Link onClick={() => navigate(-1)}>
             <S.ArrowLeftOutlinedIcon />
@@ -87,7 +87,7 @@ const StaticRouteDetails = () => {
       </S.Content>
 
       {Boolean(selectedRoutePath) && (
-        <S.PathSettingsContainer ref={ref}>
+        <S.PathSettingsContainer>
           <PathSettings />
         </S.PathSettingsContainer>
       )}

@@ -1,4 +1,4 @@
-import {Dispatch, useState} from 'react';
+import {Dispatch, useEffect, useState} from 'react';
 
 import {Button, Form, Segmented, Typography} from 'antd';
 
@@ -13,8 +13,8 @@ interface IProps {
   target: any;
   type: TargetType;
   dismissEditMode: Dispatch<boolean>;
-  onDelete: () => void;
-  onSave: () => void;
+  onDelete?: () => void;
+  onSave: (values: any) => void;
 }
 
 const EditTarget = ({target, type, dismissEditMode, onDelete, onSave}: IProps) => {
@@ -30,6 +30,34 @@ const EditTarget = ({target, type, dismissEditMode, onDelete, onSave}: IProps) =
   const onCancelClickHandler = () => {
     dismissEditMode(true);
   };
+
+  const onSaveClickHandler = () => {
+    form.submit();
+    onSave(form.getFieldsValue(true));
+    form.resetFields();
+    dismissEditMode(true);
+  };
+
+  useEffect(() => {
+    if (targetSelection === 'Redirect') {
+      form.setFieldsValue({upstream: null});
+    } else if (targetSelection === 'Upstream service') {
+      form.setFieldsValue({
+        redirect: null,
+        upstream: {
+          host: null,
+        },
+      });
+    } else {
+      form.setFieldsValue({
+        redirect: null,
+        upstream: {
+          service: null,
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targetSelection]);
 
   return (
     <S.Card>
@@ -53,14 +81,16 @@ const EditTarget = ({target, type, dismissEditMode, onDelete, onSave}: IProps) =
         )}
       </Form>
       <S.CardActions>
-        <Button danger type="primary" size="large" onClick={onDelete}>
-          Delete this target
-        </Button>
-        <div>
+        {onDelete && (
+          <Button danger type="primary" size="large" onClick={onDelete}>
+            Delete this target
+          </Button>
+        )}
+        <div style={{marginLeft: 'auto'}}>
           <Button size="large" onClick={onCancelClickHandler}>
             Cancel
           </Button>
-          <Button style={{marginLeft: 16}} type="primary" size="large" onClick={onSave}>
+          <Button style={{marginLeft: 16}} type="primary" size="large" onClick={onSaveClickHandler}>
             Save
           </Button>
         </div>

@@ -17,8 +17,8 @@ const Redirect: React.FC<IProps> = props => {
       <S.RedirectGrid>
         <Form.Item
           label="Scheme redirect"
-          name={['x-kusk', 'redirect', 'scheme_redirect']}
-          initialValue={target?.scheme_redirect}
+          name={['redirect', 'scheme_redirect']}
+          initialValue={target?.redirect?.scheme_redirect}
         >
           <Select allowClear placeholder="ex: https">
             <Option value="http">http</Option>
@@ -28,8 +28,8 @@ const Redirect: React.FC<IProps> = props => {
 
         <Form.Item
           label="Host redirect"
-          name={['x-kusk', 'redirect', 'host_redirect']}
-          initialValue={target?.host_redirect}
+          name={['redirect', 'host_redirect']}
+          initialValue={target?.redirect?.host_redirect}
           rules={[
             {
               required: isRequiredFields,
@@ -42,8 +42,8 @@ const Redirect: React.FC<IProps> = props => {
 
         <Form.Item
           label="Port redirect"
-          name={['x-kusk', 'redirect', 'port_redirect']}
-          initialValue={target?.port_redirect}
+          name={['redirect', 'port_redirect']}
+          initialValue={target?.redirect?.port_redirect}
           getValueFromEvent={e => Number(e.target.value)}
           rules={[
             {
@@ -57,8 +57,8 @@ const Redirect: React.FC<IProps> = props => {
       </S.RedirectGrid>
       <Form.Item
         label="Response code"
-        name={['x-kusk', 'redirect', 'response_code']}
-        initialValue={target?.response_code}
+        name={['redirect', 'response_code']}
+        initialValue={target?.redirect?.response_code}
       >
         <Select allowClear placeholder="Select redirect response code">
           <Option value={301}>301</Option>
@@ -68,26 +68,26 @@ const Redirect: React.FC<IProps> = props => {
           <Option value={308}>308</Option>
         </Select>
       </Form.Item>
-      <Form.Item name={['x-kusk', 'redirect', 'type']} initialValue={target?.type}>
+      <Form.Item name={['redirect', 'type']} initialValue={target?.redirect?.type}>
         <S.RadioGroup>
           <Radio value="path_redirect">Path redirect</Radio>
           <Radio value="rewrite_regex">Rewrite regex</Radio>
         </S.RadioGroup>
       </Form.Item>
       {selectedTab === 'path_redirect' ? (
-        <Form.Item name={['x-kusk', 'redirect', 'path_redirect']} label="Path Redirect">
+        <Form.Item name={['redirect', 'path_redirect']} label="Path Redirect">
           <Input placeholder="Path to which requests should be redirected" />
         </Form.Item>
       ) : (
         <>
           <Form.Item
             label="Pattern"
-            name={['x-kusk', 'redirect', 'rewrite_regex', 'pattern']}
+            name={['redirect', 'rewrite_regex', 'pattern']}
             initialValue={target?.rewrite_regex?.pattern}
           >
             <Input placeholder="Regex pattern that should be rewritten" />
           </Form.Item>
-          <Form.Item label="Substitution" name={['x-kusk', 'redirect', 'rewrite_regex', 'substitution']}>
+          <Form.Item label="Substitution" name={['redirect', 'rewrite_regex', 'substitution']}>
             <Input placeholder="Substitution for specified regex pattern" />
           </Form.Item>
         </>
@@ -95,9 +95,9 @@ const Redirect: React.FC<IProps> = props => {
 
       <Form.Item
         label="Strip query"
-        name={['x-kusk', 'redirect', 'strip_query']}
+        name={['redirect', 'strip_query']}
         valuePropName="checked"
-        initialValue={target?.strip_query}
+        initialValue={target?.redirect?.strip_query}
       >
         <Switch />
       </Form.Item>

@@ -73,7 +73,9 @@ export const updateStaticRouteSettings = createAsyncThunk<any, {editedOpenapi?: 
     };
 
     const result = await dispatch(
-      enhancedApi.endpoints.createStaticRoute.initiate({
+      enhancedApi.endpoints.updateStaticRoute.initiate({
+        name,
+        namespace,
         body: {
           name,
           namespace,
@@ -83,7 +85,12 @@ export const updateStaticRouteSettings = createAsyncThunk<any, {editedOpenapi?: 
         },
       })
     ).unwrap();
+    await new Promise(resolve => {
+      setTimeout(resolve, 1000);
+    });
+    const crdResult: any = await dispatch(enhancedApi.endpoints.getStaticRouteCrd.initiate({name, namespace})).unwrap();
 
+    dispatch(selectStaticRouteSpec({...crdResult}));
     dispatch(
       setAlert({
         title: 'Static route deployed successfully',

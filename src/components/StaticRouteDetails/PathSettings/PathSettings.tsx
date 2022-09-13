@@ -1,6 +1,9 @@
+import {useDispatch} from 'react-redux';
+
 import {Button, Typography} from 'antd';
 
 import {useAppSelector} from '@redux/hooks';
+import {selectStaticRoutePath, updateStaticRouteSettings} from '@redux/reducers/main';
 
 import CORS from './CORS';
 import PathInfo from './PathInfo';
@@ -13,13 +16,25 @@ import * as S from './styled';
 const {TabPane} = S.Tabs;
 
 const PathSettings = () => {
+  const dispatch = useDispatch();
   const selectedRoutePath = useAppSelector(state => state.main.selectedStaticRoutePath);
+
+  const onDeletePathClickHandler = () => {
+    dispatch(
+      updateStaticRouteSettings({
+        editedOpenapi: {
+          paths: {[selectedRoutePath]: null},
+        },
+      })
+    );
+    dispatch(selectStaticRoutePath(null));
+  };
 
   return (
     <div style={{position: 'relative'}}>
       <S.Header>
         <Typography.Title level={3}>{selectedRoutePath}</Typography.Title>
-        <Button danger type="primary">
+        <Button danger type="primary" onClick={onDeletePathClickHandler}>
           Delete path
         </Button>
       </S.Header>

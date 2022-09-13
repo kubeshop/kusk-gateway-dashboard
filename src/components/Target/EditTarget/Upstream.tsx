@@ -53,12 +53,10 @@ const Upstream: React.FC<IProps> = props => {
       return;
     }
     form.setFieldsValue({
-      'x-kusk': {
-        upstream: {
-          service: {
-            name: selectedService.name,
-            namespace: selectedService.namespace,
-          },
+      upstream: {
+        service: {
+          name: selectedService.name,
+          namespace: selectedService.namespace,
         },
       },
     });
@@ -118,7 +116,7 @@ const Upstream: React.FC<IProps> = props => {
 
               <Form.Item
                 label="Port"
-                name={['x-kusk', 'upstream', 'service', 'port']}
+                name={['upstream', 'service', 'port']}
                 initialValue={target?.service?.port}
                 rules={[
                   {
@@ -145,7 +143,7 @@ const Upstream: React.FC<IProps> = props => {
             <Form.Item
               label="Name"
               initialValue={target?.service?.name}
-              name={['x-kusk', 'upstream', 'service', 'name']}
+              name={['upstream', 'service', 'name']}
               rules={[
                 {
                   required: isRequiredFields,
@@ -158,7 +156,7 @@ const Upstream: React.FC<IProps> = props => {
 
             <Form.Item
               label="Namespace"
-              name={['x-kusk', 'upstream', 'service', 'namespace']}
+              name={['upstream', 'service', 'namespace']}
               initialValue={target?.service?.namespace}
               rules={[
                 {
@@ -175,7 +173,7 @@ const Upstream: React.FC<IProps> = props => {
         <>
           <Form.Item
             label="Hostname"
-            name={['x-kusk', 'upstream', 'host', 'hostname']}
+            name={['upstream', 'host', 'hostname']}
             initialValue={target?.host?.hostname}
             rules={[
               {
@@ -188,7 +186,7 @@ const Upstream: React.FC<IProps> = props => {
           </Form.Item>
           <Form.Item
             label="Port"
-            name={['x-kusk', 'upstream', 'host', 'port']}
+            name={['upstream', 'host', 'port']}
             initialValue={target?.host?.port}
             getValueFromEvent={e => Number(e.target.value)}
             rules={[
@@ -204,18 +202,14 @@ const Upstream: React.FC<IProps> = props => {
       )}
 
       <S.ExtensionSubHeading>Rewrite</S.ExtensionSubHeading>
-      <Form.Item
-        label="Pattern"
-        name={['x-kusk', 'upstream', 'rewrite', 'rewrite_regex', 'pattern']}
-        initialValue={target?.rewrite?.rewrite_regex.pattern}
-      >
+      <Form.Item label="Pattern" name={['upstream', 'rewrite', 'pattern']} initialValue={target?.rewrite?.pattern}>
         <Input placeholder="Regex pattern that should be rewritten" />
       </Form.Item>
 
       <Form.Item
         label="Substitution"
-        name={['x-kusk', 'upstream', 'rewrite', 'rewrite_regex', 'substitution']}
-        initialValue={target?.rewrite?.rewrite_regex.substitution}
+        name={['upstream', 'rewrite', 'substitution']}
+        initialValue={target?.rewrite?.substitution}
       >
         <Input placeholder="Substitution for specified regex pattern" />
       </Form.Item>

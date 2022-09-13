@@ -12,8 +12,8 @@ import * as S from './styled';
 
 interface IProps {
   target: any;
-  onSave: () => void;
-  onDelete: () => void;
+  onSave: (values: any) => void;
+  onDelete?: () => void;
 }
 
 const TargetCard = ({target, onSave, onDelete}: IProps) => {

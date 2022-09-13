@@ -48,6 +48,7 @@ export const Content = styled.div`
   padding: 20px;
   padding-right: 40px;
   overflow-y: auto;
+  height: 100%;
 `;
 
 export const PathSettingsContainer = styled.div`
