@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useLocation, useNavigate} from 'react-router-dom';
 
@@ -9,6 +9,8 @@ import {selectStaticRoutePath, selectStaticRouteSpec} from '@redux/reducers/main
 import {useGetStaticRouteCrdQuery} from '@redux/services/enhancedApi';
 
 import {SubHeading} from '@components/AntdCustom';
+
+import useOnClickOutside from '@hooks/useOnClickOutside';
 
 import {Hosts} from './Hosts';
 import {PathSettings} from './PathSettings';
@@ -28,6 +30,9 @@ const StaticRouteDetails = () => {
 
   const {data: crd, isLoading} = useGetStaticRouteCrdQuery({name, namespace});
   const [selectedTab, setSelectedTab] = useState<RouteTabs>('info');
+  const ref = useRef(null);
+
+  useOnClickOutside(ref, () => dispatch(selectStaticRoutePath(null)));
 
   useEffect(() => {
     dispatch(selectStaticRouteSpec(crd));
@@ -82,7 +87,7 @@ const StaticRouteDetails = () => {
       </S.Content>
 
       {Boolean(selectedRoutePath) && (
-        <S.PathSettingsContainer>
+        <S.PathSettingsContainer ref={ref}>
           <PathSettings />
         </S.PathSettingsContainer>
       )}

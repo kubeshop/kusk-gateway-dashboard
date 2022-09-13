@@ -15,6 +15,7 @@ module.exports = {
       '@styles': path.resolve(__dirname, 'src/styles'),
       '@swaggerUI': path.resolve(__dirname, 'src/swaggerUI'),
       '@utils': path.resolve(__dirname, 'src/utils'),
+      '@hooks': path.resolve(__dirname, 'src/hooks'),
     },
     configure: {
       resolve: {

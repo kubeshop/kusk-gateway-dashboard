@@ -1,4 +1,4 @@
-import {Suspense} from 'react';
+import {MouseEvent, Suspense} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Button, Table, Typography} from 'antd';
@@ -75,7 +75,8 @@ const Paths = () => {
         dataSource={dataSource}
         onRow={record => {
           return {
-            onClick: () => {
+            onClick: (event: MouseEvent) => {
+              event.stopPropagation();
               dispatch(selectStaticRoutePath(record.path));
             },
           };

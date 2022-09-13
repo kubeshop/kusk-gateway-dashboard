@@ -1,11 +1,6 @@
-import {useDispatch} from 'react-redux';
-
-import {Typography} from 'antd';
-
-import {CloseOutlined} from '@ant-design/icons';
+import {Button, Typography} from 'antd';
 
 import {useAppSelector} from '@redux/hooks';
-import {selectStaticRoutePath} from '@redux/reducers/main';
 
 import CORS from './CORS';
 import PathInfo from './PathInfo';
@@ -18,17 +13,16 @@ import * as S from './styled';
 const {TabPane} = S.Tabs;
 
 const PathSettings = () => {
-  const dispatch = useDispatch();
   const selectedRoutePath = useAppSelector(state => state.main.selectedStaticRoutePath);
 
-  const onDismissClickHandler = () => {
-    dispatch(selectStaticRoutePath(null));
-  };
   return (
     <div style={{position: 'relative'}}>
-      <Typography.Title level={3}>{selectedRoutePath}</Typography.Title>
-
-      <CloseOutlined style={{position: 'absolute', right: 0, top: 8, fontSize: 16}} onClick={onDismissClickHandler} />
+      <S.Header>
+        <Typography.Title level={3}>{selectedRoutePath}</Typography.Title>
+        <Button danger type="primary">
+          Delete path
+        </Button>
+      </S.Header>
 
       <S.Tabs>
         <TabPane tab="Path Info" key="1">

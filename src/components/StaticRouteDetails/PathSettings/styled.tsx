@@ -19,3 +19,8 @@ export const Tabs = styled(AntTabs)`
     color: ${Colors.zinc6};
   }
 `;
+
+export const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
