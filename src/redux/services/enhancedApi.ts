@@ -88,6 +88,6 @@ export const {
   useGetStaticRouteQuery,
   useDeleteStaticRouteMutation,
   useGetStaticRouteCrdQuery,
-  updateStaticRoute,
+  useUpdateStaticRouteMutation,
   useGetNamespacesQuery,
 } = enhancedApi;
