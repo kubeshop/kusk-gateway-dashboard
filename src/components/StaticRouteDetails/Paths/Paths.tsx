@@ -43,6 +43,8 @@ const columns = [
 const Paths = () => {
   const dispatch = useDispatch();
   const routeSpec = useAppSelector(state => state.main.selectedStaticRouteSpec);
+  const selectedRoutePath = useAppSelector(state => state.main.selectedStaticRoutePath);
+
   const isStaticRoutePathModalVisible = useAppSelector(state => state.ui.staticRoutePathModal.isOpen);
 
   const dataSource = Object.keys(routeSpec?.spec?.paths || []).map(path => ({
@@ -73,6 +75,7 @@ const Paths = () => {
         pagination={false}
         columns={columns}
         dataSource={dataSource}
+        rowClassName={record => (record.path === selectedRoutePath ? 'ant-table-selected-cell' : '')}
         onRow={record => {
           return {
             onClick: (event: MouseEvent) => {
