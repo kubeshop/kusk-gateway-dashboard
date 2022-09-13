@@ -60,6 +60,13 @@ const injectedRtkApi = api.injectEndpoints({
     getStaticRoute: build.query<GetStaticRouteApiResponse, GetStaticRouteApiArg>({
       query: queryArg => ({url: `/staticroutes/${queryArg['namespace']}/${queryArg.name}`}),
     }),
+    updateStaticRoute: build.mutation<UpdateStaticRouteApiResponse, UpdateStaticRouteApiArg>({
+      query: queryArg => ({
+        url: `/staticroutes/${queryArg['namespace']}/${queryArg.name}`,
+        method: 'PUT',
+        body: queryArg.body,
+      }),
+    }),
     deleteStaticRoute: build.mutation<DeleteStaticRouteApiResponse, DeleteStaticRouteApiArg>({
       query: queryArg => ({url: `/staticroutes/${queryArg['namespace']}/${queryArg.name}`, method: 'DELETE'}),
     }),
@@ -186,6 +193,19 @@ export type GetStaticRouteApiArg = {
   /** the name of the static route */
   name: string;
 };
+export type UpdateStaticRouteApiResponse = /** status 201 static route updated */ StaticRouteItem;
+export type UpdateStaticRouteApiArg = {
+  namespace: string;
+  name: string;
+  /** static route content */
+  body: {
+    name?: string;
+    namespace?: string;
+    envoyFleetName?: string;
+    envoyFleetNamespace?: string;
+    openapi?: string;
+  };
+};
 export type DeleteStaticRouteApiResponse = unknown;
 export type DeleteStaticRouteApiArg = {
   namespace: string;
@@ -215,14 +235,14 @@ export type ApiItem = {
 };
 export type ServicePortItem = {
   name: string;
-  nodePort: number;
+  nodePort?: number;
   port: number;
-  protocol: string;
+  protocol?: string;
   targetPort: string;
 };
 export type ServiceItem = {
   name: string;
-  status: 'available' | 'unavailable';
+  status?: 'available' | 'unavailable';
   namespace: string;
   serviceType: 'ClusterIP' | 'LoadBalancer';
   ports: ServicePortItem[];
@@ -265,6 +285,7 @@ export const {
   useGetStaticRoutesQuery,
   useCreateStaticRouteMutation,
   useGetStaticRouteQuery,
+  useUpdateStaticRouteMutation,
   useDeleteStaticRouteMutation,
   useGetStaticRouteCrdQuery,
   useGetNamespacesQuery,

@@ -24,7 +24,7 @@ const FormCard: FC<IProps> = props => {
     formProps?.onFinish && formProps?.onFinish(values);
     setTimeout(() => {
       form.resetFields();
-    }, 500);
+    }, 1000);
   };
 
   return isViewMode ? (

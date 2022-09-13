@@ -20,9 +20,9 @@ import {closeApiPublishModal, closeCanvasApiModal} from '@redux/reducers/ui';
 import {useDeployApiMutation, useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 import {ApiItem} from '@redux/services/kuskApi';
 
-import {checkDuplicateAPI, formatApiName} from '@utils/api';
+import {FleetDropdown} from '@components/FormComponents';
 
-import {FleetDropdown} from './FormComponents';
+import {checkDuplicateAPI, formatApiName} from '@utils/api';
 
 import * as S from './styled';
 

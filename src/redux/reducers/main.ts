@@ -7,7 +7,7 @@ import YAML from 'yaml';
 import {KUSK_SETTINGS_TARGET_API} from '@constants/constants';
 
 import {AlertEnum} from '@models/alert';
-import {ApiContent, MainState} from '@models/main';
+import {ApiContent, MainState, StaticRoute} from '@models/main';
 
 import initialState from '@redux/initialState';
 import {enhancedApi} from '@redux/services/enhancedApi';
@@ -49,6 +49,58 @@ export const updateApiSettings = createAsyncThunk<any, {editedOpenapi?: any}, {s
   }
 );
 
+export const updateStaticRouteSettings = createAsyncThunk<any, {editedOpenapi?: any}, {state: RootState}>(
+  'main/updateStaticRouteSettings',
+  async ({editedOpenapi}, {getState, dispatch}) => {
+    const selectedStaticRouteSpec = getState().main.selectedStaticRouteSpec;
+    const name = selectedStaticRouteSpec?.metadata?.name;
+    const namespace = selectedStaticRouteSpec?.metadata?.namespace;
+
+    const newStaticRouteDefinition: StaticRoute = {
+      apiVersion: 'gateway.kusk.io/v1alpha1',
+      kind: 'StaticRoute',
+      metadata: {
+        name,
+      },
+      spec: {
+        fleet: {
+          name: editedOpenapi?.fleetName || selectedStaticRouteSpec?.spec?.fleet?.name,
+          namespace: editedOpenapi?.fleetNamespace || selectedStaticRouteSpec?.spec?.fleet?.namespace,
+        },
+        hosts: editedOpenapi?.hosts || selectedStaticRouteSpec?.spec?.hosts,
+        paths: _.merge({}, selectedStaticRouteSpec?.spec?.paths, editedOpenapi?.paths),
+      },
+    };
+
+    const result = await dispatch(
+      enhancedApi.endpoints.updateStaticRoute.initiate({
+        name,
+        namespace,
+        body: {
+          name,
+          namespace,
+          envoyFleetNamespace: newStaticRouteDefinition.spec.fleet.name,
+          envoyFleetName: newStaticRouteDefinition.spec.fleet.namespace,
+          openapi: YAML.stringify(newStaticRouteDefinition),
+        },
+      })
+    ).unwrap();
+    await new Promise(resolve => {
+      setTimeout(resolve, 1000);
+    });
+    const crdResult: any = await dispatch(enhancedApi.endpoints.getStaticRouteCrd.initiate({name, namespace})).unwrap();
+
+    dispatch(selectStaticRouteSpec({...crdResult}));
+    dispatch(
+      setAlert({
+        title: 'Static route deployed successfully',
+        description: `${result.name} was deployed successfully in ${result.namespace} namespace!`,
+        type: AlertEnum.Success,
+      })
+    );
+  }
+);
+
 export const mainSlice = createSlice({
   name: 'main',
   initialState: initialState.main,
@@ -64,6 +116,12 @@ export const mainSlice = createSlice({
     },
     selectStaticRoute: (state: Draft<MainState>, action: PayloadAction<StaticRouteItem | null>) => {
       state.selectedStaticRoute = action.payload;
+    },
+    selectStaticRouteSpec: (state: Draft<MainState>, action: PayloadAction<any | null>) => {
+      state.selectedStaticRouteSpec = action.payload;
+    },
+    selectStaticRoutePath: (state: Draft<MainState>, action: PayloadAction<any | null>) => {
+      state.selectedStaticRoutePath = action.payload;
     },
     setApiEndpoint: (state: Draft<MainState>, action: PayloadAction<string>) => {
       state.apiEndpoint = action.payload;
@@ -83,6 +141,14 @@ export const mainSlice = createSlice({
   },
 });
 
-export const {selectApi, selectApiOpenSpec, selectEnvoyFleet, selectStaticRoute, setApiEndpoint, setNewApiFormContent} =
-  mainSlice.actions;
+export const {
+  selectApi,
+  selectApiOpenSpec,
+  selectEnvoyFleet,
+  selectStaticRoute,
+  selectStaticRouteSpec,
+  selectStaticRoutePath,
+  setApiEndpoint,
+  setNewApiFormContent,
+} = mainSlice.actions;
 export default mainSlice.reducer;

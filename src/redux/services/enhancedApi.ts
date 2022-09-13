@@ -60,6 +60,9 @@ export const enhancedApi = kuskApi.enhanceEndpoints({
     getStaticRouteCrd: {
       providesTags: ['STATIC_ROUTE'],
     },
+    updateStaticRoute: {
+      invalidatesTags: ['STATIC_ROUTE'],
+    },
     getNamespaces: {
       providesTags: ['NAMESPACE'],
     },
@@ -85,5 +88,6 @@ export const {
   useGetStaticRouteQuery,
   useDeleteStaticRouteMutation,
   useGetStaticRouteCrdQuery,
+  useUpdateStaticRouteMutation,
   useGetNamespacesQuery,
 } = enhancedApi;

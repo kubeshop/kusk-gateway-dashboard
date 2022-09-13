@@ -35,10 +35,7 @@ export const Label = styled.div`
 `;
 
 export const Modal = styled(RawModal)`
-  top: min(10%, 100px);
-
   & .ant-modal-body {
-    height: 70vh;
     overflow-y: auto;
     ${GlobalScrollbarStyle}
   }
@@ -50,7 +47,7 @@ export const RadioGroupContainer = styled.div`
 
 export const StepsContainer = styled.div`
   padding-right: 5px;
-  height: fit-content;
+  align-self: start;
   position: sticky;
   top: 0;
   ${GlobalScrollbarStyle};
