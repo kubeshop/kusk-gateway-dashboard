@@ -79,8 +79,8 @@ export const updateStaticRouteSettings = createAsyncThunk<any, {editedOpenapi?: 
         body: {
           name,
           namespace,
-          envoyFleetNamespace: newStaticRouteDefinition.spec.fleet.name,
-          envoyFleetName: newStaticRouteDefinition.spec.fleet.namespace,
+          envoyFleetNamespace: editedOpenapi?.fleetNamespace || selectedStaticRouteSpec?.spec?.fleet?.namespace,
+          envoyFleetName: editedOpenapi?.fleetName || selectedStaticRouteSpec?.spec?.fleet?.name,
           openapi: YAML.stringify(newStaticRouteDefinition),
         },
       })
