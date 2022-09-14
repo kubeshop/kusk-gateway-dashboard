@@ -8,7 +8,6 @@ import 'swagger-ui-react/swagger-ui.css';
 import {NotificationBox} from '@components';
 import {Header} from '@components/Header';
 
-import Tracker from './analytics/AnalyticsContext';
 import Router from './routes';
 
 const AppContainer = styled.div`
@@ -18,7 +17,7 @@ const AppContainer = styled.div`
 
 const App = () => {
   return (
-    <Tracker>
+    <>
       <AppContainer>
         <Header />
         <div style={{gridArea: 'main'}}>
@@ -28,7 +27,7 @@ const App = () => {
         </div>
       </AppContainer>
       <NotificationBox />
-    </Tracker>
+    </>
   );
 };
 
