@@ -1,12 +1,10 @@
 import {Suspense, lazy} from 'react';
-import {useTracking} from 'react-tracking';
 
 import {Modal, Skeleton} from 'antd';
 
 import {MenuInfo} from 'rc-menu/lib/interface';
 
 import {AlertEnum} from '@models/alert';
-import {ANALYTIC_TYPE, Events} from '@models/analytics';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
@@ -41,10 +39,6 @@ const menuItems = [
 ];
 
 const StaticRouteInfo: React.FC = () => {
-  const {trackEvent} = useTracking(
-    {eventName: Events.STATIC_ROUTES_INFO_LOADED, type: ANALYTIC_TYPE.ACTION},
-    {dispatchOnMount: true}
-  );
   const dispatch = useAppDispatch();
   const activeTab = useAppSelector(state => state.ui.staticRouteInfoActiveTab);
   const selectedStaticRoute = useAppSelector(state => state.main.selectedStaticRoute);
@@ -53,7 +47,6 @@ const StaticRouteInfo: React.FC = () => {
   const onCloseHandler = () => {
     dispatch(selectStaticRoute(null));
     dispatch(setStaticRouteInfoActiveTab('crd'));
-    trackEvent({eventName: Events.STATIC_ROUTES_INFO_CLOSED, type: ANALYTIC_TYPE.ACTION});
   };
 
   const onMenuItemClick = async (event: MenuInfo) => {
@@ -90,7 +83,6 @@ const StaticRouteInfo: React.FC = () => {
         });
       }
     }
-    trackEvent({eventName: Events.STATIC_ROUTES_MENU_CLICKED, type: ANALYTIC_TYPE.ACTION});
   };
 
   return (

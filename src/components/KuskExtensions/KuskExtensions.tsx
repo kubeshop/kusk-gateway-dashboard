@@ -1,12 +1,9 @@
-import {useTracking} from 'react-tracking';
-
 import {Card, Skeleton} from 'antd';
 
 import YAML from 'yaml';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
 
-import {ANALYTIC_TYPE, Events} from '@models/analytics';
 import {KuskExtensionsItem} from '@models/dashboard';
 
 import {useAppSelector} from '@redux/hooks';
@@ -22,7 +19,6 @@ import KuskExtensionsPanelContent from './KuskExtensionsPanelContent';
 import * as S from './styled';
 
 const KuskExtensions: React.FC = () => {
-  useTracking({eventName: Events.API_KUSK_EXTENSION_LOADED, type: ANALYTIC_TYPE.ACTION}, {dispatchOnMount: true});
   const selectedApi = useAppSelector(state => state.main.selectedApi);
 
   const {data, isLoading, error} = useGetApiCrdQuery({
