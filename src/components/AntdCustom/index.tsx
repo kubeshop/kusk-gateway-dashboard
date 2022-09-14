@@ -140,7 +140,7 @@ export const TargetTag = styled(Tag)<{$type: TargetType}>`
 
 export const MethodTag = styled(Tag)<{$method: string}>`
   padding: 4px;
-
+  text-transform: uppercase;
   ${({$method}) => {
     if ($method === 'get') {
       return css`
