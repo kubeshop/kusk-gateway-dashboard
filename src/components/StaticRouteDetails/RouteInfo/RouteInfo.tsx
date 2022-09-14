@@ -19,8 +19,8 @@ const RouteInfo = () => {
 
   const onSubmitClickHandler = (values: any) => {
     const {envoyFleet} = values;
-    console.log(envoyFleet);
     const [fleetNamespace, fleetName] = envoyFleet.split(',') || '';
+
     dispatch(
       updateStaticRouteSettings({
         editedOpenapi: {
