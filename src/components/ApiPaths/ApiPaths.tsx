@@ -53,10 +53,10 @@ const ApiRoutes = () => {
   const [selectedMethod, setSelectedMethod] = useState('');
   const [selectedSource, setSelectedSource] = useState('');
   const [filterPath, setFilterPath] = useState('');
-  const xKusk = selectedAPIOpenSpec['x-kusk'];
-  const target = xKusk['upstream'] || xKusk['redirect'];
+  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
+  const target = xKusk?.upstream || xKusk?.redirect;
   const type: TargetType = target?.service ? 'service' : target?.host ? 'host' : target ? 'redirect' : 'mocked';
-
+  console.log(selectedAPIOpenSpec);
   const dataSource = Object.keys(selectedAPIOpenSpec?.paths || {})
     .filter(i => i.includes(filterPath))
     .map(path => {

@@ -11,9 +11,9 @@ const StaticRoute = lazy(() => import('@pages/StaticRoute/StaticRoute'));
 
 const Router = () => {
   let element = useRoutes([
-    {path: '/settings/:section', element: <GlobalSettings />},
-    {path: '/staticroute/:namespace/:api', element: <StaticRoute />},
-    {path: '/:namespace/:api', element: <Api />},
+    {path: '/settings/*', element: <GlobalSettings />},
+    {path: '/staticroute/:namespace/:name/*', element: <StaticRoute />},
+    {path: '/:namespace/:name/*', element: <Api />},
     {path: '/', element: <Apis />},
     {path: '*', element: <ContentWrapper>Page not found!</ContentWrapper>},
   ]);

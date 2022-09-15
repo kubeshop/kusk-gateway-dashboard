@@ -12,7 +12,7 @@ import * as S from './styled';
 const Targets = () => {
   const [showAddTargetModal, setShowAddTargetModal] = useState(false);
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-  const xKusk = selectedAPIOpenSpec['x-kusk'];
+  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
   const hasTarget = Boolean(xKusk['upstream']) || Boolean(xKusk['redirect']);
 
   const onAddTargetClick = () => {

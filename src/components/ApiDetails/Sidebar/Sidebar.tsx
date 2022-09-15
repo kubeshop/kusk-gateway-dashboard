@@ -1,3 +1,5 @@
+import {useNavigate} from 'react-router-dom';
+
 import {Tooltip} from 'antd';
 
 import {TOOLTIP_DELAY} from '@constants/constants';
@@ -10,35 +12,27 @@ import * as S from './styled';
 
 interface IProps {
   activeSection: APIDetailsSections;
-  setActiveSection: (activeSection: APIDetailsSections) => void;
 }
 const Sidebar = (props: IProps) => {
-  const {activeSection, setActiveSection} = props;
+  const navigate = useNavigate();
+  const {activeSection} = props;
 
   return (
     <S.SidebarContainer>
       <S.DashboardMenuContainer>
         <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="Open API Spec">
-          <S.Icon
-            component={ApiIcon}
-            $active={activeSection === 'openapiBrowser'}
-            onClick={() => setActiveSection('openapiBrowser')}
-          />
+          <S.Icon component={ApiIcon} $active={activeSection === 'openapiBrowser'} onClick={() => navigate(``)} />
         </Tooltip>
 
         <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="Paths List">
-          <S.Icon
-            component={StaticRouteIcon}
-            $active={activeSection === 'routes'}
-            onClick={() => setActiveSection('routes')}
-          />
+          <S.Icon component={StaticRouteIcon} $active={activeSection === 'paths'} onClick={() => navigate(`paths`)} />
         </Tooltip>
 
         <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="API Settings">
           <S.Icon
             component={ApiSettingsIcon}
             $active={activeSection === 'settings'}
-            onClick={() => setActiveSection('settings')}
+            onClick={() => navigate(`settings`)}
           />
         </Tooltip>
       </S.DashboardMenuContainer>

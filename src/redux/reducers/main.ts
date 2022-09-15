@@ -137,7 +137,17 @@ export const mainSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(updateApiSettings.fulfilled, () => {});
+    builder.addMatcher(enhancedApi.endpoints.getApi.matchFulfilled, (state, {payload}) => {
+      state.selectedApi = payload;
+    });
+
+    builder.addMatcher(enhancedApi.endpoints.getApiCrd.matchFulfilled, (state, {payload}) => {
+      state.selectedApiOpenapiSpec = YAML.parse((payload as any)?.spec?.spec || '');
+    });
+
+    builder.addMatcher(enhancedApi.endpoints.getStaticRouteCrd.matchFulfilled, (state, {payload}) => {
+      state.selectedStaticRouteSpec = payload;
+    });
   },
 });
 

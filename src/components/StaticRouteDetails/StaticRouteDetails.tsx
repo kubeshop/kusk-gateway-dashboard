@@ -1,11 +1,11 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 import {Typography} from 'antd';
 
 import {useAppSelector} from '@redux/hooks';
-import {selectStaticRoutePath, selectStaticRouteSpec} from '@redux/reducers/main';
+import {selectStaticRoutePath} from '@redux/reducers/main';
 import {useGetStaticRouteCrdQuery} from '@redux/services/enhancedApi';
 
 import {SubHeading} from '@components/AntdCustom';
@@ -24,20 +24,14 @@ type RouteTabs = 'info' | 'paths' | 'hosts';
 const StaticRouteDetails = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {pathname} = useLocation();
-  const [name, namespace] = pathname.split('/').reverse();
+  const {name = '', namespace = '', ...params} = useParams();
+  const section = params['*'];
   const selectedRoutePath = useAppSelector(state => state.main.selectedStaticRoutePath);
 
   const {data: crd, isLoading} = useGetStaticRouteCrdQuery({name, namespace});
-  const [selectedTab, setSelectedTab] = useState<RouteTabs>('info');
   const ref = useRef(null);
-
+  const selectedTab: RouteTabs = section?.includes('hosts') ? 'hosts' : section?.includes('paths') ? 'paths' : 'info';
   useOnClickOutside(ref, () => dispatch(selectStaticRoutePath(null)));
-
-  useEffect(() => {
-    dispatch(selectStaticRouteSpec(crd));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [crd]);
 
   useEffect(() => {
     if (selectedTab !== 'paths') {
@@ -50,7 +44,7 @@ const StaticRouteDetails = () => {
     <S.Container>
       <S.Content onClick={() => dispatch(selectStaticRoutePath(null))}>
         <div>
-          <Typography.Link onClick={() => navigate(-1)}>
+          <Typography.Link onClick={() => navigate('/settings/staticRoutes')}>
             <S.ArrowLeftOutlinedIcon />
             Back to Static Routes
           </Typography.Link>
@@ -65,15 +59,15 @@ const StaticRouteDetails = () => {
         </div>
         <S.Grid>
           <S.List>
-            <S.ListItem $selected={selectedTab === 'info'} onClick={() => setSelectedTab('info')}>
+            <S.ListItem $selected={selectedTab === 'info'} onClick={() => navigate('info')}>
               Route info
             </S.ListItem>
 
-            <S.ListItem $selected={selectedTab === 'paths'} onClick={() => setSelectedTab('paths')}>
+            <S.ListItem $selected={selectedTab === 'paths'} onClick={() => navigate('paths')}>
               Paths
             </S.ListItem>
 
-            <S.ListItem $selected={selectedTab === 'hosts'} onClick={() => setSelectedTab('hosts')}>
+            <S.ListItem $selected={selectedTab === 'hosts'} onClick={() => navigate('hosts')}>
               Hosts
             </S.ListItem>
           </S.List>

@@ -12,7 +12,7 @@ import * as S from './styled';
 const Authentication = () => {
   const dispatch = useDispatch();
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-  const xKusk = selectedAPIOpenSpec['x-kusk'];
+  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
 
   const onSaveClickHandler = (values: any) => {
     const {enabled, ...rest} = values;
