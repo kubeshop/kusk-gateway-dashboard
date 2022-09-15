@@ -16,7 +16,7 @@ type StaticRouteStepType = 'routeInfo' | 'fleetInfo' | 'hosts' | 'paths';
 
 type PathModalStepType = 'path' | 'target' | 'qos' | 'cors' | 'websocket';
 
-type APIDetailsSections = 'dashboard' | 'openapiBrowser' | 'routes' | 'deployments' | 'logs' | 'settings';
+type APIDetailsSections = 'dashboard' | 'openapiBrowser' | 'paths' | 'deployments' | 'logs' | 'settings';
 
 type ApiCanvasType = 'template' | 'blank';
 type TargetType = 'redirect' | 'service' | 'host' | 'mocked';

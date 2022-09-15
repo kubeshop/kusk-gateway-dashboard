@@ -23,8 +23,8 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {pathname: apiPath} = useLocation();
-  const apiName = apiPath.split('/').pop();
-  const isApiRoute = apiName && APP_ROUTES.every(r => !apiPath.includes(r));
+  const apiName = apiPath.split('/')[2];
+  const isApiRoute = apiName && APP_ROUTES.every(r => !apiPath.startsWith(r));
   const {data: apis = []} = useGetApisQuery(isApiRoute ? {} : skipToken);
 
   const handleMenuClick: MenuProps['onClick'] = e => {

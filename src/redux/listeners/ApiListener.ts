@@ -2,13 +2,13 @@ import {createListenerMiddleware} from '@reduxjs/toolkit';
 
 import YAML from 'yaml';
 
-import {selectApi, selectApiOpenSpec, setApiEndpoint} from '@redux/reducers/main';
+import {selectApiOpenSpec, setApiEndpoint} from '@redux/reducers/main';
 import {enhancedApi} from '@redux/services/enhancedApi';
 
 export const ApiListenerMiddleware = createListenerMiddleware();
 
 ApiListenerMiddleware.startListening({
-  actionCreator: selectApi,
+  matcher: enhancedApi.endpoints.getApi.matchFulfilled,
   effect: async (action, listenerApi) => {
     listenerApi.cancelActiveListeners();
 

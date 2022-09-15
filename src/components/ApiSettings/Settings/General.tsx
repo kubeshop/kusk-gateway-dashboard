@@ -19,7 +19,7 @@ const GeneralSettings = () => {
   const [deleteAPI] = useDeleteApiMutation();
   const selectedAPI = useAppSelector(state => state.main.selectedApi);
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-  const xKusk = selectedAPIOpenSpec['x-kusk'];
+  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
   const {data: namespaces} = useGetNamespacesQuery();
 
   const onDeleteClickHandler = () => {

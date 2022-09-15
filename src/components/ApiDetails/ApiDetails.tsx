@@ -1,13 +1,8 @@
-import {useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
-import {useLocation} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 
 import {skipToken} from '@reduxjs/toolkit/query/react';
 
-import {APIDetailsSections} from '@models/ui';
-
 import {useAppSelector} from '@redux/hooks';
-import {selectApi} from '@redux/reducers/main';
 import {useGetApiQuery} from '@redux/services/enhancedApi';
 
 import {ApiOpenSpec} from '@components/ApiOpenSpec';
@@ -21,23 +16,16 @@ import {Sidebar} from './Sidebar';
 import * as S from './styled';
 
 const ApiDetails = () => {
-  const {pathname: apiPath} = useLocation();
-  const dispatch = useDispatch();
+  const {namespace = '', name = '', ...params} = useParams();
+  const section = params['*'];
   const selectedApi = useAppSelector(state => state.main.selectedApi);
-  const [activeSection, setActiveSection] = useState<APIDetailsSections>('openapiBrowser');
-  const pathArray = apiPath.split('/').filter(el => el);
-  const {
-    data: api,
-    isLoading: isLoadingApi,
-    isError,
-  } = useGetApiQuery(selectedApi ? skipToken : {namespace: pathArray[0], name: pathArray[1]});
+  const {isLoading: isLoadingApi, isError} = useGetApiQuery(selectedApi ? skipToken : {namespace, name});
 
-  useEffect(() => {
-    if (api) {
-      dispatch(selectApi(api));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api]);
+  const activeSection = section?.includes('settings')
+    ? 'settings'
+    : section?.includes('paths')
+    ? 'paths'
+    : 'openapiBrowser';
 
   if (isLoadingApi) {
     return <ApiSkelton />;
@@ -49,10 +37,10 @@ const ApiDetails = () => {
 
   return (
     <S.Container>
-      <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} />
+      <Sidebar activeSection={activeSection} />
       <S.Content>
         {activeSection === 'openapiBrowser' && <ApiOpenSpec />}
-        {activeSection === 'routes' && <ApiPaths />}
+        {activeSection === 'paths' && <ApiPaths />}
         {activeSection === 'settings' && <ApiSettings />}
       </S.Content>
     </S.Container>

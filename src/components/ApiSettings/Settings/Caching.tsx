@@ -12,7 +12,7 @@ import * as S from './styled';
 const Caching = () => {
   const dispatch = useDispatch();
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-  const xKusk = selectedAPIOpenSpec['x-kusk'];
+  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
 
   const onSaveClickHandler = (values: any) => {
     dispatch(updateApiSettings({editedOpenapi: values}));

@@ -1,4 +1,4 @@
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 import {Typography} from 'antd';
 
@@ -12,10 +12,9 @@ type SettingType = 'kusk' | 'deployments' | 'staticRoutes';
 
 const Settings = () => {
   const navigate = useNavigate();
-  const {pathname} = useLocation();
-  const setting = pathname.split('/').pop();
+  const settingSection = useParams()['*'];
   const selectedSettingsItem: SettingType =
-    setting === 'staticRoutes' ? 'staticRoutes' : setting === 'deployments' ? 'deployments' : 'kusk';
+    settingSection === 'staticRoutes' ? 'staticRoutes' : settingSection === 'deployments' ? 'deployments' : 'kusk';
 
   return (
     <S.Container>

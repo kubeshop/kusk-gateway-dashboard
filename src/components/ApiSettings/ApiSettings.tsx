@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
 
 import {Typography} from 'antd';
 
@@ -14,10 +14,12 @@ import Targets from './Settings/Targets';
 
 import * as S from './styled';
 
-type Settings = 'general' | 'caching' | 'cors' | 'rateLimiting' | 'qos' | 'target' | 'domains' | 'auth' | 'deployments';
-
 const ApiSettings = () => {
-  const [selectedSettingsItem, setSelectedSettingsItem] = useState<Settings>('general');
+  const navigate = useNavigate();
+  const params = useParams();
+  const section = params['*'] || '';
+  const selectedSettingsItem = getSection(section?.split('/')?.pop() || '');
+
   return (
     <S.Container>
       <Typography.Title level={2}>Settings</Typography.Title>
@@ -30,36 +32,36 @@ const ApiSettings = () => {
 
       <S.SettingsContainer>
         <S.List>
-          <S.ListItem $selected={selectedSettingsItem === 'general'} onClick={() => setSelectedSettingsItem('general')}>
+          <S.ListItem $selected={selectedSettingsItem === 'general'} onClick={() => navigate('settings/general')}>
             General
           </S.ListItem>
-          <S.ListItem $selected={selectedSettingsItem === 'caching'} onClick={() => setSelectedSettingsItem('caching')}>
+          <S.ListItem $selected={selectedSettingsItem === 'caching'} onClick={() => navigate('settings/caching')}>
             Caching
           </S.ListItem>
-          <S.ListItem $selected={selectedSettingsItem === 'cors'} onClick={() => setSelectedSettingsItem('cors')}>
+          <S.ListItem $selected={selectedSettingsItem === 'cors'} onClick={() => navigate('settings/cors')}>
             CORS
           </S.ListItem>
           <S.ListItem
             $selected={selectedSettingsItem === 'rateLimiting'}
-            onClick={() => setSelectedSettingsItem('rateLimiting')}
+            onClick={() => navigate('settings/rateLimiting')}
           >
             Rate Limits
           </S.ListItem>
-          <S.ListItem $selected={selectedSettingsItem === 'qos'} onClick={() => setSelectedSettingsItem('qos')}>
+          <S.ListItem $selected={selectedSettingsItem === 'qos'} onClick={() => navigate('settings/qos')}>
             QOS
           </S.ListItem>
-          <S.ListItem $selected={selectedSettingsItem === 'target'} onClick={() => setSelectedSettingsItem('target')}>
+          <S.ListItem $selected={selectedSettingsItem === 'target'} onClick={() => navigate('settings/target')}>
             Targets
           </S.ListItem>
-          <S.ListItem $selected={selectedSettingsItem === 'domains'} onClick={() => setSelectedSettingsItem('domains')}>
+          <S.ListItem $selected={selectedSettingsItem === 'domains'} onClick={() => navigate('settings/domains')}>
             Domains
           </S.ListItem>
-          <S.ListItem $selected={selectedSettingsItem === 'auth'} onClick={() => setSelectedSettingsItem('auth')}>
+          <S.ListItem $selected={selectedSettingsItem === 'auth'} onClick={() => navigate('settings/auth')}>
             Authentication
           </S.ListItem>
           <S.ListItem
             $selected={selectedSettingsItem === 'deployments'}
-            onClick={() => setSelectedSettingsItem('deployments')}
+            onClick={() => navigate('settings/deployments')}
           >
             Deployments
           </S.ListItem>
@@ -78,5 +80,28 @@ const ApiSettings = () => {
       </S.SettingsContainer>
     </S.Container>
   );
+};
+
+const getSection = (sectionParam: string) => {
+  switch (sectionParam) {
+    case 'caching':
+      return 'caching';
+    case 'cors':
+      return 'cors';
+    case 'rateLimiting':
+      return 'rateLimiting';
+    case 'qos':
+      return 'qos';
+    case 'target':
+      return 'target';
+    case 'domains':
+      return 'domains';
+    case 'auth':
+      return 'auth';
+    case 'deployments':
+      return 'deployments';
+    default:
+      return 'general';
+  }
 };
 export default ApiSettings;

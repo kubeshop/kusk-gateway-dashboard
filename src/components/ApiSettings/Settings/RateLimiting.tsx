@@ -20,7 +20,7 @@ const CardLayout = styled.div`
 const RateLimiting = () => {
   const dispatch = useDispatch();
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-  const xKusk = selectedAPIOpenSpec['x-kusk'];
+  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
 
   const onSubmitHandler = (values: any) => {
     const {enabled, ...rateLimit} = values;
@@ -44,7 +44,7 @@ const RateLimiting = () => {
             label="Enable"
             name={['enabled']}
             valuePropName="checked"
-            initialValue={Boolean(xKusk['rate_limit'])}
+            initialValue={Boolean(xKusk?.rate_limit)}
           >
             <Switch />
           </Form.Item>
@@ -56,7 +56,7 @@ const RateLimiting = () => {
           <Typography.Text>Requests per unit</Typography.Text>
           <Form.Item
             name={['x-kusk', 'rate_limit', 'requests_per_unit']}
-            initialValue={(xKusk['rate_limit'] && xKusk['rate_limit']['requests_per_unit']) || 60}
+            initialValue={xKusk?.rate_limit?.requests_per_unit || 60}
           >
             <InputNumber />
           </Form.Item>
@@ -64,10 +64,7 @@ const RateLimiting = () => {
 
         <S.CardItem>
           <Typography.Text>Time unit</Typography.Text>
-          <Form.Item
-            name={['x-kusk', 'rate_limit', 'unit']}
-            initialValue={(xKusk['rate_limit'] && xKusk['rate_limit']['unit']) || 'second'}
-          >
+          <Form.Item name={['x-kusk', 'rate_limit', 'unit']} initialValue={xKusk?.rate_limit?.unit || 'second'}>
             <Select>
               <Select.Option value="second">Second</Select.Option>
               <Select.Option value="minute">Minute</Select.Option>
@@ -80,7 +77,7 @@ const RateLimiting = () => {
           <Typography.Text>Response code</Typography.Text>
           <Form.Item
             name={['x-kusk', 'rate_limit', 'response_code']}
-            initialValue={(xKusk['rate_limit'] && xKusk['rate_limit']['response_code']) || 405}
+            initialValue={xKusk?.rate_limit?.response_code || 405}
           >
             <InputNumber />
           </Form.Item>
@@ -89,7 +86,7 @@ const RateLimiting = () => {
       <Form.Item
         name={['x-kusk', 'rate_limit', 'per_connection']}
         valuePropName="checked"
-        initialValue={(xKusk['rate_limit'] && xKusk['rate_limit']['per_connection']) || false}
+        initialValue={xKusk?.rate_limit?.per_connection || false}
       >
         <Checkbox>Apply these limits for each individual connection only</Checkbox>
       </Form.Item>
