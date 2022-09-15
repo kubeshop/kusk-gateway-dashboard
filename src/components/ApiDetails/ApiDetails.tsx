@@ -26,7 +26,7 @@ const ApiDetails = () => {
     : section?.includes('paths')
     ? 'paths'
     : 'openapiBrowser';
-  console.log('here', selectedApi);
+
   if (isLoadingApi) {
     return <ApiSkelton />;
   }
