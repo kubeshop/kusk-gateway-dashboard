@@ -40,16 +40,11 @@ const AddEnvoyFleetModal = () => {
     await form.validateFields();
     const {fleetInfo, portsInfo} = await form.getFieldsValue(true);
     form.submit();
-    const portsList = portsInfo.ports
-      .map((p: {[key: string]: string}) => Object.values(p))
-      .flat()
-      .map((p: string) => ({
-        port: Number(p),
-        name: 'fleet',
-        nodePort: 1,
-        protocol: 'tcp',
-        targetPort: p,
-      }));
+    const portsList = portsInfo.ports.map((p: any) => ({
+      port: Number(p.port),
+      name: 'fleet',
+      targetPort: 'http',
+    }));
 
     await createFleet({serviceItem: {...fleetInfo, ports: portsList, status: 'available'}}).unwrap();
     dispatch(closeEnvoyFleetModalModal());
@@ -154,7 +149,8 @@ const AddEnvoyFleetModal = () => {
                   <div>
                     {fields.map((field, index) => (
                       <Form.Item
-                        name={[field.name, index]}
+                        key={`${field.name}`}
+                        name={[field.name, 'port']}
                         rules={[
                           {required: true, min: 1, max: 65535, message: 'Port range between 1 to 65535!'},
                           ({getFieldValue}) => ({

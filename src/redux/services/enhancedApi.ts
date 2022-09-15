@@ -34,7 +34,7 @@ export const enhancedApi = kuskApi.enhanceEndpoints({
       providesTags: ['FLEET'],
     },
     createFleet: {
-      invalidatesTags: ['FLEET'],
+      invalidatesTags: ['FLEET', 'SERVICE'],
     },
     deleteFleet: {
       invalidatesTags: ['FLEET'],
