@@ -1,5 +1,6 @@
 export {AddServerModal} from './AddServerModal';
 export {ApiDefinition} from './ApiDefinition';
+export {ApiDetails} from './ApiDetails';
 export {ApisList} from './Apis';
 export {FormList} from './FormComponents/FormList';
 export {InfoPaneCRD} from './InfoPaneCRD';
