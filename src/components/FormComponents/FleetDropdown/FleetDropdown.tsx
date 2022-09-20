@@ -8,7 +8,7 @@ import {BaseSelectRef} from 'rc-select';
 import {openEnvoyFleetModalModal} from '@redux/reducers/ui';
 import {useGetEnvoyFleetsQuery} from '@redux/services/enhancedApi';
 
-import * as S from './FleetDropdown.styled';
+import * as S from './styled';
 
 const FleetDropdown: VFC = props => {
   const dispatch = useDispatch();

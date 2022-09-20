@@ -20,19 +20,11 @@ const initialMainState: MainState = {
 
 const initialUiState: UiState = {
   apiPublishModal: {
-    activeStep: 'openApiSpec',
     isOpen: false,
     isCanvasApiModalOpen: false,
     isFileApiModalOpen: false,
-    lastCompletedStep: 'openApiSpec',
     apiCanvasType: 'blank',
   },
-  apiInfoActiveTab: 'crd',
-  dashboardPaneConfiguration: {
-    leftPaneWidth: 0.5,
-    rightPaneWidth: 0.5,
-  },
-  envoyFleetInfoActiveTab: 'crd',
   envoyFleetModal: {
     isOpen: false,
   },
@@ -41,16 +33,11 @@ const initialUiState: UiState = {
     path: [],
     operation: [],
   },
-  staticRouteInfoActiveTab: 'crd',
   staticRouteModal: {
     isOpen: false,
   },
   staticRoutePathModal: {
     isOpen: false,
-  },
-  tableOfContentsHeight: {
-    apiDefinition: 500,
-    publicApiDefinition: 500,
   },
 };
 

@@ -4,7 +4,7 @@ import YAML from 'yaml';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
 
-import {KuskExtensionsItem} from '@models/dashboard';
+import {KuskExtensionsItem} from '@models/ui';
 
 import {useAppSelector} from '@redux/hooks';
 import {useGetApiCrdQuery} from '@redux/services/enhancedApi';

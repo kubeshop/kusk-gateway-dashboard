@@ -7,7 +7,7 @@ import {updateStaticRouteSettings} from '@redux/reducers/main';
 import {useGetEnvoyFleetsQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 
 import {Divider} from '@components/AntdCustom';
-import {FormCard} from '@components/FormCard';
+import {FormCard} from '@components/FormComponents';
 
 import * as S from './styled';
 

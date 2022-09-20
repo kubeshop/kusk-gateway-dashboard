@@ -4,8 +4,7 @@ import {useAppSelector} from '@redux/hooks';
 import {updateStaticRouteSettings} from '@redux/reducers/main';
 
 import {Divider} from '@components/AntdCustom';
-import {FormCard} from '@components/FormCard';
-import {FormList} from '@components/FormList';
+import {FormCard, FormList} from '@components/FormComponents';
 
 const Hosts = () => {
   const dispatch = useDispatch();

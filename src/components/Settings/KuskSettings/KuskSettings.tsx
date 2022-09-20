@@ -8,7 +8,7 @@ import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 import {setApiEndpoint} from '@redux/reducers/main';
 
-import {FormCard} from '@components/FormCard';
+import {FormCard} from '@components/FormComponents';
 
 import * as S from './styled';
 

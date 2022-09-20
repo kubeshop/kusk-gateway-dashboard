@@ -7,8 +7,7 @@ import {SUPPORTED_METHODS} from '@constants/constants';
 import {useAppSelector} from '@redux/hooks';
 import {updateApiSettings} from '@redux/reducers/main';
 
-import {FormCard} from '@components/FormCard';
-import {FormList} from '@components/FormList';
+import {FormCard, FormList} from '@components/FormComponents';
 
 import * as S from './styled';
 

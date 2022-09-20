@@ -1,5 +1,4 @@
-import React, {LegacyRef, useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import React, {LegacyRef, useCallback, useEffect, useState} from 'react';
 import {ResizableBox} from 'react-resizable';
 import useMeasure from 'react-use/lib/useMeasure';
 
@@ -10,9 +9,6 @@ import {DownOutlined} from '@ant-design/icons';
 import {SUPPORTED_METHODS} from '@constants/constants';
 
 import {TableOfContentsItem} from '@models/swaggerUI';
-
-import {useAppSelector} from '@redux/hooks';
-import {setApiDefinitionTableOfContentsHeight, setPublicApiDefinitionTableOfContentsHeight} from '@redux/reducers/ui';
 
 import {getOperationId} from '@swaggerUI/utils/operations';
 import {getPathId} from '@swaggerUI/utils/path';
@@ -29,11 +25,7 @@ interface IProps {
 const TableOfContents: React.FC<IProps> = props => {
   const {layoutActions, spec} = props;
 
-  const dispatch = useDispatch();
-  const apiInfoActiveTab = useAppSelector(state => state.ui.apiInfoActiveTab);
-  const tableOfContentsHeight = useAppSelector(state => state.ui.tableOfContentsHeight);
-
-  const [containerRef, {height}] = useMeasure<HTMLDivElement>();
+  const [containerRef] = useMeasure<HTMLDivElement>();
 
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [tableContentStatus, setTableContentStatus] = useState<'collapsed' | 'expanded'>('expanded');
@@ -43,25 +35,6 @@ const TableOfContents: React.FC<IProps> = props => {
   const resizableHandler = useCallback(
     (_h: number, ref: LegacyRef<HTMLSpanElement>) => <span className="toc-custom-handle" ref={ref} />,
     []
-  );
-
-  const resizeTableOfContentsHandler = useCallback(() => {
-    if (apiInfoActiveTab === 'api-definition') {
-      dispatch(setApiDefinitionTableOfContentsHeight(height));
-    }
-
-    if (apiInfoActiveTab === 'public-api-definition') {
-      dispatch(setPublicApiDefinitionTableOfContentsHeight(height));
-    }
-  }, [apiInfoActiveTab, dispatch, height]);
-
-  const tableOfContentsResizableHeight = useMemo(
-    () =>
-      height ||
-      (apiInfoActiveTab === 'api-definition'
-        ? tableOfContentsHeight.apiDefinition
-        : tableOfContentsHeight.publicApiDefinition),
-    [apiInfoActiveTab, height, tableOfContentsHeight.apiDefinition, tableOfContentsHeight.publicApiDefinition]
   );
 
   const onCollapseExpandButtonClickHandler = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -103,13 +76,12 @@ const TableOfContents: React.FC<IProps> = props => {
             // Infinity as a placeholder because value 100% is not allowed
             // by ResizableBox on the width property ( number required )
             width={Infinity}
-            height={tableOfContentsResizableHeight}
+            height={500}
             minConstraints={[Infinity, 300]}
             maxConstraints={[Infinity, 850]}
             axis="y"
             resizeHandles={['s']}
             handle={resizableHandler}
-            onResizeStop={resizeTableOfContentsHandler}
           >
             <S.TreeContainer>
               <S.Tree
