@@ -6,7 +6,7 @@ import {TOOLTIP_DELAY} from '@constants/constants';
 import {KuskExtensionTooltip} from '@constants/tooltips';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
-import {setApiInfoActiveTab, setKuskExtensionsActiveKeys} from '@redux/reducers/ui';
+import {setKuskExtensionsActiveKeys} from '@redux/reducers/ui';
 
 import * as S from './TableOfContentsLabel.styled';
 
@@ -43,8 +43,6 @@ const TableOfContentsLabel: React.FC<IProps> = props => {
       if (!kuskExtensionRef) {
         return;
       }
-
-      dispatch(setApiInfoActiveTab('kusk-extensions'));
 
       if (!kuskExtensionsActiveKeys.includes(kuskExtensionRef)) {
         dispatch(setKuskExtensionsActiveKeys({keys: [...kuskExtensionsActiveKeys, kuskExtensionRef], level}));

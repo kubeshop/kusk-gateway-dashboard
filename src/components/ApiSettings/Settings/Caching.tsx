@@ -5,7 +5,7 @@ import {Form, InputNumber, Switch, Typography} from 'antd';
 import {useAppSelector} from '@redux/hooks';
 import {updateApiSettings} from '@redux/reducers/main';
 
-import {FormCard} from '@components/FormCard';
+import {FormCard} from '@components/FormComponents';
 
 import * as S from './styled';
 

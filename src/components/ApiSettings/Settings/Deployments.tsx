@@ -6,7 +6,7 @@ import {useAppSelector} from '@redux/hooks';
 import {updateApiSettings} from '@redux/reducers/main';
 import {useGetEnvoyFleetsQuery} from '@redux/services/enhancedApi';
 
-import {FormCard} from '@components/FormCard';
+import {FormCard} from '@components/FormComponents';
 
 import * as S from './styled';
 

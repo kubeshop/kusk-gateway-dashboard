@@ -8,7 +8,7 @@ import {useAppSelector} from '@redux/hooks';
 import {updateStaticRouteSettings} from '@redux/reducers/main';
 
 import {Divider} from '@components/AntdCustom';
-import {FormCard} from '@components/FormCard';
+import {FormCard} from '@components/FormComponents';
 
 const QOS = () => {
   const dispatch = useDispatch();

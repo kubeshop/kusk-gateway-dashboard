@@ -1,7 +1,6 @@
 import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
 
-import {ApiInfoTabs, EnvoyFleetInfoTabs, StaticRouteInfoTabs} from '@models/dashboard';
-import {ApiCanvasType, DashboardPaneConfiguration, StepType, UiState} from '@models/ui';
+import {ApiCanvasType, UiState} from '@models/ui';
 
 import initialState from '@redux/initialState';
 
@@ -36,29 +35,6 @@ export const uiSlice = createSlice({
     setApiCanvasType: (state: Draft<UiState>, action: PayloadAction<ApiCanvasType>) => {
       state.apiPublishModal.apiCanvasType = action.payload;
     },
-    setApiDefinitionTableOfContentsHeight: (state: Draft<UiState>, action: PayloadAction<number>) => {
-      state.tableOfContentsHeight.apiDefinition = action.payload;
-    },
-
-    setApiInfoActiveTab: (state: Draft<UiState>, action: PayloadAction<ApiInfoTabs>) => {
-      state.apiInfoActiveTab = action.payload;
-    },
-
-    setApiPublishModalActiveStep: (state: Draft<UiState>, action: PayloadAction<StepType>) => {
-      state.apiPublishModal.activeStep = action.payload;
-    },
-
-    setApiPublishModalLastCompletedStep: (state: Draft<UiState>, action: PayloadAction<StepType>) => {
-      state.apiPublishModal.lastCompletedStep = action.payload;
-    },
-
-    setDashboardPaneConfiguration: (state: Draft<UiState>, action: PayloadAction<DashboardPaneConfiguration>) => {
-      state.dashboardPaneConfiguration = action.payload;
-    },
-
-    setEnvoyFleetInfoActiveTab: (state: Draft<UiState>, action: PayloadAction<EnvoyFleetInfoTabs>) => {
-      state.envoyFleetInfoActiveTab = action.payload;
-    },
 
     closeEnvoyFleetModalModal: (state: Draft<UiState>) => {
       state.envoyFleetModal.isOpen = false;
@@ -74,13 +50,6 @@ export const uiSlice = createSlice({
       state.kuskExtensionsActiveKeys[level] = keys;
     },
 
-    setPublicApiDefinitionTableOfContentsHeight: (state: Draft<UiState>, action: PayloadAction<number>) => {
-      state.tableOfContentsHeight.publicApiDefinition = action.payload;
-    },
-
-    setStaticRouteInfoActiveTab: (state: Draft<UiState>, action: PayloadAction<StaticRouteInfoTabs>) => {
-      state.staticRouteInfoActiveTab = action.payload;
-    },
     closeStaticRouteModal: (state: Draft<UiState>) => {
       state.staticRouteModal.isOpen = false;
     },
@@ -114,17 +83,9 @@ export const {
   openFileApiModal,
   closeFileApiModal,
   setApiCanvasType,
-  setApiDefinitionTableOfContentsHeight,
-  setApiInfoActiveTab,
-  setApiPublishModalActiveStep,
-  setApiPublishModalLastCompletedStep,
-  setEnvoyFleetInfoActiveTab,
   openEnvoyFleetModalModal,
   closeEnvoyFleetModalModal,
   setKuskExtensionsActiveKeys,
-  setDashboardPaneConfiguration,
-  setPublicApiDefinitionTableOfContentsHeight,
-  setStaticRouteInfoActiveTab,
   openStaticRouteModal,
   closeStaticRouteModal,
   openStaticRoutePathModal,

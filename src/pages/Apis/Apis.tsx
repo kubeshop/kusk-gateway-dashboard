@@ -3,7 +3,7 @@ import {Suspense} from 'react';
 import {useAppSelector} from '@redux/hooks';
 import {useGetServicesQuery} from '@redux/services/enhancedApi';
 
-import {ApisList, Dashboard} from '@components';
+import {ApisList} from '@components';
 import {AddEnvoyFleetModal} from '@components/AddEnvoyFleetModal';
 import {ApiCreatorModal, CanvasApiModal, FileApiModal} from '@components/ApiPublishModal';
 
@@ -14,13 +14,11 @@ const Apis: React.FC = () => {
 
   const isEnvoyFleetPublishModalVisible = useAppSelector(state => state.ui.envoyFleetModal.isOpen);
 
-  const selectedApi = useAppSelector(state => state.main.selectedApi);
-
   useGetServicesQuery({});
 
   return (
     <>
-      <Dashboard listElement={<ApisList />} selectedTableItem={selectedApi} />
+      <ApisList />
 
       <Suspense fallback={null}>
         {isApiPublishModalVisible && !isCanvasApiModalVisible && !isFileApiModalVisible && <ApiCreatorModal />}

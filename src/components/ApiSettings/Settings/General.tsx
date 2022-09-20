@@ -10,7 +10,7 @@ import {updateApiSettings} from '@redux/reducers/main';
 import {useDeleteApiMutation, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 
 import {CardHeading} from '@components/AntdCustom';
-import {FormCard} from '@components/FormCard';
+import {FormCard} from '@components/FormComponents';
 
 import * as S from './styled';
 

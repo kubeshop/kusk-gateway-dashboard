@@ -5,7 +5,7 @@ import {DraggerProps} from 'antd/lib/upload';
 
 import {FileInputIcon} from '@components/Icons';
 
-import * as S from './FilePicker.styled';
+import * as S from './styled';
 
 const FilePicker: React.VFC<DraggerProps> = props => {
   const uploadProps: UploadProps = {
