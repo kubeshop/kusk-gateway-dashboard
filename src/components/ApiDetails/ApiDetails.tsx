@@ -5,11 +5,10 @@ import {skipToken} from '@reduxjs/toolkit/query/react';
 import {useAppSelector} from '@redux/hooks';
 import {useGetApiQuery} from '@redux/services/enhancedApi';
 
-import {ApiOpenSpec} from '@components/ApiOpenSpec';
-import {ApiPaths} from '@components/ApiPaths';
-import {ApiSettings} from '@components/ApiSettings';
-
 import {ApiNotFound} from './Api404';
+import {ApiOpenSpec} from './ApiOpenSpec';
+import {ApiPaths} from './ApiPaths';
+import {ApiSettings} from './ApiSettings';
 import {ApiSkelton} from './ApiSkelton';
 import {Sidebar} from './Sidebar';
 

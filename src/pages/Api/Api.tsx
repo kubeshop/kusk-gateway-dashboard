@@ -1,4 +1,4 @@
-import {ApiDetails} from '@components/ApiDetails';
+import {ApiDetails} from '@components';
 
 const Api = () => <ApiDetails />;
 
