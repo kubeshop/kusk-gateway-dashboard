@@ -9,10 +9,10 @@ export const Tabs = styled(AntTabs)`
     border-bottom: none;
   }
   .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: #1e293b;
+    color: ${Colors.slate800};
   }
   .ant-tabs-ink-bar {
-    background-color: #1e293b;
+    background-color: ${Colors.slate800};
   }
 
   .ant-tabs-tab-btn {

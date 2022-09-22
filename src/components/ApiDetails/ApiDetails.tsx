@@ -5,6 +5,8 @@ import {skipToken} from '@reduxjs/toolkit/query/react';
 import {useAppSelector} from '@redux/hooks';
 import {useGetApiQuery} from '@redux/services/enhancedApi';
 
+import {Header} from '@components/Header';
+
 import {ApiNotFound} from './Api404';
 import {ApiOpenSpec} from './ApiOpenSpec';
 import {ApiPaths} from './ApiPaths';
@@ -35,14 +37,17 @@ const ApiDetails = () => {
   }
 
   return (
-    <S.Container>
-      <Sidebar activeSection={activeSection} />
-      <S.Content>
-        {activeSection === 'openapiBrowser' && <ApiOpenSpec />}
-        {activeSection === 'paths' && <ApiPaths />}
-        {activeSection === 'settings' && <ApiSettings />}
-      </S.Content>
-    </S.Container>
+    <S.Wrapper>
+      <Header />
+      <S.Container>
+        <Sidebar activeSection={activeSection} />
+        <S.Content>
+          {activeSection === 'openapiBrowser' && <ApiOpenSpec />}
+          {activeSection === 'paths' && <ApiPaths />}
+          {activeSection === 'settings' && <ApiSettings />}
+        </S.Content>
+      </S.Container>
+    </S.Wrapper>
   );
 };
 

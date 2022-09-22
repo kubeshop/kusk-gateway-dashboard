@@ -1,6 +1,9 @@
+import {Suspense, lazy} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
 import {Typography} from 'antd';
+
+import {useAppSelector} from '@redux/hooks';
 
 import {DeploymentsSettings} from './DeploymentsSettings';
 import {KuskSettings} from './KuskSettings';
@@ -10,9 +13,16 @@ import * as S from './styled';
 
 type SettingType = 'kusk' | 'deployments' | 'staticRoutes';
 
+const AddEnvoyFleetModal = lazy(() => import('@components/AddEnvoyFleetModal/AddEnvoyFleetModal'));
+const AddStaticRouteModal = lazy(() => import('@components/AddStaticRouteModal/AddStaticRouteModal'));
+
 const Settings = () => {
   const navigate = useNavigate();
-  const settingSection = useParams()['*'];
+  const {'*': path} = useParams();
+  const isEnvoyFleetPublishModalVisible = useAppSelector(state => state.ui.envoyFleetModal.isOpen);
+  const isStaticRouteModalVisible = useAppSelector(state => state.ui.staticRouteModal.isOpen);
+
+  const settingSection = path?.split('/')?.pop();
   const selectedSettingsItem: SettingType =
     settingSection === 'staticRoutes' ? 'staticRoutes' : settingSection === 'deployments' ? 'deployments' : 'kusk';
 
@@ -51,6 +61,8 @@ const Settings = () => {
           {selectedSettingsItem === 'staticRoutes' && <StaticRoutesSettings />}
         </div>
       </S.SettingsContainer>
+      <Suspense fallback={null}>{isEnvoyFleetPublishModalVisible && <AddEnvoyFleetModal />}</Suspense>
+      <Suspense fallback={null}>{isStaticRouteModalVisible && <AddStaticRouteModal />}</Suspense>
     </S.Container>
   );
 };

@@ -107,7 +107,7 @@ const ApiRoutes = () => {
         </S.FiltersWrapper>
       </S.Options>
 
-      <Table columns={columns} dataSource={dataSource} />
+      <Table columns={columns} dataSource={dataSource} pagination={false} />
     </S.Container>
   );
 };

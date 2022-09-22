@@ -1,8 +1,9 @@
 import {CSSProperties} from 'react';
 
-import {Button, Dropdown as RawDropdown, Typography} from 'antd';
+import {Dropdown as RawDropdown, Typography} from 'antd';
 
 import {
+  ArrowLeftOutlined,
   GithubFilled as RawGithubFilled,
   QuestionCircleFilled as RawQuestionsCircleFilled,
   SettingFilled as RawSettingFilled,
@@ -16,30 +17,19 @@ import {Transitions} from '@styles/global';
 export const Container = styled.div`
   position: sticky;
   top: 0;
-  height: 64px;
+  height: 60px;
   z-index: 5;
-  background-color: ${Colors.zinc9};
+  background-color: white;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding-left: 16px;
-  padding-right: 16px;
-`;
-
-export const Logo = styled.img`
-  height: 36px;
-  cursor: pointer;
-  margin-right: 16px;
+  padding: 0 16px;
+  border-bottom: 1px solid ${Colors.grey10};
 `;
 
 export const Options = styled.div`
   display: flex;
   align-items: center;
-`;
-
-export const TeamWrapper = styled.div`
-  width: 78px;
-  border-left: 1px solid #27272a;
-  padding: 20px;
 `;
 
 export const Divider = styled.div`
@@ -61,15 +51,12 @@ export const DropdownContainer = styled.span`
   height: 100%;
   padding: 20px 16px;
   cursor: pointer;
-  background-color: ${Colors.zinc9};
   &:hover {
-    background-color: ${Colors.zinc8};
   }
 `;
 
 export const RightContent = styled.div`
   display: flex;
-  margin-left: auto;
   gap: 16px;
 `;
 
@@ -78,21 +65,23 @@ export const IconContainer = styled.div`
   justify-content: center;
   padding: 8px 0;
   opacity: 0.5;
-  transition:${Transitions.default};
-
+  transition: ${Transitions.default};
   &:hover {
     opacity: 1;
   }
 `;
 
 export const QuestionCircleFilled = styled(RawQuestionsCircleFilled)`
-  color: ${Colors.whitePure};
+  color: ${Colors.zinc700};
   font-size: 18px;
   cursor: pointer;
 `;
 
-export const GithubFilled = styled(RawGithubFilled)`
-  color: ${Colors.whitePure};
+export const GithubFilled = styled(RawGithubFilled).attrs({
+  fill: Colors.zinc700,
+})`
+  color: ${Colors.zinc700} !important;
+
   font-size: 18px;
   cursor: pointer;
 `;
@@ -110,40 +99,15 @@ export const Dropdown = styled(RawDropdown).attrs({
 
 export const DropdownLabel = styled(Typography.Text)`
   font-weight: 700;
-  color: ${Colors.cyanBlue};
+  color: ${Colors.zinc700};
   margin-right: 8px;
-`;
-
-export const TeamLabel = styled(Typography.Text)`
-  font-weight: 700;
-  background-color: ${Colors.cyanBlue};
-  color: black;
-  padding: 4px 8px;
-  border-radius: 4px;
-  margin-right: 8px;
-`;
-
-export const APIVersionLabel = styled(Typography.Text)`
-  font-weight: 400;
-  color: ${Colors.spunPearl};
-  font-size: 10px;
-  padding: 4px 8px;
-  border-radius: 4px;
-`;
-
-export const EnvButton = styled(Button)`
-  background-color: #27272a;
-  border: 1px solid #3f3f46;
-`;
-
-export const EnvStatus = styled.span`
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #a3e635;
-  margin-right: 4px;
 `;
 
 export const DropdownOverlay: CSSProperties = {
   backgroundColor: 'white',
 };
+
+export const ArrowLeftOutlinedIcon = styled(ArrowLeftOutlined)`
+  margin-right: 8px;
+  color: ${Colors.zinc700};
+`;

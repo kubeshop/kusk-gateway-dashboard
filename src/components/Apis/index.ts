@@ -1,1 +1,1 @@
-export {ApisList} from './ApisList';
+export {default as Apis} from './Apis';
