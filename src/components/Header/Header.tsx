@@ -1,13 +1,11 @@
 import {useDispatch} from 'react-redux';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 
-import {Dropdown, Menu, MenuProps} from 'antd';
+import {Button, Dropdown, Menu} from 'antd';
 
 import {DownOutlined} from '@ant-design/icons';
 
 import {skipToken} from '@reduxjs/toolkit/query/react';
-
-import {APP_ROUTES} from '@constants/constants';
 
 import {AlertEnum} from '@models/alert';
 
@@ -15,63 +13,39 @@ import {setAlert} from '@redux/reducers/alert';
 import {selectApi} from '@redux/reducers/main';
 import {useGetApisQuery} from '@redux/services/enhancedApi';
 
-import KuskLogo from '@assets/KuskLogo.svg';
-
 import * as S from './styled';
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {pathname: apiPath} = useLocation();
-  const apiName = apiPath.split('/')[2];
-  const isApiRoute = apiName && APP_ROUTES.every(r => !apiPath.startsWith(r));
-  const {data: apis = []} = useGetApisQuery(isApiRoute ? {} : skipToken);
+  const {pathname} = useLocation();
+  const {namespace: apiNamespace, name: apiName} = useParams();
+  const type = pathname.includes('/api') ? 'api' : 'staticroute';
 
-  const handleMenuClick: MenuProps['onClick'] = e => {
-    if (e.key === 'settings') {
-      navigate('/settings/kusk');
-    }
-  };
+  const backOptions = pathname.includes('/api')
+    ? {label: 'APIs', onClick: () => navigate('/apis')}
+    : {label: 'Static Routes', onClick: () => navigate('/staticroutes')};
 
-  const menu = (
-    <Menu
-      onClick={handleMenuClick}
-      items={[
-        {
-          label: (
-            <span style={{minWidth: 78}}>
-              <S.TeamLabel>K</S.TeamLabel> kusk
-            </span>
-          ),
-          key: '1',
-        },
-        {
-          label: 'Settings',
-          key: 'settings',
-        },
-      ]}
-    />
-  );
+  const {data: apis = []} = useGetApisQuery(type === 'api' ? {} : skipToken);
 
-  const apisMenu = (
-    <Menu
-      items={apis.map(api => ({
-        label: api.name,
-        key: `${api.namespace}-${api.name}`,
-        onClick: () => {
-          dispatch(selectApi(api));
-          dispatch(
-            setAlert({
-              title: 'API selected',
-              description: `${api.name} is selected`,
-              type: AlertEnum.Success,
-            })
-          );
-          navigate(`/${api.namespace}/${api.name}`);
-        },
-      }))}
-    />
-  );
+  const apisMenu = apis
+    .slice()
+    .sort(a => (a.name === apiName && a.namespace === apiNamespace ? -1 : 0))
+    .map(api => ({
+      label: api.name,
+      key: `${api.namespace}-${api.name}`,
+      onClick: () => {
+        dispatch(selectApi(api));
+        dispatch(
+          setAlert({
+            title: 'API selected',
+            description: `${api.name} is selected`,
+            type: AlertEnum.Success,
+          })
+        );
+        navigate(`/api/${api.namespace}/${api.name}`);
+      },
+    }));
 
   const helpMenu = () => (
     <Menu
@@ -110,27 +84,19 @@ const Header = () => {
 
   return (
     <S.Container>
-      <Link to="/">
-        <S.Logo id="sidebar-kusk-logo" src={KuskLogo} alt="Kusk" />
-      </Link>
-      <S.Options>
-        <S.Divider />
-        <S.Dropdown overlay={menu}>
-          <S.DropdownContainer style={{minWidth: 78}}>
-            <S.TeamLabel>K</S.TeamLabel>
-            <DownOutlined />
-          </S.DropdownContainer>
-        </S.Dropdown>
-        <S.Divider />
-        {isApiRoute && (
-          <S.Dropdown overlay={apisMenu}>
+      <Button type="text" icon={<S.ArrowLeftOutlinedIcon />} onClick={backOptions.onClick}>
+        {backOptions.label}
+      </Button>
+      {type === 'api' && (
+        <S.Options>
+          <S.Dropdown overlay={<Menu items={apisMenu} selectedKeys={[`${apiNamespace}-${apiName}`]} />}>
             <S.DropdownContainer>
               <S.DropdownLabel>{apiName}</S.DropdownLabel>
               <DownOutlined />
             </S.DropdownContainer>
           </S.Dropdown>
-        )}
-      </S.Options>
+        </S.Options>
+      )}
 
       <S.RightContent>
         <S.IconContainer>

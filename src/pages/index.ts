@@ -1,2 +1,3 @@
-export {Apis} from './Apis';
-export {GlobalSettings} from './GlobalSettings';
+export {HomePage} from './Home';
+export {Api} from './Api';
+export {StaticRoute} from './StaticRoute';

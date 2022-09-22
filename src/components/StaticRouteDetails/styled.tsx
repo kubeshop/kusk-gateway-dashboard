@@ -6,12 +6,17 @@ import styled from 'styled-components';
 
 import Colors from '@styles/colors';
 
+export const Wrapper = styled.div`
+  overflow-y: auto;
+  height: 100vh;
+`;
+
 export const Container = styled.div`
   display: flex;
   align-items: flex-start;
-  height: calc(100vh - 64px);
-  overflow: auto;
   background-color: ${Colors.zinc1};
+  position: sticky;
+  top: 0;
 `;
 
 export const Grid = styled.div`
@@ -42,13 +47,13 @@ export const ListItem = styled.li<{$selected: boolean}>`
 
 export const Content = styled.div`
   position: sticky;
-  top: 0;
+  top: 60px;
   flex-grow: 1;
   align-self: flex-start;
   padding: 20px;
   padding-right: 40px;
   overflow-y: auto;
-  height: 100%;
+  min-height: calc(100vh - 60px);
 `;
 
 export const PathSettingsContainer = styled.div`

@@ -69,7 +69,7 @@ const ApisListTable: React.FC<IProps> = props => {
 
   const onApiItemClick = (api: ApiItem) => {
     dispatch(selectApi(api));
-    navigate(`${api.namespace}/${api.name}`);
+    navigate(`/api/${api.namespace}/${api.name}`);
   };
 
   return (

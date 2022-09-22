@@ -9,6 +9,7 @@ import {selectStaticRoutePath} from '@redux/reducers/main';
 import {useGetStaticRouteCrdQuery} from '@redux/services/enhancedApi';
 
 import {SubHeading} from '@components/AntdCustom';
+import {Header} from '@components/Header';
 
 import useOnClickOutside from '@hooks/useOnClickOutside';
 
@@ -41,51 +42,54 @@ const StaticRouteDetails = () => {
   }, [selectedTab]);
 
   return isLoading ? null : (
-    <S.Container>
-      <S.Content onClick={() => dispatch(selectStaticRoutePath(null))}>
-        <div>
-          <Typography.Link onClick={() => navigate('/settings/staticRoutes')}>
-            <S.ArrowLeftOutlinedIcon />
-            Back to Static Routes
-          </Typography.Link>
-
-          <S.Title>{(crd as any)?.metadata?.name}</S.Title>
-          <SubHeading>
-            Define manually configured routing rules.&nbsp;
-            <Typography.Link href="https://docs.kusk.io/reference/customresources/staticroute">
-              Learn more
-            </Typography.Link>
-          </SubHeading>
-        </div>
-        <S.Grid>
-          <S.List>
-            <S.ListItem $selected={selectedTab === 'info'} onClick={() => navigate('info')}>
-              Route info
-            </S.ListItem>
-
-            <S.ListItem $selected={selectedTab === 'paths'} onClick={() => navigate('paths')}>
-              Paths
-            </S.ListItem>
-
-            <S.ListItem $selected={selectedTab === 'hosts'} onClick={() => navigate('hosts')}>
-              Hosts
-            </S.ListItem>
-          </S.List>
-
+    <S.Wrapper>
+      <Header />
+      <S.Container>
+        <S.Content onClick={() => dispatch(selectStaticRoutePath(null))}>
           <div>
-            {selectedTab === 'info' && <RouteInfo />}
-            {selectedTab === 'paths' && <Paths />}
-            {selectedTab === 'hosts' && <Hosts />}
-          </div>
-        </S.Grid>
-      </S.Content>
+            {/* <Typography.Link onClick={() => navigate('/settings/staticRoutes')}>
+              <S.ArrowLeftOutlinedIcon />
+              Back to Static Routes
+            </Typography.Link> */}
 
-      {Boolean(selectedRoutePath) && (
-        <S.PathSettingsContainer>
-          <PathSettings />
-        </S.PathSettingsContainer>
-      )}
-    </S.Container>
+            <S.Title>{(crd as any)?.metadata?.name}</S.Title>
+            <SubHeading>
+              Define manually configured routing rules.&nbsp;
+              <Typography.Link href="https://docs.kusk.io/reference/customresources/staticroute">
+                Learn more
+              </Typography.Link>
+            </SubHeading>
+          </div>
+          <S.Grid>
+            <S.List>
+              <S.ListItem $selected={selectedTab === 'info'} onClick={() => navigate('info')}>
+                Route info
+              </S.ListItem>
+
+              <S.ListItem $selected={selectedTab === 'paths'} onClick={() => navigate('paths')}>
+                Paths
+              </S.ListItem>
+
+              <S.ListItem $selected={selectedTab === 'hosts'} onClick={() => navigate('hosts')}>
+                Hosts
+              </S.ListItem>
+            </S.List>
+
+            <div>
+              {selectedTab === 'info' && <RouteInfo />}
+              {selectedTab === 'paths' && <Paths />}
+              {selectedTab === 'hosts' && <Hosts />}
+            </div>
+          </S.Grid>
+        </S.Content>
+
+        {Boolean(selectedRoutePath) && (
+          <S.PathSettingsContainer>
+            <PathSettings />
+          </S.PathSettingsContainer>
+        )}
+      </S.Container>
+    </S.Wrapper>
   );
 };
 export default StaticRouteDetails;

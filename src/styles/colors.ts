@@ -19,6 +19,7 @@ enum Colors {
   zinc7 = '#52525B',
   zinc8 = '#27272A',
   zinc9 = '#18181B',
+  zinc700 = '#3F3F46',
 
   spunPearl = '#a1a1aa',
   swaggerUIGrey = '#333333',
@@ -72,6 +73,7 @@ enum Colors {
   lime600 = '#65A30D',
   lime500 = '#84cc16',
   lime100 = '#ecfccb',
+  slate800 = '#1E293B',
 }
 
 export default Colors;
