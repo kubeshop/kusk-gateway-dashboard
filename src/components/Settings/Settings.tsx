@@ -7,11 +7,10 @@ import {useAppSelector} from '@redux/hooks';
 
 import {DeploymentsSettings} from './DeploymentsSettings';
 import {KuskSettings} from './KuskSettings';
-import {StaticRoutesSettings} from './StaticRoutesSettings';
 
 import * as S from './styled';
 
-type SettingType = 'kusk' | 'deployments' | 'staticRoutes';
+type SettingType = 'kusk' | 'deployments';
 
 const AddEnvoyFleetModal = lazy(() => import('@components/AddEnvoyFleetModal/AddEnvoyFleetModal'));
 const AddStaticRouteModal = lazy(() => import('@components/AddStaticRouteModal/AddStaticRouteModal'));
@@ -23,8 +22,7 @@ const Settings = () => {
   const isStaticRouteModalVisible = useAppSelector(state => state.ui.staticRouteModal.isOpen);
 
   const settingSection = path?.split('/')?.pop();
-  const selectedSettingsItem: SettingType =
-    settingSection === 'staticRoutes' ? 'staticRoutes' : settingSection === 'deployments' ? 'deployments' : 'kusk';
+  const selectedSettingsItem: SettingType = settingSection === 'deployments' ? 'deployments' : 'kusk';
 
   return (
     <S.Container>
@@ -47,18 +45,11 @@ const Settings = () => {
           >
             Deployment fleets
           </S.ListItem>
-
-          <S.ListItem
-            $selected={selectedSettingsItem === 'staticRoutes'}
-            onClick={() => navigate('/settings/staticRoutes')}
-          >
-            Static routes
-          </S.ListItem>
         </S.List>
+
         <div>
           {selectedSettingsItem === 'kusk' && <KuskSettings />}
           {selectedSettingsItem === 'deployments' && <DeploymentsSettings />}
-          {selectedSettingsItem === 'staticRoutes' && <StaticRoutesSettings />}
         </div>
       </S.SettingsContainer>
       <Suspense fallback={null}>{isEnvoyFleetPublishModalVisible && <AddEnvoyFleetModal />}</Suspense>
