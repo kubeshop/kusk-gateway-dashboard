@@ -13,7 +13,7 @@ const Targets = () => {
   const [showAddTargetModal, setShowAddTargetModal] = useState(false);
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
   const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
-  const hasTarget = Boolean(xKusk['upstream']) || Boolean(xKusk['redirect']);
+  const hasTarget = Boolean(xKusk?.upstream) || Boolean(xKusk?.redirect);
 
   const onAddTargetClick = () => {
     setShowAddTargetModal(!showAddTargetModal);
