@@ -64,7 +64,7 @@ export const SettingsFilled = styled(RawSettingFilled)`
   cursor: pointer;
 `;
 
-export const ResourceMenu = styled(Menu)`
+export const NavMenu = styled(Menu)`
   align-self: stretch;
 
   margin-left: auto;
@@ -79,7 +79,8 @@ export const ResourceMenu = styled(Menu)`
   }
 
   .ant-menu-item:hover {
-    color: ${Colors.cyan5} !important;
+    background-color: ${Colors.slate700} !important;
+    color: white !important;
   }
 
   &.ant-menu-horizontal > .ant-menu-item {

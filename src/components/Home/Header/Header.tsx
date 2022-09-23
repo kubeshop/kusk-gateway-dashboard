@@ -76,7 +76,7 @@ const Header = () => {
         <S.Logo id="sidebar-kusk-logo" src={KuskLogo} alt="Kusk" />
       </Link>
 
-      <S.ResourceMenu mode="horizontal" items={resourceMenu} selectedKeys={[section]} />
+      <S.NavMenu mode="horizontal" items={resourceMenu} selectedKeys={[section]} />
 
       <S.RightContent>
         <S.IconContainer>
