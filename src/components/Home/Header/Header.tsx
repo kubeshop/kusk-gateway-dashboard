@@ -42,7 +42,7 @@ const Header = () => {
           label: 'Release Notes',
           key: '1',
           onClick: () => {
-            window.open('https://kubeshop.io/blog-projects/kusk', '_blank');
+            window.open('https://github.com/kubeshop/kusk-gateway/releases', '_blank');
           },
         },
         {
