@@ -66,7 +66,7 @@ export const SettingsFilled = styled(RawSettingFilled)`
 
 export const NavMenu = styled(Menu)`
   align-self: stretch;
-
+  width: 285px;
   margin-left: auto;
   margin-right: 60px;
   color: white !important;
