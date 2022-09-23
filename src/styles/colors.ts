@@ -73,6 +73,7 @@ enum Colors {
   lime600 = '#65A30D',
   lime500 = '#84cc16',
   lime100 = '#ecfccb',
+  slate700 = '#334155',
   slate800 = '#1E293B',
 }
 
