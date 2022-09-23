@@ -21,7 +21,6 @@ export const ContentWrapper = styled.div<{$backgroundColor?: string}>`
     background-color: ${$backgroundColor || 'transparent'};
   `}
 
-  height: 100%;
   position: relative;
   padding: 40px 20px 20px 20px;
   overflow-y: auto;
