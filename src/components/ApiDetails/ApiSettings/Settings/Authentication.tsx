@@ -30,7 +30,7 @@ const Authentication = () => {
       helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#authentication"
       cardProps={{
         extra: (
-          <Form.Item label="Enable" name={['enabled']} valuePropName="checked" initialValue={Boolean(xKusk.auth)}>
+          <Form.Item label="Enable" name={['enabled']} valuePropName="checked" initialValue={Boolean(xKusk?.auth)}>
             <Switch />
           </Form.Item>
         ),
