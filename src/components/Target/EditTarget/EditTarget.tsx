@@ -1,6 +1,6 @@
 import {Dispatch, useEffect, useState} from 'react';
 
-import {Button, Form, Segmented, Typography} from 'antd';
+import {Button, Form, Typography} from 'antd';
 
 import {TargetType} from '@models/ui';
 
@@ -22,10 +22,6 @@ const EditTarget = ({target, type, dismissEditMode, onDelete, onSave}: IProps) =
   const [targetSelection, setTargetSelection] = useState<string>(
     type === 'redirect' ? 'Redirect' : type === 'service' ? 'Upstream service' : 'Upstream host'
   );
-
-  const onChangeTargetType = (value: any) => {
-    setTargetSelection(value.toString());
-  };
 
   const onCancelClickHandler = () => {
     dismissEditMode(true);
@@ -64,11 +60,26 @@ const EditTarget = ({target, type, dismissEditMode, onDelete, onSave}: IProps) =
       <Form layout="vertical" form={form}>
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, marginBottom: 16}}>
           <Typography.Text>Type</Typography.Text>
-          <Segmented
-            value={targetSelection}
-            options={['Upstream service', 'Upstream host', 'Redirect']}
-            onChange={onChangeTargetType}
-          />
+          <Button.Group>
+            <Button
+              type={targetSelection === 'Upstream service' ? 'primary' : undefined}
+              onClick={() => setTargetSelection('Upstream service')}
+            >
+              Upstream service
+            </Button>
+            <Button
+              type={targetSelection === 'Upstream host' ? 'primary' : undefined}
+              onClick={() => setTargetSelection('Upstream host')}
+            >
+              Upstream host
+            </Button>
+            <Button
+              type={targetSelection === 'Redirect' ? 'primary' : undefined}
+              onClick={() => setTargetSelection('Redirect')}
+            >
+              Redirect
+            </Button>
+          </Button.Group>
         </div>
         {targetSelection.startsWith('Upstream') ? (
           <Upstream
