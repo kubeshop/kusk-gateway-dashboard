@@ -12,14 +12,12 @@ export const Container = styled.div`
 export const H2 = styled(Typography.Title).attrs({
   level: 2,
 })`
-  max-width: 375px;
+  max-width: 275px;
   margin: 24px 0 !important;
-  font-size: 28px !important;
-  line-height: 32px !important;
   text-align: center;
 `;
 
-export const PublishApiButton = styled(Button).attrs({
+export const CTAButton = styled(Button).attrs({
   type: 'primary',
 })`
   margin-top: 24px;
