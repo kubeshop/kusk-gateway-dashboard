@@ -9,6 +9,8 @@ import {useGetStaticRoutesQuery} from '@redux/services/enhancedApi';
 
 import {SubHeading} from '@components/AntdCustom';
 
+import EmptyList from './EmptyList';
+
 import * as S from './styled';
 
 const AddStaticRouteModal = lazy(() => import('@components/AddStaticRouteModal/AddStaticRouteModal'));
@@ -55,6 +57,8 @@ const StaticRoutes = () => {
     deployment: {name: staticRoute.envoyFleetName, namespace: staticRoute.envoyFleetNamespace},
   }));
 
+  const isEmptyDataSource = dataSource?.length === 0;
+
   const onAddStaticRouteClickHandler = () => {
     dispatch(openStaticRouteModal());
   };
@@ -64,19 +68,28 @@ const StaticRoutes = () => {
       <S.Header>
         <div>
           <Typography.Title>Static Routes</Typography.Title>
-          <SubHeading>
-            Define manually configured routing rules.&nbsp;
-            <Typography.Link href="https://docs.kusk.io/reference/customresources/staticroute">
-              Learn more about static routes
-            </Typography.Link>
-          </SubHeading>
+          {!isEmptyDataSource && (
+            <SubHeading>
+              Define manually configured routing rules.&nbsp;
+              <Typography.Link href="https://docs.kusk.io/reference/customresources/staticroute">
+                Learn more about static routes
+              </Typography.Link>
+            </SubHeading>
+          )}
         </div>
-        <Button type="primary" size="large" onClick={onAddStaticRouteClickHandler}>
-          Add static route
-        </Button>
+        {!isEmptyDataSource && (
+          <Button type="primary" size="large" onClick={onAddStaticRouteClickHandler}>
+            Add static route
+          </Button>
+        )}
       </S.Header>
 
-      <Table rowKey="name" columns={columns} dataSource={dataSource} pagination={false} />
+      {isEmptyDataSource ? (
+        <EmptyList />
+      ) : (
+        <Table rowKey="name" columns={columns} dataSource={dataSource} pagination={false} />
+      )}
+
       <Suspense fallback={null}>{isStaticRouteModalVisible && <AddStaticRouteModal />}</Suspense>
     </S.Container>
   );
