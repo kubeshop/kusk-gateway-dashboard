@@ -1,6 +1,6 @@
 import {useDispatch} from 'react-redux';
 
-import {Checkbox, Form, Input} from 'antd';
+import {Form, Input} from 'antd';
 
 import _ from 'lodash';
 
@@ -11,6 +11,8 @@ import {updateStaticRouteSettings} from '@redux/reducers/main';
 
 import {Divider} from '@components/AntdCustom';
 import {FormCard} from '@components/FormComponents';
+
+import * as S from './PathInfo.styled';
 
 const METHODS = SUPPORTED_METHODS.slice(0, -1);
 
@@ -62,14 +64,14 @@ const PathInfo = () => {
       </Form.Item>
       <Divider />
 
-      <Form.Item label="Operations" name="methods" rules={[{required: true}]} initialValue={methods}>
-        <Checkbox.Group style={{display: 'grid'}}>
+      <Form.Item label="Operations" name="methods" rules={[{required: true}]} initialValue={['get', ...methods]}>
+        <S.Checkbox.Group style={{display: 'grid'}}>
           {METHODS.map(method => (
-            <Checkbox style={{marginLeft: 0, marginTop: 16}} key={method} value={method}>
+            <S.Checkbox style={{marginLeft: 0, marginTop: 16}} key={method} value={method} disabled={method === 'get'}>
               {method.toUpperCase()}
-            </Checkbox>
+            </S.Checkbox>
           ))}
-        </Checkbox.Group>
+        </S.Checkbox.Group>
       </Form.Item>
       <Divider />
     </FormCard>

@@ -16,11 +16,12 @@ const PathForm = () => {
       <Form.Item
         label="Operations"
         name="methods"
+        initialValue={['get']}
         rules={[{required: true, message: 'must select one operation at least!'}]}
       >
         <S.CheckboxGroup>
           {METHODS.map(method => (
-            <S.Checkbox key={method} value={method}>
+            <S.Checkbox key={method} value={method} disabled={method === 'get'}>
               {method.toUpperCase()}
             </S.Checkbox>
           ))}

@@ -88,10 +88,10 @@ const AddPathModal = (): JSX.Element => {
                   <Input />
                 </Form.Item>
 
-                <Form.Item label="Operations" name="methods" rules={[{required: true}]}>
+                <Form.Item label="Operations" name="methods" rules={[{required: true}]} initialValue={['get']}>
                   <S.CheckboxGroup>
                     {METHODS.map(method => (
-                      <S.Checkbox key={method} value={method}>
+                      <S.Checkbox key={method} value={method} disabled={method === 'get'}>
                         {method.toUpperCase()}
                       </S.Checkbox>
                     ))}
