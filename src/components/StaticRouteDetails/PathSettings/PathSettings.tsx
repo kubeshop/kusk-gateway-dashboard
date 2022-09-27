@@ -18,6 +18,9 @@ const {TabPane} = S.Tabs;
 const PathSettings = () => {
   const dispatch = useDispatch();
   const selectedRoutePath = useAppSelector(state => state.main.selectedStaticRoutePath);
+  const selectedRouteSpec = useAppSelector(state => state.main.selectedStaticRouteSpec);
+
+  const disableDeletePath = Object.keys(selectedRouteSpec?.spec?.paths).length === 1;
 
   const onDeletePathClickHandler = () => {
     dispatch(
@@ -34,7 +37,7 @@ const PathSettings = () => {
     <div style={{position: 'relative'}}>
       <S.Header>
         <Typography.Title level={3}>{selectedRoutePath}</Typography.Title>
-        <Button danger type="primary" onClick={onDeletePathClickHandler}>
+        <Button danger type="primary" onClick={onDeletePathClickHandler} disabled={disableDeletePath}>
           Delete path
         </Button>
       </S.Header>
