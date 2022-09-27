@@ -1,8 +1,7 @@
-import {Typography} from 'antd';
-
 import {useAppDispatch} from '@redux/hooks';
 import {openApiPublishModal} from '@redux/reducers/ui';
 
+import {SubHeading} from '@components/AntdCustom';
 import {DiscordCard, HelpCard, HelpCardGroup} from '@components/HelpCard';
 
 import DashboardImg from '@assets/emptydashboard.svg';
@@ -19,13 +18,13 @@ const EmptyApisList = () => {
   return (
     <S.Container>
       <img src={DashboardImg} />
-      <S.H2>Create your first API gateway in a few easy steps.</S.H2>
-      <Typography.Paragraph style={{maxWidth: 375, textAlign: 'center'}}>
+      <S.H2>Create your first API in a few easy steps.</S.H2>
+      <SubHeading style={{maxWidth: 290, textAlign: 'center'}}>
         Create your first API, get it deployed and query your endpoints right away!
-      </Typography.Paragraph>
+      </SubHeading>
 
       <S.PublishApiButton type="primary" onClick={onClickPublishHandler}>
-        Add first API gateway
+        Create first API
       </S.PublishApiButton>
 
       <HelpCardGroup>

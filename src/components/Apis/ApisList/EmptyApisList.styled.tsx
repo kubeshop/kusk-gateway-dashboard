@@ -12,10 +12,8 @@ export const Container = styled.div`
 export const H2 = styled(Typography.Title).attrs({
   level: 2,
 })`
-  max-width: 375px;
+  max-width: 270px;
   margin: 24px 0 !important;
-  font-size: 28px !important;
-  line-height: 32px !important;
   text-align: center;
 `;
 
