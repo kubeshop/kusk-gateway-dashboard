@@ -1,11 +1,16 @@
 import {Suspense, lazy} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Button, Table, Tag, Typography} from 'antd';
+import {Button, Modal, Table, Tag, Typography} from 'antd';
+import {ColumnsType} from 'antd/lib/table';
+
+import {AlertEnum} from '@models/alert';
 
 import {useAppSelector} from '@redux/hooks';
+import {setAlert} from '@redux/reducers/alert';
 import {openStaticRouteModal} from '@redux/reducers/ui';
-import {useGetStaticRoutesQuery} from '@redux/services/enhancedApi';
+import {useDeleteStaticRouteMutation, useGetStaticRoutesQuery} from '@redux/services/enhancedApi';
+import {StaticRouteItem} from '@redux/services/kuskApi';
 
 import {SubHeading} from '@components/AntdCustom';
 
@@ -15,7 +20,15 @@ import * as S from './styled';
 
 const AddStaticRouteModal = lazy(() => import('@components/AddStaticRouteModal/AddStaticRouteModal'));
 
-const columns = [
+interface StaticRouteRecord extends StaticRouteItem {
+  deployment: {
+    namespace: string | undefined;
+    name: string | undefined;
+  };
+  deleteStaticRoute: (arg: {namespace: string; name: string}) => void;
+}
+
+const columns: ColumnsType<StaticRouteRecord> = [
   {
     title: 'NAME',
     dataIndex: 'name',
@@ -45,23 +58,70 @@ const columns = [
       <Typography.Link href={`/staticroute/${namespace}/${name}`}>View details</Typography.Link>
     ),
   },
+  {
+    title: '',
+    dataIndex: 'delete',
+    key: 'delete',
+    render: () => <Typography.Link>Delete</Typography.Link>,
+    onCell: record => ({
+      onClick: event => {
+        event.stopPropagation();
+        record.deleteStaticRoute({namespace: record.namespace, name: record.name});
+      },
+    }),
+  },
 ];
 
 const StaticRoutes = () => {
   const dispatch = useDispatch();
   const {data: staticRoutes} = useGetStaticRoutesQuery({});
+  const [deleteStaticRoute] = useDeleteStaticRouteMutation();
   const isStaticRouteModalVisible = useAppSelector(state => state.ui.staticRouteModal.isOpen);
 
-  const dataSource = staticRoutes?.map(staticRoute => ({
-    ...staticRoute,
-    deployment: {name: staticRoute.envoyFleetName, namespace: staticRoute.envoyFleetNamespace},
-  }));
+  const onDeleteStaticRoute = ({namespace, name}: {name: string; namespace: string}) => {
+    Modal.confirm({
+      title: `Delete ${name}`,
+      content: `Are you sure you want to delete ${name}? 
+      If you do so your application will be unreachable on this route. `,
+      okText: 'Yes, delete',
+      cancelText: 'Cancel',
+      okType: 'danger',
 
-  const isEmptyDataSource = dataSource?.length === 0;
+      onOk: async () => {
+        try {
+          await deleteStaticRoute({namespace, name}).unwrap();
+          dispatch(
+            setAlert({
+              title: 'Static route deleted successfully',
+              description: `${name} was deleted successfully in ${namespace} namespace!`,
+              type: AlertEnum.Success,
+            })
+          );
+        } catch (e) {
+          dispatch(
+            setAlert({
+              title: 'Static route has not deleted',
+              description: `Something went wrong!`,
+              type: AlertEnum.Error,
+            })
+          );
+        }
+      },
+    });
+  };
 
   const onAddStaticRouteClickHandler = () => {
     dispatch(openStaticRouteModal());
   };
+
+  const dataSource: Array<StaticRouteRecord> =
+    staticRoutes?.map((staticRoute: StaticRouteItem) => ({
+      ...staticRoute,
+      deployment: {name: staticRoute.envoyFleetName, namespace: staticRoute.envoyFleetNamespace},
+      deleteStaticRoute: onDeleteStaticRoute,
+    })) || [];
+
+  const isEmptyDataSource = dataSource?.length === 0;
 
   return (
     <S.Container>
