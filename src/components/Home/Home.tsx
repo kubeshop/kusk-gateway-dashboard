@@ -1,6 +1,8 @@
 import {Suspense, lazy} from 'react';
 import {useParams} from 'react-router-dom';
 
+import {AppRoutes} from '@constants/AppRoutes';
+
 import {Header} from './Header';
 
 const Apis = lazy(() => import('@components/Apis/Apis'));
@@ -9,7 +11,12 @@ const Settings = lazy(() => import('@components/Settings/Settings'));
 
 const Home = () => {
   const {'*': path = '/apis'} = useParams();
-  const [section] = path?.length > 0 ? path?.split('/') : ['apis'];
+
+  const [section] = AppRoutes.APP_SETTINGS.includes(path)
+    ? ['settings']
+    : AppRoutes.STATIC_ROUTES.includes(path)
+    ? ['staticroutes']
+    : ['apis'];
 
   return (
     <>

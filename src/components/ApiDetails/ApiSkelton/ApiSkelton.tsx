@@ -1,22 +1,13 @@
-import {Skeleton, Space} from 'antd';
+import {CardSkeleton} from '@components/Skeletons';
 
 import * as S from './styled';
 
 const ApiSkelton = () => {
   return (
     <S.Container>
-      <Space direction="vertical">
-        <Skeleton.Button shape="square" active />
-        <Skeleton.Button shape="square" active />
-        <Skeleton.Button shape="square" active />
-        <Skeleton.Button shape="square" active />
-      </Space>
-
-      <Space direction="vertical">
-        <Skeleton active />
-        <Skeleton active />
-        <Skeleton active />
-      </Space>
+      <CardSkeleton />
+      <CardSkeleton />
+      <CardSkeleton />
     </S.Container>
   );
 };

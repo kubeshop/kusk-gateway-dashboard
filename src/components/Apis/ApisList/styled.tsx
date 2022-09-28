@@ -49,3 +49,9 @@ export const NoResults = styled.div`
     margin-bottom: 24px !important;
   }
 `;
+
+export const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+`;

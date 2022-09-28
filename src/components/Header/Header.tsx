@@ -22,11 +22,11 @@ const Header = () => {
   const navigate = useNavigate();
   const {pathname} = useLocation();
   const {namespace: apiNamespace, name: apiName} = useParams();
-  const type = pathname.includes(AppRoutes.API) ? 'api' : 'staticroute';
-
-  const backOptions = pathname.includes(AppRoutes.API)
-    ? {label: 'APIs', onClick: () => navigate(AppRoutes.APIS)}
-    : {label: 'Static Routes', onClick: () => navigate(AppRoutes.STATIC_ROUTES)};
+  const type = pathname.includes(`${AppRoutes.API}/`) ? 'api' : 'staticroute';
+  const backOptions =
+    type === 'api'
+      ? {label: 'APIs', onClick: () => navigate(AppRoutes.APIS)}
+      : {label: 'Static Routes', onClick: () => navigate(AppRoutes.STATIC_ROUTES)};
 
   const {data: apis = []} = useGetApisQuery(type === 'api' ? {} : skipToken);
 
