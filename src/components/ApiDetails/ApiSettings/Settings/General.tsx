@@ -145,7 +145,7 @@ const GeneralSettings = () => {
           />
         }
       >
-        <S.DeleteButton danger size="large" type="primary" onClick={onDeleteClickHandler}>
+        <S.DeleteButton danger type="primary" onClick={onDeleteClickHandler}>
           Delete
         </S.DeleteButton>
       </S.DeleteCard>

@@ -66,7 +66,6 @@ const FormCard: FC<IProps> = props => {
             {() => (
               <S.SaveButton
                 htmlType="submit"
-                size="large"
                 disabled={
                   !form.isFieldsTouched() || form.getFieldsError().filter(({errors}) => errors.length).length > 0
                 }

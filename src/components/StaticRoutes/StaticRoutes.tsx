@@ -138,7 +138,7 @@ const StaticRoutes = () => {
           )}
         </div>
         {!isEmptyDataSource && (
-          <Button type="primary" size="large" onClick={onAddStaticRouteClickHandler}>
+          <Button type="primary" onClick={onAddStaticRouteClickHandler}>
             Add static route
           </Button>
         )}

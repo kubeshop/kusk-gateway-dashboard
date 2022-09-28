@@ -31,7 +31,7 @@ const Targets = () => {
       </div>
       {!hasTarget && (
         <div>
-          <Button type="primary" size="large" onClick={onAddTargetClick}>
+          <Button type="primary" onClick={onAddTargetClick}>
             {hasTarget ? 'Define a new target' : 'Define your first target'}
           </Button>
         </div>

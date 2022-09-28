@@ -94,7 +94,6 @@ const ApisList: React.FC = () => {
             <Button
               disabled={isLoading || Boolean(error) || !Array.isArray(data)}
               type="primary"
-              size="large"
               onClick={showApiPublishModalHandler}
             >
               Add a new API
