@@ -117,7 +117,7 @@ export const SwaggerUIStyle = `
       & .title {
         color: ${Colors.zinc9};
         font-size: 24px;
-        font-weight: 600;
+        font-weight: 500;
         font-family: 'Roboto', sans-serif;
         & small {
           border-radius: 4px;
@@ -230,7 +230,7 @@ export const SwaggerUIStyle = `
       &-tag {
         color: ${Colors.zinc9};
         font-size: 18px;
-        font-weight: 600;
+        font-weight: 500;
         border: none;
         & small {
           color: ${Colors.grey1};
