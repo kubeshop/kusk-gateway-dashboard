@@ -10,7 +10,7 @@ import {CardSkeleton} from '@components/Skeletons';
 const Hosts = () => {
   const dispatch = useDispatch();
   const selectedRouteSpec = useAppSelector(state => state.main.selectedStaticRouteSpec);
-  console.log(selectedRouteSpec?.spec?.hosts);
+
   const onSubmitClickHandler = (values: any) => {
     const {hosts} = values;
     dispatch(
