@@ -28,7 +28,7 @@ const ApisList: React.FC = () => {
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
   const [searchApiName, setSearchApiName] = useState<string>('');
   const {data: namespaces} = useGetNamespacesQuery();
-  const {data, error, isError, isLoading} = useGetApisQuery({});
+  const {data, error, isError, isLoading} = useGetApisQuery({namespace: selectedNamespace});
 
   const renderedNamespaceOptions = useMemo(() => {
     return namespaces?.map(namespace => (
@@ -65,7 +65,7 @@ const ApisList: React.FC = () => {
         <Typography.Text type="secondary">Explore your APIs at a glance...</Typography.Text>
       </S.Header>
 
-      {data?.length === 0 ? (
+      {data?.length === 0 && !selectedNamespace ? (
         <EmptyApisList />
       ) : (
         <>
