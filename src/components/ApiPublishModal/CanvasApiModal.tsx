@@ -7,6 +7,7 @@ import {Button, Form, Input, Select} from 'antd';
 import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
+import {AppRoutes} from '@constants/AppRoutes';
 import {SUPPORTED_METHODS} from '@constants/constants';
 import ToDoTemplate from '@constants/rawOpenApiSpec.json';
 
@@ -94,7 +95,7 @@ const CanvasApiModal = () => {
           })
         );
         dispatch(selectApi(apiData));
-        navigate(`/${apiData.namespace}/${apiData.name}`);
+        navigate(`${AppRoutes.API}/${apiData.namespace}/${apiData.name}`);
       })
       .catch(() => {});
   };

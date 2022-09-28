@@ -7,6 +7,8 @@ import {DownOutlined} from '@ant-design/icons';
 
 import {skipToken} from '@reduxjs/toolkit/query/react';
 
+import {AppRoutes} from '@constants/AppRoutes';
+
 import {AlertEnum} from '@models/alert';
 
 import {setAlert} from '@redux/reducers/alert';
@@ -20,11 +22,11 @@ const Header = () => {
   const navigate = useNavigate();
   const {pathname} = useLocation();
   const {namespace: apiNamespace, name: apiName} = useParams();
-  const type = pathname.includes('/api') ? 'api' : 'staticroute';
+  const type = pathname.includes(AppRoutes.API) ? 'api' : 'staticroute';
 
-  const backOptions = pathname.includes('/api')
-    ? {label: 'APIs', onClick: () => navigate('/apis')}
-    : {label: 'Static Routes', onClick: () => navigate('/staticroutes')};
+  const backOptions = pathname.includes(AppRoutes.API)
+    ? {label: 'APIs', onClick: () => navigate(AppRoutes.APIS)}
+    : {label: 'Static Routes', onClick: () => navigate(AppRoutes.STATIC_ROUTES)};
 
   const {data: apis = []} = useGetApisQuery(type === 'api' ? {} : skipToken);
 
@@ -43,7 +45,7 @@ const Header = () => {
             type: AlertEnum.Success,
           })
         );
-        navigate(`/api/${api.namespace}/${api.name}`);
+        navigate(`${AppRoutes.API}/${api.namespace}/${api.name}`);
       },
     }));
 
