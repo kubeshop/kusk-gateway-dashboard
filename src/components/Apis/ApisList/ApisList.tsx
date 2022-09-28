@@ -107,7 +107,7 @@ const ApisList: React.FC = () => {
               type="primary"
               onClick={showApiPublishModalHandler}
             >
-              Add a new API
+              Create API
             </Button>
           </S.ActionsContainer>
 
