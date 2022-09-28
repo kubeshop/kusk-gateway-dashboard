@@ -3,6 +3,8 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 import {Typography} from 'antd';
 
+import {AppRoutes} from '@constants/AppRoutes';
+
 import {useAppSelector} from '@redux/hooks';
 
 import {DeploymentsSettings} from './DeploymentsSettings';
@@ -36,12 +38,15 @@ const Settings = () => {
 
       <S.SettingsContainer>
         <S.List>
-          <S.ListItem $selected={selectedSettingsItem === 'kusk'} onClick={() => navigate('/settings/kusk')}>
+          <S.ListItem
+            $selected={selectedSettingsItem === 'kusk'}
+            onClick={() => navigate(`${AppRoutes.APP_SETTINGS}/kusk`)}
+          >
             kusk settings
           </S.ListItem>
           <S.ListItem
             $selected={selectedSettingsItem === 'deployments'}
-            onClick={() => navigate('/settings/deployments')}
+            onClick={() => navigate(`${AppRoutes.APP_SETTINGS}/deployments`)}
           >
             Deployment fleets
           </S.ListItem>

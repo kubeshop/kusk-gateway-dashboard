@@ -4,6 +4,8 @@ import {useDispatch} from 'react-redux';
 import {Button, Modal, Table, Tag, Typography} from 'antd';
 import {ColumnsType} from 'antd/lib/table';
 
+import {AppRoutes} from '@constants/AppRoutes';
+
 import {AlertEnum} from '@models/alert';
 
 import {useAppSelector} from '@redux/hooks';
@@ -55,7 +57,7 @@ const columns: ColumnsType<StaticRouteRecord> = [
     dataIndex: 'details',
     key: 'details',
     render: (args: any, {name, namespace}: any) => (
-      <Typography.Link href={`/staticroute/${namespace}/${name}`}>View details</Typography.Link>
+      <Typography.Link href={`${AppRoutes.STATIC_ROUTE}/${namespace}/${name}`}>View details</Typography.Link>
     ),
   },
   {

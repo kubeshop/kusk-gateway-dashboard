@@ -7,6 +7,8 @@ import {RcFile} from 'antd/lib/upload';
 import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
+import {AppRoutes} from '@constants/AppRoutes';
+
 import {AlertEnum} from '@models/alert';
 import {ApiContent} from '@models/main';
 
@@ -74,7 +76,7 @@ const FileApiModal = () => {
           })
         );
         dispatch(selectApi(apiData));
-        navigate(`/${apiData.namespace}/${apiData.name}`);
+        navigate(`${AppRoutes.API}/${apiData.namespace}/${apiData.name}`);
       });
   };
 

@@ -2,6 +2,8 @@ import {useNavigate} from 'react-router-dom';
 
 import {Button} from 'antd';
 
+import {AppRoutes} from '@constants/AppRoutes';
+
 import Api404 from '@assets/api404.svg';
 
 import * as S from './styled';
@@ -9,7 +11,7 @@ import * as S from './styled';
 const ApiNotFound = () => {
   const navigate = useNavigate();
   const onBackClickHandler = () => {
-    navigate('/');
+    navigate(AppRoutes.APP_HOME);
   };
   return (
     <S.Container>

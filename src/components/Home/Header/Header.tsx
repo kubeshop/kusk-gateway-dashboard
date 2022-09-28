@@ -2,6 +2,8 @@ import {Link, useNavigate, useParams} from 'react-router-dom';
 
 import {Dropdown, Menu} from 'antd';
 
+import {AppRoutes} from '@constants/AppRoutes';
+
 import KuskLogo from '@assets/KuskLogo.svg';
 
 import * as S from './styled';
@@ -16,21 +18,21 @@ const Header = () => {
       label: 'APIs',
       key: 'apis',
       onClick: () => {
-        navigate('/apis');
+        navigate(AppRoutes.APIS);
       },
     },
     {
       label: 'Static Routes',
       key: 'staticroutes',
       onClick: () => {
-        navigate('/staticroutes');
+        navigate(AppRoutes.STATIC_ROUTES);
       },
     },
     {
       label: 'Settings',
       key: 'settings',
       onClick: () => {
-        navigate('/settings');
+        navigate(AppRoutes.APP_SETTINGS);
       },
     },
   ];

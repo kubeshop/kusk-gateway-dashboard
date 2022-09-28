@@ -47,11 +47,6 @@ const StaticRouteDetails = () => {
       <S.Container>
         <S.Content onClick={() => dispatch(selectStaticRoutePath(null))}>
           <div>
-            {/* <Typography.Link onClick={() => navigate('/settings/staticRoutes')}>
-              <S.ArrowLeftOutlinedIcon />
-              Back to Static Routes
-            </Typography.Link> */}
-
             <S.Title>{(crd as any)?.metadata?.name}</S.Title>
             <SubHeading>
               Define manually configured routing rules.&nbsp;

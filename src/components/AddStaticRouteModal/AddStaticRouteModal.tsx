@@ -6,6 +6,8 @@ import {Form, Steps} from 'antd';
 
 import YAML from 'yaml';
 
+import {AppRoutes} from '@constants/AppRoutes';
+
 import {AlertEnum} from '@models/alert';
 import {StaticRoute} from '@models/main';
 
@@ -76,7 +78,7 @@ const AddStaticRouteModal = () => {
       })
     );
     dispatch(closeStaticRouteModal());
-    navigate(`/staticroute/${result.namespace}/${result.name}`);
+    navigate(`${AppRoutes.STATIC_ROUTE}/${result.namespace}/${result.name}`);
   };
 
   const onBackHandler = () => {

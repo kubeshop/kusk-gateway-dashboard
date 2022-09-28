@@ -5,6 +5,8 @@ import {Modal, Typography} from 'antd';
 
 import {MoreOutlined} from '@ant-design/icons';
 
+import {AppRoutes} from '@constants/AppRoutes';
+
 import {AlertEnum} from '@models/alert';
 
 import {setAlert} from '@redux/reducers/alert';
@@ -69,7 +71,7 @@ const ApisListTable: React.FC<IProps> = props => {
 
   const onApiItemClick = (api: ApiItem) => {
     dispatch(selectApi(api));
-    navigate(`/api/${api.namespace}/${api.name}`);
+    navigate(`${AppRoutes.API}/${api.namespace}/${api.name}`);
   };
 
   return (
