@@ -15,6 +15,7 @@ import {useDeleteStaticRouteMutation, useGetStaticRoutesQuery} from '@redux/serv
 import {StaticRouteItem} from '@redux/services/kuskApi';
 
 import {SubHeading} from '@components/AntdCustom';
+import {TableSkeleton} from '@components/Skeletons/Skeletons';
 
 import EmptyList from './EmptyList';
 
@@ -76,7 +77,7 @@ const columns: ColumnsType<StaticRouteRecord> = [
 
 const StaticRoutes = () => {
   const dispatch = useDispatch();
-  const {data: staticRoutes} = useGetStaticRoutesQuery({});
+  const {data: staticRoutes, isLoading: isLoadingStaticRoutes} = useGetStaticRoutesQuery({});
   const [deleteStaticRoute] = useDeleteStaticRouteMutation();
   const isStaticRouteModalVisible = useAppSelector(state => state.ui.staticRouteModal.isOpen);
 
@@ -146,7 +147,9 @@ const StaticRoutes = () => {
         )}
       </S.Header>
 
-      {isEmptyDataSource ? (
+      {isLoadingStaticRoutes ? (
+        <TableSkeleton />
+      ) : isEmptyDataSource ? (
         <EmptyList />
       ) : (
         <Table rowKey="name" columns={columns} dataSource={dataSource} pagination={false} />

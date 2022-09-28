@@ -12,6 +12,7 @@ import {useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedAp
 import {ContentWrapper, PageTitle} from '@components/AntdCustom';
 import {DiscordCard, HelpCard, HelpCardGroup} from '@components/HelpCard';
 import {KuskApisDown} from '@components/KuskApiDown';
+import {GridItemSkeleton} from '@components/Skeletons';
 
 import NoResultsImg from '@assets/noresults.svg';
 
@@ -21,6 +22,16 @@ import EmptyApisList from './EmptyApisList';
 import * as S from './styled';
 
 const {Option} = Select;
+
+const APIsSkelton = () => (
+  <S.Grid>
+    {new Array(6).fill(0).map((_, index) => {
+      const key = `skeleton-item-${index}`;
+
+      return <GridItemSkeleton key={key} />;
+    })}
+  </S.Grid>
+);
 
 const ApisList: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -74,7 +85,7 @@ const ApisList: React.FC = () => {
               <Input allowClear prefix={<SearchOutlined />} placeholder="API Name" onChange={onSearchApiNameChange} />
 
               {isLoading ? (
-                <Skeleton.Button />
+                <Skeleton.Input />
               ) : !namespaces ? null : (
                 <Select
                   allowClear
@@ -101,7 +112,7 @@ const ApisList: React.FC = () => {
           </S.ActionsContainer>
 
           {isLoading ? (
-            <Skeleton />
+            <APIsSkelton />
           ) : data && data.filter(el => el.name.includes(searchApiName)).length > 0 ? (
             <ApisListTable apis={data.filter(el => el.name.includes(searchApiName))} />
           ) : (

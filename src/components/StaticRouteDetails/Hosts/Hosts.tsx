@@ -5,6 +5,7 @@ import {updateStaticRouteSettings} from '@redux/reducers/main';
 
 import {Divider} from '@components/AntdCustom';
 import {FormCard, FormList} from '@components/FormComponents';
+import {CardSkeleton} from '@components/Skeletons';
 
 const Hosts = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,9 @@ const Hosts = () => {
     );
   };
 
-  return (
+  return !selectedRouteSpec ? (
+    <CardSkeleton />
+  ) : (
     <FormCard
       heading="Hosts"
       subHeading="Configure which domains your static route should listen to"

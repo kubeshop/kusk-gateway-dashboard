@@ -29,7 +29,7 @@ const StaticRouteDetails = () => {
   const section = params['*'];
   const selectedRoutePath = useAppSelector(state => state.main.selectedStaticRoutePath);
 
-  const {data: crd, isLoading} = useGetStaticRouteCrdQuery({name, namespace});
+  useGetStaticRouteCrdQuery({name, namespace});
   const ref = useRef(null);
   const selectedTab: RouteTabs = section?.includes('hosts') ? 'hosts' : section?.includes('paths') ? 'paths' : 'info';
   useOnClickOutside(ref, () => dispatch(selectStaticRoutePath(null)));
@@ -41,13 +41,13 @@ const StaticRouteDetails = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTab]);
 
-  return isLoading ? null : (
+  return (
     <S.Wrapper>
       <Header />
       <S.Container>
         <S.Content onClick={() => dispatch(selectStaticRoutePath(null))}>
           <div>
-            <S.Title>{(crd as any)?.metadata?.name}</S.Title>
+            <S.Title>{name}</S.Title>
             <SubHeading>
               Define manually configured routing rules.&nbsp;
               <Typography.Link href="https://docs.kusk.io/reference/customresources/staticroute">

@@ -8,6 +8,7 @@ import {useGetEnvoyFleetsQuery, useGetNamespacesQuery} from '@redux/services/enh
 
 import {Divider} from '@components/AntdCustom';
 import {FormCard} from '@components/FormComponents';
+import {CardSkeleton} from '@components/Skeletons';
 
 import * as S from './styled';
 
@@ -31,7 +32,9 @@ const RouteInfo = () => {
     );
   };
 
-  return isLoading || isLoadingNamespaces ? null : (
+  return isLoading || isLoadingNamespaces ? (
+    <CardSkeleton />
+  ) : (
     <S.Container>
       <FormCard
         heading="Route Information"

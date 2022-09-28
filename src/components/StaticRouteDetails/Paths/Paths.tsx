@@ -73,6 +73,7 @@ const Paths = () => {
       <Table
         rowKey="path"
         pagination={false}
+        loading={!routeSpec}
         columns={columns}
         dataSource={dataSource}
         rowClassName={record => (record.path === selectedRoutePath ? 'ant-table-selected-cell' : '')}
