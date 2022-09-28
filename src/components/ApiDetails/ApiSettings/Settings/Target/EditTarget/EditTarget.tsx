@@ -94,14 +94,12 @@ const EditTarget = ({target, type, dismissEditMode}: IProps) => {
         )}
       </Form>
       <S.CardActions>
-        <Button danger type="primary" size="large" onClick={onDeleteClickHandler}>
+        <Button danger type="primary" onClick={onDeleteClickHandler}>
           Delete this target
         </Button>
         <div>
-          <Button size="large" onClick={onCancelClickHandler}>
-            Cancel
-          </Button>
-          <Button style={{marginLeft: 16}} type="primary" size="large" onClick={onSaveClickHandler}>
+          <Button onClick={onCancelClickHandler}>Cancel</Button>
+          <Button style={{marginLeft: 16}} type="primary" onClick={onSaveClickHandler}>
             Save
           </Button>
         </div>

@@ -6,10 +6,10 @@ const ApiSkelton = () => {
   return (
     <S.Container>
       <Space direction="vertical">
-        <Skeleton.Button shape="square" size="large" active />
-        <Skeleton.Button shape="square" size="large" active />
-        <Skeleton.Button shape="square" size="large" active />
-        <Skeleton.Button shape="square" size="large" active />
+        <Skeleton.Button shape="square" active />
+        <Skeleton.Button shape="square" active />
+        <Skeleton.Button shape="square" active />
+        <Skeleton.Button shape="square" active />
       </Space>
 
       <Space direction="vertical">

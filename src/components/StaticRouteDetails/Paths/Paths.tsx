@@ -66,7 +66,7 @@ const Paths = () => {
             <Typography.Link>Learn more about static routes </Typography.Link>
           </SubHeading>
         </div>
-        <Button type="primary" size="large" onClick={onAddPathClickHandler}>
+        <Button type="primary" onClick={onAddPathClickHandler}>
           Add new path
         </Button>
       </S.Header>
