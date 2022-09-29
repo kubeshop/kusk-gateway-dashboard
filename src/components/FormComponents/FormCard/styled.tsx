@@ -4,11 +4,16 @@ import styled from 'styled-components';
 
 import {Shadows} from '@styles/global';
 
+export const ActionButtons = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-left: auto;
+`;
+
 export const SaveButton = styled(Button).attrs({
   type: 'primary',
 })`
   display: block;
-  margin-left: auto;
   width: 124px;
 `;
 

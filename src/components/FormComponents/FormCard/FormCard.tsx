@@ -1,6 +1,6 @@
 import {FC} from 'react';
 
-import {CardProps, Form, FormProps, Typography} from 'antd';
+import {Button, CardProps, Form, FormProps, Typography} from 'antd';
 
 import {CardHeading} from '@components/AntdCustom';
 
@@ -25,6 +25,10 @@ const FormCard: FC<IProps> = props => {
     setTimeout(() => {
       form.resetFields();
     }, 1000);
+  };
+
+  const onCancelClick = () => {
+    form.resetFields();
   };
 
   return isViewMode ? (
@@ -62,18 +66,24 @@ const FormCard: FC<IProps> = props => {
               </Typography.Link>
             </Typography.Text>
           )}
-          <Form.Item shouldUpdate>
-            {() => (
-              <S.SaveButton
-                htmlType="submit"
-                disabled={
-                  !form.isFieldsTouched() || form.getFieldsError().filter(({errors}) => errors.length).length > 0
-                }
-              >
-                Save
-              </S.SaveButton>
-            )}
-          </Form.Item>
+          <S.ActionButtons>
+            <Form.Item shouldUpdate>
+              {() => form.isFieldsTouched() && <Button onClick={onCancelClick}>Cancel</Button>}
+            </Form.Item>
+
+            <Form.Item shouldUpdate>
+              {() => (
+                <S.SaveButton
+                  htmlType="submit"
+                  disabled={
+                    !form.isFieldsTouched() || form.getFieldsError().filter(({errors}) => errors.length).length > 0
+                  }
+                >
+                  Save
+                </S.SaveButton>
+              )}
+            </Form.Item>
+          </S.ActionButtons>
         </S.CardActions>
       </S.Card>
     </Form>
