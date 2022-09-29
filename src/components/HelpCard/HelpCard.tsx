@@ -1,10 +1,12 @@
 import Icon from '@ant-design/icons';
 
+import {KUSK_DOCS} from '@constants/constants';
+
 import {RawExternalIcon} from '@components/Icons';
 
 import * as S from './styled';
 
-export const HelpCard = ({title, link}: {title: string; link: string}) => {
+export const HelpCard = ({title, link = KUSK_DOCS}: {title: string; link?: string}) => {
   return (
     <S.Card href={link}>
       <S.BookOutlinedIcon />
