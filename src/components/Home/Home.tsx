@@ -12,9 +12,9 @@ const Settings = lazy(() => import('@components/Settings/Settings'));
 const Home = () => {
   const {'*': path = '/apis'} = useParams();
 
-  const [section] = AppRoutes.APP_SETTINGS.includes(path)
+  const [section] = `/${path}`.startsWith(AppRoutes.APP_SETTINGS)
     ? ['settings']
-    : AppRoutes.STATIC_ROUTES.includes(path)
+    : `/${path}`.startsWith(AppRoutes.STATIC_ROUTES)
     ? ['staticroutes']
     : ['apis'];
 
