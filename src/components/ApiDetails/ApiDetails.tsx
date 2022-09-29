@@ -28,10 +28,6 @@ const ApiDetails = () => {
     ? 'paths'
     : 'openapiBrowser';
 
-  if (isLoadingApi) {
-    return <ApiSkelton />;
-  }
-
   if (isError) {
     return <ApiNotFound />;
   }
@@ -39,14 +35,18 @@ const ApiDetails = () => {
   return (
     <S.Wrapper>
       <Header />
-      <S.Container>
-        <Sidebar activeSection={activeSection} />
-        <S.Content>
-          {activeSection === 'openapiBrowser' && <ApiOpenSpec />}
-          {activeSection === 'paths' && <ApiPaths />}
-          {activeSection === 'settings' && <ApiSettings />}
-        </S.Content>
-      </S.Container>
+      {isLoadingApi ? (
+        <ApiSkelton />
+      ) : (
+        <S.Container>
+          <Sidebar activeSection={activeSection} />
+          <S.Content>
+            {activeSection === 'openapiBrowser' && <ApiOpenSpec />}
+            {activeSection === 'paths' && <ApiPaths />}
+            {activeSection === 'settings' && <ApiSettings />}
+          </S.Content>
+        </S.Container>
+      )}
     </S.Wrapper>
   );
 };
