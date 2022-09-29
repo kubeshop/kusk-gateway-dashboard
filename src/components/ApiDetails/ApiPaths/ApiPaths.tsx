@@ -48,7 +48,7 @@ const columns = [
   },
 ];
 
-const ApiRoutes = () => {
+const ApiPaths = () => {
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
   const [selectedMethod, setSelectedMethod] = useState('');
   const [selectedSource, setSelectedSource] = useState('');
@@ -64,6 +64,7 @@ const ApiRoutes = () => {
         key: path,
         route: path,
         methods: Object.keys(selectedAPIOpenSpec.paths[path])
+          .filter(i => METHODS.includes(i))
           .filter(i => i.includes(selectedMethod))
           .join(','),
         source: type,
@@ -111,4 +112,4 @@ const ApiRoutes = () => {
     </S.Container>
   );
 };
-export default ApiRoutes;
+export default ApiPaths;
