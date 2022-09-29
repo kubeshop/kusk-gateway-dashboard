@@ -5,3 +5,4 @@ export const TOOLTIP_DELAY = 0.05;
 export const KUSK_SETTINGS_TARGET_API = 'KUSK_SETTINGS_TARGET_API';
 export const KUSK_USER_ANALYTICS_OFF = 'KUSK_USER_ANALYTICS_OFF';
 export const APP_ROUTES = ['/settings', '/staticroute'];
+export const KUSK_DOCS = 'https://docs.kusk.io/';

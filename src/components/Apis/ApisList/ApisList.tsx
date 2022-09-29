@@ -126,9 +126,9 @@ const ApisList: React.FC = () => {
           )}
           <S.HelpSection>
             <HelpCardGroup>
-              <HelpCard title="Handle different environments for one API gateway" link="" />
-              <HelpCard title="Version your gateway like a pro" link="" />
-              <HelpCard title="How to deploy your API gateway" link="" />
+              <HelpCard title="Handle different environments for one API gateway" />
+              <HelpCard title="Version your gateway like a pro" />
+              <HelpCard title="How to deploy your API gateway" />
             </HelpCardGroup>
             <DiscordCard />
           </S.HelpSection>
