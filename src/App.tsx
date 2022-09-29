@@ -1,7 +1,5 @@
 import {Suspense} from 'react';
 
-import {Skeleton} from 'antd';
-
 import styled from 'styled-components';
 import 'swagger-ui-react/swagger-ui.css';
 
@@ -19,7 +17,7 @@ const App = () => {
   return (
     <>
       <AppContainer>
-        <Suspense fallback={<Skeleton />}>
+        <Suspense fallback={null}>
           <Router />
         </Suspense>
       </AppContainer>
