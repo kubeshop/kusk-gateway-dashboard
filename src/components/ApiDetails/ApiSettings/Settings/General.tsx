@@ -63,15 +63,16 @@ const GeneralSettings = () => {
       <FormCard
         heading="Display name"
         subHeading="Please provide the display name of your API"
-        formProps={{onFinish: onSaveClickHandler, disabled: true}}
+        formProps={{onFinish: onSaveClickHandler}}
       >
-        <Form.Item name="name" initialValue={selectedAPI?.name}>
+        <Form.Item name={['info', 'title']} initialValue={selectedAPIOpenSpec?.info?.title || selectedAPI?.name}>
           <Input placeholder="My first API being renamed" />
         </Form.Item>
         <S.Divider />
       </FormCard>
 
       <FormCard
+        isViewMode
         heading="Namespace"
         subHeading="Define which namespace and labels this API is assigned to"
         helpTopic="Namespaces"
@@ -87,7 +88,6 @@ const GeneralSettings = () => {
             ))}
           </Select>
         </Form.Item>
-        <S.Divider />
       </FormCard>
 
       <FormCard

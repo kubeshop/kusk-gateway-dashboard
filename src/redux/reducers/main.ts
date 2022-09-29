@@ -24,8 +24,8 @@ export const updateApiSettings = createAsyncThunk<any, {editedOpenapi?: any}, {s
     const openapiObj = _.merge({}, selectedApiOpenapiSpec, editedOpenapi);
 
     const body = {
-      name: editedOpenapi?.name || selectedApi?.name,
-      namespace: editedOpenapi?.namespace || selectedApi?.namespace,
+      name: selectedApi?.name,
+      namespace: selectedApi?.namespace,
       envoyFleetName: editedOpenapi?.envoyFleetName || selectedApi?.fleet?.name,
       envoyFleetNamespace: editedOpenapi?.envoyFleetNamespace || selectedApi?.fleet?.namespace,
       openapi: YAML.stringify(cleanDeep(openapiObj)),
