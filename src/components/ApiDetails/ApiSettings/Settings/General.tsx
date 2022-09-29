@@ -7,10 +7,12 @@ import {AlertEnum} from '@models/alert';
 import {useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 import {updateApiSettings} from '@redux/reducers/main';
-import {useDeleteApiMutation, useGetNamespacesQuery} from '@redux/services/enhancedApi';
+import {useDeleteApiMutation, useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 
 import {CardHeading} from '@components/AntdCustom';
 import {FormCard} from '@components/FormComponents';
+
+import {checkDuplicateAPI} from '@utils/api';
 
 import * as S from './styled';
 
@@ -21,6 +23,7 @@ const GeneralSettings = () => {
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
   const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
   const {data: namespaces} = useGetNamespacesQuery();
+  const {data: apis} = useGetApisQuery({namespace: selectedAPI?.namespace || ''});
 
   const onDeleteClickHandler = () => {
     Modal.confirm({
@@ -63,15 +66,37 @@ const GeneralSettings = () => {
       <FormCard
         heading="Display name"
         subHeading="Please provide the display name of your API"
-        formProps={{onFinish: onSaveClickHandler, disabled: true}}
+        formProps={{onFinish: onSaveClickHandler}}
       >
-        <Form.Item name="name" initialValue={selectedAPI?.name}>
+        <Form.Item
+          name={['info', 'title']}
+          initialValue={selectedAPIOpenSpec?.info?.title || selectedAPI?.name}
+          rules={[
+            {required: true, message: 'Enter API name!'},
+            {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern!'},
+            {max: 63, type: 'string', message: 'Name is too long!'},
+            () => {
+              return {
+                validator(_, value) {
+                  const namespace = selectedAPI?.namespace;
+
+                  if (namespace && checkDuplicateAPI(apis || [], `${namespace}-${value}`)) {
+                    return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
+                  }
+
+                  return Promise.resolve();
+                },
+              };
+            },
+          ]}
+        >
           <Input placeholder="My first API being renamed" />
         </Form.Item>
         <S.Divider />
       </FormCard>
 
       <FormCard
+        isViewMode
         heading="Namespace"
         subHeading="Define which namespace and labels this API is assigned to"
         helpTopic="Namespaces"
@@ -87,7 +112,6 @@ const GeneralSettings = () => {
             ))}
           </Select>
         </Form.Item>
-        <S.Divider />
       </FormCard>
 
       <FormCard
