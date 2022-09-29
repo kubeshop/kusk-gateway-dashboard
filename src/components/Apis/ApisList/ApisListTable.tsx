@@ -1,7 +1,7 @@
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
-import {Modal, Typography} from 'antd';
+import {Modal} from 'antd';
 
 import {MoreOutlined} from '@ant-design/icons';
 
@@ -78,7 +78,7 @@ const ApisListTable: React.FC<IProps> = props => {
     <S.Grid>
       {apis.map(api => (
         <S.GridItem key={`KEY_${api.namespace}_${api.name}`} onClick={() => onApiItemClick(api)}>
-          <Typography.Title level={4}>{api.name}</Typography.Title>
+          <S.Title level={4}>{api.name}</S.Title>
           <S.ApiInfoContainer>
             <S.ApiInfo>
               <S.InfoLabel>NAMESPACE</S.InfoLabel>
@@ -86,7 +86,7 @@ const ApisListTable: React.FC<IProps> = props => {
             </S.ApiInfo>
             <S.ApiInfo>
               <S.InfoLabel>VERSION</S.InfoLabel>
-              <Typography.Text>{api.version}</Typography.Text>
+              <S.Version>{api.version}</S.Version>
             </S.ApiInfo>
             <div onClick={e => e.stopPropagation()}>
               <S.Menu

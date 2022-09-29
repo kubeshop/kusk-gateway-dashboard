@@ -13,6 +13,7 @@ enum Colors {
   zinc1 = '#f4f4f5',
   zinc2 = '#E4E4E7',
   zinc250 = '#B9B9C1',
+  zinc3 = '#d4d4d8',
   zinc4 = '#A1A1AA',
   zinc5 = '#FAFAFA',
   zinc6 = '#71717A',
@@ -73,6 +74,9 @@ enum Colors {
   lime600 = '#65A30D',
   lime500 = '#84cc16',
   lime100 = '#ecfccb',
+  slate200 = '#94a3b8',
+  slate300 = '#64748b',
+  slate400 = '#475569',
   slate700 = '#334155',
   slate800 = '#1E293B',
 }
