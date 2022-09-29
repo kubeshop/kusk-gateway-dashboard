@@ -2,6 +2,8 @@ import {QuestionCircleOutlined as RawQuestionsCircleOutlined} from '@ant-design/
 
 import styled from 'styled-components';
 
+import Colors from '@styles/colors';
+
 export const ActionsContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -17,6 +19,19 @@ export const FiltersContainer = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   flex-wrap: wrap;
   gap: 20px;
+
+  input::placeholder {
+    color: ${Colors.slate300} !important;
+  }
+
+  .ant-select-selection-placeholder {
+    color: ${Colors.slate300} !important;
+  }
+
+  svg {
+    color: ${Colors.zinc3};
+    margin-right: 4px;
+  }
 `;
 
 export const QuestionCircleOutlined = styled(RawQuestionsCircleOutlined)`

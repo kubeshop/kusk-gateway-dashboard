@@ -41,12 +41,13 @@ export const ApiInfo = styled.div`
 `;
 
 export const InfoLabel = styled(Typography.Text)`
-  color: #94a3b8;
+  color: ${Colors.slate200};
   text-transform: uppercase;
+  font-weight: 500;
 `;
 
 export const InfoTag = styled(Tag)`
-  border: 1px solid #d4d4d8;
+  border: 1px solid ${Colors.zinc3};
   padding: 4px;
 `;
 
@@ -67,4 +68,12 @@ export const Menu = styled(RawMenu)`
   .ant-menu-submenu-selected::after {
     border-bottom: 2px solid transparent !important;
   }
+`;
+
+export const Title = styled(Typography.Title)`
+  color: ${Colors.slate700} !important;
+`;
+
+export const Version = styled(Typography.Text)`
+  color: ${Colors.slate400} !important;
 `;
