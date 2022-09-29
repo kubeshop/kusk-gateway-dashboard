@@ -43,7 +43,6 @@ export const ApiInfo = styled.div`
 export const InfoLabel = styled(Typography.Text)`
   color: ${Colors.slate200};
   text-transform: uppercase;
-  font-weight: 500;
 `;
 
 export const InfoTag = styled(Tag)`
@@ -71,6 +70,7 @@ export const Menu = styled(RawMenu)`
 `;
 
 export const Title = styled(Typography.Title)`
+  font-weight: 700 !important;
   color: ${Colors.slate700} !important;
 `;
 
