@@ -26,6 +26,7 @@ const PathInfo = () => {
     (Object.values(selectedRouteSpec?.spec?.paths[selectedRoutePath])[0] as any)?.redirect ||
     _.pick<any>(Object.values(selectedRouteSpec?.spec?.paths[selectedRoutePath])[0], 'route.upstream').route.upstream;
   const targetType = 'host_redirect' in target ? 'redirect' : 'upstream';
+
   const onSubmitClickHandler = (values: any) => {
     const {path, methods: updatedMethods} = values;
 
@@ -59,7 +60,26 @@ const PathInfo = () => {
       subHeading="Enter the paths to match. A static route must contain at least one path."
       formProps={{layout: 'vertical', onFinish: onSubmitClickHandler}}
     >
-      <Form.Item required name="path" label="Path" initialValue={selectedRoutePath}>
+      <Form.Item
+        name="path"
+        label="Path"
+        initialValue={selectedRoutePath}
+        rules={[
+          {required: true},
+          {pattern: /^\/[/.a-zA-Z0-9-]+$/, message: 'Please enter a valid path'},
+          () => {
+            return {
+              validator(arg, value) {
+                const existPaths = Object.keys(selectedRouteSpec?.spec?.paths);
+                if (!existPaths.includes(value) && selectedRoutePath !== value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(Error('Path is already exist!'));
+              },
+            };
+          },
+        ]}
+      >
         <Input />
       </Form.Item>
       <Divider />

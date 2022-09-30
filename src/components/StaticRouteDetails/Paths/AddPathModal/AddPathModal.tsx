@@ -75,12 +75,13 @@ const AddPathModal = (): JSX.Element => {
                   label="Path"
                   rules={[
                     {required: true},
+                    {pattern: /^\/[/.a-zA-Z0-9-]+$/, message: 'Please enter a valid path'},
                     {
                       validator(rule, value) {
                         if (!Object.keys(selectedRouteSpec?.spec?.paths).includes(value)) {
                           return Promise.resolve();
                         }
-                        return Promise.reject(new Error('This path is exist'));
+                        return Promise.reject(Error('This path is exist'));
                       },
                     },
                   ]}
