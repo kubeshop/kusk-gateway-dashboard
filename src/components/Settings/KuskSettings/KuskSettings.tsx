@@ -42,6 +42,7 @@ const KuskSettings: React.FC = () => {
         ),
       }}
       isViewMode={isViewMode}
+      cancelEditMode={onEditClickHandler}
     >
       <Form.Item label="API Endpoint" name="apiEndpoint" rules={[{required: true}]}>
         <Input placeholder="Enter API endpoint" type="text" />
