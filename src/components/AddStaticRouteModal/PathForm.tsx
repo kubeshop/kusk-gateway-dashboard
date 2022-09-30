@@ -9,7 +9,14 @@ const METHODS = SUPPORTED_METHODS.slice(0, -1);
 const PathForm = () => {
   return (
     <>
-      <Form.Item name="path" label="Path" rules={[{required: true, message: 'Enter a path!'}]}>
+      <Form.Item
+        name="path"
+        label="Path"
+        rules={[
+          {required: true, message: 'Enter a path!'},
+          {pattern: /^\/[/.a-zA-Z0-9-]+$/, message: 'Please enter a valid path'},
+        ]}
+      >
         <Input />
       </Form.Item>
 
