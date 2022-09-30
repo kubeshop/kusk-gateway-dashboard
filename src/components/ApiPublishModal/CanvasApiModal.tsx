@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
@@ -8,7 +8,6 @@ import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
 import {AppRoutes} from '@constants/AppRoutes';
-import {SUPPORTED_METHODS} from '@constants/constants';
 import ToDoTemplate from '@constants/rawOpenApiSpec.json';
 
 import {AlertEnum} from '@models/alert';
@@ -33,7 +32,6 @@ const CanvasApiModal = () => {
   const dispatch = useDispatch();
   const apiCanvasType = useAppSelector(state => state.ui.apiPublishModal.apiCanvasType);
   const openapiField = Form.useWatch('openapi', form);
-  const [warnings, setWarnings] = useState<string[]>([]);
   const {data: apis} = useGetApisQuery({});
   const {data: namespaces} = useGetNamespacesQuery();
   const [deployAPI, {isError, error}] = useDeployApiMutation();
@@ -202,100 +200,11 @@ const CanvasApiModal = () => {
             },
           ]}
         >
-          <S.Textarea
-            rows={10}
-            placeholder="Enter the OpenAPI Spec in YAML/JSON format"
-            onChange={e => {
-              const spec = e.target.value;
-
-              if (!spec) {
-                setWarnings([]);
-              } else {
-                setWarnings(checkMockingExamples(YAML.parse(JSON.parse(JSON.stringify(spec)))));
-              }
-            }}
-          />
+          <S.Textarea rows={10} placeholder="Enter the OpenAPI Spec in YAML/JSON format" />
         </Form.Item>
       </Form>
-      <S.WarningsContainer>
-        {warnings.map(warning => (
-          <div key={warning}>
-            <S.ExclamationCircleOutlined />
-            {warning}
-            <a
-              href="https://kubeshop.github.io/kusk-gateway/reference/extension/#mocking"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              mocking examples!
-            </a>
-          </div>
-        ))}
-      </S.WarningsContainer>
     </S.Modal>
   );
-};
-
-const findResponseExample = (key: string, children: any, check: {hasExample: boolean}) => {
-  if ((key === 'example' && children) || (key === 'examples' && children && Object.entries(children).length)) {
-    check.hasExample = true;
-    return;
-  }
-
-  if (children && typeof children === 'object') {
-    Object.entries(children).forEach(([k, c]) => findResponseExample(k, c, check));
-  }
-};
-
-const checkMockingExamples = (spec: {[key: string]: any}) => {
-  const paths = spec.paths;
-
-  if (!paths) {
-    return [];
-  }
-
-  let warnings: string[] = [];
-
-  Object.entries(paths).forEach((pathEntry: [string, any]) => {
-    const [path, pathValue] = pathEntry;
-
-    // mocking kusk extension from path level
-    const pathMocking = pathValue['x-kusk']?.mocking?.enabled;
-
-    if (pathMocking !== false) {
-      Object.entries(pathValue)
-        .filter(entry => SUPPORTED_METHODS.includes(entry[0]))
-        .forEach((operationEntry: [string, any]) => {
-          const [operation, operationValue] = operationEntry;
-
-          // mocking kusk extension from operation level
-          const operationMocking = operationValue['x-kusk']?.mocking?.enabled;
-          let missingExamplesCount = 0;
-
-          if (operationMocking !== false) {
-            Object.entries(operationValue.responses).forEach((responseEntry: [string, any]) => {
-              const [responseCode, responseValue] = responseEntry;
-
-              if (parseInt(responseCode, 10) < 300) {
-                let check = {hasExample: false};
-
-                findResponseExample(responseCode, responseValue, check);
-
-                if (!check.hasExample) {
-                  missingExamplesCount += 1;
-                }
-              }
-            });
-          }
-
-          if (missingExamplesCount) {
-            warnings.push(`${path} -> ${operation} is missing `);
-          }
-        });
-    }
-  });
-
-  return warnings;
 };
 
 export default CanvasApiModal;
