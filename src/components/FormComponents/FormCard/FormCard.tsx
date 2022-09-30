@@ -14,10 +14,11 @@ interface IProps {
   cardProps?: CardProps;
   formProps?: FormProps;
   isViewMode?: boolean;
+  cancelEditMode?: () => void;
 }
 
 const FormCard: FC<IProps> = props => {
-  const {heading, subHeading, helpTopic, helpLink, cardProps, formProps, children, isViewMode} = props;
+  const {heading, subHeading, helpTopic, helpLink, cardProps, formProps, children, isViewMode, cancelEditMode} = props;
   const [form] = Form.useForm();
 
   const onFinish = (values: any) => {
@@ -28,6 +29,7 @@ const FormCard: FC<IProps> = props => {
   };
 
   const onCancelClick = () => {
+    cancelEditMode && cancelEditMode();
     form.resetFields();
   };
 
