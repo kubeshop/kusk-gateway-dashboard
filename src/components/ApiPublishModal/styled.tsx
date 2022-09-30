@@ -1,7 +1,5 @@
 import {Input, Alert as RawAlert, Modal as RawModal} from 'antd';
 
-import {ExclamationCircleOutlined as RawExclamationCircleOutlined} from '@ant-design/icons';
-
 import styled from 'styled-components';
 
 import {GlobalScrollbarStyle} from '@utils/scrollbar';
@@ -48,22 +46,8 @@ export const Modal = styled(RawModal)`
   }
 `;
 
-export const ExclamationCircleOutlined = styled(RawExclamationCircleOutlined)`
-  margin-right: 10px;
-`;
-
 export const Textarea = styled(Input.TextArea)`
   ${GlobalScrollbarStyle}
-`;
-
-export const WarningsContainer = styled.div`
-  color: ${Colors.yellow500};
-  margin-bottom: 15px;
-
-  & a {
-    color: ${Colors.yellow500};
-    text-decoration: underline;
-  }
 `;
 
 export const AddDeploymentOption = styled.div`
