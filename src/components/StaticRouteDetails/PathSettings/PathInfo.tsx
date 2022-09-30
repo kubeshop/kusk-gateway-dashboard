@@ -59,7 +59,7 @@ const PathInfo = () => {
       subHeading="Enter the paths to match. A static route must contain at least one path."
       formProps={{layout: 'vertical', onFinish: onSubmitClickHandler}}
     >
-      <Form.Item required name="path" label="Path" initialValue={selectedRoutePath}>
+      <Form.Item name="path" label="Path" initialValue={selectedRoutePath} rules={[{required: true}]}>
         <Input />
       </Form.Item>
       <Divider />
