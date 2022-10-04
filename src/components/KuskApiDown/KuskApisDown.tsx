@@ -27,8 +27,8 @@ const KuskApisDown = () => {
 
       <HelpCardGroup style={{marginTop: 36}}>
         <HelpCard
-          title="Learn how to create a mocked API"
-          link="https://kubeshop.github.io/kusk-gateway/guides/mocking/"
+          title="How to install and run kusk and it’s dashboard"
+          link="https://docs.kusk.io/reference/dashboard/overview"
         />
         <DiscordCard />
       </HelpCardGroup>
