@@ -1,5 +1,8 @@
 import {Typography} from 'antd';
 
+import {AppRoutes} from '@constants/AppRoutes';
+
+import {SubHeading} from '@components/AntdCustom';
 import {DiscordCard, HelpCard, HelpCardGroup} from '@components/HelpCard';
 
 import ApiDownImage from '@assets/apidown.svg';
@@ -10,30 +13,25 @@ const KuskApisDown = () => {
   return (
     <S.Container>
       <img src={ApiDownImage} />
-      <S.H2>Well... this is weird...</S.H2>
-      <Typography.Paragraph style={{maxWidth: 375, textAlign: 'center'}}>
-        Your kusk API instance seems to be down.Did you try some of the following?
-      </Typography.Paragraph>
+      <S.H2>Your Kusk API instance seems to be down.</S.H2>
 
-      <HelpCardGroup>
+      <S.Heading>
+        <SubHeading>Your Kusk API endpoint may be incorrectly configured.</SubHeading>
+        <br />
+        <SubHeading>
+          To try and resolve the issue, please edit the endpoint in&nbsp;
+          <Typography.Link href={AppRoutes.APP_SETTINGS}>Settings</Typography.Link> and ensure that it is accessible
+          from the browser.
+        </SubHeading>
+      </S.Heading>
+
+      <HelpCardGroup style={{marginTop: 36}}>
         <HelpCard
           title="Learn how to create a mocked API"
           link="https://kubeshop.github.io/kusk-gateway/guides/mocking/"
         />
-
-        <HelpCard
-          title="How to combine mocked returns and your REST APIs in one gateway"
-          link="https://docs.kusk.io/"
-        />
-
-        <HelpCard title="Modern REST API design 101" link="https://docs.kusk.io/" />
-
-        <HelpCard
-          title="New to OpenAPI? Here’s a great guide to get you started"
-          link="https://kubeshop.github.io/kusk-gateway/getting-started/deploy-an-api/"
-        />
+        <DiscordCard />
       </HelpCardGroup>
-      <DiscordCard />
     </S.Container>
   );
 };
