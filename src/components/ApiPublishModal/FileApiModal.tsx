@@ -71,7 +71,7 @@ const FileApiModal = () => {
         dispatch(
           setAlert({
             title: 'API deployed successfully',
-            description: `${apiData.name} was deployed successfully in ${apiData.namespace} namespace!`,
+            description: `${apiData.name} was deployed successfully in ${apiData.namespace} namespace`,
             type: AlertEnum.Success,
           })
         );
@@ -110,7 +110,7 @@ const FileApiModal = () => {
                       return Promise.resolve();
                     }
                   } catch (e) {
-                    throw new Error('Cannot read the file!');
+                    throw new Error('Cannot read the file');
                   }
                 },
               },
@@ -136,7 +136,7 @@ const FileApiModal = () => {
                       return Promise.resolve();
                     }
                   } catch (e) {
-                    throw new Error('Cannot fetch url!');
+                    throw new Error('Cannot fetch url');
                   }
                 },
               },
@@ -153,16 +153,23 @@ const FileApiModal = () => {
           required
           dependencies={['namespace']}
           rules={[
-            {required: true, message: 'Enter API name!'},
-            {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern!'},
-            {max: 63, type: 'string', message: 'Name is too long!'},
+            {required: true, message: 'Enter API name'},
+            {
+              pattern: /^[a-z0-9].*[a-z0-9]$/gi,
+              message: 'Name must start and end with an alphanumerical character',
+            },
+            {
+              pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/,
+              message: 'Name must contain only lowercase alphanumerical characters or "-"',
+            },
+            {max: 63, type: 'string', message: 'Name is too long'},
             () => {
               return {
                 validator(_, value) {
                   const namespace = form.getFieldValue('namespace');
 
                   if (namespace && checkDuplicateAPI(apis || [], `${namespace}-${value}`)) {
-                    return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
+                    return Promise.reject(new Error(`API name is already used in ${namespace} namespace`));
                   }
 
                   return Promise.resolve();
@@ -180,7 +187,7 @@ const FileApiModal = () => {
           rules={[
             {
               required: true,
-              message: 'Please select namespace!',
+              message: 'Please select namespace',
             },
           ]}
         >
@@ -200,7 +207,7 @@ const FileApiModal = () => {
           rules={[
             {
               required: true,
-              message: 'Please select deployment!',
+              message: 'Please select deployment',
             },
           ]}
         >

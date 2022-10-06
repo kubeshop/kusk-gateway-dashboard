@@ -97,7 +97,7 @@ const Upstream: React.FC<IProps> = props => {
                 rules={[
                   {
                     required: isRequiredFields,
-                    message: `Please ${selectedService ? 'choose' : 'enter'} a valid port!`,
+                    message: `Please ${selectedService ? 'choose' : 'enter'} a valid port`,
                   },
                 ]}
               >
@@ -122,7 +122,7 @@ const Upstream: React.FC<IProps> = props => {
               rules={[
                 {
                   required: isRequiredFields,
-                  message: 'Please enter name!',
+                  message: 'Please enter name',
                 },
               ]}
             >
@@ -135,7 +135,7 @@ const Upstream: React.FC<IProps> = props => {
               rules={[
                 {
                   required: isRequiredFields,
-                  message: 'Please enter namespace!',
+                  message: 'Please enter namespace',
                 },
               ]}
             >
@@ -151,7 +151,7 @@ const Upstream: React.FC<IProps> = props => {
             rules={[
               {
                 required: isRequiredFields,
-                message: 'Please enter hostname!',
+                message: 'Please enter hostname',
               },
             ]}
           >
@@ -164,7 +164,7 @@ const Upstream: React.FC<IProps> = props => {
             rules={[
               {
                 required: isRequiredFields,
-                message: 'Please enter port!',
+                message: 'Please enter port',
               },
             ]}
           >

@@ -56,7 +56,7 @@ const Authentication = () => {
             rules={[
               {
                 required: true,
-                message: 'Please enter hostname!',
+                message: 'Please enter hostname',
               },
             ]}
           >
@@ -70,7 +70,7 @@ const Authentication = () => {
           rules={[
             {
               required: true,
-              message: 'Please enter port!',
+              message: 'Please enter port',
             },
           ]}
         >
