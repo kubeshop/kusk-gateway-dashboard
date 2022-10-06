@@ -13,7 +13,8 @@ const PathForm = () => {
         name="path"
         label="Path"
         rules={[
-          {required: true, message: 'Enter a path!'},
+          {required: true, message: 'Enter a path'},
+          {pattern: /^\/.+$/, message: 'Path must begin with a forward slash “/”'},
           {pattern: /^\/[/.a-zA-Z0-9-]+$/, message: 'Please enter a valid path'},
         ]}
       >
@@ -24,7 +25,7 @@ const PathForm = () => {
         label="Operations"
         name="methods"
         initialValue={['get']}
-        rules={[{required: true, message: 'must select one operation at least!'}]}
+        rules={[{required: true, message: 'must select one operation at least'}]}
       >
         <S.CheckboxGroup>
           {METHODS.map(method => (

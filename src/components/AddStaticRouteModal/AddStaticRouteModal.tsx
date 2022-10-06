@@ -73,7 +73,7 @@ const AddStaticRouteModal = () => {
     dispatch(
       setAlert({
         title: 'Static route deployed successfully',
-        description: `${name} was deployed successfully in ${namespace} namespace!`,
+        description: `${name} was deployed successfully in ${namespace} namespace`,
         type: AlertEnum.Success,
       })
     );

@@ -88,7 +88,7 @@ const CanvasApiModal = () => {
         dispatch(
           setAlert({
             title: 'API deployed successfully',
-            description: `${apiData.name} was deployed successfully in ${apiData.namespace} namespace!`,
+            description: `${apiData.name} was deployed successfully in ${apiData.namespace} namespace`,
             type: AlertEnum.Success,
           })
         );
@@ -124,16 +124,23 @@ const CanvasApiModal = () => {
           required
           dependencies={['namespace']}
           rules={[
-            {required: true, message: 'Enter API name!'},
-            {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern!'},
-            {max: 63, type: 'string', message: 'Name is too long!'},
+            {required: true, message: 'Enter API name'},
+            {
+              pattern: /^[a-z0-9].*[a-z0-9]$/gi,
+              message: 'Name must start and end with an alphanumerical character',
+            },
+            {
+              pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/,
+              message: 'Name must contain only lowercase alphanumerical characters or "-"',
+            },
+            {max: 63, type: 'string', message: 'Name is too long'},
             () => {
               return {
                 validator(_, value) {
                   const namespace = form.getFieldValue('namespace');
 
                   if (namespace && checkDuplicateAPI(apis || [], `${namespace}-${value}`)) {
-                    return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
+                    return Promise.reject(new Error(`API name is already used in ${namespace} namespace`));
                   }
 
                   return Promise.resolve();
@@ -151,7 +158,7 @@ const CanvasApiModal = () => {
           rules={[
             {
               required: true,
-              message: 'Please select namespace!',
+              message: 'Please select namespace',
             },
           ]}
         >
@@ -171,7 +178,7 @@ const CanvasApiModal = () => {
           rules={[
             {
               required: true,
-              message: 'Please select deployment!',
+              message: 'Please select deployment',
             },
           ]}
         >
@@ -185,7 +192,7 @@ const CanvasApiModal = () => {
           rules={[
             {
               required: true,
-              message: 'Please enter your API content!',
+              message: 'Please enter your API content',
             },
             () => {
               return {
@@ -194,7 +201,7 @@ const CanvasApiModal = () => {
                     return Promise.resolve();
                   }
 
-                  return Promise.reject(new Error('Please enter a valid API content!'));
+                  return Promise.reject(new Error('Please enter correctly formatted JSON or YAML'));
                 },
               };
             },

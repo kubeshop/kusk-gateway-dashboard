@@ -51,7 +51,7 @@ const AddEnvoyFleetModal = () => {
     dispatch(
       setAlert({
         title: 'The Envoy fleet deployed successfully',
-        description: `${fleetInfo.name} was deployed successfully in ${fleetInfo.namespace} namespace!`,
+        description: `${fleetInfo.name} was deployed successfully in ${fleetInfo.namespace} namespace`,
         type: AlertEnum.Success,
       })
     );
@@ -94,14 +94,14 @@ const AddEnvoyFleetModal = () => {
               name={['fleetInfo', 'name']}
               label="Name"
               rules={[
-                {required: true, message: 'Enter envoy fleet name!'},
+                {required: true, message: 'Enter envoy fleet name'},
                 () => {
                   return {
                     validator(_, value) {
                       const namespace = form.getFieldValue(['fleetInfo', 'namespace']);
 
                       if (namespace && checkDuplicateService(services || [], `${namespace}-${value}`)) {
-                        return Promise.reject(new Error(`API name is already used in ${namespace} cluster!`));
+                        return Promise.reject(new Error(`API name is already used in ${namespace} cluster`));
                       }
 
                       return Promise.resolve();
@@ -118,7 +118,7 @@ const AddEnvoyFleetModal = () => {
               required
               name={['fleetInfo', 'namespace']}
               label="Cluster service"
-              rules={[{required: true, message: 'Enter target cluster!'}]}
+              rules={[{required: true, message: 'Enter target cluster'}]}
             >
               <Select>
                 {namespaces?.map(namespace => (
@@ -133,7 +133,7 @@ const AddEnvoyFleetModal = () => {
               required
               name={['fleetInfo', 'serviceType']}
               label="Service type"
-              rules={[{required: true, message: 'Select service type!'}]}
+              rules={[{required: true, message: 'Select service type'}]}
             >
               <Radio.Group>
                 <Space direction="horizontal">
@@ -152,7 +152,7 @@ const AddEnvoyFleetModal = () => {
                         key={`${field.name}`}
                         name={[field.name, 'port']}
                         rules={[
-                          {required: true, min: 1, max: 65535, message: 'Port range between 1 to 65535!'},
+                          {required: true, min: 1, max: 65535, message: 'Port range between 1 to 65535'},
                           ({getFieldValue}) => ({
                             validator(_, value) {
                               if (

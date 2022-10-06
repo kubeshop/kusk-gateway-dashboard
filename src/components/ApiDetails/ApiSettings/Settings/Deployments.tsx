@@ -33,7 +33,7 @@ const Deployments = () => {
         rules={[
           {
             required: true,
-            message: 'Please select envoy fleet!',
+            message: 'Please select envoy fleet',
           },
         ]}
       >

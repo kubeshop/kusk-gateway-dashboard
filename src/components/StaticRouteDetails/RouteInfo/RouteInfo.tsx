@@ -47,9 +47,9 @@ const RouteInfo = () => {
           required
           dependencies={['namespace']}
           rules={[
-            {required: true, message: 'Enter API name!'},
-            {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern!'},
-            {max: 63, type: 'string', message: 'Name is too long!'},
+            {required: true, message: 'Enter API name'},
+            {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern'},
+            {max: 63, type: 'string', message: 'Name is too long'},
           ]}
           initialValue={selectedRouteSpec?.metadata?.name}
         >
@@ -77,7 +77,7 @@ const RouteInfo = () => {
           rules={[
             {
               required: true,
-              message: 'Please select envoy fleet!',
+              message: 'Please select envoy fleet',
             },
           ]}
         >

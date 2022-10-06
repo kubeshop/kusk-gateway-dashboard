@@ -19,16 +19,16 @@ const RouteInfo = () => {
         required
         dependencies={['namespace']}
         rules={[
-          {required: true, message: 'Enter Static route name!'},
-          {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern!'},
-          {max: 63, type: 'string', message: 'Name is too long!'},
+          {required: true, message: 'Enter Static route name'},
+          {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern'},
+          {max: 63, type: 'string', message: 'Name is too long'},
           () => {
             return {
               validator(_, value) {
                 const namespace = form.getFieldValue('namespace');
 
                 if (namespace && checkDuplicateStaticRoute(staticRoutes || [], `${namespace}-${value}`)) {
-                  return Promise.reject(new Error(`API name is already used in ${namespace} namespace!`));
+                  return Promise.reject(new Error(`API name is already used in ${namespace} namespace`));
                 }
 
                 return Promise.resolve();
@@ -56,7 +56,7 @@ const RouteInfo = () => {
         rules={[
           {
             required: true,
-            message: 'Please select envoy fleet!',
+            message: 'Please select envoy fleet',
           },
         ]}
       >
