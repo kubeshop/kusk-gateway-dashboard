@@ -27,7 +27,7 @@ const Authentication = () => {
       heading="Authentication"
       subHeading="Configure HTTP Authentication for your API"
       helpTopic="Authentication"
-      helpLink="https://docs.kusk.io/guides/authentication/custom-auth-upstream/"
+      helpLink="https://docs.kusk.io/extension#authentication"
       cardProps={{
         extra: (
           <Form.Item label="Enable" name={['enabled']} valuePropName="checked" initialValue={Boolean(xKusk?.auth)}>
