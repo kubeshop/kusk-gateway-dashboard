@@ -20,8 +20,15 @@ const RouteInfo = () => {
         dependencies={['namespace']}
         rules={[
           {required: true, message: 'Enter Static route name'},
-          {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern'},
-          {max: 63, type: 'string', message: 'Name is too long'},
+          {
+            pattern: /^[a-z0-9].*[a-z0-9]$/gi,
+            message: 'Name must start and end with an alphanumerical character',
+          },
+          {
+            pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/,
+            message: 'Name must contain only lowercase alphanumerical characters or "-"',
+          },
+          {max: 64, type: 'string', message: 'Maximum 64 characters'},
           () => {
             return {
               validator(_, value) {
