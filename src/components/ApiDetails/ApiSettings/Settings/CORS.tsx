@@ -27,7 +27,7 @@ const CORS = () => {
         heading="Origins"
         subHeading="Please provide the CORS origin"
         helpTopic="Origins"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        helpLink="https://docs.kusk.io/extension/#cors"
         formProps={{onFinish: onSaveClickHandler}}
       >
         <FormList
@@ -45,7 +45,7 @@ const CORS = () => {
         heading="Methods"
         subHeading="Which CORS request methods would you like to allow?"
         helpTopic="CORS Request Methods"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        helpLink="https://docs.kusk.io/extension/#cors"
         formProps={{onFinish: onSaveClickHandler}}
       >
         <Form.Item name={['x-kusk', 'cors', 'methods']} initialValue={xKusk?.cors?.methods}>
@@ -64,7 +64,7 @@ const CORS = () => {
         heading="Headers"
         subHeading="Please provide the CORS headers"
         helpTopic="Origins"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        helpLink="https://docs.kusk.io/extension/#cors"
         formProps={{onFinish: onSaveClickHandler}}
       >
         <FormList
@@ -81,7 +81,7 @@ const CORS = () => {
         heading="Exposed Headers"
         subHeading="Please provide the CORS exposed headers"
         helpTopic="Origins"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        helpLink="https://docs.kusk.io/extension/#cors"
         formProps={{onFinish: onSaveClickHandler}}
       >
         <FormList
@@ -98,7 +98,7 @@ const CORS = () => {
         heading="Credentials"
         subHeading="Please provide the Credentials"
         helpTopic="Origins"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        helpLink="https://docs.kusk.io/extension/#cors"
         formProps={{onFinish: onSaveClickHandler}}
         cardProps={{
           extra: (
@@ -118,14 +118,15 @@ const CORS = () => {
         heading="CORS Max age"
         subHeading="Please provide the CORS exposed headers"
         helpTopic="Origins"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        helpLink="https://docs.kusk.io/extension/#cors"
         formProps={{layout: 'vertical', onFinish: onSaveClickHandler}}
       >
         <Form.Item
           label="Max age (in seconds)"
           name={['x-kusk', 'cors', 'max_age']}
-          initialValue={xKusk?.cors?.max_age || 60}
+          initialValue={xKusk?.cors?.max_age}
           getValueFromEvent={e => Number(e.target.value)}
+          rules={[{required: true, message: 'Enter Max age'}]}
         >
           <Input type="number" />
         </Form.Item>

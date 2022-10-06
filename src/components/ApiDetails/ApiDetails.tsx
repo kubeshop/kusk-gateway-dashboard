@@ -20,6 +20,7 @@ const ApiDetails = () => {
   const {namespace = '', name = '', ...params} = useParams();
   const section = params['*'];
   const selectedApi = useAppSelector(state => state.main.selectedApi);
+  const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
   const {isLoading: isLoadingApi, isError} = useGetApiQuery(selectedApi ? skipToken : {namespace, name});
 
   const activeSection = section?.includes('settings')
@@ -35,7 +36,7 @@ const ApiDetails = () => {
   return (
     <S.Wrapper>
       <Header />
-      {isLoadingApi ? (
+      {isLoadingApi || !selectedAPIOpenSpec ? (
         <ApiSkelton />
       ) : (
         <S.Container>
