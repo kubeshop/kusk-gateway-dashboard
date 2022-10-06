@@ -14,11 +14,9 @@ export const ActionsContainer = styled.div`
 `;
 
 export const FiltersContainer = styled.div`
-  width: 500px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  flex-wrap: wrap;
-  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 296px));
+  gap: 24px;
 
   input::placeholder {
     color: ${Colors.slate300} !important;

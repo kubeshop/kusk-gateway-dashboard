@@ -88,6 +88,12 @@ const ApisListTable: React.FC<IProps> = props => {
               <S.InfoLabel>VERSION</S.InfoLabel>
               <S.Version>{api.version}</S.Version>
             </S.ApiInfo>
+
+            <S.ApiInfo>
+              <S.InfoLabel>Deployment fleet</S.InfoLabel>
+              <S.Version>{api.fleet.name}</S.Version>
+            </S.ApiInfo>
+
             <div onClick={e => e.stopPropagation()}>
               <S.Menu
                 selectable={false}
