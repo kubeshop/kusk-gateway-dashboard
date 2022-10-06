@@ -31,8 +31,8 @@ const FormCard: FC<IProps> = props => {
     cancelEditMode,
     disableResetForm,
   } = props;
-  const [form] = Form.useForm();
-
+  const [defaultForm] = Form.useForm();
+  const form = formProps?.form || defaultForm;
   const onFinish = (values: any) => {
     formProps?.onFinish && formProps?.onFinish(values);
     setTimeout(() => {
