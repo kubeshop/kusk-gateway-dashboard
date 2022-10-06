@@ -94,7 +94,16 @@ const AddEnvoyFleetModal = () => {
               name={['fleetInfo', 'name']}
               label="Name"
               rules={[
-                {required: true, message: 'Enter envoy fleet name'},
+                {required: true, message: 'Enter name'},
+                {
+                  pattern: /^[a-z0-9].*[a-z0-9]$/gi,
+                  message: 'Name must start and end with an alphanumerical character',
+                },
+                {
+                  pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/,
+                  message: 'Name must contain only lowercase alphanumerical characters or "-"',
+                },
+                {max: 64, type: 'string', message: 'Maximum 64 characters'},
                 () => {
                   return {
                     validator(_, value) {
