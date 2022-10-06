@@ -27,7 +27,7 @@ const Redirect: React.FC<IProps> = props => {
           rules={[
             {
               required: isRequiredFields,
-              message: 'Please enter name!',
+              message: 'Please enter name',
             },
           ]}
         >
@@ -41,7 +41,7 @@ const Redirect: React.FC<IProps> = props => {
           rules={[
             {
               required: isRequiredFields,
-              message: 'Please enter name!',
+              message: 'Please enter name',
             },
           ]}
         >

@@ -15,16 +15,30 @@ interface IProps {
   formProps?: FormProps;
   isViewMode?: boolean;
   cancelEditMode?: () => void;
+  disableResetForm?: boolean;
 }
 
 const FormCard: FC<IProps> = props => {
-  const {heading, subHeading, helpTopic, helpLink, cardProps, formProps, children, isViewMode, cancelEditMode} = props;
-  const [form] = Form.useForm();
-
+  const {
+    heading,
+    subHeading,
+    helpTopic,
+    helpLink,
+    cardProps,
+    formProps,
+    children,
+    isViewMode,
+    cancelEditMode,
+    disableResetForm,
+  } = props;
+  const [defaultForm] = Form.useForm();
+  const form = formProps?.form || defaultForm;
   const onFinish = (values: any) => {
     formProps?.onFinish && formProps?.onFinish(values);
     setTimeout(() => {
-      form.resetFields();
+      if (!disableResetForm) {
+        form.resetFields();
+      }
     }, 1000);
   };
 

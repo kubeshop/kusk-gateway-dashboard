@@ -72,9 +72,9 @@ const GeneralSettings = () => {
           name={['info', 'title']}
           initialValue={selectedAPIOpenSpec?.info?.title || selectedAPI?.name}
           rules={[
-            {required: true, message: 'Enter API name!'},
-            {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern!'},
-            {max: 63, type: 'string', message: 'Name is too long!'},
+            {required: true, message: 'Enter API name'},
+            {pattern: /^[a-z0-9]$|^([a-z0-9\-])*[a-z0-9]$/, message: 'Wrong pattern'},
+            {max: 63, type: 'string', message: 'Name is too long'},
             () => {
               return {
                 validator(_, value) {

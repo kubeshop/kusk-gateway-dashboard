@@ -7,7 +7,8 @@ import {SearchOutlined} from '@ant-design/icons';
 import {useAppDispatch} from '@redux/hooks';
 import {selectApi} from '@redux/reducers/main';
 import {openApiPublishModal} from '@redux/reducers/ui';
-import {useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
+import {useGetApisQuery, useGetEnvoyFleetsQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
+import {EnvoyFleetItem} from '@redux/services/kuskApi';
 
 import {ContentWrapper, PageTitle} from '@components/AntdCustom';
 import {DiscordCard, HelpCard, HelpCardGroup} from '@components/HelpCard';
@@ -37,9 +38,16 @@ const ApisList: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
+  const [selectedFleet, setSelectedFleet] = useState<EnvoyFleetItem>();
+
   const [searchApiName, setSearchApiName] = useState<string>('');
   const {data: namespaces} = useGetNamespacesQuery();
-  const {data, error, isError, isLoading} = useGetApisQuery({namespace: selectedNamespace});
+  const {data: fleets} = useGetEnvoyFleetsQuery({});
+  const {data, error, isError, isLoading} = useGetApisQuery({
+    namespace: selectedNamespace,
+    fleetname: selectedFleet?.name,
+    fleetnamespace: selectedFleet?.namespace,
+  });
 
   const renderedNamespaceOptions = useMemo(() => {
     return namespaces?.map(namespace => (
@@ -59,6 +67,15 @@ const ApisList: React.FC = () => {
     dispatch(selectApi(null));
   };
 
+  const onFleetSelectHandler = (fleet: string) => {
+    const [namespace, name] = fleet.split('@');
+    setSelectedFleet(fleets?.find(el => el.namespace === namespace && el.name === name));
+  };
+
+  const onFleetSelectionClearHandler = () => {
+    setSelectedFleet(undefined);
+  };
+
   const onSearchApiNameChange = (e: React.FormEvent<HTMLInputElement>) => {
     setSearchApiName(e.currentTarget.value);
   };
@@ -76,7 +93,7 @@ const ApisList: React.FC = () => {
         <Typography.Text type="secondary">Explore your APIs at a glance...</Typography.Text>
       </S.Header>
 
-      {data?.length === 0 && !selectedNamespace ? (
+      {data?.length === 0 && !selectedNamespace && !selectedFleet ? (
         <EmptyApisList />
       ) : (
         <>
@@ -98,6 +115,25 @@ const ApisList: React.FC = () => {
                   }}
                 >
                   {renderedNamespaceOptions}
+                </Select>
+              )}
+
+              {isLoading ? (
+                <Skeleton.Input />
+              ) : !fleets ? null : (
+                <Select
+                  allowClear
+                  placeholder="Select a deployment fleet"
+                  value={selectedFleet && `${selectedFleet?.namespace}@${selectedFleet?.name}`}
+                  showSearch
+                  onClear={onFleetSelectionClearHandler}
+                  onSelect={onFleetSelectHandler}
+                >
+                  {fleets?.map(fleet => (
+                    <Option key={fleet.name} value={`${fleet.namespace}@${fleet.name}`}>
+                      {fleet.name}
+                    </Option>
+                  ))}
                 </Select>
               )}
             </S.FiltersContainer>

@@ -66,6 +66,7 @@ const PathInfo = () => {
         initialValue={selectedRoutePath}
         rules={[
           {required: true},
+          {pattern: /^\/.+$/, message: 'Path must begin with a forward slash “/”'},
           {pattern: /^\/[/.a-zA-Z0-9-]+$/, message: 'Please enter a valid path'},
           () => {
             return {
@@ -74,7 +75,7 @@ const PathInfo = () => {
                 if (!existPaths.includes(value) && selectedRoutePath !== value) {
                   return Promise.resolve();
                 }
-                return Promise.reject(Error('Path is already exist!'));
+                return Promise.reject(Error('Path already exists'));
               },
             };
           },

@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-import {Button, Form, Input} from 'antd';
+import {Button, Form, Input, Modal} from 'antd';
 
 import {AlertEnum} from '@models/alert';
 
@@ -18,9 +18,28 @@ const KuskSettings: React.FC = () => {
   const [isViewMode, setIsViewMode] = useState(true);
 
   const onFinishHandler = (values: any) => {
-    dispatch(setApiEndpoint(values.apiEndpoint));
-    dispatch(setAlert({title: `API endpoint was successfully set to ${values.apiEndpoint}`, type: AlertEnum.Success}));
-    setIsViewMode(!isViewMode);
+    Modal.confirm({
+      title: `Save kusk API endpoint changes?`,
+      content: (
+        <p>
+          Are you sure you want to edit the default kusk API endpoint?
+          <br />
+          <br />
+          If you do, please ensure that CORS is configured accordingly and that the new endpoint is accessible from your
+          browser.
+        </p>
+      ),
+      okText: 'Yes, save',
+      cancelText: 'Cancel',
+      okType: 'primary',
+      onOk: () => {
+        dispatch(setApiEndpoint(values.apiEndpoint));
+        dispatch(
+          setAlert({title: `API endpoint was successfully set to ${values.apiEndpoint}`, type: AlertEnum.Success})
+        );
+        setIsViewMode(!isViewMode);
+      },
+    });
   };
 
   const onEditClickHandler = () => {
@@ -33,7 +52,7 @@ const KuskSettings: React.FC = () => {
       subHeading="Please provide the kusk API endpoint for your installation. The endpoint needs to be accessible from your browser."
       helpTopic="API endpoints"
       helpLink="https://docs.kusk.io/dashboard/overview"
-      formProps={{initialValues: {apiEndpoint}, layout: 'vertical', onFinish: onFinishHandler}}
+      formProps={{layout: 'vertical', onFinish: onFinishHandler}}
       cardProps={{
         extra: isViewMode && (
           <Button type="default" onClick={onEditClickHandler}>
@@ -43,8 +62,15 @@ const KuskSettings: React.FC = () => {
       }}
       isViewMode={isViewMode}
       cancelEditMode={onEditClickHandler}
+      disableResetForm
     >
-      <Form.Item label="API Endpoint" name="apiEndpoint" rules={[{required: true}]}>
+      <Form.Item
+        shouldUpdate
+        label="API Endpoint"
+        name="apiEndpoint"
+        rules={[{required: true}]}
+        initialValue={apiEndpoint}
+      >
         <Input placeholder="Enter API endpoint" type="text" />
       </Form.Item>
       {!isViewMode && <S.Divider />}
