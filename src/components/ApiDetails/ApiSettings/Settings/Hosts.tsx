@@ -20,7 +20,7 @@ const Hosts = () => {
       heading="Hosts"
       subHeading="Configure which domains your api should listen to"
       helpTopic="Hosts"
-      helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#hosts"
+      helpLink="https://docs.kusk.io/extension/#hosts"
       formProps={{onFinish: onSubmitHandler}}
     >
       <FormList

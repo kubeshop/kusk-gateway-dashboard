@@ -25,7 +25,7 @@ const ApiSettings = () => {
       <Typography.Title level={2}>Settings</Typography.Title>
       <Typography.Text type="secondary">
         Update your API settings and general preferences.&nbsp;
-        <Typography.Link target="_blank" href="https://kubeshop.github.io/kusk-gateway/reference/extension/">
+        <Typography.Link target="_blank" href="https://docs.kusk.io/guides/working-with-extension">
           Learn more
         </Typography.Link>
       </Typography.Text>

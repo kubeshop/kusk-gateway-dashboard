@@ -36,7 +36,7 @@ const RateLimiting = () => {
       heading="Rate Limiting"
       subHeading="Limit the amount of requests this API should handle"
       helpTopic="Rate Limiting"
-      helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#rate-limiting"
+      helpLink="https://docs.kusk.io/extension/#rate-limiting"
       formProps={{onFinish: onSubmitHandler}}
       cardProps={{
         extra: (

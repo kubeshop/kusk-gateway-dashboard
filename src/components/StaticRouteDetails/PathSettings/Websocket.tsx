@@ -43,7 +43,7 @@ const Websocket = () => {
     <FormCard
       heading="Websocket"
       subHeading='Handle "Upgrade: websocket" and other actions related to Websocket HTTP headers.'
-      helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#websocket"
+      helpLink="https://docs.kusk.io/extension#websocket"
       helpTopic="Websockets"
       formProps={{name: 'websockets', onFinish: onSubmitClickHandler, disabled: Boolean(!upstream)}}
     >

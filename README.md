@@ -25,4 +25,4 @@ easily changed by going to **Settings** page and entering a new absolute URL.
 ## Documentation
 
 Read more about the dashboard at
-[https://kubeshop.github.io/kusk-gateway/dashboard/overview/](https://kubeshop.github.io/kusk-gateway/dashboard/overview/).
+[https://docs.kusk.io/reference/dashboard/overview](https://docs.kusk.io/reference/dashboard/overview).
