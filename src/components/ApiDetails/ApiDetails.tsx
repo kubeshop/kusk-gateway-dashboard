@@ -1,7 +1,5 @@
 import {useParams} from 'react-router-dom';
 
-import {skipToken} from '@reduxjs/toolkit/query/react';
-
 import {useAppSelector} from '@redux/hooks';
 import {useGetApiQuery} from '@redux/services/enhancedApi';
 
@@ -17,11 +15,13 @@ import {Sidebar} from './Sidebar';
 import * as S from './styled';
 
 const ApiDetails = () => {
-  const {namespace = '', name = '', ...params} = useParams();
-  const section = params['*'];
+  const {namespace = '', name = '', '*': section} = useParams();
   const selectedApi = useAppSelector(state => state.main.selectedApi);
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-  const {isLoading: isLoadingApi, isError} = useGetApiQuery(selectedApi ? skipToken : {namespace, name});
+  const {isLoading: isLoadingApi, isError} = useGetApiQuery({
+    namespace: selectedApi?.namespace || namespace,
+    name: selectedApi?.name || name,
+  });
 
   const activeSection = section?.includes('settings')
     ? 'settings'
