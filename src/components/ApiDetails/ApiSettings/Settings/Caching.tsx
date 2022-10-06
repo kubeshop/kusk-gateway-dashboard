@@ -22,7 +22,7 @@ const Caching = () => {
       heading="Caching"
       subHeading="Current support for caching is experimental"
       helpTopic="Caching"
-      helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#caching"
+      helpLink="https://docs.kusk.io/guides/cache"
       formProps={{onFinish: onSaveClickHandler}}
       cardProps={{
         extra: (

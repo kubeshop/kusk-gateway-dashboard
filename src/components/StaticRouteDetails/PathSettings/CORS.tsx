@@ -62,7 +62,7 @@ const CORS = () => {
         heading="Origins"
         subHeading="Please provide the CORS origin"
         helpTopic="Origins"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        helpLink="https://docs.kusk.io/guides/cors"
         formProps={{onFinish: onSubmitClickHandler}}
       >
         <FormList
@@ -79,7 +79,7 @@ const CORS = () => {
         heading="Methods"
         subHeading="Which CORS request methods would you like to allow?"
         helpTopic="CORS Request Methods"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        helpLink="https://docs.kusk.io/extension#cors"
         formProps={{onFinish: onSubmitClickHandler}}
       >
         <Form.Item name={['cors', 'methods']} initialValue={cors?.methods}>
@@ -98,7 +98,7 @@ const CORS = () => {
         heading="Headers"
         subHeading="Please provide the CORS headers"
         helpTopic="Origins"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        helpLink="https://docs.kusk.io/extension#cors"
         formProps={{onFinish: onSubmitClickHandler}}
       >
         <FormList
@@ -115,7 +115,7 @@ const CORS = () => {
         heading="Exposed Headers"
         subHeading="Please provide the CORS exposed headers"
         helpTopic="Origins"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        helpLink="https://docs.kusk.io/extension#cors"
         formProps={{onFinish: onSubmitClickHandler}}
       >
         <FormList
@@ -132,7 +132,7 @@ const CORS = () => {
         heading="Credentials"
         subHeading="Please provide the Credentials"
         helpTopic="Origins"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        helpLink="https://docs.kusk.io/extension#cors"
         cardProps={{
           extra: (
             <Form.Item
@@ -152,7 +152,7 @@ const CORS = () => {
         heading="CORS Max age"
         subHeading="Please provide the CORS exposed headers"
         helpTopic="Origins"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#cors"
+        helpLink="https://docs.kusk.io/extension#cors"
         formProps={{layout: 'vertical', onFinish: onSubmitClickHandler}}
       >
         <Form.Item

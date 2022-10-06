@@ -51,7 +51,7 @@ const QOS = () => {
       heading="QoS"
       subHeading="Configure your quality of service settings"
       helpTopic="QoS"
-      helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#qos"
+      helpLink="https://docs.kusk.io/extension#qos"
       formProps={{layout: 'vertical', onFinish: onSubmitClickHandler}}
     >
       <Form.Item

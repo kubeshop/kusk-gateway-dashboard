@@ -100,7 +100,7 @@ const GeneralSettings = () => {
         heading="Namespace"
         subHeading="Define which namespace and labels this API is assigned to"
         helpTopic="Namespaces"
-        helpLink="https://kubeshop.github.io/kusk-gateway/customresources/api/"
+        helpLink="https://docs.kusk.io/reference/customresources/api"
         formProps={{layout: 'vertical', onFinish: onSaveClickHandler, disabled: true}}
       >
         <Form.Item label="Namespace" name="namespace" initialValue={selectedAPI?.namespace}>
@@ -118,7 +118,7 @@ const GeneralSettings = () => {
         heading="API Prefix"
         subHeading="Define your prefix for every route on this API"
         helpTopic="API Prefixes"
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#path"
+        helpLink="https://docs.kusk.io/extension/#path"
         formProps={{onFinish: onSaveClickHandler}}
       >
         <Form.Item name={['x-kusk', 'path', 'prefix']} initialValue={xKusk?.path?.prefix}>
@@ -142,14 +142,14 @@ const GeneralSettings = () => {
             </Form.Item>
           ),
         }}
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#validation"
+        helpLink="https://docs.kusk.io/extension/#validation"
         helpTopic="Request validation"
       />
 
       <FormCard
         heading="Websocket"
         subHeading='Handle "Upgrade: websocket" and other actions related to Websocket HTTP headers.'
-        helpLink="https://kubeshop.github.io/kusk-gateway/reference/extension/#websocket"
+        helpLink="https://docs.kusk.io/extension/#websocket"
         helpTopic="Websockets"
         formProps={{name: 'websockets', onFinish: onSaveClickHandler}}
         cardProps={{

@@ -57,7 +57,7 @@ const PathTarget = () => {
       <S.Header>
         <SubHeading>
           Define the the upstreams or redirects your API is routing the requests to.&nbsp;
-          <Typography.Link href="https://kubeshop.github.io/kusk-gateway/reference/extension/#upstream" target="_blank">
+          <Typography.Link href="https://docs.kusk.io/guides/routing" target="_blank">
             Learn more
           </Typography.Link>
         </SubHeading>

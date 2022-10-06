@@ -24,7 +24,7 @@ const Deployments = () => {
       heading="Deployments"
       subHeading="Select which environment to deploy this API to"
       helpTopic="Environments and Envoy Fleet"
-      helpLink="https://kubeshop.github.io/kusk-gateway/customresources/envoyfleet/"
+      helpLink="https://docs.kusk.io/reference/customresources/envoyfleet"
       formProps={{onFinish: onSaveClickHandler}}
     >
       <Form.Item

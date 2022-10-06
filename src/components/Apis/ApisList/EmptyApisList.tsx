@@ -28,24 +28,18 @@ const EmptyApisList = () => {
       </S.PublishApiButton>
 
       <HelpCardGroup>
-        <HelpCard
-          title="Learn how to create a mocked API"
-          link="https://kubeshop.github.io/kusk-gateway/guides/mocking/"
-        />
+        <HelpCard title="Learn how to create a mocked API" link="https://docs.kusk.io/guides/mocking" />
 
         <HelpCard
           title="How to combine mocked returns and your REST APIs in one gateway"
-          link="https://kubeshop.github.io/kusk-gateway/getting-started/deploy-an-api/"
+          link="https://docs.kusk.io/getting-started#4-deploy-the-api"
         />
 
-        <HelpCard
-          title="Modern REST API design 101"
-          link="https://kubeshop.github.io/kusk-gateway/getting-started/deploy-an-api/"
-        />
+        <HelpCard title="Modern REST API design 101" link="https://docs.kusk.io/getting-started#4-deploy-the-api" />
 
         <HelpCard
           title="New to OpenAPI? Here’s a great guide to get you started"
-          link="https://kubeshop.github.io/kusk-gateway/getting-started/deploy-an-api/"
+          link="https://docs.kusk.io/getting-started#4-deploy-the-api"
         />
       </HelpCardGroup>
       <DiscordCard />
