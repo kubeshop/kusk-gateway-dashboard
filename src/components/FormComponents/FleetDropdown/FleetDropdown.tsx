@@ -1,9 +1,7 @@
 import {VFC, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Button, Select, Tag} from 'antd';
-
-import {BaseSelectRef} from 'rc-select';
+import {Button, RefSelectProps, Select, Tag} from 'antd';
 
 import {openEnvoyFleetModalModal} from '@redux/reducers/ui';
 import {useGetEnvoyFleetsQuery} from '@redux/services/enhancedApi';
@@ -12,7 +10,7 @@ import * as S from './styled';
 
 const FleetDropdown: VFC = props => {
   const dispatch = useDispatch();
-  const deploymentRef = useRef<BaseSelectRef | null>(null);
+  const deploymentRef = useRef<RefSelectProps>(null);
   const {data: envoyFleets} = useGetEnvoyFleetsQuery({});
 
   const onAddDeploymentClickHandler = () => {
