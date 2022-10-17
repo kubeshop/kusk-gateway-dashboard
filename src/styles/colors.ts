@@ -42,7 +42,7 @@ enum Colors {
   yellow700 = '#a16207',
 
   amber500 = '#F59E0B',
-
+  blue50 = '#EFF6FF',
   blue700 = '#1D4ED8',
   blue600 = '#2563EB',
   blue500 = '#3B82F6',
