@@ -3,17 +3,23 @@ import {ApiPolicies} from './ApiPolicies';
 
 import * as S from './styled';
 
+const tabs = [
+  {
+    key: '1',
+    label: 'Path Overview',
+    children: <ApiPathsTable />,
+  },
+  {
+    key: '2',
+    label: 'Policies',
+    children: <ApiPolicies />,
+  },
+];
+
 const ApiPaths = () => {
   return (
     <S.Container>
-      <S.Tabs>
-        <S.Tabs.TabPane tab="Path Overview" key="1">
-          <ApiPathsTable />
-        </S.Tabs.TabPane>
-        <S.Tabs.TabPane tab="Policies" key="2">
-          <ApiPolicies />
-        </S.Tabs.TabPane>
-      </S.Tabs>
+      <S.Tabs items={tabs} />
     </S.Container>
   );
 };
