@@ -46,7 +46,11 @@ const Authentication = () => {
       formProps={{form, layout: 'vertical', onFinish: onSaveClickHandler}}
     >
       <Form.Item label="Authentication Scheme">
-        <Select onChange={onSelectSchemeHandler} value={Object.keys(xKusk?.auth || [])[0]} disabled={!authEnabled}>
+        <Select
+          onChange={onSelectSchemeHandler}
+          value={Object.keys(xKusk?.auth || [])[0] || 'custom'}
+          disabled={!authEnabled}
+        >
           <Select.Option value="custom">Custom</Select.Option>
         </Select>
       </Form.Item>
@@ -67,7 +71,7 @@ const Authentication = () => {
               <Form.Item
                 label="Hostname"
                 name={['x-kusk', 'auth', 'custom', 'host', 'hostname']}
-                initialValue={xKusk?.auth.custom?.host?.hostname}
+                initialValue={xKusk?.auth?.custom?.host?.hostname}
                 rules={[
                   {
                     required: true,
