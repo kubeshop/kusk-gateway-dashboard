@@ -10,6 +10,8 @@ import {FormCard} from '@components/FormComponents';
 import * as S from './styled';
 
 const Authentication = () => {
+  const [form] = Form.useForm();
+  const authSchema = Form.useWatch(['x-kusk', 'auth', 'scheme'], form);
   const dispatch = useDispatch();
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
   const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
@@ -17,6 +19,7 @@ const Authentication = () => {
   const onSaveClickHandler = (values: any) => {
     const {enabled, ...rest} = values;
     if (enabled) {
+      delete rest['x-kusk'].auth.scheme;
       dispatch(updateApiSettings({editedOpenapi: rest}));
     } else {
       dispatch(updateApiSettings({editedOpenapi: {'x-kusk': {auth: null}}}));
@@ -35,15 +38,23 @@ const Authentication = () => {
           </Form.Item>
         ),
       }}
-      formProps={{layout: 'vertical', onFinish: onSaveClickHandler}}
+      formProps={{layout: 'vertical', onFinish: onSaveClickHandler, form}}
     >
-      <Form.Item label="Authentication Scheme" name={['x-kusk', 'auth', 'scheme']} initialValue={xKusk?.auth?.scheme}>
+      <Form.Item
+        label="Authentication Scheme"
+        name={['x-kusk', 'auth', 'scheme']}
+        initialValue={Object.keys(xKusk?.auth || [])[0]}
+      >
         <Select>
-          <Select.Option value="basic">Basic</Select.Option>
+          <Select.Option value="custom">Custom</Select.Option>
         </Select>
       </Form.Item>
 
-      <Form.Item label="Path Prefix" name={['x-kusk', 'auth', 'path_prefix']} initialValue={xKusk?.auth?.path_prefix}>
+      <Form.Item
+        label="Path Prefix"
+        name={['x-kusk', 'auth', authSchema, 'path_prefix']}
+        initialValue={xKusk?.auth?.custom?.path_prefix}
+      >
         <Input placeholder="e.g. /login" />
       </Form.Item>
 
@@ -51,8 +62,8 @@ const Authentication = () => {
         <S.CardItem style={{flex: 1}}>
           <Form.Item
             label="Hostname"
-            name={['x-kusk', 'auth', 'auth-upstream', 'host', 'hostname']}
-            initialValue={xKusk?.auth && xKusk?.auth['auth-upstream'] && xKusk?.auth['auth-upstream'].host.hostname}
+            name={['x-kusk', 'auth', authSchema, 'host', 'hostname']}
+            initialValue={xKusk?.auth.custom?.host?.hostname}
             rules={[
               {
                 required: true,
@@ -65,8 +76,8 @@ const Authentication = () => {
         </S.CardItem>
         <Form.Item
           label="Port"
-          name={['x-kusk', 'auth', 'auth-upstream', 'host', 'port']}
-          initialValue={xKusk?.auth && xKusk?.auth['auth-upstream'] && xKusk?.auth['auth-upstream'].host.port}
+          name={['x-kusk', 'auth', authSchema, 'host', 'port']}
+          initialValue={xKusk?.auth?.custom?.host?.port}
           rules={[
             {
               required: true,

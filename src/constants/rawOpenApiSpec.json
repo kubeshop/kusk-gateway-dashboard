@@ -224,7 +224,7 @@
     "/todos": {
       "get": {
         "x-kusk": {
-          "disabled": true
+          "hidden": true
         },
         "responses": {
           "200": {
