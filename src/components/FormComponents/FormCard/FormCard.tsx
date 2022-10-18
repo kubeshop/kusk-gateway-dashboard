@@ -16,6 +16,7 @@ interface IProps {
   isViewMode?: boolean;
   cancelEditMode?: () => void;
   disableResetForm?: boolean;
+  enableCancelButton?: boolean;
 }
 
 const FormCard: FC<IProps> = props => {
@@ -30,6 +31,7 @@ const FormCard: FC<IProps> = props => {
     isViewMode,
     cancelEditMode,
     disableResetForm,
+    enableCancelButton,
   } = props;
   const [defaultForm] = Form.useForm();
   const form = formProps?.form || defaultForm;
@@ -84,7 +86,7 @@ const FormCard: FC<IProps> = props => {
           )}
           <S.ActionButtons>
             <Form.Item shouldUpdate>
-              {() => form.isFieldsTouched() && <Button onClick={onCancelClick}>Cancel</Button>}
+              {() => (enableCancelButton || form.isFieldsTouched()) && <Button onClick={onCancelClick}>Cancel</Button>}
             </Form.Item>
 
             <Form.Item shouldUpdate>

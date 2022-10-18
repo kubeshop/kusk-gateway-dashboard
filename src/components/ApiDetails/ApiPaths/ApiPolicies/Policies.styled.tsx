@@ -1,4 +1,4 @@
-import {Card as AntCard} from 'antd';
+import {Card as AntCard, Typography} from 'antd';
 
 import AntIcon from '@ant-design/icons';
 
@@ -56,4 +56,8 @@ export const Card = styled(AntCard)`
 export const Icon = styled(AntIcon)`
   color: ${Colors.blue400};
   vertical-align: sub;
+`;
+
+export const Link = styled(Typography.Link)`
+  width: fit-content;
 `;

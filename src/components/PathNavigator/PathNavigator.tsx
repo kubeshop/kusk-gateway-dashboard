@@ -1,6 +1,6 @@
 import {ChangeEvent, useMemo, useState} from 'react';
 
-import {Input, Select} from 'antd';
+import {Input, Select, Typography} from 'antd';
 import {DataNode} from 'antd/lib/tree';
 
 import {flattenDeep} from 'lodash';
@@ -38,7 +38,11 @@ const PathNavigator = () => {
         title: 'Root',
         key: 'root',
         children: paths.map(p => ({
-          title: p.path,
+          title: (
+            <div>
+              <Typography.Text>{p.path}</Typography.Text>
+            </div>
+          ),
           key: p.path,
           children: p.methods.map(method => ({
             title: (
