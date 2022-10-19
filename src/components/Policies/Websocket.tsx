@@ -14,19 +14,15 @@ const Validation = ({xKusk, onFinish, onCancel}: IProps) => {
   return (
     <FormCard
       enableCancelButton
-      heading="Request validation"
-      subHeading="Validate all incoming requests against the corresponding OpenAPI definition."
+      heading="Websocket"
+      subHeading='Handle "Upgrade: websocket" and other actions related to Websocket HTTP headers.'
       formProps={{onFinish}}
       cancelEditMode={onCancel}
-      helpLink="https://docs.kusk.io/extension/#validation"
-      helpTopic="Request validation"
+      helpLink="https://docs.kusk.io/extension#websocket"
+      helpTopic="Websockets"
     >
-      <Form.Item
-        name={['x-kusk', 'validation', 'request', 'enabled']}
-        valuePropName="checked"
-        initialValue={xKusk?.validation?.request?.enabled}
-      >
-        <Checkbox>Enable request validation</Checkbox>
+      <Form.Item name={['x-kusk', 'websocket']} valuePropName="checked" initialValue={Boolean(xKusk?.websocket)}>
+        <Checkbox>Enable websocket</Checkbox>
       </Form.Item>
       <S.Divider />
     </FormCard>

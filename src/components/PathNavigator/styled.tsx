@@ -35,6 +35,10 @@ export const Tree = styled(AntTree)`
     svg {
       fill: ${Colors.blue500};
     }
+
+    .ant-typography {
+      color: ${Colors.blue500};
+    }
   }
 
   .ant-tree-treenode.ant-tree-treenode-selected {
@@ -42,6 +46,10 @@ export const Tree = styled(AntTree)`
     color: ${Colors.blue500};
     svg {
       fill: ${Colors.blue500};
+    }
+
+    .ant-typography {
+      color: ${Colors.blue500};
     }
   }
 
@@ -69,4 +77,11 @@ export const Select = styled(props => <AntSelect {...props} />)`
   .ant-select-arrow svg {
     fill: ${Colors.zinc3};
   }
+`;
+
+export const Path = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-right: 24px;
+  margin-top: 2px;
 `;

@@ -1,44 +1,56 @@
-import {useState} from 'react';
+import {Form} from 'antd';
 
-import {Button, Typography} from 'antd';
+import _ from 'lodash';
 
-import {useAppSelector} from '@redux/hooks';
-
-import {AddTargetModal} from './AddTargetModal';
-import {TargetCard} from './Target';
+import {FormCard} from '@components/FormComponents';
+import {TargetForm} from '@components/TargetForm';
 
 import * as S from './styled';
 
-const Targets = () => {
-  const [showAddTargetModal, setShowAddTargetModal] = useState(false);
-  const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
-  const hasTarget = Boolean(xKusk?.upstream) || Boolean(xKusk?.redirect);
+interface IProps {
+  xKusk: {[key: string]: any};
+  onFinish: (values: any) => void;
+  onCancel: () => void;
+}
 
-  const onAddTargetClick = () => {
-    setShowAddTargetModal(!showAddTargetModal);
+const Targets = ({xKusk, onFinish, onCancel}: IProps) => {
+  const onSaveClickHandler = (values: any) => {
+    let {
+      redirect = null,
+      upstream: {service = null, host = null, rewrite},
+      mocking,
+    } = values;
+    if (rewrite) {
+      rewrite = rewrite?.rewrite_regex;
+    }
+
+    if (redirect) {
+      redirect.type = undefined;
+    }
+
+    const edits = {'x-kusk': {mocking, redirect, upstream: {service, host, rewrite}}};
+
+    onFinish(edits);
   };
+  const xKuskForm = _.set(_.cloneDeep(xKusk), 'upstream.rewrite.rewrite_regex', {
+    pattern: xKusk?.upstream?.rewrite?.pattern,
+    substitution: xKusk?.upstream?.rewrite?.substitution,
+  });
+
   return (
-    <S.Container>
-      <div>
-        <Typography.Title level={5}>Targets</Typography.Title>
-        <Typography.Text>
-          Define the the upstreams or redirects your API is routing the requests to.&nbsp;
-          <Typography.Link href="https://docs.kusk.io/guides/routing" target="_blank">
-            Learn more about targets
-          </Typography.Link>
-        </Typography.Text>
-      </div>
-      {!hasTarget && (
-        <div>
-          <Button type="primary" onClick={onAddTargetClick}>
-            {hasTarget ? 'Define a new target' : 'Define your first target'}
-          </Button>
-        </div>
-      )}
-      {hasTarget && <TargetCard target={xKusk['upstream'] || {redirect: xKusk['redirect']}} />}
-      {showAddTargetModal && <AddTargetModal closeModal={() => setShowAddTargetModal(false)} />}
-    </S.Container>
+    <FormCard
+      enableCancelButton
+      heading="Routing"
+      subHeading="Define the the upstreams or redirects your API is routing the requests to."
+      helpTopic="Routing"
+      helpLink="https://docs.kusk.io/guides/routing"
+      formProps={{onFinish: onSaveClickHandler, layout: 'vertical', initialValues: xKuskForm}}
+      cancelEditMode={onCancel}
+    >
+      <Form.Item hidden name="mocking" initialValue={null} />
+      <TargetForm />
+      <S.Divider />
+    </FormCard>
   );
 };
 

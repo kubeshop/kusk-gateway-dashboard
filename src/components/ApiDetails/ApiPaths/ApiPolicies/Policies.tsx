@@ -72,6 +72,13 @@ const Policies = ({selectPolicy}: IPoliciesProps) => {
             link="https://docs.kusk.io/extension#authentication"
             onClick={() => selectPolicy('authentication')}
           />
+
+          <PolicyCard
+            title="Websocket"
+            description="Set websocket policy to enable handling of “Upgrade:websocket” and other actions."
+            link="https://docs.kusk.io/extension#websocket"
+            onClick={() => selectPolicy('websocket')}
+          />
         </S.Grid>
       </div>
       <div>

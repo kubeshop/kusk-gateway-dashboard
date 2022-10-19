@@ -27,7 +27,7 @@ const RateLimiting = () => {
     if (enabled) {
       dispatch(updateApiSettings({editedOpenapi: rateLimit}));
     } else {
-      dispatch(updateApiSettings({editedOpenapi: {'x-kusk': {rate_limiting: null}}}));
+      dispatch(updateApiSettings({editedOpenapi: {'x-kusk': {rate_limit: null}}}));
     }
   };
 

@@ -30,6 +30,7 @@ const Authentication = () => {
   const onSelectSchemeHandler = (value: string) => {
     setAuthScheme(value);
   };
+
   return (
     <FormCard
       heading="Authentication"

@@ -1,9 +1,12 @@
-import {ChangeEvent, useMemo, useState} from 'react';
+import {ChangeEvent, Dispatch, useMemo, useState} from 'react';
 
-import {Input, Select, Typography} from 'antd';
+import {Dropdown, Input, Menu, Select, Typography} from 'antd';
+import {Key} from 'antd/lib/table/interface';
 import {DataNode} from 'antd/lib/tree';
 
-import {flattenDeep} from 'lodash';
+import {MoreOutlined} from '@ant-design/icons';
+
+import _, {flattenDeep} from 'lodash';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
 
@@ -15,19 +18,28 @@ import * as S from './styled';
 
 const METHODS = SUPPORTED_METHODS.slice(0, -1);
 
-const PathNavigator = () => {
+interface IProps {
+  selectKey: Dispatch<Key[] | undefined>;
+  onHidePath: (path: string, hide: boolean) => void;
+}
+
+const PathNavigator = ({selectKey, onHidePath}: IProps) => {
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
 
   const [selectedMethod, setSelectedMethod] = useState('');
   const [filterPath, setFilterPath] = useState('');
-
   const pathTree = useMemo(() => {
     const paths = Object.keys(selectedAPIOpenSpec?.paths || {})
+      .filter(p => p !== 'x-kusk')
       .filter(i => i.includes(filterPath))
       .map(path => {
         return {
           path,
+          hidden:
+            Boolean(selectedAPIOpenSpec.paths[path]['x-kusk']?.hidden) ||
+            Boolean(_.find(selectedAPIOpenSpec.paths[path], el => el['x-kusk']?.hidden === true)),
           methods: Object.keys(selectedAPIOpenSpec.paths[path])
+            .filter(k => SUPPORTED_METHODS.includes(k))
             .filter(i => METHODS.includes(i))
             .filter(i => i.includes(selectedMethod)),
         };
@@ -36,26 +48,50 @@ const PathNavigator = () => {
     return [
       {
         title: 'Root',
-        key: 'root',
+        key: '.',
         children: paths.map(p => ({
           title: (
-            <div>
+            <S.Path>
               <Typography.Text>{p.path}</Typography.Text>
-            </div>
+              <Dropdown
+                overlay={
+                  <Menu
+                    items={[
+                      {
+                        label: p.hidden ? 'Unhide' : 'Hide',
+                        key: 'hidden',
+                        onClick: ({domEvent}) => {
+                          domEvent.stopPropagation();
+                          onHidePath(p.path, !p.hidden);
+                        },
+                      },
+                    ]}
+                  />
+                }
+              >
+                <MoreOutlined />
+              </Dropdown>
+            </S.Path>
           ),
-          key: p.path,
+          key: `paths.${p.path}`,
+
+          style: {opacity: p.hidden ? 0.5 : 1},
           children: p.methods.map(method => ({
             title: (
               <MethodTag style={{marginTop: 8}} $method={method}>
                 {method}
               </MethodTag>
             ),
-            key: `${p.path}-${method}`,
+            key: `paths.${p.path}.${method}`,
+            style: {opacity: p.hidden ? 0.5 : 1},
           })),
         })),
       },
     ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAPIOpenSpec, filterPath, selectedMethod]);
+
+  const [expandedKeys, setExpandedKeys] = useState(getAllKeys(pathTree));
 
   const onPathFilterChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setFilterPath(e?.currentTarget?.value || '');
@@ -63,6 +99,14 @@ const PathNavigator = () => {
 
   const onMethodSelectHandler = (value: string) => {
     setSelectedMethod(value || '');
+  };
+
+  const onExpand = (keys: Key[]) => {
+    setExpandedKeys(keys);
+  };
+
+  const onSelectKeyClickHandler = (keys: Key[]) => {
+    selectKey(keys);
   };
 
   return (
@@ -77,7 +121,7 @@ const PathNavigator = () => {
           ))}
         </S.Select>
       </S.Filters>
-      <S.Tree treeData={pathTree} />
+      <S.Tree treeData={pathTree} onExpand={onExpand} expandedKeys={expandedKeys} onSelect={onSelectKeyClickHandler} />
     </S.Container>
   );
 };

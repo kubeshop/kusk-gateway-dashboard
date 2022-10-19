@@ -1,20 +1,16 @@
 import {Checkbox, Form} from 'antd';
 
-import {useAppSelector} from '@redux/hooks';
-
 import {FormCard} from '@components/FormComponents';
 
 import * as S from './styled';
 
 interface IProps {
+  xKusk: {[key: string]: any};
   onFinish: (values: any) => void;
   onCancel: () => void;
 }
 
-const Mocking = ({onFinish, onCancel}: IProps) => {
-  const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
-
+const Mocking = ({xKusk, onFinish, onCancel}: IProps) => {
   return (
     <FormCard
       enableCancelButton
@@ -25,9 +21,13 @@ const Mocking = ({onFinish, onCancel}: IProps) => {
       helpLink="https://docs.kusk.io/extension/#mocking"
       helpTopic="Mocking"
     >
-      <Form.Item name={['mocking', 'enabled']} valuePropName="checked" initialValue={xKusk}>
+      <Form.Item name={['x-kusk', 'mocking', 'enabled']} valuePropName="checked" initialValue={xKusk?.mocking?.enabled}>
         <Checkbox>Mock responses</Checkbox>
       </Form.Item>
+
+      <Form.Item name={['x-kusk', 'upstream']} hidden initialValue={null} />
+      <Form.Item name={['x-kusk', 'redirect']} hidden initialValue={null} />
+
       <S.Divider />
     </FormCard>
   );

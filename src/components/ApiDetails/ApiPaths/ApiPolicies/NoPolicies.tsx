@@ -4,10 +4,12 @@ import {SubHeading} from '@components/AntdCustom';
 
 import PoliciesLogo from '@assets/PoliciesLogo.svg';
 
+import * as S from './NoPolicies.styled';
+
 const NoPolicies = () => {
   return (
-    <div>
-      <img src={PoliciesLogo} />
+    <S.Container>
+      <S.Img src={PoliciesLogo} />
       <Typography.Title>This API doesn’t have any policies added.</Typography.Title>
       <SubHeading>
         Select the root? level, path or method from the left menu to add a policy. Learn more about &nbsp;
@@ -15,7 +17,7 @@ const NoPolicies = () => {
           Policies.
         </Typography.Link>
       </SubHeading>
-    </div>
+    </S.Container>
   );
 };
 

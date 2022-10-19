@@ -1,20 +1,16 @@
 import {Form, Input} from 'antd';
 
-import {useAppSelector} from '@redux/hooks';
-
 import {FormCard} from '@components/FormComponents';
 
 import * as S from './styled';
 
 interface IProps {
+  xKusk: {[key: string]: any};
   onFinish: (values: any) => void;
   onCancel: () => void;
 }
 
-const QOS = ({onFinish, onCancel}: IProps) => {
-  const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
-
+const QOS = ({xKusk, onFinish, onCancel}: IProps) => {
   return (
     <FormCard
       enableCancelButton
@@ -27,7 +23,7 @@ const QOS = ({onFinish, onCancel}: IProps) => {
     >
       <Form.Item
         label="Idle timeout (in seconds)"
-        name={['qos', 'idle_timeout']}
+        name={['x-kusk', 'qos', 'idle_timeout']}
         getValueFromEvent={e => Number(e.target.value)}
         initialValue={xKusk?.qos && xKusk.qos['idle_timeout']}
       >
@@ -36,7 +32,7 @@ const QOS = ({onFinish, onCancel}: IProps) => {
 
       <Form.Item
         label="Retries"
-        name={['qos', 'retries']}
+        name={['x-kusk', 'qos', 'retries']}
         getValueFromEvent={e => Number(e.target.value)}
         initialValue={xKusk?.qos?.retries}
       >
@@ -45,7 +41,7 @@ const QOS = ({onFinish, onCancel}: IProps) => {
 
       <Form.Item
         label="Request timeout (in seconds)"
-        name={['qos', 'request_timeout']}
+        name={['x-kusk', 'qos', 'request_timeout']}
         getValueFromEvent={e => Number(e.target.value)}
         initialValue={xKusk?.qos && xKusk.qos['request_timeout']}
       >
