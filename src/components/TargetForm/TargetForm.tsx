@@ -1,12 +1,20 @@
 import {useState} from 'react';
 
-import {Button, Typography} from 'antd';
+import {Button, Form, Typography} from 'antd';
 
 import Redirect from './Targets/Redirect';
 import Upstream from './Targets/Upstream';
 
 const TargetForm = () => {
-  const [targetSelection, setTargetSelection] = useState<string>('Upstream service');
+  const form = Form.useFormInstance();
+
+  const [targetSelection, setTargetSelection] = useState<string>(
+    form.getFieldValue('redirect')
+      ? 'Redirect'
+      : form.getFieldValue(['upstream', 'host'])
+      ? 'Upstream host'
+      : 'Upstream service'
+  );
 
   return (
     <>

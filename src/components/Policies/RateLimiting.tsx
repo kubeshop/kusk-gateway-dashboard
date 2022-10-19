@@ -1,11 +1,6 @@
-import {useDispatch} from 'react-redux';
-
-import {Checkbox, Form, InputNumber, Select, Switch, Typography} from 'antd';
+import {Checkbox, Form, Input, Select, Switch, Typography} from 'antd';
 
 import styled from 'styled-components';
-
-import {useAppSelector} from '@redux/hooks';
-import {updateApiSettings} from '@redux/reducers/main';
 
 import {FormCard} from '@components/FormComponents';
 
@@ -15,37 +10,40 @@ const CardLayout = styled.div`
   display: grid;
   grid-template-columns: 40% 40% 20%;
   grid-gap: 12px;
+  margin-right: 24px;
 `;
 
-const RateLimiting = () => {
-  const dispatch = useDispatch();
-  const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
+interface IProps {
+  xKusk: {[key: string]: any};
+  onFinish: (values: any) => void;
+  onCancel: () => void;
+}
 
-  const onSubmitHandler = (values: any) => {
+const RateLimiting = ({xKusk, onCancel, onFinish}: IProps) => {
+  const [form] = Form.useForm();
+  const rateLimitingEnabled = Form.useWatch('enabled', form);
+
+  const onSaveClickHandler = (values: any) => {
     const {enabled, ...rateLimit} = values;
     if (enabled) {
-      dispatch(updateApiSettings({editedOpenapi: rateLimit}));
+      onFinish(rateLimit);
     } else {
-      dispatch(updateApiSettings({editedOpenapi: {'x-kusk': {rate_limit: null}}}));
+      onFinish({'x-kusk': {rate_limit: null}});
     }
   };
 
   return (
     <FormCard
+      enableCancelButton
       heading="Rate Limiting"
       subHeading="Limit the amount of requests this API should handle"
       helpTopic="Rate Limiting"
       helpLink="https://docs.kusk.io/extension/#rate-limiting"
-      formProps={{onFinish: onSubmitHandler}}
+      formProps={{onFinish: onSaveClickHandler, form}}
+      cancelEditMode={onCancel}
       cardProps={{
         extra: (
-          <Form.Item
-            label="Enable"
-            name={['enabled']}
-            valuePropName="checked"
-            initialValue={Boolean(xKusk?.rate_limit)}
-          >
+          <Form.Item name="enabled" valuePropName="checked" initialValue={Boolean(xKusk?.rate_limit)}>
             <Switch />
           </Form.Item>
         ),
@@ -57,15 +55,16 @@ const RateLimiting = () => {
           <Form.Item
             name={['x-kusk', 'rate_limit', 'requests_per_unit']}
             initialValue={xKusk?.rate_limit?.requests_per_unit || 60}
+            getValueFromEvent={e => Number(e.target.value)}
           >
-            <InputNumber />
+            <Input type="number" disabled={!rateLimitingEnabled} />
           </Form.Item>
         </S.CardItem>
 
         <S.CardItem>
           <Typography.Text>Time unit</Typography.Text>
           <Form.Item name={['x-kusk', 'rate_limit', 'unit']} initialValue={xKusk?.rate_limit?.unit || 'second'}>
-            <Select>
+            <Select disabled={!rateLimitingEnabled}>
               <Select.Option value="second">Second</Select.Option>
               <Select.Option value="minute">Minute</Select.Option>
               <Select.Option value="hour">Hour</Select.Option>
@@ -78,8 +77,9 @@ const RateLimiting = () => {
           <Form.Item
             name={['x-kusk', 'rate_limit', 'response_code']}
             initialValue={xKusk?.rate_limit?.response_code || 405}
+            getValueFromEvent={e => Number(e.target.value)}
           >
-            <InputNumber />
+            <Input type="number" disabled={!rateLimitingEnabled} />
           </Form.Item>
         </S.CardItem>
       </CardLayout>
@@ -88,7 +88,7 @@ const RateLimiting = () => {
         valuePropName="checked"
         initialValue={xKusk?.rate_limit?.per_connection || false}
       >
-        <Checkbox>Apply these limits for each individual connection only</Checkbox>
+        <Checkbox disabled={!rateLimitingEnabled}>Apply these limits for each individual connection only</Checkbox>
       </Form.Item>
       <S.Divider />
     </FormCard>

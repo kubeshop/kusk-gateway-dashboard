@@ -18,9 +18,7 @@ const FormList: React.FC<IProps> = props => {
   const {addButtonText, label = '', name, placeholder = '', requiredMessage, initialValue} = props;
 
   return (
-    <>
-      {label && <S.Label>{label}</S.Label>}
-
+    <Form.Item label={label}>
       <Form.List name={name} initialValue={initialValue}>
         {(fields, {add, remove}) => (
           <>
@@ -43,7 +41,7 @@ const FormList: React.FC<IProps> = props => {
           </>
         )}
       </Form.List>
-    </>
+    </Form.Item>
   );
 };
 

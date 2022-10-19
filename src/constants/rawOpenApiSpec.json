@@ -222,10 +222,10 @@
       }
     },
     "/todos": {
+      "x-kusk": {
+        "hidden": true
+      },
       "get": {
-        "x-kusk": {
-          "hidden": true
-        },
         "responses": {
           "200": {
             "description": "The full list of todos",

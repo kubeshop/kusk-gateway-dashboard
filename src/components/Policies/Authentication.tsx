@@ -1,38 +1,38 @@
 import {useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {Form, Input, InputNumber, Select, Switch} from 'antd';
-
-import {useAppSelector} from '@redux/hooks';
-import {updateApiSettings} from '@redux/reducers/main';
 
 import {FormCard} from '@components/FormComponents';
 
 import * as S from './styled';
 
-const Authentication = () => {
+interface IProps {
+  xKusk: {[key: string]: any};
+  onFinish: (values: any) => void;
+  onCancel: () => void;
+}
+
+const Authentication = ({xKusk, onFinish, onCancel}: IProps) => {
   const [form] = Form.useForm();
   const authEnabled = Form.useWatch('enabled', form);
   const [authSchema, setAuthScheme] = useState<string | undefined>('custom');
-  const dispatch = useDispatch();
-  const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
-
-  const onSaveClickHandler = (values: any) => {
-    const {enabled, ...rest} = values;
-    if (enabled) {
-      dispatch(updateApiSettings({editedOpenapi: rest}));
-    } else {
-      dispatch(updateApiSettings({editedOpenapi: {'x-kusk': {auth: null}}}));
-    }
-  };
 
   const onSelectSchemeHandler = (value: string) => {
     setAuthScheme(value);
   };
 
+  const onSaveClickHandler = (values: any) => {
+    const {enabled, ...rest} = values;
+    if (enabled) {
+      onFinish(rest);
+    } else {
+      onFinish({'x-kusk': {auth: null}});
+    }
+  };
+
   return (
     <FormCard
+      enableCancelButton
       heading="Authentication"
       subHeading="Configure HTTP Authentication for your API"
       helpTopic="Authentication"
@@ -45,6 +45,7 @@ const Authentication = () => {
         ),
       }}
       formProps={{form, layout: 'vertical', onFinish: onSaveClickHandler}}
+      cancelEditMode={onCancel}
     >
       <Form.Item label="Authentication Scheme">
         <Select
@@ -109,5 +110,4 @@ const Authentication = () => {
     </FormCard>
   );
 };
-
 export default Authentication;
