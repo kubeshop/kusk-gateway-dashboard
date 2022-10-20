@@ -259,8 +259,8 @@
     "/services": {
       "get": {
         "tags": ["services"],
-        "summary": "Get a list of services handled by kusk-gateway",
-        "description": "Returns the list of services available in the cluster that are related to kusk-gateway",
+        "summary": "Get a list of services handled by Kusk-gateway",
+        "description": "Returns the list of services available in the cluster that are related to Kusk-gateway",
         "operationId": "getServices",
         "parameters": [
           {

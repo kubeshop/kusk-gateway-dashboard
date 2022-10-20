@@ -42,7 +42,7 @@ const Settings = () => {
             $selected={selectedSettingsItem === 'kusk'}
             onClick={() => navigate(`${AppRoutes.APP_SETTINGS}/kusk`)}
           >
-            kusk settings
+            Kusk settings
           </S.ListItem>
           <S.ListItem
             $selected={selectedSettingsItem === 'deployments'}

@@ -27,7 +27,7 @@ const KuskApisDown = () => {
 
       <HelpCardGroup style={{marginTop: 36}}>
         <HelpCard
-          title="How to install and run kusk and it’s dashboard"
+          title="How to install and run Kusk and it’s dashboard"
           link="https://docs.kusk.io/reference/dashboard/overview"
         />
         <DiscordCard />
