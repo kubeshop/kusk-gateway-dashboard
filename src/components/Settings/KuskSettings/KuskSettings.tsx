@@ -19,10 +19,10 @@ const KuskSettings: React.FC = () => {
 
   const onFinishHandler = (values: any) => {
     Modal.confirm({
-      title: `Save kusk API endpoint changes?`,
+      title: `Save Kusk API endpoint changes?`,
       content: (
         <p>
-          Are you sure you want to edit the default kusk API endpoint?
+          Are you sure you want to edit the default Kusk API endpoint?
           <br />
           <br />
           If you do, please ensure that CORS is configured accordingly and that the new endpoint is accessible from your
@@ -48,8 +48,8 @@ const KuskSettings: React.FC = () => {
 
   return (
     <FormCard
-      heading="kusk API endpoint"
-      subHeading="Please provide the kusk API endpoint for your installation. The endpoint needs to be accessible from your browser."
+      heading="Kusk API endpoint"
+      subHeading="Please provide the Kusk API endpoint for your installation. The endpoint needs to be accessible from your browser."
       helpTopic="API endpoints"
       helpLink="https://docs.kusk.io/dashboard/overview"
       formProps={{layout: 'vertical', onFinish: onFinishHandler}}
