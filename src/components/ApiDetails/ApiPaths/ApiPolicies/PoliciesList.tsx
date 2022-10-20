@@ -25,6 +25,7 @@ const PoliciesList = ({selectedPath, xkusk, selectPolicy}: IProps) => {
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
 
   const policies = Object.keys(xkusk || {}).sort(a => (routingPolicies.includes(a) ? -1 : 0));
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_1, path, operation] = selectedPath.split('.');
   const displayPath = selectedPath === '.' ? 'Root' : path;
 
