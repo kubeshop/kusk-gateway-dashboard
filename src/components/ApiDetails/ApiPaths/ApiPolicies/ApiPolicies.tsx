@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Key} from 'antd/lib/table/interface';
@@ -21,8 +21,8 @@ import {
   WebsocketPolicy,
 } from '@components/Policies';
 
-import NoPolicies from './NoPolicies';
 import Policies from './Policies';
+import PoliciesList from './PoliciesList';
 
 import * as S from './styled';
 
@@ -31,32 +31,38 @@ const ApiPolicies = () => {
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
 
   const [activePolicy, setActivePolicy] = useState<string | undefined>();
-  const [selectedKeys, setSelectedKeys] = useState<Key[] | undefined>();
-  const selectedKey = ((selectedKeys && selectedKeys[0]) || '')?.toString();
-  const selectedXKusk = _.get(selectedAPIOpenSpec, `${selectedKey === '.' ? '' : selectedKey}.x-kusk`);
+  const [selectedKeys, setSelectedKeys] = useState<Key[]>(['.']);
+  const selectedKey = selectedKeys[0].toString();
+  const selectedXKusk = _.get(selectedAPIOpenSpec, selectedKey === '.' ? 'x-kusk' : `${selectedKey}.x-kusk`);
 
   const onCancelClickHandler = () => {
     setActivePolicy(undefined);
   };
 
   const onFinishClickHandler = (values: any) => {
-    const edit = _.set(_.cloneDeep(selectedAPIOpenSpec), selectedKey, values);
+    const targetPath = selectedKey === '.' ? ['x-kusk'] : `${selectedKey}.x-kusk`;
+
+    const edit = _.set(_.cloneDeep(selectedAPIOpenSpec), targetPath, values['x-kusk']);
     dispatch(updateApiSettings({editedOpenapi: edit}));
   };
 
   const onHidePathClickHandler = (p: string, hide: boolean) => {
-    const edit = {paths: {[p]: {'x-kusk': {hidden: hide}}}};
+    const edit = {paths: {[p]: {'x-kusk': {disable: hide}}}};
     dispatch(updateApiSettings({editedOpenapi: edit}));
   };
 
+  useEffect(() => {
+    setActivePolicy(undefined);
+  }, [selectedKey]);
+
   return (
     <S.Container>
-      <PathNavigator selectKey={setSelectedKeys} onHidePath={onHidePathClickHandler} />
-      {!selectedKeys || !selectedKeys[0] ? (
-        <NoPolicies />
+      <PathNavigator selectedKeys={selectedKeys} selectKey={setSelectedKeys} onHidePath={onHidePathClickHandler} />
+      {!activePolicy ? (
+        <PoliciesList selectedPath={selectedKey} xkusk={selectedXKusk} selectPolicy={setActivePolicy} />
       ) : (
         <div style={{width: '100%'}} key={selectedKey}>
-          {!activePolicy && <Policies selectPolicy={setActivePolicy} />}
+          {activePolicy === 'grid' && <Policies selectPolicy={setActivePolicy} />}
           {activePolicy === 'cors' && (
             <CORSPolicy xKusk={selectedXKusk} onCancel={onCancelClickHandler} onFinish={onFinishClickHandler} />
           )}
