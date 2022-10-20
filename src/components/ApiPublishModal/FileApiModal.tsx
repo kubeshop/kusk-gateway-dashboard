@@ -50,7 +50,7 @@ const FileApiModal = () => {
     const openapiObj = openapi;
     openapiObj['x-kusk'] = {
       mocking: {
-        enabled: true,
+        enabled: false,
       },
     };
     const body = {
