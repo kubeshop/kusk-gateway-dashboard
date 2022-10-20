@@ -23,8 +23,6 @@ import {FilePicker, FleetDropdown} from '@components/FormComponents';
 
 import {checkDuplicateAPI, formatApiName} from '@utils/api';
 
-import * as S from './styled';
-
 const FileApiModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
