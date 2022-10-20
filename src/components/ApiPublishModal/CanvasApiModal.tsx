@@ -68,7 +68,7 @@ const CanvasApiModal = () => {
     const openapiObj = YAML.parse(openapi);
     openapiObj['x-kusk'] = {
       mocking: {
-        enabled: false,
+        enabled: true,
       },
     };
     const body = {
