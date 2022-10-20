@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
@@ -31,7 +32,20 @@ const FileApiModal = () => {
   const type = Form.useWatch('type', form);
   const {data: apis} = useGetApisQuery({});
   const {data: namespaces} = useGetNamespacesQuery();
-  const [deployAPI, {isError, error}] = useDeployApiMutation();
+  const [deployAPI, {isError, error, isUninitialized}] = useDeployApiMutation();
+
+  useEffect(() => {
+    if (!isUninitialized && isError && error?.message) {
+      Modal.error({
+        type: 'error',
+        title: 'Something wrong happened!',
+        content: error?.message,
+        okText: 'Got it!',
+        cancelText: null,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError, isUninitialized]);
 
   const onBackHandler = () => {
     dispatch(closeFileApiModal());
@@ -82,8 +96,6 @@ const FileApiModal = () => {
 
   return (
     <Modal visible title="Create an API from file" onCancel={onBackHandler} onOk={onSubmitHandler} okText="Create API">
-      {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" closable />}
-
       <Form form={form} layout="vertical">
         <Form.Item required name="type" label="Import API via" initialValue="file">
           <Radio.Group>

@@ -1,8 +1,8 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
-import {Form, Steps} from 'antd';
+import {Form, Modal, Steps} from 'antd';
 
 import YAML from 'yaml';
 
@@ -26,11 +26,24 @@ const AddStaticRouteModal = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const [createStaticRoute, {error, isError, reset}] = useCreateStaticRouteMutation();
+  const [createStaticRoute, {error, isError, reset, isUninitialized}] = useCreateStaticRouteMutation();
   const [currentStep, setCurrentStep] = useState(0);
   const step = currentStep === 0 ? 'routeInfo' : currentStep === 1 ? 'pathInfo' : 'targetInfo';
 
   const okText = currentStep === 0 ? 'Add path' : currentStep === 1 ? 'Add target' : 'Create static route';
+
+  useEffect(() => {
+    if (!isUninitialized && isError && error?.message) {
+      Modal.error({
+        type: 'error',
+        title: 'Something wrong happened!',
+        content: error?.message,
+        okText: 'Got it!',
+        cancelText: null,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError, isUninitialized]);
 
   const onSubmitHandler = async () => {
     await form.validateFields();
@@ -99,7 +112,6 @@ const AddStaticRouteModal = () => {
       okText={okText}
       onOk={onSubmitHandler}
     >
-      {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" closable />}
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={currentStep}>

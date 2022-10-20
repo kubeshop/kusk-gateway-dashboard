@@ -1,6 +1,7 @@
+import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Button, Form, Input, Radio, Select, Space, Typography} from 'antd';
+import {Button, Form, Input, Modal, Radio, Select, Space, Typography} from 'antd';
 
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 
@@ -30,8 +31,21 @@ const AddEnvoyFleetModal = () => {
   const {data: namespaces} = useGetNamespacesQuery();
   const {data: services} = useGetServicesQuery({});
 
-  const [createFleet, {isLoading: isLoadingNewFleet, isError, error, reset}] = useCreateFleetMutation();
+  const [createFleet, {isLoading: isLoadingNewFleet, isError, error, reset, isUninitialized}] =
+    useCreateFleetMutation();
 
+  useEffect(() => {
+    if (!isUninitialized && isError && error?.message) {
+      Modal.error({
+        type: 'error',
+        title: 'Something wrong happened!',
+        content: error?.message,
+        okText: 'Got it!',
+        cancelText: null,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError, isUninitialized]);
   const onBackHandler = () => {
     dispatch(closeEnvoyFleetModalModal());
   };
@@ -75,8 +89,6 @@ const AddEnvoyFleetModal = () => {
         </>
       }
     >
-      {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" />}
-
       <Form
         preserve
         layout="vertical"

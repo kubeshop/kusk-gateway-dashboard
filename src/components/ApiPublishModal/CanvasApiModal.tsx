@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
-import {Button, Form, Input, Select} from 'antd';
+import {Button, Form, Input, Modal, Select} from 'antd';
 
 import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
@@ -34,7 +34,7 @@ const CanvasApiModal = () => {
   const openapiField = Form.useWatch('openapi', form);
   const {data: apis} = useGetApisQuery({});
   const {data: namespaces} = useGetNamespacesQuery();
-  const [deployAPI, {isError, error}] = useDeployApiMutation();
+  const [deployAPI, {isError, error, isUninitialized}] = useDeployApiMutation();
 
   useEffect(() => {
     if (apiCanvasType === 'template') {
@@ -51,6 +51,19 @@ const CanvasApiModal = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openapiField]);
+
+  useEffect(() => {
+    if (!isUninitialized && isError && error?.message) {
+      Modal.error({
+        type: 'error',
+        title: 'Something wrong happened!',
+        content: error?.message,
+        okText: 'Got it!',
+        cancelText: null,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError, isUninitialized]);
 
   const onBackHandler = () => {
     dispatch(closeCanvasApiModal());
@@ -114,8 +127,6 @@ const CanvasApiModal = () => {
       }
       onCancel={onBackHandler}
     >
-      {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" closable />}
-
       <Form layout="vertical" form={form}>
         <Form.Item
           hasFeedback
