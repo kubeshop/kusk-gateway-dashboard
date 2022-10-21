@@ -1,5 +1,7 @@
 import {useNavigate, useParams} from 'react-router-dom';
 
+import {Typography} from 'antd';
+
 import {ApiPathsTable} from './ApiPathsTable';
 import {ApiPolicies} from './ApiPolicies';
 
@@ -8,7 +10,7 @@ import * as S from './styled';
 const tabs = [
   {
     key: '1',
-    label: 'Path Overview',
+    label: 'Overview',
     children: <ApiPathsTable />,
   },
   {
@@ -31,6 +33,7 @@ const ApiPaths = () => {
   };
   return (
     <S.Container>
+      <Typography.Title level={1}>Routes</Typography.Title>
       <S.Tabs items={tabs} activeKey={activeKey} onTabClick={onTabClickHandler} />
     </S.Container>
   );
