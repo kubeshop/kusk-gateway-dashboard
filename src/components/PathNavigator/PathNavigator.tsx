@@ -1,4 +1,5 @@
 import {ChangeEvent, Dispatch, useMemo, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 import {Dropdown, Input, Menu, Select, Typography} from 'antd';
 import {Key} from 'antd/lib/table/interface';
@@ -25,6 +26,7 @@ interface IProps {
 }
 
 const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
+  const navigate = useNavigate();
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
 
   const [selectedMethod, setSelectedMethod] = useState('');
@@ -109,6 +111,7 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
   const onSelectKeyClickHandler = (keys: Key[], {selected}: {selected: boolean}) => {
     if (selected) {
       selectKey(keys);
+      navigate(`paths/policies?p=${keys[0].toString()}`);
     }
   };
 
