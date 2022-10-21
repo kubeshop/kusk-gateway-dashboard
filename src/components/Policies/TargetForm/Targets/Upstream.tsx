@@ -48,6 +48,14 @@ const Upstream: React.FC<IProps> = props => {
   };
 
   useEffect(() => {
+    const {namespace, name} = form.getFieldValue(['upstream', 'service']);
+    if (!selectedService && namespace && name) {
+      setSelectedService(services.find(s => s.namespace === namespace && s.name === name));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (!selectedService) {
       return;
     }
