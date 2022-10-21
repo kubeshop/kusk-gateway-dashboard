@@ -7,10 +7,8 @@ import styled from 'styled-components';
 import Colors from '@styles/colors';
 
 export const Container = styled.div`
-  position: sticky;
-  top: 0;
   border-radius: 4px;
-  height: inherit;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
