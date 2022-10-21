@@ -1,6 +1,9 @@
-import {FormEvent, useState} from 'react';
+import {FormEvent, useMemo, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 import {Input, Select, Table} from 'antd';
+
+import {DownCircleOutlined, RightCircleOutlined, RightOutlined} from '@ant-design/icons';
 
 import _ from 'lodash';
 
@@ -46,31 +49,83 @@ const columns = [
       </TargetTag>
     ),
   },
+  {
+    title: 'Policies applied',
+    dataIndex: 'policiesCount',
+    key: 'policiesCount',
+  },
+  {
+    title: '',
+    key: 'icon',
+    render: () => <RightOutlined style={{marginLeft: 'auto'}} />,
+  },
 ];
 
+const expandIcon = ({expanded, onExpand, record}: any) => {
+  return !record.route || record?.methods?.length === 0 ? null : expanded ? (
+    <DownCircleOutlined
+      style={{marginRight: 8}}
+      onClick={e => {
+        e?.stopPropagation();
+        onExpand(record, e);
+      }}
+    />
+  ) : (
+    <RightCircleOutlined
+      style={{marginRight: 8}}
+      onClick={e => {
+        e?.stopPropagation();
+        onExpand(record, e);
+      }}
+    />
+  );
+};
+
 const ApiPathsTable = () => {
+  const navigate = useNavigate();
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
   const [selectedMethod, setSelectedMethod] = useState('');
   const [selectedSource, setSelectedSource] = useState('');
   const [filterPath, setFilterPath] = useState('');
-  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
-  const target = xKusk?.upstream || xKusk?.redirect;
-  const type: TargetType = target?.service ? 'service' : target?.host ? 'host' : target ? 'redirect' : 'mocked';
 
-  const dataSource = Object.keys(selectedAPIOpenSpec?.paths || {})
-    .filter(i => i.includes(filterPath))
-    .map(path => {
-      return {
-        key: path,
-        route: path,
-        methods: Object.keys(selectedAPIOpenSpec.paths[path])
-          .filter(i => METHODS.includes(i))
-          .filter(i => i.includes(selectedMethod))
-          .join(','),
-        source: type,
-      };
-    })
-    .filter(i => i.source.includes(selectedSource) && i.methods.includes(selectedMethod));
+  const dataSource = useMemo(() => {
+    const root = {
+      key: '.',
+      route: 'Root',
+      source: getSourceType(_.get(selectedAPIOpenSpec, 'x-kusk')),
+      policiesCount: _.size(_.get(selectedAPIOpenSpec, 'x-kusk')),
+      methods: '',
+    };
+    return [
+      root,
+      ...Object.keys(selectedAPIOpenSpec?.paths || {})
+        .filter(i => i.includes(filterPath))
+        .map(path => {
+          return {
+            key: `paths.${path}`,
+            route: path,
+            methods: Object.keys(selectedAPIOpenSpec.paths[path])
+              .filter(i => METHODS.includes(i))
+              .filter(i => i.includes(selectedMethod))
+              .join(','),
+            source: getSourceType(_.get(selectedAPIOpenSpec.paths, `${path}.x-kusk`)),
+            policiesCount: _.size(_.get(selectedAPIOpenSpec.paths, `${path}.x-kusk`)),
+            children: Object.keys(selectedAPIOpenSpec.paths[path])
+              .filter(i => METHODS.includes(i))
+              .filter(i => i.includes(selectedMethod))
+              .map(m => {
+                return {
+                  key: `paths.${path}.${m}`,
+                  methods: m,
+                  source: getSourceType(_.get(selectedAPIOpenSpec.paths, `${path}.${m}.x-kusk`)),
+                  policiesCount: _.size(_.get(selectedAPIOpenSpec.paths, `${path}.${m}.x-kusk`)),
+                };
+              }),
+          };
+        })
+        .filter(i => i.source.includes(selectedSource) && i.methods.includes(selectedMethod)),
+    ];
+  }, [selectedAPIOpenSpec, filterPath, selectedSource, selectedMethod]);
 
   const onMethodSelectHandler = (value: string) => {
     setSelectedMethod(value || '');
@@ -106,8 +161,30 @@ const ApiPathsTable = () => {
         </S.FiltersWrapper>
       </S.Options>
 
-      <Table columns={columns} dataSource={dataSource} pagination={false} />
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={false}
+        expandable={{
+          columnWidth: 24,
+          rowExpandable: record => Boolean(record.route),
+          expandIcon,
+        }}
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: event => {
+              navigate(`paths/policies?p=${record.key}`, {});
+            },
+          };
+        }}
+      />
     </S.Container>
   );
+};
+
+const getSourceType = (xkusk: {[key: string]: any}): TargetType => {
+  const target = xkusk?.upstream || xkusk?.redirect;
+
+  return target?.service ? 'service' : target?.host ? 'host' : target ? 'redirect' : 'mocked';
 };
 export default ApiPathsTable;
