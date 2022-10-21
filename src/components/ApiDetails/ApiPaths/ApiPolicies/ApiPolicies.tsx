@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
+import {useSearchParams} from 'react-router-dom';
 
 import {Key} from 'antd/lib/table/interface';
 
@@ -27,11 +28,14 @@ import PoliciesList from './PoliciesList';
 import * as S from './styled';
 
 const ApiPolicies = () => {
+  let [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-
+  const queryPath = searchParams.get('p');
   const [activePolicy, setActivePolicy] = useState<string | undefined>();
-  const [selectedKeys, setSelectedKeys] = useState<Key[]>(['.']);
+  const [selectedKeys, setSelectedKeys] = useState<Key[]>(
+    searchParams.get('p') ? [searchParams.get('p')?.toString() as Key] : ['.']
+  );
   const selectedKey = selectedKeys[0].toString();
   const selectedXKusk = _.get(selectedAPIOpenSpec, selectedKey === '.' ? 'x-kusk' : `${selectedKey}.x-kusk`);
 
@@ -54,6 +58,13 @@ const ApiPolicies = () => {
   useEffect(() => {
     setActivePolicy(undefined);
   }, [selectedKey]);
+
+  useEffect(() => {
+    if (searchParams.get('p') && selectedKey !== searchParams.get('p')) {
+      setSelectedKeys([searchParams.get('p')?.toString() as Key]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryPath]);
 
   return (
     <S.Container>

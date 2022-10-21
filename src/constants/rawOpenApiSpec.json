@@ -223,7 +223,7 @@
     },
     "/todos": {
       "x-kusk": {
-        "hidden": true
+        "disabled": true
       },
       "get": {
         "responses": {
