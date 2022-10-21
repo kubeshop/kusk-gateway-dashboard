@@ -29,15 +29,16 @@ const columns = [
     title: 'OPERATIONS',
     dataIndex: 'methods',
     key: 'methods',
-    render: (arg: any, {methods}: any) => (
-      <>
-        {methods.split(',').map((method: string) => (
-          <S.Tag key={method} $method={method}>
-            {method.toUpperCase()}
-          </S.Tag>
-        ))}
-      </>
-    ),
+    render: (arg: any, {methods}: any) =>
+      !methods ? null : (
+        <>
+          {methods.split(',').map((method: string) => (
+            <S.Tag key={method} $method={method}>
+              {method.toUpperCase()}
+            </S.Tag>
+          ))}
+        </>
+      ),
   },
   {
     title: 'SOURCE',
@@ -50,7 +51,7 @@ const columns = [
     ),
   },
   {
-    title: 'Policies applied',
+    title: 'POLICIES APPLIED',
     dataIndex: 'policiesCount',
     key: 'policiesCount',
   },
@@ -94,7 +95,7 @@ const ApiPathsTable = () => {
       route: 'Root',
       source: getSourceType(_.get(selectedAPIOpenSpec, 'x-kusk')),
       policiesCount: _.size(_.get(selectedAPIOpenSpec, 'x-kusk')),
-      methods: '',
+      methods: null,
     };
     return [
       root,
