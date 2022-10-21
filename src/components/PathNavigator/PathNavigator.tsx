@@ -39,8 +39,8 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
         return {
           path,
           disabled:
-            Boolean(selectedAPIOpenSpec.paths[path]['x-kusk']?.hidden) ||
-            Boolean(_.find(selectedAPIOpenSpec.paths[path], el => el['x-kusk']?.hidden === true)),
+            Boolean(selectedAPIOpenSpec.paths[path]['x-kusk']?.disabled) ||
+            Boolean(_.find(selectedAPIOpenSpec.paths[path], el => el['x-kusk']?.disabled === true)),
           methods: Object.keys(selectedAPIOpenSpec.paths[path])
             .filter(k => SUPPORTED_METHODS.includes(k))
             .filter(i => METHODS.includes(i))
