@@ -132,8 +132,10 @@ const getPolicyDisplayName = (policy: string) => {
       return 'Routing';
     case 'mocking':
       return 'Routing';
+    case 'disabled':
+      return 'Disabled';
     default:
-      return '';
+      return _.capitalize(policy);
   }
 };
 
