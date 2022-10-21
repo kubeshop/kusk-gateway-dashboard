@@ -170,9 +170,9 @@ const ApiPathsTable = () => {
           rowExpandable: record => Boolean(record.route),
           expandIcon,
         }}
-        onRow={(record, rowIndex) => {
+        onRow={record => {
           return {
-            onClick: event => {
+            onClick: () => {
               navigate(`paths/policies?p=${record.key}`, {});
             },
           };

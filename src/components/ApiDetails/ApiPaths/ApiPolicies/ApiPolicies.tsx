@@ -63,6 +63,7 @@ const ApiPolicies = () => {
     if (searchParams.get('p') && selectedKey !== searchParams.get('p')) {
       setSelectedKeys([searchParams.get('p')?.toString() as Key]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryPath]);
 
   return (
