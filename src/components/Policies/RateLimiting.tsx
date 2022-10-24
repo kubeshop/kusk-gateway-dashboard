@@ -1,4 +1,4 @@
-import {Checkbox, Form, Input, Select, Switch, Typography} from 'antd';
+import {Checkbox, Form, Input, Select, Typography} from 'antd';
 
 import styled from 'styled-components';
 
@@ -21,15 +21,9 @@ interface IProps {
 
 const RateLimiting = ({xKusk, onCancel, onFinish}: IProps) => {
   const [form] = Form.useForm();
-  const rateLimitingEnabled = Form.useWatch('enabled', form);
 
   const onSaveClickHandler = (values: any) => {
-    const {enabled, ...rateLimit} = values;
-    if (enabled) {
-      onFinish(rateLimit);
-    } else {
-      onFinish({'x-kusk': {rate_limit: null}});
-    }
+    onFinish(values);
   };
 
   return (
@@ -41,13 +35,7 @@ const RateLimiting = ({xKusk, onCancel, onFinish}: IProps) => {
       helpLink="https://docs.kusk.io/extension/#rate-limiting"
       formProps={{onFinish: onSaveClickHandler, form}}
       cancelEditMode={onCancel}
-      cardProps={{
-        extra: (
-          <Form.Item name="enabled" valuePropName="checked" initialValue={Boolean(xKusk?.rate_limit)}>
-            <Switch />
-          </Form.Item>
-        ),
-      }}
+      enableSaveButton
     >
       <CardLayout>
         <S.CardItem>
@@ -57,14 +45,14 @@ const RateLimiting = ({xKusk, onCancel, onFinish}: IProps) => {
             initialValue={xKusk?.rate_limit?.requests_per_unit || 60}
             getValueFromEvent={e => Number(e.target.value)}
           >
-            <Input type="number" disabled={!rateLimitingEnabled} />
+            <Input type="number" />
           </Form.Item>
         </S.CardItem>
 
         <S.CardItem>
           <Typography.Text>Time unit</Typography.Text>
           <Form.Item name={['x-kusk', 'rate_limit', 'unit']} initialValue={xKusk?.rate_limit?.unit || 'second'}>
-            <Select disabled={!rateLimitingEnabled}>
+            <Select>
               <Select.Option value="second">Second</Select.Option>
               <Select.Option value="minute">Minute</Select.Option>
               <Select.Option value="hour">Hour</Select.Option>
@@ -79,7 +67,7 @@ const RateLimiting = ({xKusk, onCancel, onFinish}: IProps) => {
             initialValue={xKusk?.rate_limit?.response_code || 405}
             getValueFromEvent={e => Number(e.target.value)}
           >
-            <Input type="number" disabled={!rateLimitingEnabled} />
+            <Input type="number" />
           </Form.Item>
         </S.CardItem>
       </CardLayout>
@@ -88,7 +76,7 @@ const RateLimiting = ({xKusk, onCancel, onFinish}: IProps) => {
         valuePropName="checked"
         initialValue={xKusk?.rate_limit?.per_connection || false}
       >
-        <Checkbox disabled={!rateLimitingEnabled}>Apply these limits for each individual connection only</Checkbox>
+        <Checkbox>Apply these limits for each individual connection only</Checkbox>
       </Form.Item>
       <S.Divider />
     </FormCard>

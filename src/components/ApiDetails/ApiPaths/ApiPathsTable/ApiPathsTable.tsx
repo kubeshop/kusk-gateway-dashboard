@@ -63,9 +63,9 @@ const columns = [
 ];
 
 const expandIcon = ({expanded, onExpand, record}: any) => {
-  return !record.route || record?.methods?.length === 0 ? null : expanded ? (
+  return !record.route || !record.children ? null : expanded ? (
     <DownCircleOutlined
-      style={{marginRight: 8}}
+      style={{marginRight: 8, fontSize: 18}}
       onClick={e => {
         e?.stopPropagation();
         onExpand(record, e);
@@ -73,7 +73,7 @@ const expandIcon = ({expanded, onExpand, record}: any) => {
     />
   ) : (
     <RightCircleOutlined
-      style={{marginRight: 8}}
+      style={{marginRight: 8, fontSize: 18}}
       onClick={e => {
         e?.stopPropagation();
         onExpand(record, e);
@@ -95,37 +95,37 @@ const ApiPathsTable = () => {
       route: 'Root',
       source: getSourceType(_.get(selectedAPIOpenSpec, 'x-kusk')),
       policiesCount: _.size(_.get(selectedAPIOpenSpec, 'x-kusk')),
-      methods: null,
+      methods: '',
+      children: null,
     };
     return [
       root,
-      ...Object.keys(selectedAPIOpenSpec?.paths || {})
-        .filter(i => i.includes(filterPath))
-        .map(path => {
-          return {
-            key: `paths.${path}`,
-            route: path,
-            methods: Object.keys(selectedAPIOpenSpec.paths[path])
-              .filter(i => METHODS.includes(i))
-              .filter(i => i.includes(selectedMethod))
-              .join(','),
-            source: getSourceType(_.get(selectedAPIOpenSpec.paths, `${path}.x-kusk`)),
-            policiesCount: _.size(_.get(selectedAPIOpenSpec.paths, `${path}.x-kusk`)),
-            children: Object.keys(selectedAPIOpenSpec.paths[path])
-              .filter(i => METHODS.includes(i))
-              .filter(i => i.includes(selectedMethod))
-              .map(m => {
-                return {
-                  key: `paths.${path}.${m}`,
-                  methods: m,
-                  source: getSourceType(_.get(selectedAPIOpenSpec.paths, `${path}.${m}.x-kusk`)),
-                  policiesCount: _.size(_.get(selectedAPIOpenSpec.paths, `${path}.${m}.x-kusk`)),
-                };
-              }),
-          };
-        })
-        .filter(i => i.source.includes(selectedSource) && i.methods.includes(selectedMethod)),
-    ];
+      ...Object.keys(selectedAPIOpenSpec?.paths || {}).map(path => {
+        return {
+          key: `paths.${path}`,
+          route: path,
+          methods: Object.keys(selectedAPIOpenSpec.paths[path])
+            .filter(i => METHODS.includes(i))
+            .filter(i => i.includes(selectedMethod))
+            .join(','),
+          source: getSourceType(_.get(selectedAPIOpenSpec.paths, `${path}.x-kusk`)),
+          policiesCount: _.size(_.get(selectedAPIOpenSpec.paths, `${path}.x-kusk`)),
+          children: Object.keys(selectedAPIOpenSpec.paths[path])
+            .filter(i => METHODS.includes(i))
+            .filter(i => i.includes(selectedMethod))
+            .map(m => {
+              return {
+                key: `paths.${path}.${m}`,
+                methods: m,
+                source: getSourceType(_.get(selectedAPIOpenSpec.paths, `${path}.${m}.x-kusk`)),
+                policiesCount: _.size(_.get(selectedAPIOpenSpec.paths, `${path}.${m}.x-kusk`)),
+              };
+            }),
+        };
+      }),
+    ]
+      .filter(i => i.route.includes(filterPath))
+      .filter(i => i.source.includes(selectedSource) && i.methods.includes(selectedMethod));
   }, [selectedAPIOpenSpec, filterPath, selectedSource, selectedMethod]);
 
   const onMethodSelectHandler = (value: string) => {

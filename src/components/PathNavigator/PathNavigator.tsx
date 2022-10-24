@@ -1,7 +1,7 @@
 import {ChangeEvent, Dispatch, useMemo, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
-import {Dropdown, Input, Menu, Select, Typography} from 'antd';
+import {Input, Menu, Select, Typography} from 'antd';
 import {Key} from 'antd/lib/table/interface';
 import {DataNode} from 'antd/lib/tree';
 
@@ -40,7 +40,7 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
           path,
           disabled:
             Boolean(selectedAPIOpenSpec.paths[path]['x-kusk']?.disabled) ||
-            Boolean(_.find(selectedAPIOpenSpec.paths[path], el => el['x-kusk']?.disabled === true)),
+            Boolean(_.find(selectedAPIOpenSpec.paths[path], el => el && el['x-kusk']?.disabled === true)),
           methods: Object.keys(selectedAPIOpenSpec.paths[path])
             .filter(k => SUPPORTED_METHODS.includes(k))
             .filter(i => METHODS.includes(i))
@@ -56,7 +56,7 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
           title: (
             <S.Path>
               <Typography.Text>{p.path}</Typography.Text>
-              <Dropdown
+              <S.Dropdown
                 overlay={
                   <Menu
                     items={[
@@ -73,7 +73,7 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
                 }
               >
                 <MoreOutlined />
-              </Dropdown>
+              </S.Dropdown>
             </S.Path>
           ),
           key: `paths.${p.path}`,

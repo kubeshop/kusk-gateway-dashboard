@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-import {Form, Input, InputNumber, Select, Switch} from 'antd';
+import {Form, Input, InputNumber, Select} from 'antd';
 
 import {FormCard} from '@components/FormComponents';
 
@@ -14,7 +14,6 @@ interface IProps {
 
 const Authentication = ({xKusk, onFinish, onCancel}: IProps) => {
   const [form] = Form.useForm();
-  const authEnabled = Form.useWatch('enabled', form);
   const [authSchema, setAuthScheme] = useState<string | undefined>('custom');
 
   const onSelectSchemeHandler = (value: string) => {
@@ -22,12 +21,7 @@ const Authentication = ({xKusk, onFinish, onCancel}: IProps) => {
   };
 
   const onSaveClickHandler = (values: any) => {
-    const {enabled, ...rest} = values;
-    if (enabled) {
-      onFinish(rest);
-    } else {
-      onFinish({'x-kusk': {auth: null}});
-    }
+    onFinish(values);
   };
 
   return (
@@ -37,22 +31,11 @@ const Authentication = ({xKusk, onFinish, onCancel}: IProps) => {
       subHeading="Configure HTTP Authentication for your API"
       helpTopic="Authentication"
       helpLink="https://docs.kusk.io/extension#authentication"
-      cardProps={{
-        extra: (
-          <Form.Item label="Enable" name="enabled" valuePropName="checked" initialValue={Boolean(xKusk?.auth)}>
-            <Switch />
-          </Form.Item>
-        ),
-      }}
       formProps={{form, layout: 'vertical', onFinish: onSaveClickHandler}}
       cancelEditMode={onCancel}
     >
       <Form.Item label="Authentication Scheme">
-        <Select
-          onChange={onSelectSchemeHandler}
-          value={Object.keys(xKusk?.auth || [])[0] || 'custom'}
-          disabled={!authEnabled}
-        >
+        <Select onChange={onSelectSchemeHandler} value={Object.keys(xKusk?.auth || [])[0] || 'custom'}>
           <Select.Option value="custom">Custom</Select.Option>
         </Select>
       </Form.Item>
@@ -65,7 +48,7 @@ const Authentication = ({xKusk, onFinish, onCancel}: IProps) => {
             name={['x-kusk', 'auth', 'custom', 'path_prefix']}
             initialValue={xKusk?.auth?.custom?.path_prefix}
           >
-            <Input placeholder="e.g. /login" disabled={!authEnabled} />
+            <Input placeholder="e.g. /login" />
           </Form.Item>
 
           <S.Row>
@@ -81,7 +64,7 @@ const Authentication = ({xKusk, onFinish, onCancel}: IProps) => {
                   },
                 ]}
               >
-                <Input placeholder="e.g. example.com" disabled={!authEnabled} />
+                <Input placeholder="e.g. example.com" />
               </Form.Item>
             </S.CardItem>
             <Form.Item
@@ -99,7 +82,6 @@ const Authentication = ({xKusk, onFinish, onCancel}: IProps) => {
                 style={{minWidth: '100%'}}
                 placeholder="Target port to which requests should be routed"
                 type="number"
-                disabled={!authEnabled}
               />
             </Form.Item>
           </S.Row>

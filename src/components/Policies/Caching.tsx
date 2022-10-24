@@ -1,4 +1,4 @@
-import {Form, Input, Switch, Typography} from 'antd';
+import {Form, Input, Typography} from 'antd';
 
 import {FormCard} from '@components/FormComponents';
 
@@ -12,7 +12,6 @@ interface IProps {
 
 const Caching = ({xKusk, onFinish, onCancel}: IProps) => {
   const [form] = Form.useForm();
-  const enabled = Form.useWatch(['x-kusk', 'cache', 'enabled'], form);
   return (
     <FormCard
       enableCancelButton
@@ -22,22 +21,18 @@ const Caching = ({xKusk, onFinish, onCancel}: IProps) => {
       helpLink="https://docs.kusk.io/guides/cache"
       formProps={{onFinish, form}}
       cancelEditMode={onCancel}
-      cardProps={{
-        extra: (
-          <Form.Item name={['x-kusk', 'cache', 'enabled']} valuePropName="checked" initialValue={xKusk?.cache?.enabled}>
-            <Switch />
-          </Form.Item>
-        ),
-      }}
     >
       <S.CardItem>
         <Typography.Text type="secondary">Max age (in seconds)</Typography.Text>
+        <Form.Item hidden name={['x-kusk', 'cache', 'enabled']} initialValue={Boolean(true)} />
+
         <Form.Item
           name={['x-kusk', 'cache', 'max_age']}
-          initialValue={xKusk?.cache?.max_age || 60}
+          initialValue={xKusk?.cache?.max_age}
           getValueFromEvent={e => Number(e.target.value)}
+          rules={[{required: true}]}
         >
-          <Input type="number" disabled={!enabled} />
+          <Input type="number" placeholder="ex: 60" />
         </Form.Item>
       </S.CardItem>
 

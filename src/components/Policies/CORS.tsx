@@ -1,4 +1,4 @@
-import {Checkbox, Form, Input} from 'antd';
+import {Checkbox, Form, Input, Typography} from 'antd';
 
 import {SUPPORTED_METHODS} from '@constants/constants';
 
@@ -19,8 +19,8 @@ const CORS = ({xKusk, onFinish, onCancel}: IProps) => {
     <S.Container>
       <FormCard
         enableCancelButton
-        heading="Origins"
-        subHeading="Please provide the CORS origin"
+        heading="Cross Origin Resource Sharing"
+        subHeading=""
         helpTopic="Origins"
         helpLink="https://docs.kusk.io/extension/#cors"
         formProps={{onFinish, layout: 'vertical'}}
@@ -28,14 +28,21 @@ const CORS = ({xKusk, onFinish, onCancel}: IProps) => {
       >
         <FormList
           addButtonText="Add a new origin"
-          label="Origins"
+          label="Origin"
           name={['x-kusk', 'cors', 'origins']}
           initialValue={xKusk?.cors?.origins}
           requiredMessage="Enter origin or delete the field."
         />
 
         <S.Divider />
-        <Form.Item name={['x-kusk', 'cors', 'methods']} initialValue={xKusk?.cors?.methods}>
+        <Typography.Title level={5}>Methods</Typography.Title>
+
+        <Form.Item
+          label="Which CORS request methods would you like to allow?"
+          name={['x-kusk', 'cors', 'methods']}
+          initialValue={xKusk?.cors?.methods}
+          rules={[{required: true}]}
+        >
           <Checkbox.Group>
             {METHODS.map(method => (
               <Checkbox key={method} value={method}>
@@ -45,24 +52,28 @@ const CORS = ({xKusk, onFinish, onCancel}: IProps) => {
           </Checkbox.Group>
         </Form.Item>
         <S.Divider />
+        <Typography.Title level={5}>Headers</Typography.Title>
+
         <FormList
           addButtonText="Add a new header"
-          label="Headers"
+          label="CORS header"
           name={['x-kusk', 'cors', 'headers']}
-          initialValue={xKusk?.cors?.headers}
-          requiredMessage="Enter header or delete the field."
+          initialValue={xKusk?.cors?.headers || ['']}
         />
         <S.Divider />
+
+        <Typography.Title level={5}>Expose Headers</Typography.Title>
+
         <FormList
           addButtonText="Add a new exposed header"
-          label="Expose Headers"
+          label="Expose header"
           name={['x-kusk', 'cors', 'exposed_headers']}
           initialValue={xKusk?.cors?.expose_headers}
-          requiredMessage="Enter header or delete the field."
         />
         <S.Divider />
+        <Typography.Title level={5}>Credentials</Typography.Title>
+
         <Form.Item
-          label="Credentials"
           name={['x-kusk', 'cors', 'credentials']}
           valuePropName="checked"
           initialValue={xKusk?.cors?.credentials}
@@ -71,12 +82,12 @@ const CORS = ({xKusk, onFinish, onCancel}: IProps) => {
         </Form.Item>
         <S.Divider />
 
+        <Typography.Title level={5}>Max Age</Typography.Title>
         <Form.Item
-          label="Max age (in seconds)"
+          label="CORS max age (in seconds)"
           name={['x-kusk', 'cors', 'max_age']}
           initialValue={xKusk?.cors?.max_age}
           getValueFromEvent={e => Number(e.target.value)}
-          rules={[{required: true, message: 'Enter Max age'}]}
         >
           <Input type="number" />
         </Form.Item>

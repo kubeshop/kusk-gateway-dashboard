@@ -6,7 +6,7 @@ import Colors from '@styles/colors';
 
 export const Container = styled.div`
   padding: 24px 32px;
-  overflow-y: auto;
+  height: calc(100% - 60px);
 `;
 
 export const Tabs = styled(AntTabs)`
