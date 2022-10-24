@@ -22,7 +22,7 @@ const METHODS = SUPPORTED_METHODS.slice(0, -1);
 interface IProps {
   selectedKeys: Key[];
   selectKey: Dispatch<Key[]>;
-  onHidePath: (path: string, hide: boolean) => void;
+  onHidePath: (path: string[], hide: boolean) => void;
 }
 
 const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
@@ -63,7 +63,7 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
                         key: 'disabled',
                         onClick: ({domEvent}) => {
                           domEvent.stopPropagation();
-                          onHidePath(`paths.${p.path}`, !p.disabled);
+                          onHidePath([`paths.${p.path}.x-kusk`], !p.disabled);
                         },
                       },
                     ]}
@@ -88,9 +88,11 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
                     <Menu
                       items={[
                         {
-                          label: _.result<boolean>(selectedAPIOpenSpec, `paths.${p.path}.${method}.x-kusk.disabled`)
-                            ? 'Enable'
-                            : 'Disable',
+                          label:
+                            _.result<boolean>(selectedAPIOpenSpec, `paths.${p.path}.${method}.x-kusk.disabled`) ||
+                            p.disabled
+                              ? 'Enable'
+                              : 'Disable',
                           key: 'disabled',
                           onClick: ({domEvent}) => {
                             domEvent.stopPropagation();
@@ -98,7 +100,7 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
                               selectedAPIOpenSpec,
                               `paths.${p.path}.${method}.x-kusk.disabled`
                             );
-                            onHidePath(`paths.${p.path}.${method}`, !currentState);
+                            onHidePath([`paths.${p.path}.${method}.x-kusk`, `paths.${p.path}.x-kusk`], !currentState);
                           },
                         },
                       ]}
@@ -110,9 +112,12 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
               </S.Path>
             ),
             key: `paths.${p.path}.${method}`,
-            disabled: _.result<boolean>(selectedAPIOpenSpec, `paths.${p.path}.${method}.x-kusk.disabled`),
+            disabled: _.result<boolean>(selectedAPIOpenSpec, `paths.${p.path}.${method}.x-kusk.disabled`) || p.disabled,
             style: {
-              opacity: _.result<boolean>(selectedAPIOpenSpec, `paths.${p.path}.${method}.x-kusk.disabled`) ? 0.5 : 1,
+              opacity:
+                _.result<boolean>(selectedAPIOpenSpec, `paths.${p.path}.${method}.x-kusk.disabled`) || p.disabled
+                  ? 0.5
+                  : 1,
             },
           })),
         })),
