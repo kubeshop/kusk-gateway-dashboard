@@ -51,6 +51,16 @@ export const Card = styled(AntCard)`
   .ant-card-body::after {
     content: none;
   }
+
+  h4.ant-typography {
+    color: ${Colors.slate700} !important;
+  }
+  .ant-typography {
+    color: ${Colors.slate500} !important;
+  }
+  a.ant-typography {
+    color: ${Colors.blue400} !important;
+  }
 `;
 
 export const Icon = styled(AntIcon)`
@@ -60,4 +70,10 @@ export const Icon = styled(AntIcon)`
 
 export const Link = styled(Typography.Link)`
   width: fit-content;
+`;
+
+export const H3 = styled(Typography.Title).attrs({
+  level: 3,
+})`
+  color: ${Colors.zinc8};
 `;

@@ -1,4 +1,4 @@
-import {Select as AntSelect, Tree as AntTree} from 'antd';
+import {Dropdown as AntDropdown, Select as AntSelect, Tree as AntTree} from 'antd';
 
 import {SearchOutlined} from '@ant-design/icons';
 
@@ -62,6 +62,13 @@ export const Tree = styled(AntTree)`
     }
   }
 
+  .ant-tree-treenode:has(.anticon:hover) {
+    background-color: unset;
+    svg {
+      fill: ${Colors.blue500};
+    }
+  }
+
   .ant-tree-node-content-wrapper.ant-tree-node-selected {
     background-color: unset;
   }
@@ -82,4 +89,10 @@ export const Path = styled.div`
   justify-content: space-between;
   padding-right: 24px;
   margin-top: 2px;
+`;
+
+export const Dropdown = styled(AntDropdown)`
+  & .anticon:hover {
+    color: black;
+  }
 `;
