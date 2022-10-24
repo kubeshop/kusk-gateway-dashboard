@@ -24,7 +24,7 @@ const Sidebar = (props: IProps) => {
           <S.Icon component={ApiIcon} $active={activeSection === 'openapiBrowser'} onClick={() => navigate(``)} />
         </Tooltip>
 
-        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="Paths List">
+        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="Routes">
           <S.Icon component={StaticRouteIcon} $active={activeSection === 'paths'} onClick={() => navigate(`paths`)} />
         </Tooltip>
 

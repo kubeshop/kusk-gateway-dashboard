@@ -1,8 +1,12 @@
 import {Dispatch, SetStateAction} from 'react';
 
-import {Typography} from 'antd';
+import {Button, Typography} from 'antd';
+
+import {ArrowLeftOutlined} from '@ant-design/icons';
 
 import {RawExternalIcon} from '@components/Icons';
+
+import Colors from '@styles/colors';
 
 import * as S from './Policies.styled';
 
@@ -29,8 +33,16 @@ interface IPoliciesProps {
 }
 
 const Policies = ({selectPolicy}: IPoliciesProps) => {
+  const onBackClickHandler = () => {
+    selectPolicy(undefined);
+  };
+
   return (
     <div>
+      <Button onClick={onBackClickHandler} type="link">
+        <ArrowLeftOutlined style={{color: Colors.blue400}} />
+        Back
+      </Button>
       <div>
         <Typography.Title level={3}>Add Request Policy</Typography.Title>
         <S.Grid>
@@ -84,12 +96,12 @@ const Policies = ({selectPolicy}: IPoliciesProps) => {
       <div>
         <Typography.Title level={3}>Add Response Policy</Typography.Title>
         <S.Grid>
-          <PolicyCard
+          {/* <PolicyCard
             title="Mocking"
             description="Set mocking policy to return a response based on the defined samples."
             link="https://docs.kusk.io/extension#mocking"
             onClick={() => selectPolicy('mocking')}
-          />
+          /> */}
 
           <PolicyCard
             title="Caching"
