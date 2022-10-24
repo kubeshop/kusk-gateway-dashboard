@@ -1,4 +1,4 @@
-https://gallant-edison-9baea8.netlify.app/api/* http://34.138.148.3/api/:splat 200!
-https://dashboard.kusk.io/api/* http://34.138.148.3/api/:splat 200!
+https://gallant-edison-9baea8.netlify.app/api/* http://34.148.43.242/:splat 200!
+https://dashboard.kusk.io/api/* http://34.148.43.242/:splat 200!
 
 /* /index.html 200
