@@ -1,9 +1,8 @@
-import {Form} from 'antd';
-
 import _ from 'lodash';
 
 import {FormCard} from '@components/FormComponents';
-import {TargetForm} from '@components/TargetForm';
+
+import {TargetForm} from './TargetForm';
 
 import * as S from './styled';
 
@@ -15,17 +14,17 @@ interface IProps {
 
 const Targets = ({xKusk, onFinish, onCancel}: IProps) => {
   const onSaveClickHandler = (values: any) => {
-    let {
-      redirect = null,
-      upstream: {service = null, host = null, rewrite},
-      mocking,
-    } = values;
+    let {redirect = null, upstream: {service = null, host = null, rewrite = null} = {}, mocking = null} = values;
     if (rewrite) {
       rewrite = rewrite?.rewrite_regex;
     }
 
     if (redirect) {
       redirect.type = undefined;
+    }
+
+    if (!redirect && !service && !host) {
+      mocking = {enabled: true};
     }
 
     const edits = {'x-kusk': {mocking, redirect, upstream: {service, host, rewrite}}};
@@ -40,6 +39,7 @@ const Targets = ({xKusk, onFinish, onCancel}: IProps) => {
   return (
     <FormCard
       enableCancelButton
+      enableSaveButton
       heading="Routing"
       subHeading="Define the the upstreams or redirects your API is routing the requests to."
       helpTopic="Routing"
@@ -47,7 +47,6 @@ const Targets = ({xKusk, onFinish, onCancel}: IProps) => {
       formProps={{onFinish: onSaveClickHandler, layout: 'vertical', initialValues: xKuskForm}}
       cancelEditMode={onCancel}
     >
-      <Form.Item hidden name="mocking" initialValue={null} />
       <TargetForm />
       <S.Divider />
     </FormCard>

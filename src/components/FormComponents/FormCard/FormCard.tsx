@@ -17,6 +17,7 @@ interface IProps {
   cancelEditMode?: () => void;
   disableResetForm?: boolean;
   enableCancelButton?: boolean;
+  enableSaveButton?: boolean;
 }
 
 const FormCard: FC<IProps> = props => {
@@ -32,6 +33,7 @@ const FormCard: FC<IProps> = props => {
     cancelEditMode,
     disableResetForm,
     enableCancelButton,
+    enableSaveButton,
   } = props;
   const [defaultForm] = Form.useForm();
   const form = formProps?.form || defaultForm;
@@ -94,7 +96,8 @@ const FormCard: FC<IProps> = props => {
                 <S.SaveButton
                   htmlType="submit"
                   disabled={
-                    !form.isFieldsTouched() || form.getFieldsError().filter(({errors}) => errors.length).length > 0
+                    !enableSaveButton &&
+                    (!form.isFieldsTouched() || form.getFieldsError().filter(({errors}) => errors.length).length > 0)
                   }
                 >
                   Save

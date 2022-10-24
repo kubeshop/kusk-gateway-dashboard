@@ -1,4 +1,5 @@
 import {ChangeEvent, Dispatch, useMemo, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 import {Dropdown, Input, Menu, Select, Typography} from 'antd';
 import {Key} from 'antd/lib/table/interface';
@@ -19,11 +20,13 @@ import * as S from './styled';
 const METHODS = SUPPORTED_METHODS.slice(0, -1);
 
 interface IProps {
-  selectKey: Dispatch<Key[] | undefined>;
+  selectedKeys: Key[];
+  selectKey: Dispatch<Key[]>;
   onHidePath: (path: string, hide: boolean) => void;
 }
 
-const PathNavigator = ({selectKey, onHidePath}: IProps) => {
+const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
+  const navigate = useNavigate();
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
 
   const [selectedMethod, setSelectedMethod] = useState('');
@@ -35,9 +38,9 @@ const PathNavigator = ({selectKey, onHidePath}: IProps) => {
       .map(path => {
         return {
           path,
-          hidden:
-            Boolean(selectedAPIOpenSpec.paths[path]['x-kusk']?.hidden) ||
-            Boolean(_.find(selectedAPIOpenSpec.paths[path], el => el['x-kusk']?.hidden === true)),
+          disabled:
+            Boolean(selectedAPIOpenSpec.paths[path]['x-kusk']?.disabled) ||
+            Boolean(_.find(selectedAPIOpenSpec.paths[path], el => el['x-kusk']?.disabled === true)),
           methods: Object.keys(selectedAPIOpenSpec.paths[path])
             .filter(k => SUPPORTED_METHODS.includes(k))
             .filter(i => METHODS.includes(i))
@@ -58,11 +61,11 @@ const PathNavigator = ({selectKey, onHidePath}: IProps) => {
                   <Menu
                     items={[
                       {
-                        label: p.hidden ? 'Unhide' : 'Hide',
-                        key: 'hidden',
+                        label: p.disabled ? 'Enable' : 'Disable',
+                        key: 'disabled',
                         onClick: ({domEvent}) => {
                           domEvent.stopPropagation();
-                          onHidePath(p.path, !p.hidden);
+                          onHidePath(p.path, !p.disabled);
                         },
                       },
                     ]}
@@ -75,7 +78,7 @@ const PathNavigator = ({selectKey, onHidePath}: IProps) => {
           ),
           key: `paths.${p.path}`,
 
-          style: {opacity: p.hidden ? 0.5 : 1},
+          style: {opacity: p.disabled ? 0.5 : 1},
           children: p.methods.map(method => ({
             title: (
               <MethodTag style={{marginTop: 8}} $method={method}>
@@ -83,7 +86,7 @@ const PathNavigator = ({selectKey, onHidePath}: IProps) => {
               </MethodTag>
             ),
             key: `paths.${p.path}.${method}`,
-            style: {opacity: p.hidden ? 0.5 : 1},
+            style: {opacity: p.disabled ? 0.5 : 1},
           })),
         })),
       },
@@ -105,8 +108,11 @@ const PathNavigator = ({selectKey, onHidePath}: IProps) => {
     setExpandedKeys(keys);
   };
 
-  const onSelectKeyClickHandler = (keys: Key[]) => {
-    selectKey(keys);
+  const onSelectKeyClickHandler = (keys: Key[], {selected}: {selected: boolean}) => {
+    if (selected) {
+      selectKey(keys);
+      navigate(`paths/policies?p=${keys[0].toString()}`);
+    }
   };
 
   return (
@@ -121,7 +127,13 @@ const PathNavigator = ({selectKey, onHidePath}: IProps) => {
           ))}
         </S.Select>
       </S.Filters>
-      <S.Tree treeData={pathTree} onExpand={onExpand} expandedKeys={expandedKeys} onSelect={onSelectKeyClickHandler} />
+      <S.Tree
+        treeData={pathTree}
+        onExpand={onExpand}
+        expandedKeys={expandedKeys}
+        selectedKeys={selectedKeys}
+        onSelect={onSelectKeyClickHandler}
+      />
     </S.Container>
   );
 };

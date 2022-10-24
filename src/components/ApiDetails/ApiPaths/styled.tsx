@@ -5,10 +5,7 @@ import styled from 'styled-components';
 import Colors from '@styles/colors';
 
 export const Container = styled.div`
-  position: sticky;
-  top: 0;
   padding: 24px 32px;
-  height: 100%;
   overflow-y: auto;
 `;
 
