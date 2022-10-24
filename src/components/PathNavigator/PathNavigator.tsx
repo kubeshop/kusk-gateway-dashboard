@@ -38,9 +38,7 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
       .map(path => {
         return {
           path,
-          disabled:
-            Boolean(selectedAPIOpenSpec.paths[path]['x-kusk']?.disabled) ||
-            Boolean(_.find(selectedAPIOpenSpec.paths[path], el => el && el['x-kusk']?.disabled === true)),
+          disabled: Boolean(selectedAPIOpenSpec.paths[path]['x-kusk']?.disabled),
           methods: Object.keys(selectedAPIOpenSpec.paths[path])
             .filter(k => SUPPORTED_METHODS.includes(k))
             .filter(i => METHODS.includes(i))
@@ -65,7 +63,7 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
                         key: 'disabled',
                         onClick: ({domEvent}) => {
                           domEvent.stopPropagation();
-                          onHidePath(p.path, !p.disabled);
+                          onHidePath(`paths.${p.path}`, !p.disabled);
                         },
                       },
                     ]}
@@ -81,12 +79,41 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
           style: {opacity: p.disabled ? 0.5 : 1},
           children: p.methods.map(method => ({
             title: (
-              <MethodTag style={{marginTop: 8}} $method={method}>
-                {method}
-              </MethodTag>
+              <S.Path>
+                <MethodTag style={{marginTop: 8}} $method={method}>
+                  {method}
+                </MethodTag>
+                <S.Dropdown
+                  overlay={
+                    <Menu
+                      items={[
+                        {
+                          label: _.result<boolean>(selectedAPIOpenSpec, `paths.${p.path}.${method}.x-kusk.disabled`)
+                            ? 'Enable'
+                            : 'Disable',
+                          key: 'disabled',
+                          onClick: ({domEvent}) => {
+                            domEvent.stopPropagation();
+                            const currentState = _.result<boolean>(
+                              selectedAPIOpenSpec,
+                              `paths.${p.path}.${method}.x-kusk.disabled`
+                            );
+                            onHidePath(`paths.${p.path}.${method}`, !currentState);
+                          },
+                        },
+                      ]}
+                    />
+                  }
+                >
+                  <MoreOutlined />
+                </S.Dropdown>
+              </S.Path>
             ),
             key: `paths.${p.path}.${method}`,
-            style: {opacity: p.disabled ? 0.5 : 1},
+            disabled: _.result<boolean>(selectedAPIOpenSpec, `paths.${p.path}.${method}.x-kusk.disabled`),
+            style: {
+              opacity: _.result<boolean>(selectedAPIOpenSpec, `paths.${p.path}.${method}.x-kusk.disabled`) ? 0.5 : 1,
+            },
           })),
         })),
       },

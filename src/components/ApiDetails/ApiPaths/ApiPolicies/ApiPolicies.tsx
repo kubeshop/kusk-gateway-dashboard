@@ -52,7 +52,8 @@ const ApiPolicies = () => {
   };
 
   const onHidePathClickHandler = (p: string, hide: boolean) => {
-    const edit = {paths: {[p]: {'x-kusk': {disable: hide}}}};
+    const edit = _.set(_.cloneDeep(selectedAPIOpenSpec), p, {'x-kusk': {disabled: hide}});
+    console.log(edit);
     dispatch(updateApiSettings({editedOpenapi: edit}));
   };
 

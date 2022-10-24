@@ -53,6 +53,11 @@ export const Tree = styled(AntTree)`
 
   .ant-tree-node-content-wrapper {
     width: 100%;
+    align-self: center;
+  }
+
+  .ant-tree-node-content-wrapper .anticon {
+    visibility: hidden;
   }
 
   .ant-tree-node-content-wrapper:hover {
@@ -62,15 +67,18 @@ export const Tree = styled(AntTree)`
     }
   }
 
-  .ant-tree-treenode:has(.anticon:hover) {
-    background-color: unset;
-    svg {
-      fill: ${Colors.blue500};
-    }
+  .ant-tree-node-content-wrapper:hover .anticon {
+    visibility: visible;
   }
 
+  .anticon:hover {
+    background-color: ${Colors.blue100};
+  }
   .ant-tree-node-content-wrapper.ant-tree-node-selected {
     background-color: unset;
+  }
+  .ant-tree-switcher {
+    align-self: center;
   }
 `;
 
@@ -87,8 +95,10 @@ export const Select = styled(props => <AntSelect {...props} />)`
 export const Path = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding-right: 24px;
   margin-top: 2px;
+  align-self: center;
 `;
 
 export const Dropdown = styled(AntDropdown)`
