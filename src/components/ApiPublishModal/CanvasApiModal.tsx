@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
-import {Button, Form, Input, Modal, Select} from 'antd';
+import {Button, Form, Input, Select} from 'antd';
 
 import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
@@ -20,6 +20,7 @@ import {closeApiPublishModal, closeCanvasApiModal} from '@redux/reducers/ui';
 import {useDeployApiMutation, useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 import {ApiItem} from '@redux/services/kuskApi';
 
+import {renderErrorModal} from '@components/AntdCustom';
 import {FleetDropdown} from '@components/FormComponents';
 
 import {checkDuplicateAPI, formatApiName} from '@utils/api';
@@ -54,13 +55,7 @@ const CanvasApiModal = () => {
 
   useEffect(() => {
     if (!isUninitialized && isError && error?.message) {
-      Modal.error({
-        type: 'error',
-        title: 'Something wrong happened!',
-        content: error?.message,
-        okText: 'Got it!',
-        cancelText: null,
-      });
+      renderErrorModal({title: 'Unable to deploy API', error: error?.message});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError, isUninitialized]);
@@ -113,7 +108,7 @@ const CanvasApiModal = () => {
 
   return (
     <S.Modal
-      visible
+      open
       closable
       title={`Create an API from ${apiCanvasType === 'template' ? 'template' : 'scratch'}`}
       footer={

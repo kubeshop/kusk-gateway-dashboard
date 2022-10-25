@@ -19,6 +19,7 @@ import {closeApiPublishModal, closeFileApiModal} from '@redux/reducers/ui';
 import {useDeployApiMutation, useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 import {ApiItem} from '@redux/services/kuskApi';
 
+import {renderErrorModal} from '@components/AntdCustom';
 import {FilePicker, FleetDropdown} from '@components/FormComponents';
 
 import {checkDuplicateAPI, formatApiName} from '@utils/api';
@@ -34,13 +35,7 @@ const FileApiModal = () => {
 
   useEffect(() => {
     if (!isUninitialized && isError && error?.message) {
-      Modal.error({
-        type: 'error',
-        title: 'Something wrong happened!',
-        content: error?.message,
-        okText: 'Got it!',
-        cancelText: null,
-      });
+      renderErrorModal({title: 'Unable to deploy API', error: error?.message});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError, isUninitialized]);
@@ -93,7 +88,7 @@ const FileApiModal = () => {
   };
 
   return (
-    <Modal visible title="Create an API from file" onCancel={onBackHandler} onOk={onSubmitHandler} okText="Create API">
+    <Modal open title="Create an API from file" onCancel={onBackHandler} onOk={onSubmitHandler} okText="Create API">
       <Form form={form} layout="vertical">
         <Form.Item required name="type" label="Import API via" initialValue="file">
           <Radio.Group>

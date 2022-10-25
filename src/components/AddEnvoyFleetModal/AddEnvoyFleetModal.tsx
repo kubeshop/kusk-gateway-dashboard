@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Button, Form, Input, Modal, Radio, Select, Space, Typography} from 'antd';
+import {Button, Form, Input, Radio, Select, Space, Typography} from 'antd';
 
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 
@@ -11,6 +11,8 @@ import {setAlert} from '@redux/reducers/alert';
 import {closeEnvoyFleetModalModal} from '@redux/reducers/ui';
 import {useCreateFleetMutation, useGetNamespacesQuery, useGetServicesQuery} from '@redux/services/enhancedApi';
 import {GetServiceApiResponse} from '@redux/services/kuskApi';
+
+import {renderErrorModal} from '@components/AntdCustom';
 
 import * as S from './styled';
 
@@ -36,13 +38,7 @@ const AddEnvoyFleetModal = () => {
 
   useEffect(() => {
     if (!isUninitialized && isError && error?.message) {
-      Modal.error({
-        type: 'error',
-        title: 'Something wrong happened!',
-        content: error?.message,
-        okText: 'Got it!',
-        cancelText: null,
-      });
+      renderErrorModal({title: 'Unable to create Deployment', error: error?.message});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError, isUninitialized]);
@@ -73,7 +69,7 @@ const AddEnvoyFleetModal = () => {
 
   return (
     <S.Modal
-      visible
+      open
       title={<Typography.Title level={3}>Add a deployment fleet</Typography.Title>}
       width="600px"
       onCancel={onBackHandler}

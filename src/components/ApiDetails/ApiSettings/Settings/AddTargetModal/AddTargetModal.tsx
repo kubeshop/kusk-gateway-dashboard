@@ -35,7 +35,7 @@ const AddTargetModal = ({closeModal}: IProps) => {
 
   return (
     <S.Modal
-      visible
+      open
       width="648px"
       title="Add a target"
       onCancel={closeModal}

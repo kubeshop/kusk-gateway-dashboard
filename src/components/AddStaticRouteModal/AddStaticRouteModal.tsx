@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
-import {Form, Modal, Steps} from 'antd';
+import {Form, Steps} from 'antd';
 
 import YAML from 'yaml';
 
@@ -15,6 +15,7 @@ import {setAlert} from '@redux/reducers/alert';
 import {closeStaticRouteModal} from '@redux/reducers/ui';
 import {useCreateStaticRouteMutation} from '@redux/services/enhancedApi';
 
+import {renderErrorModal} from '@components/AntdCustom';
 import {TargetForm} from '@components/TargetForm';
 
 import PathForm from './PathForm';
@@ -34,13 +35,7 @@ const AddStaticRouteModal = () => {
 
   useEffect(() => {
     if (!isUninitialized && isError && error?.message) {
-      Modal.error({
-        type: 'error',
-        title: 'Something wrong happened!',
-        content: error?.message,
-        okText: 'Got it!',
-        cancelText: null,
-      });
+      renderErrorModal({title: 'Unable to deploy static route', error: error?.message});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError, isUninitialized]);
@@ -105,7 +100,7 @@ const AddStaticRouteModal = () => {
 
   return (
     <S.Modal
-      visible
+      open
       title="Create static route"
       width="824px"
       onCancel={onBackHandler}
