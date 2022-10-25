@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 
 import {notification} from 'antd';
 
-import {alertTypes} from '@models/alert';
+import {AlertEnum, alertTypes} from '@models/alert';
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {clearAlert} from '@redux/reducers/alert';
@@ -12,7 +12,7 @@ const NotificationBox: React.FC = () => {
   const alert = useAppSelector(state => state.alert.alert);
 
   useEffect(() => {
-    if (!alert) {
+    if (!alert || alert.type === AlertEnum.Error) {
       return;
     }
 

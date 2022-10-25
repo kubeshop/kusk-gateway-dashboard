@@ -20,7 +20,6 @@ import {closeApiPublishModal, closeCanvasApiModal} from '@redux/reducers/ui';
 import {useDeployApiMutation, useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 import {ApiItem} from '@redux/services/kuskApi';
 
-import {renderErrorModal} from '@components/AntdCustom';
 import {FleetDropdown} from '@components/FormComponents';
 
 import {checkDuplicateAPI, formatApiName} from '@utils/api';
@@ -35,7 +34,7 @@ const CanvasApiModal = () => {
   const openapiField = Form.useWatch('openapi', form);
   const {data: apis} = useGetApisQuery({});
   const {data: namespaces} = useGetNamespacesQuery();
-  const [deployAPI, {isError, error, isUninitialized}] = useDeployApiMutation();
+  const [deployAPI] = useDeployApiMutation();
 
   useEffect(() => {
     if (apiCanvasType === 'template') {
@@ -52,13 +51,6 @@ const CanvasApiModal = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openapiField]);
-
-  useEffect(() => {
-    if (!isUninitialized && isError && error?.message) {
-      renderErrorModal({title: 'Unable to deploy API', error: error?.message});
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isError, isUninitialized]);
 
   const onBackHandler = () => {
     dispatch(closeCanvasApiModal());
@@ -103,7 +95,15 @@ const CanvasApiModal = () => {
         dispatch(selectApi(apiData));
         navigate(`${AppRoutes.API}/${apiData.namespace}/${apiData.name}`);
       })
-      .catch(() => {});
+      .catch(error => {
+        dispatch(
+          setAlert({
+            title: 'Unable to deploy API',
+            description: error?.message,
+            type: AlertEnum.Error,
+          })
+        );
+      });
   };
 
   return (

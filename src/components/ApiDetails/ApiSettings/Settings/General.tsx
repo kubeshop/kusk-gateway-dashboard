@@ -43,11 +43,11 @@ const GeneralSettings = () => {
                 type: AlertEnum.Success,
               })
             );
-          } catch (e) {
+          } catch (e: any) {
             dispatch(
               setAlert({
-                title: 'Deleting API was failed',
-                description: `Something went wrong!`,
+                title: 'Unable to delete API',
+                description: e?.message,
                 type: AlertEnum.Error,
               })
             );

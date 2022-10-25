@@ -1,6 +1,6 @@
 import {ReactNode} from 'react';
 
-import {Modal, Menu as RawMenu, Tag, Typography} from 'antd';
+import {Menu as RawMenu, Tag, Typography} from 'antd';
 
 import {
   CloseOutlined as RawCloseOutlined,
@@ -187,25 +187,3 @@ export const Divider = styled.div`
     background-color: #f0f0f0;
   }
 `;
-
-export const renderErrorModal = ({title, error}: {title: string; error: string}) => {
-  return Modal.error({
-    type: 'error',
-    title,
-    content: (
-      <div>
-        <Typography.Text>{error}</Typography.Text>
-        <br />
-        <br />
-        <Typography.Text>
-          If the issue persists or should you need help, please contact us on&nbsp;
-          <Typography.Link href="https://discord.com/channels/884464549347074049/913784299273211905" target="_blank">
-            Discord.
-          </Typography.Link>
-        </Typography.Text>
-      </div>
-    ),
-    okText: 'Got it!',
-    cancelText: null,
-  });
-};

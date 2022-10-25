@@ -1,4 +1,3 @@
-import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Button, Form, Input, Radio, Select, Space, Typography} from 'antd';
@@ -11,8 +10,6 @@ import {setAlert} from '@redux/reducers/alert';
 import {closeEnvoyFleetModalModal} from '@redux/reducers/ui';
 import {useCreateFleetMutation, useGetNamespacesQuery, useGetServicesQuery} from '@redux/services/enhancedApi';
 import {GetServiceApiResponse} from '@redux/services/kuskApi';
-
-import {renderErrorModal} from '@components/AntdCustom';
 
 import * as S from './styled';
 
@@ -33,38 +30,41 @@ const AddEnvoyFleetModal = () => {
   const {data: namespaces} = useGetNamespacesQuery();
   const {data: services} = useGetServicesQuery({});
 
-  const [createFleet, {isLoading: isLoadingNewFleet, isError, error, reset, isUninitialized}] =
-    useCreateFleetMutation();
+  const [createFleet, {isLoading: isLoadingNewFleet, isError, reset}] = useCreateFleetMutation();
 
-  useEffect(() => {
-    if (!isUninitialized && isError && error?.message) {
-      renderErrorModal({title: 'Unable to create Deployment', error: error?.message});
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isError, isUninitialized]);
   const onBackHandler = () => {
     dispatch(closeEnvoyFleetModalModal());
   };
 
   const onSubmitHandler = async () => {
-    await form.validateFields();
-    const {fleetInfo, portsInfo} = await form.getFieldsValue(true);
-    form.submit();
-    const portsList = portsInfo.ports.map((p: any) => ({
-      port: Number(p.port),
-      name: 'fleet',
-      targetPort: 'http',
-    }));
+    try {
+      await form.validateFields();
+      const {fleetInfo, portsInfo} = await form.getFieldsValue(true);
+      form.submit();
+      const portsList = portsInfo.ports.map((p: any) => ({
+        port: Number(p.port),
+        name: 'fleet',
+        targetPort: 'http',
+      }));
 
-    await createFleet({serviceItem: {...fleetInfo, ports: portsList, status: 'available'}}).unwrap();
-    dispatch(closeEnvoyFleetModalModal());
-    dispatch(
-      setAlert({
-        title: 'The Envoy fleet deployed successfully',
-        description: `${fleetInfo.name} was deployed successfully in ${fleetInfo.namespace} namespace`,
-        type: AlertEnum.Success,
-      })
-    );
+      await createFleet({serviceItem: {...fleetInfo, ports: portsList, status: 'available'}}).unwrap();
+      dispatch(closeEnvoyFleetModalModal());
+      dispatch(
+        setAlert({
+          title: 'The Envoy fleet deployed successfully',
+          description: `${fleetInfo.name} was deployed successfully in ${fleetInfo.namespace} namespace`,
+          type: AlertEnum.Success,
+        })
+      );
+    } catch (e: any) {
+      dispatch(
+        setAlert({
+          title: 'Unable to create deployment',
+          description: e?.message,
+          type: AlertEnum.Error,
+        })
+      );
+    }
   };
 
   return (

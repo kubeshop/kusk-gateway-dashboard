@@ -1,4 +1,3 @@
-import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
@@ -19,7 +18,6 @@ import {closeApiPublishModal, closeFileApiModal} from '@redux/reducers/ui';
 import {useDeployApiMutation, useGetApisQuery, useGetNamespacesQuery} from '@redux/services/enhancedApi';
 import {ApiItem} from '@redux/services/kuskApi';
 
-import {renderErrorModal} from '@components/AntdCustom';
 import {FilePicker, FleetDropdown} from '@components/FormComponents';
 
 import {checkDuplicateAPI, formatApiName} from '@utils/api';
@@ -31,14 +29,7 @@ const FileApiModal = () => {
   const type = Form.useWatch('type', form);
   const {data: apis} = useGetApisQuery({});
   const {data: namespaces} = useGetNamespacesQuery();
-  const [deployAPI, {isError, error, isUninitialized}] = useDeployApiMutation();
-
-  useEffect(() => {
-    if (!isUninitialized && isError && error?.message) {
-      renderErrorModal({title: 'Unable to deploy API', error: error?.message});
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isError, isUninitialized]);
+  const [deployAPI] = useDeployApiMutation();
 
   const onBackHandler = () => {
     dispatch(closeFileApiModal());
@@ -84,6 +75,15 @@ const FileApiModal = () => {
         );
         dispatch(selectApi(apiData));
         navigate(`${AppRoutes.API}/${apiData.namespace}/${apiData.name}`);
+      })
+      .catch((error: any) => {
+        dispatch(
+          setAlert({
+            title: 'Unable to deploy API',
+            description: error?.message,
+            type: AlertEnum.Error,
+          })
+        );
       });
   };
 
