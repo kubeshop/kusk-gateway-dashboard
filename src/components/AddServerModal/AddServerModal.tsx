@@ -56,7 +56,7 @@ const AddServerModal: React.FC<IProps> = props => {
           destroyOnClose
           centered
           title="Add new server"
-          visible={showModal}
+          open={showModal}
           onCancel={onCancelHandler}
           onOk={onOkHandler}
         >

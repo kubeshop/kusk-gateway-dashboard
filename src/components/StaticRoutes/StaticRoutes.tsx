@@ -100,11 +100,11 @@ const StaticRoutes = () => {
               type: AlertEnum.Success,
             })
           );
-        } catch (e) {
+        } catch (e: any) {
           dispatch(
             setAlert({
-              title: 'Static route has not deleted',
-              description: `Something went wrong!`,
+              title: 'Unable to delete Static Route',
+              description: e.message,
               type: AlertEnum.Error,
             })
           );

@@ -30,36 +30,46 @@ const AddEnvoyFleetModal = () => {
   const {data: namespaces} = useGetNamespacesQuery();
   const {data: services} = useGetServicesQuery({});
 
-  const [createFleet, {isLoading: isLoadingNewFleet, isError, error, reset}] = useCreateFleetMutation();
+  const [createFleet, {isLoading: isLoadingNewFleet, isError, reset}] = useCreateFleetMutation();
 
   const onBackHandler = () => {
     dispatch(closeEnvoyFleetModalModal());
   };
 
   const onSubmitHandler = async () => {
-    await form.validateFields();
-    const {fleetInfo, portsInfo} = await form.getFieldsValue(true);
-    form.submit();
-    const portsList = portsInfo.ports.map((p: any) => ({
-      port: Number(p.port),
-      name: 'fleet',
-      targetPort: 'http',
-    }));
+    try {
+      await form.validateFields();
+      const {fleetInfo, portsInfo} = await form.getFieldsValue(true);
+      form.submit();
+      const portsList = portsInfo.ports.map((p: any) => ({
+        port: Number(p.port),
+        name: 'fleet',
+        targetPort: 'http',
+      }));
 
-    await createFleet({serviceItem: {...fleetInfo, ports: portsList, status: 'available'}}).unwrap();
-    dispatch(closeEnvoyFleetModalModal());
-    dispatch(
-      setAlert({
-        title: 'The Envoy fleet deployed successfully',
-        description: `${fleetInfo.name} was deployed successfully in ${fleetInfo.namespace} namespace`,
-        type: AlertEnum.Success,
-      })
-    );
+      await createFleet({serviceItem: {...fleetInfo, ports: portsList, status: 'available'}}).unwrap();
+      dispatch(closeEnvoyFleetModalModal());
+      dispatch(
+        setAlert({
+          title: 'The Envoy fleet deployed successfully',
+          description: `${fleetInfo.name} was deployed successfully in ${fleetInfo.namespace} namespace`,
+          type: AlertEnum.Success,
+        })
+      );
+    } catch (e: any) {
+      dispatch(
+        setAlert({
+          title: 'Unable to create deployment',
+          description: e?.message,
+          type: AlertEnum.Error,
+        })
+      );
+    }
   };
 
   return (
     <S.Modal
-      visible
+      open
       title={<Typography.Title level={3}>Add a deployment fleet</Typography.Title>}
       width="600px"
       onCancel={onBackHandler}
@@ -75,8 +85,6 @@ const AddEnvoyFleetModal = () => {
         </>
       }
     >
-      {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" />}
-
       <Form
         preserve
         layout="vertical"

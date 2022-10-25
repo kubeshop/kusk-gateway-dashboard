@@ -26,59 +26,69 @@ const AddStaticRouteModal = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const [createStaticRoute, {error, isError, reset}] = useCreateStaticRouteMutation();
+  const [createStaticRoute, {isError, reset}] = useCreateStaticRouteMutation();
   const [currentStep, setCurrentStep] = useState(0);
   const step = currentStep === 0 ? 'routeInfo' : currentStep === 1 ? 'pathInfo' : 'targetInfo';
 
   const okText = currentStep === 0 ? 'Add path' : currentStep === 1 ? 'Add target' : 'Create static route';
 
   const onSubmitHandler = async () => {
-    await form.validateFields();
-    if (step !== 'targetInfo') {
-      setCurrentStep(currentStep + 1);
-      return;
+    try {
+      await form.validateFields();
+      if (step !== 'targetInfo') {
+        setCurrentStep(currentStep + 1);
+        return;
+      }
+      const {name, namespace, deployment, path, methods, upstream, redirect} = await form.getFieldsValue(true);
+
+      const newStaticRouteDefinition: StaticRoute = {
+        apiVersion: 'gateway.kusk.io/v1alpha1',
+        kind: 'StaticRoute',
+        metadata: {
+          name,
+        },
+        spec: {
+          fleet: {
+            name: deployment.split(',')[1],
+            namespace: deployment.split(',')[0],
+          },
+          hosts: [],
+          paths: {
+            [path]: methods.reduce((acc: any, item: any) => {
+              acc[item] = redirect ? {redirect} : {route: {upstream}};
+              return acc;
+            }, {}),
+          },
+        },
+      };
+
+      const result = await createStaticRoute({
+        body: {
+          name,
+          namespace,
+          envoyFleetNamespace: deployment.split(',')[0],
+          envoyFleetName: deployment.split(',')[1],
+          openapi: YAML.stringify(newStaticRouteDefinition),
+        },
+      }).unwrap();
+      dispatch(
+        setAlert({
+          title: 'Static route deployed successfully',
+          description: `${name} was deployed successfully in ${namespace} namespace`,
+          type: AlertEnum.Success,
+        })
+      );
+      dispatch(closeStaticRouteModal());
+      navigate(`${AppRoutes.STATIC_ROUTE}/${result.namespace}/${result.name}`);
+    } catch (e: any) {
+      dispatch(
+        setAlert({
+          title: 'Unable to deploy Static Route',
+          description: e?.message,
+          type: AlertEnum.Error,
+        })
+      );
     }
-    const {name, namespace, deployment, path, methods, upstream, redirect} = await form.getFieldsValue(true);
-
-    const newStaticRouteDefinition: StaticRoute = {
-      apiVersion: 'gateway.kusk.io/v1alpha1',
-      kind: 'StaticRoute',
-      metadata: {
-        name,
-      },
-      spec: {
-        fleet: {
-          name: deployment.split(',')[1],
-          namespace: deployment.split(',')[0],
-        },
-        hosts: [],
-        paths: {
-          [path]: methods.reduce((acc: any, item: any) => {
-            acc[item] = redirect ? {redirect} : {route: {upstream}};
-            return acc;
-          }, {}),
-        },
-      },
-    };
-
-    const result = await createStaticRoute({
-      body: {
-        name,
-        namespace,
-        envoyFleetNamespace: deployment.split(',')[0],
-        envoyFleetName: deployment.split(',')[1],
-        openapi: YAML.stringify(newStaticRouteDefinition),
-      },
-    }).unwrap();
-    dispatch(
-      setAlert({
-        title: 'Static route deployed successfully',
-        description: `${name} was deployed successfully in ${namespace} namespace`,
-        type: AlertEnum.Success,
-      })
-    );
-    dispatch(closeStaticRouteModal());
-    navigate(`${AppRoutes.STATIC_ROUTE}/${result.namespace}/${result.name}`);
   };
 
   const onBackHandler = () => {
@@ -92,14 +102,13 @@ const AddStaticRouteModal = () => {
 
   return (
     <S.Modal
-      visible
+      open
       title="Create static route"
       width="824px"
       onCancel={onBackHandler}
       okText={okText}
       onOk={onSubmitHandler}
     >
-      {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" closable />}
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={currentStep}>

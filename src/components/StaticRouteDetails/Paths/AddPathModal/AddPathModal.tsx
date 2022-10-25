@@ -58,7 +58,7 @@ const AddPathModal = (): JSX.Element => {
   };
 
   return (
-    <S.Modal visible title="Add Path" width="824px" onCancel={onBackHandler} onOk={onSubmitHandler} okText={okText}>
+    <S.Modal open title="Add Path" width="824px" onCancel={onBackHandler} onOk={onSubmitHandler} okText={okText}>
       <S.Container>
         <S.StepsContainer>
           <Steps direction="vertical" current={currentStep}>

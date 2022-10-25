@@ -19,32 +19,42 @@ import {setAlert} from './alert';
 export const updateApiSettings = createAsyncThunk<any, {editedOpenapi?: any}, {state: RootState}>(
   'main/updateApiSettings',
   async ({editedOpenapi}, {getState, dispatch}) => {
-    const selectedApi = getState().main.selectedApi;
-    const selectedApiOpenapiSpec = getState().main.selectedApiOpenapiSpec;
-    const openapiObj = _.merge({}, selectedApiOpenapiSpec, editedOpenapi);
+    try {
+      const selectedApi = getState().main.selectedApi;
+      const selectedApiOpenapiSpec = getState().main.selectedApiOpenapiSpec;
+      const openapiObj = _.merge({}, selectedApiOpenapiSpec, editedOpenapi);
 
-    const body = {
-      name: selectedApi?.name,
-      namespace: selectedApi?.namespace,
-      envoyFleetName: editedOpenapi?.envoyFleetName || selectedApi?.fleet?.name,
-      envoyFleetNamespace: editedOpenapi?.envoyFleetNamespace || selectedApi?.fleet?.namespace,
-      openapi: YAML.stringify(cleanDeep(openapiObj)),
-    };
+      const body = {
+        name: selectedApi?.name,
+        namespace: selectedApi?.namespace,
+        envoyFleetName: editedOpenapi?.envoyFleetName || selectedApi?.fleet?.name,
+        envoyFleetNamespace: editedOpenapi?.envoyFleetNamespace || selectedApi?.fleet?.namespace,
+        openapi: YAML.stringify(cleanDeep(openapiObj)),
+      };
 
-    if (selectedApi) {
-      const result: any = await dispatch(
-        enhancedApi.endpoints.updateApi.initiate({name: selectedApi.name, namespace: selectedApi.namespace, body})
-      ).unwrap();
-      enhancedApi.util.invalidateTags(['API']);
-      dispatch(selectApiOpenSpec(YAML.parse((result as any)?.spec?.spec || '')));
+      if (selectedApi) {
+        const result: any = await dispatch(
+          enhancedApi.endpoints.updateApi.initiate({name: selectedApi.name, namespace: selectedApi.namespace, body})
+        ).unwrap();
+        enhancedApi.util.invalidateTags(['API']);
+        dispatch(selectApiOpenSpec(YAML.parse((result as any)?.spec?.spec || '')));
+        dispatch(
+          setAlert({
+            title: 'API updated successfully',
+            description: `${result.metadata.name} was deployed successfully in ${result.metadata.namespace} namespace!`,
+            type: AlertEnum.Success,
+          })
+        );
+        return result;
+      }
+    } catch (e: any) {
       dispatch(
         setAlert({
-          title: 'API updated successfully',
-          description: `${result.metadata.name} was deployed successfully in ${result.metadata.namespace} namespace!`,
-          type: AlertEnum.Success,
+          title: 'Unable to update API',
+          description: e?.message,
+          type: AlertEnum.Error,
         })
       );
-      return result;
     }
   }
 );
@@ -52,52 +62,62 @@ export const updateApiSettings = createAsyncThunk<any, {editedOpenapi?: any}, {s
 export const updateStaticRouteSettings = createAsyncThunk<any, {editedOpenapi?: any}, {state: RootState}>(
   'main/updateStaticRouteSettings',
   async ({editedOpenapi}, {getState, dispatch}) => {
-    const selectedStaticRouteSpec = getState().main.selectedStaticRouteSpec;
-    const name = selectedStaticRouteSpec?.metadata?.name;
-    const namespace = selectedStaticRouteSpec?.metadata?.namespace;
+    try {
+      const selectedStaticRouteSpec = getState().main.selectedStaticRouteSpec;
+      const name = selectedStaticRouteSpec?.metadata?.name;
+      const namespace = selectedStaticRouteSpec?.metadata?.namespace;
 
-    const newStaticRouteDefinition: StaticRoute = {
-      apiVersion: 'gateway.kusk.io/v1alpha1',
-      kind: 'StaticRoute',
-      metadata: {
-        name,
-      },
-      spec: {
-        fleet: {
-          name: editedOpenapi?.fleetName || selectedStaticRouteSpec?.spec?.fleet?.name,
-          namespace: editedOpenapi?.fleetNamespace || selectedStaticRouteSpec?.spec?.fleet?.namespace,
+      const newStaticRouteDefinition: StaticRoute = {
+        apiVersion: 'gateway.kusk.io/v1alpha1',
+        kind: 'StaticRoute',
+        metadata: {
+          name,
         },
-        hosts: editedOpenapi?.hosts || selectedStaticRouteSpec?.spec?.hosts,
-        paths: _.merge({}, selectedStaticRouteSpec?.spec?.paths, editedOpenapi?.paths),
-      },
-    };
+        spec: {
+          fleet: {
+            name: editedOpenapi?.fleetName || selectedStaticRouteSpec?.spec?.fleet?.name,
+            namespace: editedOpenapi?.fleetNamespace || selectedStaticRouteSpec?.spec?.fleet?.namespace,
+          },
+          hosts: editedOpenapi?.hosts || selectedStaticRouteSpec?.spec?.hosts,
+          paths: _.merge({}, selectedStaticRouteSpec?.spec?.paths, editedOpenapi?.paths),
+        },
+      };
 
-    const result = await dispatch(
-      enhancedApi.endpoints.updateStaticRoute.initiate({
-        name,
-        namespace,
-        body: {
+      const result = await dispatch(
+        enhancedApi.endpoints.updateStaticRoute.initiate({
           name,
           namespace,
-          envoyFleetNamespace: editedOpenapi?.fleetNamespace || selectedStaticRouteSpec?.spec?.fleet?.namespace,
-          envoyFleetName: editedOpenapi?.fleetName || selectedStaticRouteSpec?.spec?.fleet?.name,
-          openapi: YAML.stringify(newStaticRouteDefinition),
-        },
-      })
-    ).unwrap();
-    await new Promise(resolve => {
-      setTimeout(resolve, 1000);
-    });
-    const crdResult: any = await dispatch(enhancedApi.endpoints.getStaticRouteCrd.initiate({name, namespace})).unwrap();
+          body: {
+            name,
+            namespace,
+            envoyFleetNamespace: editedOpenapi?.fleetNamespace || selectedStaticRouteSpec?.spec?.fleet?.namespace,
+            envoyFleetName: editedOpenapi?.fleetName || selectedStaticRouteSpec?.spec?.fleet?.name,
+            openapi: YAML.stringify(newStaticRouteDefinition),
+          },
+        })
+      ).unwrap();
 
-    dispatch(selectStaticRouteSpec({...crdResult}));
-    dispatch(
-      setAlert({
-        title: 'Static route deployed successfully',
-        description: `${result.name} was deployed successfully in ${result.namespace} namespace!`,
-        type: AlertEnum.Success,
-      })
-    );
+      const crdResult: any = await dispatch(
+        enhancedApi.endpoints.getStaticRouteCrd.initiate({name, namespace})
+      ).unwrap();
+
+      dispatch(selectStaticRouteSpec({...crdResult}));
+      dispatch(
+        setAlert({
+          title: 'Static route deployed successfully',
+          description: `${result.name} was deployed successfully in ${result.namespace} namespace!`,
+          type: AlertEnum.Success,
+        })
+      );
+    } catch (e: any) {
+      dispatch(
+        setAlert({
+          title: 'Unable to update Static Route',
+          description: e?.message,
+          type: AlertEnum.Error,
+        })
+      );
+    }
   }
 );
 

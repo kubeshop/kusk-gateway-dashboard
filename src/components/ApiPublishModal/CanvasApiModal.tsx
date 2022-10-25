@@ -34,7 +34,7 @@ const CanvasApiModal = () => {
   const openapiField = Form.useWatch('openapi', form);
   const {data: apis} = useGetApisQuery({});
   const {data: namespaces} = useGetNamespacesQuery();
-  const [deployAPI, {isError, error}] = useDeployApiMutation();
+  const [deployAPI] = useDeployApiMutation();
 
   useEffect(() => {
     if (apiCanvasType === 'template') {
@@ -95,12 +95,20 @@ const CanvasApiModal = () => {
         dispatch(selectApi(apiData));
         navigate(`${AppRoutes.API}/${apiData.namespace}/${apiData.name}`);
       })
-      .catch(() => {});
+      .catch(error => {
+        dispatch(
+          setAlert({
+            title: 'Unable to deploy API',
+            description: error?.message,
+            type: AlertEnum.Error,
+          })
+        );
+      });
   };
 
   return (
     <S.Modal
-      visible
+      open
       closable
       title={`Create an API from ${apiCanvasType === 'template' ? 'template' : 'scratch'}`}
       footer={
@@ -114,8 +122,6 @@ const CanvasApiModal = () => {
       }
       onCancel={onBackHandler}
     >
-      {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" closable />}
-
       <Form layout="vertical" form={form}>
         <Form.Item
           hasFeedback

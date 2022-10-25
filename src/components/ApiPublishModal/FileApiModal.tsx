@@ -22,8 +22,6 @@ import {FilePicker, FleetDropdown} from '@components/FormComponents';
 
 import {checkDuplicateAPI, formatApiName} from '@utils/api';
 
-import * as S from './styled';
-
 const FileApiModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,7 +29,7 @@ const FileApiModal = () => {
   const type = Form.useWatch('type', form);
   const {data: apis} = useGetApisQuery({});
   const {data: namespaces} = useGetNamespacesQuery();
-  const [deployAPI, {isError, error}] = useDeployApiMutation();
+  const [deployAPI] = useDeployApiMutation();
 
   const onBackHandler = () => {
     dispatch(closeFileApiModal());
@@ -77,13 +75,20 @@ const FileApiModal = () => {
         );
         dispatch(selectApi(apiData));
         navigate(`${AppRoutes.API}/${apiData.namespace}/${apiData.name}`);
+      })
+      .catch((error: any) => {
+        dispatch(
+          setAlert({
+            title: 'Unable to deploy API',
+            description: error?.message,
+            type: AlertEnum.Error,
+          })
+        );
       });
   };
 
   return (
-    <Modal visible title="Create an API from file" onCancel={onBackHandler} onOk={onSubmitHandler} okText="Create API">
-      {isError && <S.Alert description={error?.message} message="Error" showIcon type="error" closable />}
-
+    <Modal open title="Create an API from file" onCancel={onBackHandler} onOk={onSubmitHandler} okText="Create API">
       <Form form={form} layout="vertical">
         <Form.Item required name="type" label="Import API via" initialValue="file">
           <Radio.Group>
