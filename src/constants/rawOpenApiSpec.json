@@ -12,25 +12,6 @@
     "description": "Find out more about our API",
     "url": "https://raw.githubusercontent.com/kubeshop/kusk-gateway/main/examples/todomvc/kusk-backend-api.yaml"
   },
-  "x-kusk": {
-    "cors": {
-      "origins": ["*"],
-      "methods": ["POST", "PATCH", "DELETE", "PUT", "GET", "OPTIONS"],
-      "headers": ["Content-Type"],
-      "credentials": true,
-      "max_age": 86200
-    },
-    "upstream": {
-      "service": {
-        "namespace": "default",
-        "name": "todo-backend",
-        "port": 43
-      }
-    },
-    "path": {
-      "prefix": "/"
-    }
-  },
   "paths": {
     "/todos/{id}": {
       "get": {
@@ -222,9 +203,6 @@
       }
     },
     "/todos": {
-      "x-kusk": {
-        "disabled": true
-      },
       "get": {
         "responses": {
           "200": {

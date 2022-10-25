@@ -19,7 +19,7 @@ interface IPolicyCard {
 
 const PolicyCard = ({title, description, link, onClick}: IPolicyCard) => (
   <S.Card hoverable onClick={onClick}>
-    <Typography.Title level={5}>{title}</Typography.Title>
+    <Typography.Title level={4}>{title}</Typography.Title>
     <S.SubHeading>{description}</S.SubHeading>
 
     <S.Link href={link} target="_blank">
@@ -44,7 +44,7 @@ const Policies = ({selectPolicy}: IPoliciesProps) => {
         Back
       </Button>
       <div>
-        <Typography.Title level={3}>Add Request Policy</Typography.Title>
+        <S.H3>Add Request Policy</S.H3>
         <S.Grid>
           <PolicyCard
             title="CORS"
@@ -94,15 +94,8 @@ const Policies = ({selectPolicy}: IPoliciesProps) => {
         </S.Grid>
       </div>
       <div>
-        <Typography.Title level={3}>Add Response Policy</Typography.Title>
+        <S.H3>Add Response Policy</S.H3>
         <S.Grid>
-          {/* <PolicyCard
-            title="Mocking"
-            description="Set mocking policy to return a response based on the defined samples."
-            link="https://docs.kusk.io/extension#mocking"
-            onClick={() => selectPolicy('mocking')}
-          /> */}
-
           <PolicyCard
             title="Caching"
             description="Set response caching policy to reduce the number of endpoint calls and improve latency of requests."

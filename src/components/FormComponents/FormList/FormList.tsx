@@ -8,7 +8,7 @@ import * as S from './styled';
 interface IProps {
   addButtonText: string;
   name: NamePath;
-  requiredMessage: string;
+  requiredMessage?: string;
   label?: string;
   placeholder?: string;
   initialValue?: any;
@@ -18,7 +18,7 @@ const FormList: React.FC<IProps> = props => {
   const {addButtonText, label = '', name, placeholder = '', requiredMessage, initialValue} = props;
 
   return (
-    <Form.Item label={label}>
+    <Form.Item label={label} required={Boolean(requiredMessage)}>
       <Form.List name={name} initialValue={initialValue}>
         {(fields, {add, remove}) => (
           <>

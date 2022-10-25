@@ -72,7 +72,6 @@ const CORS = () => {
           label="Headers"
           name={['x-kusk', 'cors', 'headers']}
           initialValue={xKusk?.cors?.headers}
-          requiredMessage="Enter header or delete the field."
         />
         <S.Divider />
       </FormCard>
@@ -89,7 +88,6 @@ const CORS = () => {
           label="Headers"
           name={['x-kusk', 'cors', 'exposed_headers']}
           initialValue={xKusk?.cors?.expose_headers}
-          requiredMessage="Enter header or delete the field."
         />
         <S.Divider />
       </FormCard>

@@ -106,7 +106,6 @@ const CORS = () => {
           label="Headers"
           name={['cors', 'headers']}
           initialValue={cors?.headers}
-          requiredMessage="Enter header or delete the field."
         />
         <Divider />
       </FormCard>
@@ -123,7 +122,6 @@ const CORS = () => {
           label="Headers"
           name={['cors', 'exposed_headers']}
           initialValue={cors?.exposed_headers}
-          requiredMessage="Enter header or delete the field."
         />
         <Divider />
       </FormCard>

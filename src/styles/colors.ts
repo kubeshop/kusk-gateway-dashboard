@@ -77,6 +77,7 @@ enum Colors {
   slate200 = '#94a3b8',
   slate300 = '#64748b',
   slate400 = '#475569',
+  slate500 = '#64748B',
   slate700 = '#334155',
   slate800 = '#1E293B',
 }
