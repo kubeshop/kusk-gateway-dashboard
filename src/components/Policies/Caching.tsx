@@ -1,4 +1,4 @@
-import {Form, Input, Typography} from 'antd';
+import {Form, Input} from 'antd';
 
 import {FormCard} from '@components/FormComponents';
 
@@ -19,18 +19,18 @@ const Caching = ({xKusk, onFinish, onCancel}: IProps) => {
       subHeading="Current support for caching is experimental"
       helpTopic="Caching"
       helpLink="https://docs.kusk.io/guides/cache"
-      formProps={{onFinish, form}}
+      formProps={{onFinish, form, layout: 'vertical'}}
       cancelEditMode={onCancel}
     >
       <S.CardItem>
-        <Typography.Text type="secondary">Max age (in seconds)</Typography.Text>
         <Form.Item hidden name={['x-kusk', 'cache', 'enabled']} initialValue={Boolean(true)} />
 
         <Form.Item
           name={['x-kusk', 'cache', 'max_age']}
+          label="Max age (in seconds)"
           initialValue={xKusk?.cache?.max_age}
           getValueFromEvent={e => Number(e.target.value)}
-          rules={[{required: true}]}
+          rules={[{required: true, message: 'Set cache max age'}]}
         >
           <Input type="number" placeholder="ex: 60" />
         </Form.Item>

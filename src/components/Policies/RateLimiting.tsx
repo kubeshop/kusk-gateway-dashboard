@@ -35,17 +35,16 @@ const RateLimiting = ({xKusk, onCancel, onFinish}: IProps) => {
       helpLink="https://docs.kusk.io/extension/#rate-limiting"
       formProps={{onFinish: onSaveClickHandler, form}}
       cancelEditMode={onCancel}
-      enableSaveButton
     >
       <CardLayout>
         <S.CardItem>
           <Typography.Text>Requests per unit</Typography.Text>
           <Form.Item
             name={['x-kusk', 'rate_limit', 'requests_per_unit']}
-            initialValue={xKusk?.rate_limit?.requests_per_unit || 60}
+            initialValue={xKusk?.rate_limit?.requests_per_unit}
             getValueFromEvent={e => Number(e.target.value)}
           >
-            <Input type="number" />
+            <Input type="number" placeholder="ex: 60" />
           </Form.Item>
         </S.CardItem>
 
@@ -64,10 +63,10 @@ const RateLimiting = ({xKusk, onCancel, onFinish}: IProps) => {
           <Typography.Text>Response code</Typography.Text>
           <Form.Item
             name={['x-kusk', 'rate_limit', 'response_code']}
-            initialValue={xKusk?.rate_limit?.response_code || 405}
+            initialValue={xKusk?.rate_limit?.response_code}
             getValueFromEvent={e => Number(e.target.value)}
           >
-            <Input type="number" />
+            <Input type="number" placeholder="ex: 405" />
           </Form.Item>
         </S.CardItem>
       </CardLayout>

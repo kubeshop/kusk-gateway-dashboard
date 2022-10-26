@@ -14,7 +14,6 @@ import {
   AuthenticationPolicy,
   CORSPolicy,
   CachingPolicy,
-  MockingPolicy,
   QOSPolicy,
   RateLimitingPolicy,
   TargetsPolicy,
@@ -104,9 +103,7 @@ const ApiPolicies = () => {
           {activePolicy === 'websocket' && (
             <WebsocketPolicy xKusk={selectedXKusk} onCancel={onCancelClickHandler} onFinish={onFinishClickHandler} />
           )}
-          {activePolicy === 'mocking' && (
-            <MockingPolicy xKusk={selectedXKusk} onCancel={onCancelClickHandler} onFinish={onFinishClickHandler} />
-          )}
+
           {activePolicy === 'caching' && (
             <CachingPolicy xKusk={selectedXKusk} onCancel={onCancelClickHandler} onFinish={onFinishClickHandler} />
           )}

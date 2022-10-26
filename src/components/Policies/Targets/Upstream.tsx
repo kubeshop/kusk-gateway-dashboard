@@ -53,7 +53,7 @@ const Upstream: React.FC<IProps> = props => {
       setSelectedService(services.find(s => s.namespace === namespace && s.name === name));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [services]);
 
   useEffect(() => {
     if (!selectedService) {
@@ -89,9 +89,14 @@ const Upstream: React.FC<IProps> = props => {
                   onSelect={(value: any, option: any) => {
                     onServiceSelectHandler(option.service);
                   }}
+                  value={selectedService ? `${selectedService?.namespace}@${selectedService?.name}` : ''}
                 >
                   {services.map(serviceItem => (
-                    <Option key={`${serviceItem.namespace}-${serviceItem.name}`} service={serviceItem}>
+                    <Option
+                      key={`${serviceItem.namespace}-${serviceItem.name}`}
+                      service={serviceItem}
+                      value={`${serviceItem.namespace}@${serviceItem.name}`}
+                    >
                       <Tag>{serviceItem.namespace}</Tag>
                       {serviceItem.name}
                     </Option>
