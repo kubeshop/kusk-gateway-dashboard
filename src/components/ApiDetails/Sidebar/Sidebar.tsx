@@ -6,7 +6,7 @@ import {TOOLTIP_DELAY} from '@constants/constants';
 
 import {APIDetailsSections} from '@models/ui';
 
-import {ApiIcon, ApiSettingsIcon, StaticRouteIcon} from '@components/Icons';
+import {ApiIcon, ApiLogsIcon, ApiSettingsIcon, StaticRouteIcon} from '@components/Icons';
 
 import * as S from './styled';
 
@@ -26,6 +26,10 @@ const Sidebar = (props: IProps) => {
 
         <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="Routes">
           <S.Icon component={StaticRouteIcon} $active={activeSection === 'paths'} onClick={() => navigate(`paths`)} />
+        </Tooltip>
+
+        <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="API logs">
+          <S.Icon component={ApiLogsIcon} $active={activeSection === 'logs'} onClick={() => navigate(`logs`)} />
         </Tooltip>
 
         <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="right" title="API Settings">
