@@ -1,4 +1,4 @@
-import {Button, Tag, Typography} from 'antd';
+import {Button, Dropdown, Menu, Typography} from 'antd';
 
 import {useAppSelector} from '@redux/hooks';
 
@@ -25,6 +25,30 @@ const columns = [
     title: '',
     dataIndex: 'raw',
     key: 'key',
+    render: (arg: any, {raw}: any) => {
+      const onMenuClick = async (e: any) => {
+        if ('clipboard' in navigator) {
+          await navigator.clipboard.writeText(JSON.stringify(raw));
+        } else {
+          document.execCommand('copy', true, JSON.stringify(raw));
+        }
+      };
+
+      const menu = (
+        <Menu
+          items={[
+            {key: 1, label: 'Copy as raw', onClick: onMenuClick},
+            {key: 2, label: 'Copy as JSON', onClick: onMenuClick},
+          ]}
+        />
+      );
+
+      return (
+        <Dropdown overlay={menu} trigger={['contextMenu']} placement="bottomRight">
+          <Typography.Text type="secondary">{raw}</Typography.Text>
+        </Dropdown>
+      );
+    },
   },
 ];
 
@@ -36,19 +60,29 @@ const ApiLogging = () => {
     raw: l,
   }));
 
+  const onCopyClickHandler = async () => {
+    if ('clipboard' in navigator) {
+      await navigator.clipboard.writeText(JSON.stringify(logs));
+    } else {
+      document.execCommand('copy', true, JSON.stringify(logs));
+    }
+  };
+
   return logs.length === 0 ? (
     <EmptyLogs />
   ) : (
     <S.Container>
-      <Typography.Title>Request Logs</Typography.Title>
+      <S.H1>Request Logs</S.H1>
       <S.Row>
         <Typography.Text type="secondary">
-          View request logs for all APIs deployed with deployment fleet &nbsp;<Tag>{selectedApi?.fleet?.namespace}</Tag>
+          View request logs for all APIs deployed with deployment fleet&nbsp;
           {selectedApi?.fleet?.name}.
         </Typography.Text>
-        <Button type="primary">Copy logs as</Button>
+        <Button type="primary" onClick={onCopyClickHandler}>
+          Copy logs as
+        </Button>
       </S.Row>
-      <S.Table style={{height: '100%'}} columns={columns} dataSource={dataSource} pagination={false} />
+      <S.Table columns={columns} dataSource={dataSource} pagination={false} />
     </S.Container>
   );
 };
