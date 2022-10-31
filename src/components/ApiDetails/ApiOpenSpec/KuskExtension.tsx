@@ -1,9 +1,12 @@
+import {Suspense, lazy} from 'react';
+
 import {useAppSelector} from '@redux/hooks';
 
 import {KuskExtensions} from '@components/KuskExtensions';
-import {Monaco} from '@components/Monaco';
 
 import * as S from './KuskExtension.styled';
+
+const Monaco = lazy(() => import('@components/Monaco/Monaco'));
 
 const KuskExtension = () => {
   const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
@@ -13,7 +16,9 @@ const KuskExtension = () => {
         Kusk Extensions
       </S.Title>
       <S.EditorContainer>
-        <Monaco openapi={selectedAPIOpenSpec} />
+        <Suspense fallback={null}>
+          <Monaco openapi={selectedAPIOpenSpec} />
+        </Suspense>
       </S.EditorContainer>
       <S.RightPane>
         <KuskExtensions />

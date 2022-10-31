@@ -1,6 +1,6 @@
-import styled from 'styled-components';
+import {Suspense, lazy} from 'react';
 
-import {Monaco} from '@components/Monaco';
+import styled from 'styled-components';
 
 interface IProps {
   yaml: string;
@@ -13,12 +13,16 @@ const Container = styled.div`
   overflow-y: hidden;
 `;
 
+const Monaco = lazy(() => import('@components/Monaco/Monaco'));
+
 const InfoPaneCRD = (props: IProps): JSX.Element => {
   const {yaml} = props;
 
   return (
     <Container>
-      <Monaco openapi={yaml} />
+      <Suspense fallback={null}>
+        <Monaco openapi={yaml} />
+      </Suspense>
     </Container>
   );
 };
