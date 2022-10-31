@@ -1,3 +1,4 @@
+import {Suspense, lazy} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Tooltip} from 'antd';
@@ -10,9 +11,10 @@ import {useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 
 import {ApiDefinition} from '@components/ApiDefinition';
-import {Monaco} from '@components/Monaco';
 
 import * as S from './OpenApiEditor.styled';
+
+const Monaco = lazy(() => import('@components/Monaco/Monaco'));
 
 const OpenApiEditor = () => {
   const dispatch = useDispatch();
@@ -42,7 +44,9 @@ const OpenApiEditor = () => {
         </Tooltip>
       </S.Header>
       <S.EditorContainer>
-        <Monaco openapi={selectedAPIOpenSpec} />
+        <Suspense fallback={null}>
+          <Monaco openapi={selectedAPIOpenSpec} />
+        </Suspense>
       </S.EditorContainer>
       <S.RightPane>
         <ApiDefinition />
