@@ -30,8 +30,9 @@ const CORS = ({xKusk, onFinish, onCancel}: IProps) => {
           addButtonText="Add a new origin"
           label="Origin"
           name={['x-kusk', 'cors', 'origins']}
-          initialValue={xKusk?.cors?.origins}
+          initialValue={xKusk?.cors?.origins || ['']}
           requiredMessage="Enter origin or delete the field."
+          required
         />
 
         <S.Divider />
@@ -41,7 +42,7 @@ const CORS = ({xKusk, onFinish, onCancel}: IProps) => {
           label="Which CORS request methods would you like to allow?"
           name={['x-kusk', 'cors', 'methods']}
           initialValue={xKusk?.cors?.methods}
-          rules={[{required: true}]}
+          rules={[{required: true, message: 'Select a method'}]}
         >
           <Checkbox.Group>
             {METHODS.map(method => (
@@ -58,7 +59,7 @@ const CORS = ({xKusk, onFinish, onCancel}: IProps) => {
           addButtonText="Add a new header"
           label="CORS header"
           name={['x-kusk', 'cors', 'headers']}
-          initialValue={xKusk?.cors?.headers || ['']}
+          initialValue={xKusk?.cors?.headers}
         />
         <S.Divider />
 
