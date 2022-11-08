@@ -36,6 +36,7 @@ const CORS = () => {
           name={['x-kusk', 'cors', 'origins']}
           initialValue={xKusk?.cors?.origins}
           requiredMessage="Enter origin or delete the field."
+          required
         />
 
         <S.Divider />

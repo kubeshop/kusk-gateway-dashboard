@@ -71,6 +71,7 @@ const CORS = () => {
           name={['cors', 'origins']}
           initialValue={cors?.origins}
           requiredMessage="Enter origin or delete the field."
+          required
         />
         <Divider />
       </FormCard>

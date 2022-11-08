@@ -36,6 +36,7 @@ const Hosts = () => {
         initialValue={selectedRouteSpec?.spec?.hosts}
         placeholder="e.g. example.com"
         requiredMessage="Enter host or delete this field."
+        required
       />
       <Divider />
     </FormCard>
