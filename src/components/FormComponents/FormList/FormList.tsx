@@ -41,20 +41,15 @@ const FormList: React.FC<IProps> = props => {
       >
         {(fields, {add, remove}, {errors}) => (
           <>
-            {fields.map((field, index) => {
-              return (
-                <S.Space key={field.key} align="baseline">
-                  <Form.Item
-                    {...field}
-                    rules={[{required: Boolean(requiredMessage?.length), message: requiredMessage}]}
-                  >
-                    <S.Input placeholder={placeholder} />
-                  </Form.Item>
+            {fields.map(field => (
+              <S.Space key={field.key} align="baseline">
+                <Form.Item {...field} rules={[{required: Boolean(requiredMessage?.length), message: requiredMessage}]}>
+                  <S.Input placeholder={placeholder} />
+                </Form.Item>
 
-                  <DeleteOutlined onClick={() => remove(field.name)} />
-                </S.Space>
-              );
-            })}
+                <DeleteOutlined onClick={() => remove(field.name)} />
+              </S.Space>
+            ))}
             <Form.ErrorList errors={errors} />
             <S.ButtonContainer>
               <Form.Item>
