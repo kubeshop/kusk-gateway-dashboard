@@ -5,8 +5,6 @@ import Colors from '@styles/colors';
 export const Container = styled.div`
   padding: 24px 32px;
   overflow: auto;
-  position: sticky;
-  top: 60px;
 `;
 
 export const SettingsContainer = styled.div`
