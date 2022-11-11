@@ -6,9 +6,9 @@ import Colors from '@styles/colors';
 
 export const Container = styled.div`
   padding: 32px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  height: calc(100vh - 60px);
 `;
 
 export const H1 = styled(Typography.Title)`
@@ -25,8 +25,12 @@ export const Row = styled.div`
 export const Table = styled(AntTable)`
   position: relative;
   display: flex;
-  overflow: hidden;
-  height: 100%;
+  width: 100%;
+  overflow: auto;
+
+  .ant-table-thead > tr > th {
+    background-color: ${Colors.zinc5};
+  }
   .ant-table-tbody > tr.ant-table-row:hover > td,
   .ant-table-tbody > tr > td.ant-table-cell-row-hover {
     background-color: ${Colors.blue50};
@@ -43,4 +47,40 @@ export const Table = styled(AntTable)`
   .ant-table-tbody > tr > td {
     border-bottom: none;
   }
+`;
+
+export const LogContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: auto;
+  background-color: white;
+  place-self: stretch;
+  border-top: 38px solid ${Colors.zinc5};
+  & :last-child {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
+export const LogText = styled(Typography.Text).attrs({
+  type: 'secondary',
+})`
+  padding: 2px;
+  padding-left: 8px;
+  height: 24px !important;
+  color: ${Colors.zinc6} !important;
+  white-space: nowrap;
+  overflow-x: hidden;
+  :hover {
+    background-color: ${Colors.blue50};
+  }
+`;
+
+export const LogsHeader = styled.div`
+  width: 100%;
+  height: 38px !important;
+  background-color: ${Colors.zinc5};
+  top: 0px;
 `;
