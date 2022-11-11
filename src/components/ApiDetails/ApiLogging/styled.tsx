@@ -60,7 +60,6 @@ export const LogContainer = styled.div`
   align-items: stretch;
   overflow: auto;
   background-color: white;
-  place-self: stretch;
   border-top: 38px solid ${Colors.zinc5};
   & :last-child {
     display: flex;
@@ -78,7 +77,6 @@ export const LogText = styled(Typography.Text).attrs({
   font-family: 'Roboto Mono';
   line-height: 20px !important;
   white-space: nowrap;
-  overflow-x: hidden;
   :hover {
     background-color: ${Colors.blue50};
   }
