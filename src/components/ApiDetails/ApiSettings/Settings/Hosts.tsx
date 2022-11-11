@@ -29,6 +29,7 @@ const Hosts = () => {
         placeholder="e.g. example.com"
         requiredMessage="Enter host or delete this field."
         initialValue={xKusk?.hosts}
+        required
       />
 
       <S.Divider />
