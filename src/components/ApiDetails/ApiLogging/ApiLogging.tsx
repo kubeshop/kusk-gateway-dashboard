@@ -14,6 +14,7 @@ import * as S from './styled';
 
 const ApiLogging = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
+  const baseApi = useAppSelector(state => state.main.apiEndpoint);
   const logsContinerRef = useRef<HTMLDivElement>(null);
   const logsRef = useRef<Array<string>>([]);
   const data = logsRef.current;
@@ -25,10 +26,6 @@ const ApiLogging = () => {
           draft.logs.push(...action.payload);
           draft.hasMore = true;
           break;
-        case 'reset':
-          draft.logs = [];
-          draft.hasMore = true;
-          break;
         default:
           break;
       }
@@ -37,7 +34,7 @@ const ApiLogging = () => {
   );
 
   useEffect(() => {
-    const logsUrl = 'ws://139.178.84.155/api/logs'; // `${(getState() as RootState).main.apiEndpoint.replace('http', 'ws')}/logs`;
+    const logsUrl = getWebsocketURl(baseApi, window.location);
     const ws = new WebSocket(logsUrl);
     const listener = async (event: MessageEvent) => {
       logsRef.current.push(event.data);
@@ -70,6 +67,7 @@ const ApiLogging = () => {
       dispatch({type: 'hasMore', payload: data.slice(logs.length, data.length)});
       return () => clearTimeout(TIMEOUTID);
     }, 2000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadFunc = () => {
@@ -97,7 +95,13 @@ const ApiLogging = () => {
           View request logs for all APIs deployed with deployment fleet&nbsp;
           {selectedApi?.fleet?.name}.
         </Typography.Text>
-        <Dropdown key={uuid()} overlay={copyMenu} trigger={['click']} placement="bottomRight">
+        <Dropdown
+          key={uuid()}
+          overlay={copyMenu}
+          overlayClassName="copy-dropdown-menu"
+          trigger={['click']}
+          placement="bottomRight"
+        >
           <Button type="primary">Copy logs as</Button>
         </Dropdown>
       </S.Row>
@@ -113,7 +117,7 @@ const ApiLogging = () => {
           useWindow={false}
         >
           {logs.map(i => {
-            const onMenuClick = async (e: any) => {
+            const onMenuClick = async () => {
               if ('clipboard' in navigator) {
                 await navigator.clipboard.writeText(JSON.stringify(i));
               } else {
@@ -129,7 +133,13 @@ const ApiLogging = () => {
               />
             );
             return (
-              <Dropdown key={uuid()} overlay={menu} trigger={['contextMenu']} placement="bottomRight">
+              <Dropdown
+                key={uuid()}
+                overlay={menu}
+                overlayClassName="copy-dropdown-menu"
+                trigger={['contextMenu']}
+                placement="bottomRight"
+              >
                 <S.LogText>{i}</S.LogText>
               </Dropdown>
             );
@@ -138,6 +148,15 @@ const ApiLogging = () => {
       </S.LogContainer>
     </S.Container>
   );
+};
+
+const getWebsocketURl = (baseApi: string, location: Location) => {
+  try {
+    const url = new URL(baseApi);
+    return `ws://${url.host}${url.pathname}logs`;
+  } catch {
+    return `ws://${location.host}${baseApi}logs`;
+  }
 };
 
 export default ApiLogging;

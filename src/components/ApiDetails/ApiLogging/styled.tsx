@@ -9,6 +9,10 @@ export const Container = styled.div`
   display: grid;
   grid-template-rows: auto auto 1fr;
   height: calc(100vh - 60px);
+
+  &.ant-dropdown-menu-item {
+    color: ${Colors.zinc7} !important;
+  }
 `;
 
 export const H1 = styled(Typography.Title)`
@@ -71,6 +75,8 @@ export const LogText = styled(Typography.Text).attrs({
   padding-left: 8px;
   height: 24px !important;
   color: ${Colors.zinc6} !important;
+  font-family: 'Roboto Mono';
+  line-height: 20px !important;
   white-space: nowrap;
   overflow-x: hidden;
   :hover {
