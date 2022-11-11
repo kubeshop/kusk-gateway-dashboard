@@ -1,3 +1,7 @@
+import {RootState} from '@redux/store';
+
+import {getWebsocketURl} from '@utils/api';
+
 import {kuskApi} from './kuskApi';
 
 export const enhancedApi = kuskApi.enhanceEndpoints({
@@ -9,9 +13,9 @@ export const enhancedApi = kuskApi.enhanceEndpoints({
         return {data: []};
       },
       keepUnusedDataFor: 0,
-      async onCacheEntryAdded(arg, {updateCachedData, cacheDataLoaded, cacheEntryRemoved, getState, dispatch}) {
+      async onCacheEntryAdded(arg, {updateCachedData, cacheDataLoaded, cacheEntryRemoved, getState}) {
         const connect = async () => {
-          const logsUrl = 'ws://139.178.84.155/api/logs'; // `${(getState() as RootState).main.apiEndpoint.replace('http', 'ws')}/logs`;
+          const logsUrl = getWebsocketURl((getState() as RootState).main.apiEndpoint, window.location);
           const ws = new WebSocket(logsUrl);
           const listener = async (event: MessageEvent) => {
             event.preventDefault();

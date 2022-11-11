@@ -8,6 +8,8 @@ import {useImmerReducer} from 'use-immer';
 
 import {useAppSelector} from '@redux/hooks';
 
+import {getWebsocketURl} from '@utils/api';
+
 import EmptyLogs from './EmptyLogs';
 
 import * as S from './styled';
@@ -52,6 +54,7 @@ const ApiLogging = () => {
       ws.removeEventListener('message', listener);
       ws?.close();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onCopyClickHandler = async () => {
@@ -148,15 +151,6 @@ const ApiLogging = () => {
       </S.LogContainer>
     </S.Container>
   );
-};
-
-const getWebsocketURl = (baseApi: string, location: Location) => {
-  try {
-    const url = new URL(baseApi);
-    return `ws://${url.host}${url.pathname}logs`;
-  } catch {
-    return `ws://${location.host}${baseApi}logs`;
-  }
 };
 
 export default ApiLogging;

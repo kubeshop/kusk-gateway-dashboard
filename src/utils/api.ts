@@ -80,3 +80,12 @@ export const checkMockingExamples = (spec: {[key: string]: any}) => {
 
   return warnings;
 };
+
+export const getWebsocketURl = (baseApi: string, location: Location) => {
+  try {
+    const url = new URL(baseApi);
+    return `ws://${url.host}${url.pathname}logs`;
+  } catch {
+    return `ws://${location.host}${baseApi}logs`;
+  }
+};
