@@ -25,7 +25,6 @@ const Settings = () => {
   const isStaticRouteModalVisible = useAppSelector(state => state.ui.staticRouteModal.isOpen);
 
   const settingSection = (path?.split('/')[1] || 'kusk') as SettingType;
-  console.log(settingSection);
   const selectedSettingsItem: SettingType = settingSection || 'kusk';
 
   return (

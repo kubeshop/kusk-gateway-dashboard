@@ -6,3 +6,4 @@ export {default as QOSPolicy} from './QOS';
 export {default as AuthenticationPolicy} from './Authentication';
 export {default as CachingPolicy} from './Caching';
 export {default as WebsocketPolicy} from './Websocket';
+export {default as DevPortalPolicy} from './DevPortal';
