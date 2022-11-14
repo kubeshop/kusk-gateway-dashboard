@@ -5,6 +5,7 @@
     "^react?.+$",
     "^antd?.+$",
     "^@ant-design?.+$",
+    "^@tanstack?.+$",
     "^@reduxjs?.+$",
     "^@rjsf?.+$",
     "^(?![@\\.]).+$",

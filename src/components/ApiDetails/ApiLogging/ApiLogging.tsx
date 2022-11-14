@@ -1,81 +1,40 @@
-import {useEffect, useRef} from 'react';
-import InfiniteScroll from 'react-infinite-scroller';
+import {useRef} from 'react';
 import uuid from 'react-uuid';
 
 import {Button, Dropdown, Menu, Typography} from 'antd';
 
-import {useImmerReducer} from 'use-immer';
+import {useVirtualizer} from '@tanstack/react-virtual';
 
 import {useAppSelector} from '@redux/hooks';
-
-import {getWebsocketURl} from '@utils/api';
+import {useGetEnvoyFleetLogsQuery} from '@redux/services/enhancedApi';
 
 import EmptyLogs from './EmptyLogs';
 
 import * as S from './styled';
 
+const LOG_ROW_HEIGHT = 24;
+
 const ApiLogging = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
-  const baseApi = useAppSelector(state => state.main.apiEndpoint);
-  const logsContinerRef = useRef<HTMLDivElement>(null);
+  const logsContainerRef = useRef<HTMLDivElement>(null);
   const logsRef = useRef<Array<string>>([]);
   const data = logsRef.current;
-
-  const [{logs}, dispatch] = useImmerReducer<{logs: Array<string>; hasMore: boolean}>(
-    (draft, action) => {
-      switch (action.type) {
-        case 'hasMore':
-          draft.logs.push(...action.payload);
-          draft.hasMore = true;
-          break;
-        default:
-          break;
-      }
-    },
-    {logs: [], hasMore: false}
-  );
-
-  useEffect(() => {
-    const logsUrl = getWebsocketURl(baseApi, window.location);
-    const ws = new WebSocket(logsUrl);
-    const listener = async (event: MessageEvent) => {
-      logsRef.current.push(event.data);
-    };
-    const connect = async () => {
-      try {
-        ws.addEventListener('message', listener, {passive: true});
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log('error', e);
-      }
-    };
-    connect().then();
-    return () => {
-      ws.removeEventListener('message', listener);
-      ws?.close();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const {data: logsData = []} = useGetEnvoyFleetLogsQuery({
+    namespace: selectedApi?.fleet?.namespace || '',
+    name: selectedApi?.fleet?.name || '',
+  });
+  const rowVirtualizer = useVirtualizer({
+    count: logsData.length,
+    getScrollElement: () => logsContainerRef.current,
+    estimateSize: () => LOG_ROW_HEIGHT,
+    overscan: 5,
+  });
 
   const onCopyClickHandler = async () => {
     if ('clipboard' in navigator) {
       await navigator.clipboard.writeText(JSON.stringify(data));
     } else {
       document.execCommand('copy', true, JSON.stringify(data));
-    }
-  };
-
-  useEffect(() => {
-    const TIMEOUTID = setTimeout(() => {
-      dispatch({type: 'hasMore', payload: data.slice(logs.length, data.length)});
-      return () => clearTimeout(TIMEOUTID);
-    }, 2000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const loadFunc = () => {
-    if (data.length !== logs.length) {
-      dispatch({type: 'hasMore', payload: data.slice(logs.length, data.length)});
     }
   };
 
@@ -88,7 +47,7 @@ const ApiLogging = () => {
     />
   );
 
-  return logs.length === 0 ? (
+  return logsData.length === 0 ? (
     <EmptyLogs />
   ) : (
     <S.Container>
@@ -109,17 +68,16 @@ const ApiLogging = () => {
         </Dropdown>
       </S.Row>
 
-      <S.LogContainer ref={logsContinerRef}>
-        <InfiniteScroll
-          getScrollParent={() => logsContinerRef.current}
-          threshold={200}
-          pageStart={0}
-          loadMore={loadFunc}
-          hasMore
-          initialLoad={false}
-          useWindow={false}
+      <S.LogContainer ref={logsContainerRef}>
+        <div
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+          }}
         >
-          {logs.map(i => {
+          {rowVirtualizer.getVirtualItems().map(virtualRow => {
+            const i = logsData[virtualRow.index];
             const onMenuClick = async () => {
               if ('clipboard' in navigator) {
                 await navigator.clipboard.writeText(JSON.stringify(i));
@@ -136,18 +94,30 @@ const ApiLogging = () => {
               />
             );
             return (
-              <Dropdown
-                key={uuid()}
-                overlay={menu}
-                overlayClassName="copy-dropdown-menu"
-                trigger={['contextMenu']}
-                placement="bottomRight"
+              <div
+                key={virtualRow.index}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: `${virtualRow.size}px`,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
               >
-                <S.LogText>{i}</S.LogText>
-              </Dropdown>
+                <Dropdown
+                  key={uuid()}
+                  overlay={menu}
+                  overlayClassName="copy-dropdown-menu"
+                  trigger={['contextMenu']}
+                  placement="bottomRight"
+                >
+                  <S.LogText>{i}</S.LogText>
+                </Dropdown>
+              </div>
             );
           })}
-        </InfiniteScroll>
+        </div>
       </S.LogContainer>
     </S.Container>
   );
