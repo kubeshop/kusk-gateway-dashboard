@@ -8,12 +8,13 @@ import Colors from '@styles/colors';
 
 export const Container = styled.div`
   border-radius: 4px;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
   background: white;
-  overflow-y: hidden;
+  overflow: hidden;
 `;
 
 export const Filters = styled.div`
@@ -99,6 +100,14 @@ export const Path = styled.div`
   padding-right: 24px;
   margin-top: 2px;
   align-self: center;
+  .ant-typography {
+    text-overflow: ellipsis;
+    max-width: 170px;
+    white-space: nowrap;
+    overflow: hidden;
+    /* direction: rtl;
+    text-align: left; */
+  }
 `;
 
 export const Dropdown = styled(AntDropdown)`
