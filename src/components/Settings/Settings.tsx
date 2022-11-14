@@ -8,11 +8,12 @@ import {AppRoutes} from '@constants/AppRoutes';
 import {useAppSelector} from '@redux/hooks';
 
 import {DeploymentsSettings} from './DeploymentsSettings';
+import {DevPortalSettings} from './DevPortalSettings';
 import {KuskSettings} from './KuskSettings';
 
 import * as S from './styled';
 
-type SettingType = 'kusk' | 'deployments';
+type SettingType = 'kusk' | 'deployments' | 'devportal';
 
 const AddEnvoyFleetModal = lazy(() => import('@components/AddEnvoyFleetModal/AddEnvoyFleetModal'));
 const AddStaticRouteModal = lazy(() => import('@components/AddStaticRouteModal/AddStaticRouteModal'));
@@ -23,8 +24,9 @@ const Settings = () => {
   const isEnvoyFleetPublishModalVisible = useAppSelector(state => state.ui.envoyFleetModal.isOpen);
   const isStaticRouteModalVisible = useAppSelector(state => state.ui.staticRouteModal.isOpen);
 
-  const settingSection = path?.split('/')?.pop();
-  const selectedSettingsItem: SettingType = settingSection === 'deployments' ? 'deployments' : 'kusk';
+  const settingSection = (path?.split('/')[1] || 'kusk') as SettingType;
+  console.log(settingSection);
+  const selectedSettingsItem: SettingType = settingSection || 'kusk';
 
   return (
     <S.Container>
@@ -50,11 +52,18 @@ const Settings = () => {
           >
             Deployment fleets
           </S.ListItem>
+          <S.ListItem
+            $selected={selectedSettingsItem === 'devportal'}
+            onClick={() => navigate(`${AppRoutes.APP_SETTINGS}/devportal`)}
+          >
+            Developer Portal
+          </S.ListItem>
         </S.List>
 
         <div>
           {selectedSettingsItem === 'kusk' && <KuskSettings />}
           {selectedSettingsItem === 'deployments' && <DeploymentsSettings />}
+          {selectedSettingsItem === 'devportal' && <DevPortalSettings />}
         </div>
       </S.SettingsContainer>
       <Suspense fallback={null}>{isEnvoyFleetPublishModalVisible && <AddEnvoyFleetModal />}</Suspense>
