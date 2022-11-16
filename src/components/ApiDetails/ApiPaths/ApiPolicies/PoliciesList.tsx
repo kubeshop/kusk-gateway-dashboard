@@ -134,6 +134,8 @@ const getPolicyDisplayName = (policy: string) => {
       return 'Routing';
     case 'disabled':
       return 'Disabled';
+    case 'dev_portal':
+      return 'Dev Portal';
     default:
       return _.capitalize(policy);
   }

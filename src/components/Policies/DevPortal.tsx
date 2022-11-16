@@ -19,15 +19,27 @@ const DevPortalPolicy = ({xKusk, onFinish, onCancel}: IProps) => {
       cancelEditMode={onCancel}
       enableCancelButton
     >
-      <Form.Item name={['x-kusk', 'dev_portal', 'path']} label="Docs pathname">
+      <Form.Item
+        name={['x-kusk', 'dev_portal', 'path']}
+        label="Docs pathname"
+        initialValue={xKusk?.dev_portal?.path}
+        rules={[
+          {required: true, message: 'Path is missing.'},
+          {type: 'url', message: 'Invalid url.'},
+        ]}
+      >
         <Input />
       </Form.Item>
 
-      <Form.Item name={['x-kusk', 'dev_portal', 'logo_url']} label="Favicon URL">
+      <Form.Item
+        name={['x-kusk', 'dev_portal', 'logo_url']}
+        label="Favicon URL"
+        initialValue={xKusk?.dev_portal?.logo_url}
+      >
         <Input />
       </Form.Item>
 
-      <Form.Item name={['x-kusk', 'dev_portal', 'title']} label="Title tag">
+      <Form.Item name={['x-kusk', 'dev_portal', 'title']} label="Title tag" initialValue={xKusk?.dev_portal?.title}>
         <Input />
       </Form.Item>
       <Divider />
