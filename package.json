@@ -6,7 +6,7 @@
     "@reduxjs/toolkit": "1.8.6",
     "@rtk-incubator/rtk-query": "^0.3.0",
     "@types/jest": "27.5.2",
-    "@types/lodash": "^4.14.186",
+    "@types/lodash": "^4.14.187",
     "@types/react": "17.0.51",
     "@types/node": "^16.18.0",
     "@types/react-dom": "17.0.17",
