@@ -5,6 +5,7 @@ export {default as ApiDashboardIcon} from './ApiDashboard';
 export {default as ApiDeploymentsIcon} from './ApiDeployments';
 export {default as ApiAnalyticsIcon} from './ApiAnalytics';
 export {default as ApiSettingsIcon} from './ApiSettings';
+export {default as ApiLogsIcon} from './ApiLogs';
 export {default as RawExternalIcon} from './RawExternalIcon';
 export {default as CRDIcon} from './CRDIcon';
 export {default as CRDSolid} from './CRDSolid';

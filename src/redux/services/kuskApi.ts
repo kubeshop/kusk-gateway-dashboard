@@ -51,6 +51,9 @@ const injectedRtkApi = api.injectEndpoints({
     getEnvoyFleetCrd: build.query<GetEnvoyFleetCrdApiResponse, GetEnvoyFleetCrdApiArg>({
       query: queryArg => ({url: `/fleets/${queryArg['namespace']}/${queryArg.name}/crd`}),
     }),
+    getEnvoyFleetLogs: build.query<GetEnvoyFleetLogsApiResponse, GetEnvoyFleetLogsApiArg>({
+      query: queryArg => ({url: `/logs`, params: {namespace: queryArg['namespace'], name: queryArg.name}}),
+    }),
     getStaticRoutes: build.query<GetStaticRoutesApiResponse, GetStaticRoutesApiArg>({
       query: queryArg => ({url: `/staticroutes`, params: {namespace: queryArg['namespace']}}),
     }),
@@ -170,6 +173,11 @@ export type GetEnvoyFleetCrdApiArg = {
   namespace: string;
   name: string;
 };
+export type GetEnvoyFleetLogsApiResponse = /** status 200 Envoy fleet logs */ Array<string>;
+export type GetEnvoyFleetLogsApiArg = {
+  namespace: string;
+  name: string;
+};
 export type GetStaticRoutesApiResponse = /** status 200 list of static routes */ StaticRouteItem[];
 export type GetStaticRoutesApiArg = {
   /** optional filter on namespace */
@@ -282,6 +290,7 @@ export const {
   useGetEnvoyFleetQuery,
   useDeleteFleetMutation,
   useGetEnvoyFleetCrdQuery,
+  useGetEnvoyFleetLogsQuery,
   useGetStaticRoutesQuery,
   useCreateStaticRouteMutation,
   useGetStaticRouteQuery,
