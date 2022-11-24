@@ -14,7 +14,6 @@ import {
   AuthenticationPolicy,
   CORSPolicy,
   CachingPolicy,
-  DevPortalPolicy,
   QOSPolicy,
   RateLimitingPolicy,
   TargetsPolicy,
@@ -84,9 +83,6 @@ const ApiPolicies = () => {
           )}
           {activePolicy === 'rateLimiting' && (
             <RateLimitingPolicy xKusk={selectedXKusk} onCancel={onCancelClickHandler} onFinish={onFinishClickHandler} />
-          )}
-          {activePolicy === 'devPortal' && (
-            <DevPortalPolicy xKusk={selectedXKusk} onCancel={onCancelClickHandler} onFinish={onFinishClickHandler} />
           )}
           {activePolicy === 'routing' && (
             <TargetsPolicy xKusk={selectedXKusk} onCancel={onCancelClickHandler} onFinish={onFinishClickHandler} />
