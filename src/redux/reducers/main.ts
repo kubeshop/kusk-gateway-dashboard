@@ -4,7 +4,7 @@ import cleanDeep from 'clean-deep';
 import _ from 'lodash';
 import YAML from 'yaml';
 
-import {KUSK_SETTINGS_TARGET_API} from '@constants/constants';
+import {KUSK_SETTINGS_TARGET_API, KUSK_SETTINGS_TARGET_DEV_PORTAL} from '@constants/constants';
 
 import {AlertEnum} from '@models/alert';
 import {ApiContent, MainState, StaticRoute} from '@models/main';
@@ -152,6 +152,15 @@ export const mainSlice = createSlice({
         localStorage.removeItem(KUSK_SETTINGS_TARGET_API);
       }
     },
+    setDevPortalEndpoint: (state: Draft<MainState>, action: PayloadAction<string>) => {
+      state.devPortalEndpoint = action.payload;
+
+      if (action.payload) {
+        localStorage.setItem(KUSK_SETTINGS_TARGET_DEV_PORTAL, action.payload);
+      } else {
+        localStorage.removeItem(KUSK_SETTINGS_TARGET_DEV_PORTAL);
+      }
+    },
     setNewApiFormContent: (state: Draft<MainState>, action: PayloadAction<ApiContent | null>) => {
       state.newApiFormContent = action.payload;
     },
@@ -179,6 +188,7 @@ export const {
   selectStaticRouteSpec,
   selectStaticRoutePath,
   setApiEndpoint,
+  setDevPortalEndpoint,
   setNewApiFormContent,
 } = mainSlice.actions;
 export default mainSlice.reducer;

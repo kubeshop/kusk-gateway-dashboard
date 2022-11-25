@@ -1,48 +1,57 @@
+import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Form, Input} from 'antd';
+import {Button, Form, Input} from 'antd';
 
 import {useAppSelector} from '@redux/hooks';
-import {updateApiSettings} from '@redux/reducers/main';
+import {setDevPortalEndpoint} from '@redux/reducers/main';
 
 import {Divider} from '@components/AntdCustom';
 import {FormCard} from '@components/FormComponents';
 
 const DevPortalSettings = () => {
   const dispatch = useDispatch();
-  const selectedAPIOpenSpec = useAppSelector(state => state.main.selectedApiOpenapiSpec);
-  const xKusk = selectedAPIOpenSpec && selectedAPIOpenSpec['x-kusk'];
+  const devPortalEndpoint = useAppSelector(state => state.main.devPortalEndpoint);
+  const [isViewMode, setIsViewMode] = useState(true);
 
   const onFinishClickHandler = (values: any) => {
-    dispatch(updateApiSettings({editedOpenapi: values}));
+    dispatch(setDevPortalEndpoint(values.devPortalEndpoint));
+    setIsViewMode(!isViewMode);
+  };
+
+  const onEditClickHandler = () => {
+    setIsViewMode(!isViewMode);
   };
 
   return (
     <FormCard
       heading="Developer Portal"
-      subHeading="Configure the developer portal for consumers of your API"
+      subHeading="Please provide the Kusk API endpoint for your installation. The endpoint needs to be accessible from your browser."
       helpTopic="Developer Portal"
+      helpLink="https://docs.kusk.io/reference/dashboard/overview"
       formProps={{layout: 'vertical', onFinish: onFinishClickHandler}}
+      isViewMode={isViewMode}
+      cancelEditMode={onEditClickHandler}
+      cardProps={{
+        extra: isViewMode && (
+          <Button type="default" onClick={onEditClickHandler}>
+            Edit
+          </Button>
+        ),
+      }}
     >
       <Form.Item
-        name="path"
-        label="Docs pathname"
+        name="devPortalEndpoint"
+        label="Dev portal path"
         rules={[
           {required: true, message: 'Path is missing.'},
           {type: 'url', message: 'Invalid url.'},
         ]}
-        initialValue={xKusk?.dev_portal?.path}
+        initialValue={devPortalEndpoint}
       >
         <Input />
       </Form.Item>
 
-      <Form.Item name="logo_url" label="Favicon URL" initialValue={xKusk?.dev_portal?.logo_url}>
-        <Input />
-      </Form.Item>
-
-      <Form.Item name="title" label="Title tag" initialValue={xKusk?.dev_portal?.title}>
-        <Input />
-      </Form.Item>
       <Divider />
     </FormCard>
   );

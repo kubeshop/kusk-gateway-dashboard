@@ -3,6 +3,8 @@ import {ApiItem, EnvoyFleetItem, ServiceItem, StaticRouteItem} from '@redux/serv
 interface MainState {
   /** API server endpoint */
   apiEndpoint: string;
+  /** Dev portal endpoint */
+  devPortalEndpoint: string;
   /** content of the new publishing API */
   newApiFormContent: {[key: string]: any} | null;
   /**  currently selected API */
