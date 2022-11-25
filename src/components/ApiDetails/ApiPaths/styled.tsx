@@ -36,5 +36,5 @@ export const Tabs = styled(AntTabs)`
 
 export const CopyPortalUrlButton = styled(CopyOutlined)`
   color: ${Colors.neutral4};
-  margin-left: 16px;
+  margin-left: 12px;
 `;
