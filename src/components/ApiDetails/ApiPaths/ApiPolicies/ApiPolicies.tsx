@@ -14,6 +14,7 @@ import {
   AuthenticationPolicy,
   CORSPolicy,
   CachingPolicy,
+  JWTAuthenticationPolicy,
   QOSPolicy,
   RateLimitingPolicy,
   TargetsPolicy,
@@ -92,8 +93,16 @@ const ApiPolicies = () => {
           {activePolicy === 'qos' && (
             <QOSPolicy xKusk={selectedXKusk} onCancel={onCancelClickHandler} onFinish={onFinishClickHandler} />
           )}
-          {activePolicy === 'authentication' && (
+          {activePolicy === 'customAuthentication' && (
             <AuthenticationPolicy
+              xKusk={selectedXKusk}
+              onCancel={onCancelClickHandler}
+              onFinish={onFinishClickHandler}
+            />
+          )}
+
+          {activePolicy === 'jwtAuthentication' && (
+            <JWTAuthenticationPolicy
               xKusk={selectedXKusk}
               onCancel={onCancelClickHandler}
               onFinish={onFinishClickHandler}
