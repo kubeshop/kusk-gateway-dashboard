@@ -59,14 +59,6 @@ const Policies = ({selectPolicy, isRootPath}: IPoliciesProps) => {
             link="https://docs.kusk.io/extension#rate-limiting"
             onClick={() => selectPolicy('rateLimiting')}
           />
-          {isRootPath && (
-            <PolicyCard
-              title="Developer Portal"
-              description="Create interactive documentation for consumers of your API with the Kusk developer portal."
-              link="https://docs.kusk.io/guides/portal"
-              onClick={() => selectPolicy('devPortal')}
-            />
-          )}
           <PolicyCard
             title="Routing"
             description="Set routing policy for request target service via the upstream or redirect property."
