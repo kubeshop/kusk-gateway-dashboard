@@ -30,10 +30,9 @@ const PolicyCard = ({title, description, link, onClick}: IPolicyCard) => (
 
 interface IPoliciesProps {
   selectPolicy: Dispatch<SetStateAction<string | undefined>>;
-  isRootPath: boolean;
 }
 
-const Policies = ({selectPolicy, isRootPath}: IPoliciesProps) => {
+const Policies = ({selectPolicy}: IPoliciesProps) => {
   const onBackClickHandler = () => {
     selectPolicy(undefined);
   };
