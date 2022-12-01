@@ -25,6 +25,7 @@ const JWTAuthentication = ({xKusk, onFinish, onCancel}: IProps) => {
       heading="JWT"
       subHeading="Configure JSON Web Token"
       helpTopic="JSON Web Tokens"
+      enableCancelButton
       cancelEditMode={onCancel}
       formProps={{layout: 'vertical', onFinish: onFinishClickHandler, initialValues: currentProvider}}
     >

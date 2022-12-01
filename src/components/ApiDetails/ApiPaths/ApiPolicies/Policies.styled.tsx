@@ -84,7 +84,7 @@ export const Tabs = styled(AntTabs)`
   }
 
   .ant-tabs-ink-bar {
-    background-color: transparent;
+    background-color: transparent !important;
   }
 
   .ant-tabs-tab > .ant-tabs-tab-btn > .ant-tag {
