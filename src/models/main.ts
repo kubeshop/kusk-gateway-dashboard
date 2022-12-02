@@ -46,7 +46,8 @@ interface Metadata {
 interface StaticRouteSpec {
   fleet: Fleet;
   hosts: string[];
-  paths: Path;
+  redirect: Redirect;
+  upstream: Upstream;
 }
 
 interface Fleet {
@@ -61,8 +62,6 @@ type PartialRecord<K extends keyof any, T> = {
 };
 
 type PathMatch = PartialRecord<HTTP_METHOD, PathMethod>;
-
-type Path = Record<string, PathMatch>;
 
 type PathMethod = {
   redirect: Redirect;

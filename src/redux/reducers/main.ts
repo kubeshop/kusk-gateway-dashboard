@@ -79,7 +79,8 @@ export const updateStaticRouteSettings = createAsyncThunk<any, {editedOpenapi?: 
             namespace: editedOpenapi?.fleetNamespace || selectedStaticRouteSpec?.spec?.fleet?.namespace,
           },
           hosts: editedOpenapi?.hosts || selectedStaticRouteSpec?.spec?.hosts,
-          paths: _.merge({}, selectedStaticRouteSpec?.spec?.paths, editedOpenapi?.paths),
+          redirect: _.merge({}, selectedStaticRouteSpec?.spec?.redirect, editedOpenapi?.redirect),
+          upstream: _.merge({}, selectedStaticRouteSpec?.spec?.upstream, editedOpenapi?.upstream),
         },
       };
 
