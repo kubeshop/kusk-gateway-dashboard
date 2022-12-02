@@ -6,6 +6,7 @@ import {useGetApiQuery} from '@redux/services/enhancedApi';
 import {Header} from '@components/Header';
 
 import {ApiNotFound} from './Api404';
+import {ApiLogging} from './ApiLogging';
 import {ApiOpenSpec} from './ApiOpenSpec';
 import {ApiPaths} from './ApiPaths';
 import {ApiSettings} from './ApiSettings';
@@ -25,6 +26,8 @@ const ApiDetails = () => {
 
   const activeSection = section?.includes('settings')
     ? 'settings'
+    : section?.includes('logs')
+    ? 'logs'
     : section?.includes('paths')
     ? 'paths'
     : 'openapiBrowser';
@@ -44,6 +47,7 @@ const ApiDetails = () => {
           <S.Content>
             {activeSection === 'openapiBrowser' && <ApiOpenSpec />}
             {activeSection === 'paths' && <ApiPaths />}
+            {activeSection === 'logs' && <ApiLogging />}
             {activeSection === 'settings' && <ApiSettings />}
           </S.Content>
         </S.Container>
