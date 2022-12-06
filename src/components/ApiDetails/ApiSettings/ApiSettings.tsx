@@ -2,6 +2,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 import {Typography} from 'antd';
 
+import {DevPortalSettings} from './DevPortalSettings';
 import Authentication from './Settings/Authentication';
 import CORS from './Settings/CORS';
 import Caching from './Settings/Caching';
@@ -65,6 +66,9 @@ const ApiSettings = () => {
           >
             Deployments
           </S.ListItem>
+          <S.ListItem $selected={selectedSettingsItem === 'portal'} onClick={() => navigate('settings/portal')}>
+            Developer Portal
+          </S.ListItem>
         </S.List>
         <div style={{padding: '0 20px 0 20px'}}>
           {selectedSettingsItem === 'general' && <GeneralSettings />}
@@ -76,6 +80,7 @@ const ApiSettings = () => {
           {selectedSettingsItem === 'domains' && <Hosts />}
           {selectedSettingsItem === 'auth' && <Authentication />}
           {selectedSettingsItem === 'deployments' && <Deployments />}
+          {selectedSettingsItem === 'portal' && <DevPortalSettings />}
         </div>
       </S.SettingsContainer>
     </S.Container>
@@ -100,6 +105,8 @@ const getSection = (sectionParam: string) => {
       return 'auth';
     case 'deployments':
       return 'deployments';
+    case 'portal':
+      return 'portal';
     default:
       return 'general';
   }

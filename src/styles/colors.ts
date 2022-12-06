@@ -80,6 +80,7 @@ enum Colors {
   slate500 = '#64748B',
   slate700 = '#334155',
   slate800 = '#1E293B',
+  neutral4 = '#A3A3A3',
 }
 
 export default Colors;
