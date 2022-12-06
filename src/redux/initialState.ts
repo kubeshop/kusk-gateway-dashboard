@@ -8,7 +8,7 @@ const initialAlertState: AlertState = {
 
 const initialMainState: MainState = {
   apiEndpoint: '/api/',
-  devPortalEndpoint: 'http://localhost:8090',
+  devPortalEndpoint: null,
   newApiFormContent: null,
   selectedApi: null,
   selectedApiOpenapiSpec: null,

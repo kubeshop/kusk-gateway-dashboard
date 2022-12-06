@@ -4,7 +4,7 @@ interface MainState {
   /** API server endpoint */
   apiEndpoint: string;
   /** Dev portal endpoint */
-  devPortalEndpoint: string;
+  devPortalEndpoint: string | null;
   /** content of the new publishing API */
   newApiFormContent: {[key: string]: any} | null;
   /**  currently selected API */

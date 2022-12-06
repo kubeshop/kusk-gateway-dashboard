@@ -35,7 +35,9 @@ const ApiPaths = () => {
   const selectedApi = useAppSelector(state => state.main.selectedApi);
   const devPortalEndpoint = useAppSelector(state => state.main.devPortalEndpoint);
 
-  const portalURL = `${devPortalEndpoint}?name=${selectedApi?.name}&namespace=${selectedApi?.namespace}`;
+  const portalURL = devPortalEndpoint
+    ? `${devPortalEndpoint}?name=${selectedApi?.name}&namespace=${selectedApi?.namespace}`
+    : null;
 
   const activeKey = section?.endsWith('policies') ? '2' : '1';
   const onTabClickHandler = (key: string) => {
@@ -66,8 +68,8 @@ const ApiPaths = () => {
       <Typography.Title level={1}>Routes</Typography.Title>
       <Typography.Text type="secondary">
         View Developer Portal at&nbsp;
-        <Typography.Link target="_blank" href={portalURL}>
-          {portalURL}
+        <Typography.Link target={portalURL ? '_blank' : undefined} href={portalURL || '/settings/devportal'}>
+          {portalURL || 'configure Dev Portal'}
         </Typography.Link>
         <Tooltip mouseEnterDelay={TOOLTIP_DELAY} placement="bottom" title="Copy to clipboard">
           <S.CopyPortalUrlButton onClick={onClipboardClick} />

@@ -27,8 +27,6 @@ const DevPortalSettings = () => {
     <FormCard
       heading="Developer Portal"
       subHeading="Please provide the Kusk API endpoint for your installation. The endpoint needs to be accessible from your browser."
-      helpTopic="Developer Portal"
-      helpLink="https://docs.kusk.io/reference/dashboard/overview"
       formProps={{layout: 'vertical', onFinish: onFinishClickHandler}}
       isViewMode={isViewMode}
       cancelEditMode={onEditClickHandler}
@@ -52,7 +50,7 @@ const DevPortalSettings = () => {
         <Input />
       </Form.Item>
 
-      <Divider />
+      {!isViewMode && <Divider />}
     </FormCard>
   );
 };
