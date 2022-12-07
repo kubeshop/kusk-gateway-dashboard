@@ -141,9 +141,6 @@ export const mainSlice = createSlice({
     selectStaticRouteSpec: (state: Draft<MainState>, action: PayloadAction<any | null>) => {
       state.selectedStaticRouteSpec = action.payload;
     },
-    selectStaticRoutePath: (state: Draft<MainState>, action: PayloadAction<any | null>) => {
-      state.selectedStaticRoutePath = action.payload;
-    },
     setApiEndpoint: (state: Draft<MainState>, action: PayloadAction<string>) => {
       state.apiEndpoint = action.payload;
 
@@ -178,7 +175,6 @@ export const {
   selectEnvoyFleet,
   selectStaticRoute,
   selectStaticRouteSpec,
-  selectStaticRoutePath,
   setApiEndpoint,
   setNewApiFormContent,
 } = mainSlice.actions;

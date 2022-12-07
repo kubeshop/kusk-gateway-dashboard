@@ -14,7 +14,6 @@ const initialMainState: MainState = {
   selectedEnvoyFleet: null,
   selectedStaticRoute: null,
   selectedStaticRouteSpec: null,
-  selectedStaticRoutePath: null,
   selectedApiNewSettings: null,
 };
 
