@@ -28,6 +28,7 @@ const PoliciesList = ({selectedPath, xkusk, selectPolicy}: IProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_1, path, operation] = selectedPath.split('.');
   const displayPath = selectedPath === '.' ? 'Root' : path;
+  const isDisabled = xkusk?.disabled;
 
   const onAddPolicyClickHandler = () => {
     selectPolicy('grid');
@@ -63,7 +64,7 @@ const PoliciesList = ({selectedPath, xkusk, selectPolicy}: IProps) => {
     <S.Container>
       <S.Header>
         <div>
-          <S.Path>{displayPath}</S.Path>
+          <S.Path $disabled={isDisabled}>{displayPath}</S.Path>
           {operation && <MethodTag $method={operation}>{operation}</MethodTag>}
         </div>
         <Button type="primary" onClick={onAddPolicyClickHandler}>
@@ -88,9 +89,9 @@ const PoliciesList = ({selectedPath, xkusk, selectPolicy}: IProps) => {
               : 'host';
 
           return (
-            <S.PolicyChip key={policy}>
+            <S.PolicyChip key={policy} $disabled={isDisabled}>
               <div>
-                <S.Title>{getPolicyDisplayName(policy)}</S.Title>
+                <S.Title $disabled={isDisabled}>{getPolicyDisplayName(policy)}</S.Title>
                 {routingPolicies.includes(policy) && <TargetTag $type={targetType}>{targetType}</TargetTag>}
               </div>
               <div>
