@@ -125,7 +125,7 @@ const AddStaticRouteModal = () => {
           }}
         >
           {step === 'routeInfo' && <RouteInfo />}
-          {step === 'targetInfo' && <TargetForm />}
+          {step === 'targetInfo' && <TargetForm targetTypes={['service', 'host']} />}
         </Form>
       </S.Container>
     </S.Modal>

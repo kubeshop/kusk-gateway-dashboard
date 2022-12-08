@@ -6,6 +6,7 @@ import {useAppSelector} from '@redux/hooks';
 import {updateStaticRouteSettings} from '@redux/reducers/main';
 
 import {SubHeading} from '@components/AntdCustom';
+import {CardSkeleton} from '@components/Skeletons';
 import {TargetCard} from '@components/Target';
 
 import * as S from './PathTarget.styled';
@@ -14,8 +15,7 @@ const PathTarget = () => {
   const dispatch = useDispatch();
   const selectedRouteSpec = useAppSelector(state => state.main.selectedStaticRouteSpec);
 
-  const target = selectedRouteSpec.spec.redirect || selectedRouteSpec.spec.upstream;
-  const targetType = 'host_redirect' in target ? 'redirect' : 'upstream';
+  const target = selectedRouteSpec?.spec?.upstream;
 
   const onSaveClickHandler = (values: any) => {
     const {upstream, redirect = null} = values;
@@ -35,7 +35,9 @@ const PathTarget = () => {
     );
   };
 
-  return (
+  return !selectedRouteSpec ? (
+    <CardSkeleton />
+  ) : (
     <>
       <S.Header>
         <SubHeading>
@@ -45,7 +47,7 @@ const PathTarget = () => {
           </Typography.Link>
         </SubHeading>
       </S.Header>
-      <TargetCard target={targetType === 'redirect' ? {redirect: target} : target} onSave={onSaveClickHandler} />
+      <TargetCard target={target} onSave={onSaveClickHandler} targetTypes={['service', 'host']} />
     </>
   );
 };

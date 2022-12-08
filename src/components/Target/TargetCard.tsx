@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-import {Button, Form, Input, Switch, Tag, Typography} from 'antd';
+import {Button, Form, Input, Switch, Tag} from 'antd';
 
 import {TargetType} from '@models/ui';
 
@@ -14,9 +14,10 @@ interface IProps {
   target: any;
   onSave: (values: any) => void;
   onDelete?: () => void;
+  targetTypes?: TargetType[];
 }
 
-const TargetCard = ({target, onSave, onDelete}: IProps) => {
+const TargetCard = ({target, onSave, onDelete, targetTypes}: IProps) => {
   const [isViewMode, setIsViewMode] = useState<boolean>(true);
 
   const onEditClickHandler = () => {
@@ -48,10 +49,10 @@ const TargetCard = ({target, onSave, onDelete}: IProps) => {
       title={
         <CardHeading
           heading={
-            <Typography.Title level={3}>
+            <S.Heading>
               {title}
               <TargetTag $type={type}>{title}</TargetTag>
-            </Typography.Title>
+            </S.Heading>
           }
           subHeading={subHeading}
         />
@@ -76,7 +77,14 @@ const TargetCard = ({target, onSave, onDelete}: IProps) => {
       </Form>
     </S.Card>
   ) : (
-    <EditTarget target={target} type={type} dismissEditMode={setIsViewMode} onSave={onSave} onDelete={onDelete} />
+    <EditTarget
+      target={target}
+      type={type}
+      dismissEditMode={setIsViewMode}
+      onSave={onSave}
+      onDelete={onDelete}
+      targetTypes={targetTypes}
+    />
   );
 };
 

@@ -48,7 +48,7 @@ const StaticRouteDetails = () => {
               </S.ListItem>
 
               <S.ListItem $selected={selectedTab === 'settings'} onClick={() => navigate('settings')}>
-                Route Settings
+                Route Target
               </S.ListItem>
 
               <S.ListItem $selected={selectedTab === 'hosts'} onClick={() => navigate('hosts')}>
