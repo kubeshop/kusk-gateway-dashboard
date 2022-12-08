@@ -1,7 +1,8 @@
-import {Card as AntCard, Button} from 'antd';
+import {Card as AntCard, Button, Typography} from 'antd';
 
 import styled from 'styled-components';
 
+import Colors from '@styles/colors';
 import {Shadows} from '@styles/global';
 
 export const SaveButton = styled(Button).attrs({
@@ -26,4 +27,11 @@ export const CardActions = styled.div`
     margin-left: auto;
     margin-bottom: 0;
   }
+`;
+
+export const Heading = styled(Typography.Text)`
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: bold;
+  color: ${Colors.zinc9};
 `;

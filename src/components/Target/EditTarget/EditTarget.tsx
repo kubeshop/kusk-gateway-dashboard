@@ -15,9 +15,12 @@ interface IProps {
   dismissEditMode: Dispatch<boolean>;
   onDelete?: () => void;
   onSave: (values: any) => void;
+  targetTypes?: TargetType[];
 }
 
-const EditTarget = ({target, type, dismissEditMode, onDelete, onSave}: IProps) => {
+const defaultTargets: TargetType[] = ['service', 'host', 'redirect', 'mocked'];
+
+const EditTarget = ({target, type, dismissEditMode, onDelete, onSave, targetTypes = defaultTargets}: IProps) => {
   const [form] = Form.useForm();
   const [targetSelection, setTargetSelection] = useState<string>(
     type === 'redirect' ? 'Redirect' : type === 'service' ? 'Upstream service' : 'Upstream host'
@@ -61,24 +64,30 @@ const EditTarget = ({target, type, dismissEditMode, onDelete, onSave}: IProps) =
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, marginBottom: 16}}>
           <Typography.Text>Type</Typography.Text>
           <Button.Group>
-            <Button
-              type={targetSelection === 'Upstream service' ? 'primary' : undefined}
-              onClick={() => setTargetSelection('Upstream service')}
-            >
-              Upstream service
-            </Button>
-            <Button
-              type={targetSelection === 'Upstream host' ? 'primary' : undefined}
-              onClick={() => setTargetSelection('Upstream host')}
-            >
-              Upstream host
-            </Button>
-            <Button
-              type={targetSelection === 'Redirect' ? 'primary' : undefined}
-              onClick={() => setTargetSelection('Redirect')}
-            >
-              Redirect
-            </Button>
+            {targetTypes.includes('service') && (
+              <Button
+                type={targetSelection === 'Upstream service' ? 'primary' : undefined}
+                onClick={() => setTargetSelection('Upstream service')}
+              >
+                Upstream service
+              </Button>
+            )}
+            {targetTypes.includes('host') && (
+              <Button
+                type={targetSelection === 'Upstream host' ? 'primary' : undefined}
+                onClick={() => setTargetSelection('Upstream host')}
+              >
+                Upstream host
+              </Button>
+            )}
+            {targetTypes.includes('redirect') && (
+              <Button
+                type={targetSelection === 'Redirect' ? 'primary' : undefined}
+                onClick={() => setTargetSelection('Redirect')}
+              >
+                Redirect
+              </Button>
+            )}
           </Button.Group>
         </div>
         {targetSelection.startsWith('Upstream') ? (

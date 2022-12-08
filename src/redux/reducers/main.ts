@@ -79,7 +79,8 @@ export const updateStaticRouteSettings = createAsyncThunk<any, {editedOpenapi?: 
             namespace: editedOpenapi?.fleetNamespace || selectedStaticRouteSpec?.spec?.fleet?.namespace,
           },
           hosts: editedOpenapi?.hosts || selectedStaticRouteSpec?.spec?.hosts,
-          paths: _.merge({}, selectedStaticRouteSpec?.spec?.paths, editedOpenapi?.paths),
+          redirect: _.merge({}, selectedStaticRouteSpec?.spec?.redirect, editedOpenapi?.redirect),
+          upstream: _.merge({}, selectedStaticRouteSpec?.spec?.upstream, editedOpenapi?.upstream),
         },
       };
 
@@ -140,9 +141,6 @@ export const mainSlice = createSlice({
     selectStaticRouteSpec: (state: Draft<MainState>, action: PayloadAction<any | null>) => {
       state.selectedStaticRouteSpec = action.payload;
     },
-    selectStaticRoutePath: (state: Draft<MainState>, action: PayloadAction<any | null>) => {
-      state.selectedStaticRoutePath = action.payload;
-    },
     setApiEndpoint: (state: Draft<MainState>, action: PayloadAction<string>) => {
       state.apiEndpoint = action.payload;
 
@@ -186,7 +184,6 @@ export const {
   selectEnvoyFleet,
   selectStaticRoute,
   selectStaticRouteSpec,
-  selectStaticRoutePath,
   setApiEndpoint,
   setDevPortalEndpoint,
   setNewApiFormContent,

@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 
 import {Form, Steps} from 'antd';
 
+import cleanDeep from 'clean-deep';
 import YAML from 'yaml';
 
 import {AppRoutes} from '@constants/AppRoutes';
@@ -17,7 +18,6 @@ import {useCreateStaticRouteMutation} from '@redux/services/enhancedApi';
 
 import {TargetForm} from '@components/TargetForm';
 
-import PathForm from './PathForm';
 import RouteInfo from './RouteInfoForm';
 
 import * as S from './styled';
@@ -28,9 +28,9 @@ const AddStaticRouteModal = () => {
   const [form] = Form.useForm();
   const [createStaticRoute, {isError, reset}] = useCreateStaticRouteMutation();
   const [currentStep, setCurrentStep] = useState(0);
-  const step = currentStep === 0 ? 'routeInfo' : currentStep === 1 ? 'pathInfo' : 'targetInfo';
+  const step = currentStep === 0 ? 'routeInfo' : 'targetInfo';
 
-  const okText = currentStep === 0 ? 'Add path' : currentStep === 1 ? 'Add target' : 'Create static route';
+  const okText = currentStep === 0 ? 'Add target' : 'Create static route';
 
   const onSubmitHandler = async () => {
     try {
@@ -39,7 +39,7 @@ const AddStaticRouteModal = () => {
         setCurrentStep(currentStep + 1);
         return;
       }
-      const {name, namespace, deployment, path, methods, upstream, redirect} = await form.getFieldsValue(true);
+      const {name, namespace, deployment, upstream, redirect} = await form.getFieldsValue(true);
 
       const newStaticRouteDefinition: StaticRoute = {
         apiVersion: 'gateway.kusk.io/v1alpha1',
@@ -52,13 +52,9 @@ const AddStaticRouteModal = () => {
             name: deployment.split(',')[1],
             namespace: deployment.split(',')[0],
           },
+          upstream,
+          redirect,
           hosts: [],
-          paths: {
-            [path]: methods.reduce((acc: any, item: any) => {
-              acc[item] = redirect ? {redirect} : {route: {upstream}};
-              return acc;
-            }, {}),
-          },
         },
       };
 
@@ -68,7 +64,7 @@ const AddStaticRouteModal = () => {
           namespace,
           envoyFleetNamespace: deployment.split(',')[0],
           envoyFleetName: deployment.split(',')[1],
-          openapi: YAML.stringify(newStaticRouteDefinition),
+          openapi: YAML.stringify(cleanDeep(newStaticRouteDefinition)),
         },
       }).unwrap();
       dispatch(
@@ -113,8 +109,7 @@ const AddStaticRouteModal = () => {
         <S.StepsContainer>
           <Steps direction="vertical" current={currentStep}>
             <Steps.Step title="Route info" onStepClick={() => onStepClickHandler(0)} />
-            <Steps.Step title="Path" onStepClick={() => onStepClickHandler(1)} />
-            <Steps.Step title="Target" onStepClick={() => onStepClickHandler(2)} />
+            <Steps.Step title="Target" onStepClick={() => onStepClickHandler(1)} />
           </Steps>
         </S.StepsContainer>
 
@@ -130,8 +125,7 @@ const AddStaticRouteModal = () => {
           }}
         >
           {step === 'routeInfo' && <RouteInfo />}
-          {step === 'pathInfo' && <PathForm />}
-          {step === 'targetInfo' && <TargetForm />}
+          {step === 'targetInfo' && <TargetForm targetTypes={['service', 'host']} />}
         </Form>
       </S.Container>
     </S.Modal>
