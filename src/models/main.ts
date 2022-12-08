@@ -3,6 +3,8 @@ import {ApiItem, EnvoyFleetItem, ServiceItem, StaticRouteItem} from '@redux/serv
 interface MainState {
   /** API server endpoint */
   apiEndpoint: string;
+  /** Dev portal endpoint */
+  devPortalEndpoint: string | null;
   /** content of the new publishing API */
   newApiFormContent: {[key: string]: any} | null;
   /**  currently selected API */
@@ -14,7 +16,6 @@ interface MainState {
   /**  currently selected Static Route */
   selectedStaticRoute: StaticRouteItem | null;
   selectedStaticRouteSpec: any | null;
-  selectedStaticRoutePath: any | null;
   /**  selected api changed settings */
   selectedApiNewSettings: {[key: string]: any} | null;
 }
@@ -46,7 +47,8 @@ interface Metadata {
 interface StaticRouteSpec {
   fleet: Fleet;
   hosts: string[];
-  paths: Path;
+  redirect: Redirect;
+  upstream: Upstream;
 }
 
 interface Fleet {
@@ -61,8 +63,6 @@ type PartialRecord<K extends keyof any, T> = {
 };
 
 type PathMatch = PartialRecord<HTTP_METHOD, PathMethod>;
-
-type Path = Record<string, PathMatch>;
 
 type PathMethod = {
   redirect: Redirect;

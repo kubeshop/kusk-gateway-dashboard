@@ -1,5 +1,7 @@
 import {Tabs as AntTabs} from 'antd';
 
+import {CopyOutlined} from '@ant-design/icons';
+
 import styled from 'styled-components';
 
 import Colors from '@styles/colors';
@@ -30,4 +32,9 @@ export const Tabs = styled(AntTabs)`
   .ant-tabs-tab-btn {
     color: ${Colors.zinc6};
   }
+`;
+
+export const CopyPortalUrlButton = styled(CopyOutlined)`
+  color: ${Colors.neutral4};
+  margin-left: 12px;
 `;

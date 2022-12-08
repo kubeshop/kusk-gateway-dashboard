@@ -4,7 +4,7 @@ import cleanDeep from 'clean-deep';
 import _ from 'lodash';
 import YAML from 'yaml';
 
-import {KUSK_SETTINGS_TARGET_API} from '@constants/constants';
+import {KUSK_SETTINGS_TARGET_API, KUSK_SETTINGS_TARGET_DEV_PORTAL} from '@constants/constants';
 
 import {AlertEnum} from '@models/alert';
 import {ApiContent, MainState, StaticRoute} from '@models/main';
@@ -79,7 +79,8 @@ export const updateStaticRouteSettings = createAsyncThunk<any, {editedOpenapi?: 
             namespace: editedOpenapi?.fleetNamespace || selectedStaticRouteSpec?.spec?.fleet?.namespace,
           },
           hosts: editedOpenapi?.hosts || selectedStaticRouteSpec?.spec?.hosts,
-          paths: _.merge({}, selectedStaticRouteSpec?.spec?.paths, editedOpenapi?.paths),
+          redirect: _.merge({}, selectedStaticRouteSpec?.spec?.redirect, editedOpenapi?.redirect),
+          upstream: _.merge({}, selectedStaticRouteSpec?.spec?.upstream, editedOpenapi?.upstream),
         },
       };
 
@@ -140,9 +141,6 @@ export const mainSlice = createSlice({
     selectStaticRouteSpec: (state: Draft<MainState>, action: PayloadAction<any | null>) => {
       state.selectedStaticRouteSpec = action.payload;
     },
-    selectStaticRoutePath: (state: Draft<MainState>, action: PayloadAction<any | null>) => {
-      state.selectedStaticRoutePath = action.payload;
-    },
     setApiEndpoint: (state: Draft<MainState>, action: PayloadAction<string>) => {
       state.apiEndpoint = action.payload;
 
@@ -150,6 +148,15 @@ export const mainSlice = createSlice({
         localStorage.setItem(KUSK_SETTINGS_TARGET_API, action.payload);
       } else {
         localStorage.removeItem(KUSK_SETTINGS_TARGET_API);
+      }
+    },
+    setDevPortalEndpoint: (state: Draft<MainState>, action: PayloadAction<string>) => {
+      state.devPortalEndpoint = action.payload;
+
+      if (action.payload) {
+        localStorage.setItem(KUSK_SETTINGS_TARGET_DEV_PORTAL, action.payload);
+      } else {
+        localStorage.removeItem(KUSK_SETTINGS_TARGET_DEV_PORTAL);
       }
     },
     setNewApiFormContent: (state: Draft<MainState>, action: PayloadAction<ApiContent | null>) => {
@@ -177,8 +184,8 @@ export const {
   selectEnvoyFleet,
   selectStaticRoute,
   selectStaticRouteSpec,
-  selectStaticRoutePath,
   setApiEndpoint,
+  setDevPortalEndpoint,
   setNewApiFormContent,
 } = mainSlice.actions;
 export default mainSlice.reducer;

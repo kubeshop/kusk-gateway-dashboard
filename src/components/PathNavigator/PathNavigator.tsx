@@ -112,7 +112,7 @@ const PathNavigator = ({selectedKeys, selectKey, onHidePath}: IProps) => {
               </S.Path>
             ),
             key: `paths.${p.path}.${method}`,
-            disabled: _.result<boolean>(selectedAPIOpenSpec, `paths.${p.path}.${method}.x-kusk.disabled`) || p.disabled,
+            // disabled: _.result<boolean>(selectedAPIOpenSpec, `paths.${p.path}.${method}.x-kusk.disabled`) || p.disabled,
             style: {
               opacity:
                 _.result<boolean>(selectedAPIOpenSpec, `paths.${p.path}.${method}.x-kusk.disabled`) || p.disabled
