@@ -1,4 +1,4 @@
-import {Card as AntCard, Typography} from 'antd';
+import {Card as AntCard, Tabs as AntTabs, Typography} from 'antd';
 
 import AntIcon from '@ant-design/icons';
 
@@ -76,4 +76,35 @@ export const H3 = styled(Typography.Title).attrs({
   level: 3,
 })`
   color: ${Colors.zinc8};
+`;
+
+export const Tabs = styled(AntTabs)`
+  .ant-tabs-nav::before {
+    border-bottom: none;
+  }
+
+  .ant-tabs-ink-bar {
+    background-color: transparent !important;
+  }
+
+  .ant-tabs-tab > .ant-tabs-tab-btn > .ant-tag {
+    border-radius: 32px;
+    margin-right: 0;
+    padding: 4px 8px;
+    color: ${Colors.slate400};
+    background-color: ${Colors.grey10};
+    border: none;
+    line-height: 16px;
+    font-weight: 500;
+  }
+
+  .ant-tabs-tab-active > .ant-tabs-tab-btn > .ant-tag {
+    padding: 4px 8px;
+    color: ${Colors.blue500};
+    background-color: ${Colors.blue50};
+  }
+
+  .ant-tabs-tab + .ant-tabs-tab {
+    margin: 0 0 0 16px;
+  }
 `;

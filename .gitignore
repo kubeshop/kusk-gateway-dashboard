@@ -26,3 +26,5 @@ yarn-error.log*
 antd-customized.css
 
 .env
+
+setupProxy.js

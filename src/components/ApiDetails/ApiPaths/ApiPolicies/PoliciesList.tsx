@@ -49,8 +49,10 @@ const PoliciesList = ({selectedPath, xkusk, selectPolicy}: IProps) => {
       selectPolicy('rateLimiting');
     } else if (policy === 'validation') {
       selectPolicy('validation');
-    } else if (policy === 'auth') {
-      selectPolicy('authentication');
+    } else if (policy === 'auth' && xkusk?.auth?.jwt) {
+      selectPolicy('jwtAuthentication');
+    } else if (policy === 'auth' && xkusk?.auth?.custom) {
+      selectPolicy('customAuthentication');
     } else if (policy === 'websocket') {
       selectPolicy('websocket');
     } else if (policy === 'cache') {
