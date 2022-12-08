@@ -2,15 +2,9 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 import {Typography} from 'antd';
 
-import Authentication from './Settings/Authentication';
-import CORS from './Settings/CORS';
-import Caching from './Settings/Caching';
 import Deployments from './Settings/Deployments';
 import GeneralSettings from './Settings/General';
 import Hosts from './Settings/Hosts';
-import QOS from './Settings/QOS';
-import RateLimiting from './Settings/RateLimiting';
-import Targets from './Settings/Targets';
 
 import * as S from './styled';
 
@@ -35,47 +29,21 @@ const ApiSettings = () => {
           <S.ListItem $selected={selectedSettingsItem === 'general'} onClick={() => navigate('settings/general')}>
             General
           </S.ListItem>
-          <S.ListItem $selected={selectedSettingsItem === 'caching'} onClick={() => navigate('settings/caching')}>
-            Caching
-          </S.ListItem>
-          <S.ListItem $selected={selectedSettingsItem === 'cors'} onClick={() => navigate('settings/cors')}>
-            CORS
-          </S.ListItem>
-          <S.ListItem
-            $selected={selectedSettingsItem === 'rateLimiting'}
-            onClick={() => navigate('settings/rateLimiting')}
-          >
-            Rate Limits
-          </S.ListItem>
-          <S.ListItem $selected={selectedSettingsItem === 'qos'} onClick={() => navigate('settings/qos')}>
-            QOS
-          </S.ListItem>
-          <S.ListItem $selected={selectedSettingsItem === 'target'} onClick={() => navigate('settings/target')}>
-            Targets
-          </S.ListItem>
-          <S.ListItem $selected={selectedSettingsItem === 'domains'} onClick={() => navigate('settings/domains')}>
-            Domains
-          </S.ListItem>
-          <S.ListItem $selected={selectedSettingsItem === 'auth'} onClick={() => navigate('settings/auth')}>
-            Authentication
-          </S.ListItem>
+
           <S.ListItem
             $selected={selectedSettingsItem === 'deployments'}
             onClick={() => navigate('settings/deployments')}
           >
             Deployments
           </S.ListItem>
+          <S.ListItem $selected={selectedSettingsItem === 'domains'} onClick={() => navigate('settings/domains')}>
+            Hosts
+          </S.ListItem>
         </S.List>
         <div style={{padding: '0 20px 0 20px'}}>
           {selectedSettingsItem === 'general' && <GeneralSettings />}
-          {selectedSettingsItem === 'caching' && <Caching />}
-          {selectedSettingsItem === 'cors' && <CORS />}
-          {selectedSettingsItem === 'rateLimiting' && <RateLimiting />}
-          {selectedSettingsItem === 'qos' && <QOS />}
-          {selectedSettingsItem === 'target' && <Targets />}
-          {selectedSettingsItem === 'domains' && <Hosts />}
-          {selectedSettingsItem === 'auth' && <Authentication />}
           {selectedSettingsItem === 'deployments' && <Deployments />}
+          {selectedSettingsItem === 'domains' && <Hosts />}
         </div>
       </S.SettingsContainer>
     </S.Container>

@@ -1,6 +1,6 @@
 import {useDispatch} from 'react-redux';
 
-import {Form, Input, Modal, Select, Switch} from 'antd';
+import {Form, Input, Modal, Select} from 'antd';
 
 import {AlertEnum} from '@models/alert';
 
@@ -126,40 +126,6 @@ const GeneralSettings = () => {
         </Form.Item>
         <S.Divider />
       </FormCard>
-
-      <FormCard
-        heading="Request validation"
-        subHeading="Validate all incoming requests against the corresponding OpenAPI definition."
-        formProps={{onFinish: onSaveClickHandler}}
-        cardProps={{
-          extra: (
-            <Form.Item
-              name={['x-kusk', 'validation', 'request', 'enabled']}
-              valuePropName="checked"
-              initialValue={xKusk?.validation?.request?.enabled}
-            >
-              <Switch />
-            </Form.Item>
-          ),
-        }}
-        helpLink="https://docs.kusk.io/extension/#validation"
-        helpTopic="Request validation"
-      />
-
-      <FormCard
-        heading="Websocket"
-        subHeading='Handle "Upgrade: websocket" and other actions related to Websocket HTTP headers.'
-        helpLink="https://docs.kusk.io/extension/#websocket"
-        helpTopic="Websockets"
-        formProps={{name: 'websockets', onFinish: onSaveClickHandler}}
-        cardProps={{
-          extra: (
-            <Form.Item name={['x-kusk', 'websocket']} valuePropName="checked" initialValue={xKusk?.websocket}>
-              <Switch />
-            </Form.Item>
-          ),
-        }}
-      />
 
       <S.DeleteCard
         title={
