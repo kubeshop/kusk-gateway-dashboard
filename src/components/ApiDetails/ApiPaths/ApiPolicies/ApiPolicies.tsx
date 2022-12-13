@@ -39,6 +39,7 @@ const ApiPolicies = () => {
   );
   const selectedKey = selectedKeys[0].toString();
   const selectedXKusk = _.get(selectedAPIOpenSpec, selectedKey === '.' ? 'x-kusk' : `${selectedKey}.x-kusk`);
+  const isRootPath = selectedKey === '.';
 
   const onCancelClickHandler = () => {
     setActivePolicy(undefined);
@@ -78,7 +79,7 @@ const ApiPolicies = () => {
         <PoliciesList selectedPath={selectedKey} xkusk={selectedXKusk} selectPolicy={setActivePolicy} />
       ) : (
         <div style={{width: '100%'}} key={selectedKey}>
-          {activePolicy === 'grid' && <Policies selectPolicy={setActivePolicy} />}
+          {activePolicy === 'grid' && <Policies selectPolicy={setActivePolicy} isRootPath={isRootPath} />}
           {activePolicy === 'cors' && (
             <CORSPolicy xKusk={selectedXKusk} onCancel={onCancelClickHandler} onFinish={onFinishClickHandler} />
           )}

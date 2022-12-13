@@ -18,6 +18,7 @@ interface IPolicyCard {
 }
 
 interface IPoliciesProps {
+  isRootPath: boolean;
   selectPolicy: Dispatch<SetStateAction<string | undefined>>;
 }
 
@@ -32,7 +33,7 @@ const PolicyCard = ({title, description, link, onClick}: IPolicyCard) => (
   </S.Card>
 );
 
-const Policies = ({selectPolicy}: IPoliciesProps) => {
+const Policies = ({isRootPath, selectPolicy}: IPoliciesProps) => {
   const onBackClickHandler = () => {
     selectPolicy(undefined);
   };
@@ -120,12 +121,14 @@ const Policies = ({selectPolicy}: IPoliciesProps) => {
               onClick={() => selectPolicy('jwtAuthentication')}
             />
 
-            <PolicyCard
-              title="Crunch 42"
-              description="Set this policy to execute API security checks, provide security scores and remediation advice."
-              link="https://docs.kusk.io/guides/security/42crunch"
-              onClick={() => selectPolicy('42crunch')}
-            />
+            {isRootPath && (
+              <PolicyCard
+                title="Crunch 42"
+                description="Set this policy to execute API security checks, provide security scores and remediation advice."
+                link="https://docs.kusk.io/guides/security/42crunch"
+                onClick={() => selectPolicy('42crunch')}
+              />
+            )}
           </S.Grid>
         </>
       ),
