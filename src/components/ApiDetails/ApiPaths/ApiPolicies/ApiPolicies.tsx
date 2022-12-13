@@ -14,6 +14,7 @@ import {
   AuthenticationPolicy,
   CORSPolicy,
   CachingPolicy,
+  CrunchSecurityPolicy,
   JWTAuthenticationPolicy,
   QOSPolicy,
   RateLimitingPolicy,
@@ -103,6 +104,14 @@ const ApiPolicies = () => {
 
           {activePolicy === 'jwtAuthentication' && (
             <JWTAuthenticationPolicy
+              xKusk={selectedXKusk}
+              onCancel={onCancelClickHandler}
+              onFinish={onFinishClickHandler}
+            />
+          )}
+
+          {activePolicy === '42crunch' && (
+            <CrunchSecurityPolicy
               xKusk={selectedXKusk}
               onCancel={onCancelClickHandler}
               onFinish={onFinishClickHandler}

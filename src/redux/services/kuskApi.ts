@@ -240,6 +240,7 @@ export type ApiItem = {
   fleet: ApiItemFleet;
   service: ApiItemService;
   version: string;
+  crunch42url?: string;
 };
 export type ServicePortItem = {
   name: string;

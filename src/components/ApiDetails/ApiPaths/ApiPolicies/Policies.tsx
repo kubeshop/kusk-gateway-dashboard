@@ -119,6 +119,13 @@ const Policies = ({selectPolicy}: IPoliciesProps) => {
               link="https://docs.kusk.io/extension#authentication"
               onClick={() => selectPolicy('jwtAuthentication')}
             />
+
+            <PolicyCard
+              title="Crunch 42"
+              description="Set this policy to execute API security checks, provide security scores and remediation advice."
+              link="https://docs.kusk.io/guides/security/42crunch"
+              onClick={() => selectPolicy('42crunch')}
+            />
           </S.Grid>
         </>
       ),
