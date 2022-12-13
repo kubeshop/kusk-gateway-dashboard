@@ -11,7 +11,7 @@ export const Container = styled.div`
   padding: 0 20px;
 `;
 
-export const Header = styled.div`
+export const Row = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -46,4 +46,18 @@ export const RightPane = styled.div`
 
 export const CopyYamlButton = styled(CopyOutlined)`
   font-size: 24px;
+`;
+
+export const ReportLabel = styled(Typography.Text)`
+  color: ${Colors.zinc6} !important;
+`;
+
+export const ReportLink = styled(Typography.Link)`
+  color: ${Colors.blue500} !important;
+  display: flex;
+  align-items: center;
+  svg {
+    color: ${Colors.blue500};
+    margin-left: 8px;
+  }
 `;
