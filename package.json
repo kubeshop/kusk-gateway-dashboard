@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@reduxjs/toolkit": "1.9.0",
+    "@reduxjs/toolkit": "1.9.1",
     "@rtk-incubator/rtk-query": "^0.3.0",
     "@tanstack/react-virtual": "^3.0.0-beta.22",
     "@types/jest": "27.5.2",
