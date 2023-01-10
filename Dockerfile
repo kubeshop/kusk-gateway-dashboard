@@ -1,5 +1,5 @@
 # build environment
-ARG TARGET=nginx:1.23.2-alpine
+ARG TARGET=nginx:1.23.3-alpine
 
 FROM docker.io/node:16.14-buster as build
 ARG SEGMENT_API_KEY
